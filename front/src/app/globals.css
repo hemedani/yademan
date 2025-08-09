@@ -1,8 +1,6 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 
-@tailwind utilities;
-
 * {
     font-family: vazir-matn;
 }
@@ -148,9 +146,47 @@
     }
 }
 
-/* RTL Support */
-.dir-rtl {
+/* Enhanced RTL Support */
+[dir="rtl"] {
     direction: rtl;
+}
+
+[dir="ltr"] {
+    direction: ltr;
+}
+
+/* RTL-specific utilities */
+.rtl\:text-right:where([dir="rtl"], [dir="rtl"] *) {
+    text-align: right;
+}
+
+.rtl\:text-left:where([dir="rtl"], [dir="rtl"] *) {
+    text-align: left;
+}
+
+.ltr\:text-left:where([dir="ltr"], [dir="ltr"] *) {
+    text-align: left;
+}
+
+.ltr\:text-right:where([dir="ltr"], [dir="ltr"] *) {
+    text-align: right;
+}
+
+/* RTL spacing utilities */
+.rtl\:mr-auto:where([dir="rtl"], [dir="rtl"] *) {
+    margin-right: auto;
+}
+
+.rtl\:ml-auto:where([dir="rtl"], [dir="rtl"] *) {
+    margin-left: auto;
+}
+
+.ltr\:ml-auto:where([dir="ltr"], [dir="ltr"] *) {
+    margin-left: auto;
+}
+
+.ltr\:mr-auto:where([dir="ltr"], [dir="ltr"] *) {
+    margin-right: auto;
 }
 
 .loader {
@@ -261,14 +297,24 @@
 }
 
 /* RTL Support for map controls */
-.leaflet-control-zoom {
+[dir="rtl"] .leaflet-control-zoom {
     left: auto !important;
     right: 10px !important;
 }
 
-.leaflet-control-attribution {
+[dir="ltr"] .leaflet-control-zoom {
+    right: auto !important;
+    left: 10px !important;
+}
+
+[dir="rtl"] .leaflet-control-attribution {
     right: auto !important;
     left: 0 !important;
+}
+
+[dir="ltr"] .leaflet-control-attribution {
+    left: auto !important;
+    right: 0 !important;
 }
 
 /* Custom map popup styles */
@@ -347,10 +393,19 @@
 }
 
 /* Prevent map from interfering with page scroll */
-.leaflet-container .leaflet-control-zoom {
+[dir="rtl"] .leaflet-container .leaflet-control-zoom {
     position: absolute !important;
     top: 10px !important;
     right: 10px !important;
+    left: auto !important;
+    z-index: 1000 !important;
+}
+
+[dir="ltr"] .leaflet-container .leaflet-control-zoom {
+    position: absolute !important;
+    top: 10px !important;
+    left: 10px !important;
+    right: auto !important;
     z-index: 1000 !important;
 }
 
