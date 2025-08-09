@@ -1,3 +1,4 @@
 node_modules
 .DS_Store
 back/uploads
+dump.rdb
