@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import React, { useState, useRef, useEffect } from "react";
+import { useTranslations } from "next-intl";
 
 interface SearchResult {
   id: string;
@@ -11,8 +11,8 @@ interface SearchResult {
 }
 
 const SearchBar: React.FC = () => {
-  const t = useTranslations('HomePage');
-  const [query, setQuery] = useState('');
+  const t = useTranslations("HomePage");
+  const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,35 +21,38 @@ const SearchBar: React.FC = () => {
   // Mock search results
   const mockResults: SearchResult[] = [
     {
-      id: '1',
-      title: 'تخت جمشید',
-      category: 'مکان تاریخی',
-      address: 'فارس، شیراز، مرودشت'
+      id: "1",
+      title: "تخت جمشید",
+      category: "مکان تاریخی",
+      address: "فارس، شیراز، مرودشت",
     },
     {
-      id: '2',
-      title: 'میدان نقش جهان',
-      category: 'میراث جهانی',
-      address: 'اصفهان، میدان امام'
+      id: "2",
+      title: "میدان نقش جهان",
+      category: "میراث جهانی",
+      address: "اصفهان، میدان امام",
     },
     {
-      id: '3',
-      title: 'برج آزادی',
-      category: 'بنای یادبود',
-      address: 'تهران، میدان آزادی'
-    }
+      id: "3",
+      title: "برج آزادی",
+      category: "بنای یادبود",
+      address: "تهران، میدان آزادی",
+    },
   ];
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -65,10 +68,10 @@ const SearchBar: React.FC = () => {
     // Simulate API call delay
     const timer = setTimeout(() => {
       const filteredResults = mockResults.filter(
-        result =>
+        (result) =>
           result.title.toLowerCase().includes(query.toLowerCase()) ||
           result.address.toLowerCase().includes(query.toLowerCase()) ||
-          result.category.toLowerCase().includes(query.toLowerCase())
+          result.category.toLowerCase().includes(query.toLowerCase()),
       );
       setResults(filteredResults);
       setIsOpen(true);
@@ -86,32 +89,32 @@ const SearchBar: React.FC = () => {
     setQuery(result.title);
     setIsOpen(false);
     // Handle navigation or selection logic here
-    console.log('Selected:', result);
+    console.log("Selected:", result);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
       // Handle search submission
-      console.log('Searching for:', query);
+      console.log("Searching for:", query);
       setIsOpen(false);
     }
   };
 
   const clearSearch = () => {
-    setQuery('');
+    setQuery("");
     setResults([]);
     setIsOpen(false);
   };
 
   return (
-    <div ref={searchRef} className="relative w-full max-w-lg">
+    <div ref={searchRef} className="relative w-full max-w-full lg:max-w-lg">
       <form onSubmit={handleSubmit} className="relative">
         <div className="relative">
           {/* Search Icon */}
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
             <svg
-              className="h-5 w-5 text-gray-400"
+              className="h-5 w-5 sm:h-6 sm:w-6 text-gray-400"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -125,24 +128,25 @@ const SearchBar: React.FC = () => {
             </svg>
           </div>
 
-          {/* Input Field */}
+          {/* Input Field - Mobile-first responsive */}
           <input
             type="text"
             value={query}
             onChange={handleInputChange}
-            placeholder={t('searchPlaceholder')}
-            className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+            placeholder={t("searchPlaceholder")}
+            className="block w-full pl-11 pr-12 sm:pl-12 sm:pr-14 py-3 sm:py-4 text-base sm:text-lg border border-gray-300 rounded-lg sm:rounded-xl leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
           />
 
-          {/* Clear Button */}
+          {/* Clear Button - Larger touch target */}
           {query && (
             <button
               type="button"
               onClick={clearSearch}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center"
+              className="absolute inset-y-0 right-0 pr-3 sm:pr-4 flex items-center min-w-[44px] min-h-[44px] justify-center"
+              aria-label="پاک کردن جستجو"
             >
               <svg
-                className="h-5 w-5 text-gray-400 hover:text-gray-600"
+                className="h-5 w-5 sm:h-6 sm:w-6 text-gray-400 hover:text-gray-600 transition-colors"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -159,14 +163,16 @@ const SearchBar: React.FC = () => {
         </div>
       </form>
 
-      {/* Search Results Dropdown */}
+      {/* Search Results Dropdown - Mobile responsive */}
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-white rounded-md shadow-lg border border-gray-200 max-h-60 overflow-auto">
+        <div className="absolute z-50 w-full mt-1 bg-white rounded-lg sm:rounded-xl shadow-lg border border-gray-200 max-h-64 sm:max-h-72 overflow-auto">
           {isLoading ? (
-            <div className="px-4 py-3 text-center">
+            <div className="px-4 py-4 text-center">
               <div className="inline-flex items-center">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-2"></div>
-                <span className="text-gray-600 text-sm">در حال جستجو...</span>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600 mr-2"></div>
+                <span className="text-gray-600 text-sm sm:text-base">
+                  در حال جستجو...
+                </span>
               </div>
             </div>
           ) : results.length > 0 ? (
@@ -175,12 +181,12 @@ const SearchBar: React.FC = () => {
                 <button
                   key={result.id}
                   onClick={() => handleSelectResult(result)}
-                  className="w-full text-left px-4 py-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0 transition-colors"
+                  className="w-full text-right px-4 py-4 hover:bg-gray-50 active:bg-gray-100 border-b border-gray-100 last:border-b-0 transition-colors min-h-[64px] touch-manipulation"
                 >
                   <div className="flex items-start">
                     <div className="flex-shrink-0 mt-1">
                       <svg
-                        className="w-4 h-4 text-gray-400"
+                        className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -195,15 +201,15 @@ const SearchBar: React.FC = () => {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           strokeWidth={2}
-                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                          d="M15 11a3 3 0 11-6 0 3 3 0 616 0z"
                         />
                       </svg>
                     </div>
-                    <div className="ml-3 flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">
+                    <div className="mr-3 flex-1 min-w-0">
+                      <p className="text-sm sm:text-base font-medium text-gray-900 truncate">
                         {result.title}
                       </p>
-                      <p className="text-xs text-gray-500 truncate">
+                      <p className="text-xs sm:text-sm text-gray-500 truncate mt-1">
                         {result.category} • {result.address}
                       </p>
                     </div>
@@ -212,7 +218,7 @@ const SearchBar: React.FC = () => {
               ))}
             </div>
           ) : query.length >= 2 ? (
-            <div className="px-4 py-3 text-center text-gray-500 text-sm">
+            <div className="px-4 py-4 text-center text-gray-500 text-sm sm:text-base">
               نتیجه‌ای یافت نشد
             </div>
           ) : null}

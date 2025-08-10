@@ -15,6 +15,18 @@ import { routing } from "../../../i18n/routing";
 export const metadata: Metadata = {
   title: "یادمان | نقشه گنجینه های ایران",
   description: "مکان های تاریخی و فرهنگی ایران را کاوش کنید",
+  other: {
+    "mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "default",
+  },
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#ffffff",
 };
 
 type Props = {
@@ -42,7 +54,13 @@ export default async function RootLayout({ children, params }: Props) {
 
   return (
     <html lang={locale} dir={locale === "fa" ? "rtl" : "ltr"}>
-      <body>
+      <head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=5"
+        />
+      </head>
+      <body className="overflow-x-hidden">
         <NextIntlClientProvider messages={messages}>
           <MapComparisonProvider>
             <AuthProvider>
@@ -50,12 +68,24 @@ export default async function RootLayout({ children, params }: Props) {
                 isAuthenticated={isAuthenticated}
                 userLevel={userLevel}
               />
-              <div className="h-screen">
+              <div className="min-h-screen flex flex-col">
                 <Navbar />
-                <div className="flex-1 p-6 bg-gray-300 mt-16">{children}</div>
+                <main className="flex-1 px-2 sm:px-4 lg:px-6 py-4 bg-gray-50 mt-16 overflow-x-hidden">
+                  {children}
+                </main>
                 <Footer />
               </div>
-              <Toaster position="top-center" reverseOrder={false} />
+              <Toaster
+                position="top-center"
+                reverseOrder={false}
+                toastOptions={{
+                  duration: 4000,
+                  style: {
+                    fontSize: "14px",
+                    maxWidth: "90vw",
+                  },
+                }}
+              />
             </AuthProvider>
           </MapComparisonProvider>
         </NextIntlClientProvider>
