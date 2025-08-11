@@ -23,7 +23,15 @@
     "menu": "منو",
     "user": "کاربر",
     "login": "ورود",
-    "filterTooltip": "فیلتر مکان‌ها"
+    "filterTooltip": "فیلتر مکان‌ها",
+    "homeAriaLabel": "رفتن به صفحه اصلی",
+    "eventsAriaLabel": "رفتن به صفحه رویدادها",
+    "menuAriaLabel": "رفتن به صفحه منو",
+    "userAriaLabel": "رفتن به پروفایل کاربر",
+    "loginAriaLabel": "رفتن به صفحه ورود",
+    "adminPanelAriaLabel": "رفتن به پنل مدیریت - مدیریت تنظیمات سیستم و کاربران",
+    "searchAriaLabel": "جستجوی مکان‌ها",
+    "filterButtonAriaLabel": "باز کردن منوی فیلترها"
   },
   "Common": {
     "loading": "در حال بارگذاری...",

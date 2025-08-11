@@ -23,7 +23,15 @@
     "menu": "Menu",
     "user": "User",
     "login": "Login",
-    "filterTooltip": "Filter locations"
+    "filterTooltip": "Filter locations",
+    "homeAriaLabel": "Navigate to homepage",
+    "eventsAriaLabel": "Navigate to events page",
+    "menuAriaLabel": "Navigate to menu page",
+    "userAriaLabel": "Navigate to user profile",
+    "loginAriaLabel": "Navigate to login page",
+    "adminPanelAriaLabel": "Navigate to Admin Dashboard - Manage system settings and users",
+    "searchAriaLabel": "Search locations",
+    "filterButtonAriaLabel": "Open filters menu"
   },
   "Common": {
     "loading": "Loading...",

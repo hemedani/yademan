@@ -34,19 +34,24 @@ export default function TopBar({
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-      <div className="flex items-center justify-between px-4 py-3 h-14">
+      <header
+        className="flex items-center justify-between px-4 py-3 h-16"
+        role="banner"
+      >
         {/* Left side - Search or Admin Button */}
         <div className="flex-1 max-w-md">
           {isAdmin ? (
             <Link
               href="/admin/dashboard"
-              className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors touch-manipulation min-h-[44px]"
+              aria-label={t("Navigation.adminPanelAriaLabel")}
+              className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-all duration-200 touch-manipulation min-h-[48px] min-w-[120px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 hover:shadow-md active:scale-95"
             >
               <svg
                 className="w-4 h-4 ltr:mr-2 rtl:ml-2"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <path
                   strokeLinecap="round"
@@ -61,19 +66,26 @@ export default function TopBar({
                   d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
                 />
               </svg>
-              {t("HomePage.adminPanel")}
+              <span>{t("HomePage.adminPanel")}</span>
             </Link>
           ) : (
             <div className="relative">
-              <div className="absolute inset-y-0 ltr:left-0 rtl:right-0 pl-3 pr-3 flex items-center pointer-events-none">
-                <MagnifyingGlassIcon className="h-4 w-4 text-gray-400" />
+              <div className="absolute inset-y-0 ltr:left-0 rtl:right-0 ltr:pl-4 rtl:pr-4 flex items-center pointer-events-none">
+                <MagnifyingGlassIcon
+                  className="h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
               </div>
               <input
                 type="text"
                 value={localSearchValue}
                 onChange={(e) => handleSearchChange(e.target.value)}
-                className="block w-full ltr:pl-9 rtl:pr-9 ltr:pr-3 rtl:pl-3 py-2 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-[44px] touch-manipulation"
+                className="block w-full ltr:pl-12 rtl:pr-12 ltr:pr-4 rtl:pl-4 py-3 border border-gray-300 rounded-lg text-sm placeholder-gray-500 transition-all duration-200 touch-manipulation min-h-[48px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus:border-blue-500 hover:border-gray-400"
                 placeholder={t("HomePage.searchPlaceholder")}
+                aria-label={t("Navigation.searchAriaLabel")}
+                role="searchbox"
+                aria-expanded="false"
+                aria-autocomplete="list"
               />
             </div>
           )}
@@ -82,13 +94,14 @@ export default function TopBar({
         {/* Right side - Filter Button */}
         <button
           onClick={onFilterClick}
-          className="flex items-center justify-center w-11 h-11 ltr:ml-3 rtl:mr-3 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors touch-manipulation"
+          className="flex items-center justify-center w-12 h-12 ltr:ml-4 rtl:mr-4 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all duration-200 touch-manipulation focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 active:scale-95"
           title={t("Navigation.filterTooltip")}
-          aria-label={t("Navigation.filterTooltip")}
+          aria-label={t("Navigation.filterButtonAriaLabel")}
+          type="button"
         >
-          <AdjustmentsHorizontalIcon className="h-5 w-5" />
+          <AdjustmentsHorizontalIcon className="h-6 w-6" aria-hidden="true" />
         </button>
-      </div>
+      </header>
     </div>
   );
 }
