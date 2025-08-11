@@ -4,18 +4,14 @@ import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { Link } from "../../../i18n/routing";
-import {
-  HomeIcon,
-  CalendarDaysIcon,
-  Bars3Icon,
-  UserIcon,
-} from "@heroicons/react/24/outline";
-import {
-  HomeIcon as HomeIconSolid,
-  CalendarDaysIcon as CalendarDaysIconSolid,
-  Bars3Icon as Bars3IconSolid,
-  UserIcon as UserIconSolid,
-} from "@heroicons/react/24/solid";
+import HomeIcon from "@heroicons/react/24/outline/HomeIcon";
+import CalendarDaysIcon from "@heroicons/react/24/outline/CalendarDaysIcon";
+import Bars3Icon from "@heroicons/react/24/outline/Bars3Icon";
+import UserIcon from "@heroicons/react/24/outline/UserIcon";
+import HomeIconSolid from "@heroicons/react/24/solid/HomeIcon";
+import CalendarDaysIconSolid from "@heroicons/react/24/solid/CalendarDaysIcon";
+import Bars3IconSolid from "@heroicons/react/24/solid/Bars3Icon";
+import UserIconSolid from "@heroicons/react/24/solid/UserIcon";
 
 interface NavItem {
   key: string;

@@ -4,10 +4,8 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/context/AuthContext";
 import { Link } from "../../../i18n/routing";
-import {
-  MagnifyingGlassIcon,
-  AdjustmentsHorizontalIcon,
-} from "@heroicons/react/24/outline";
+import MagnifyingGlassIcon from "@heroicons/react/24/outline/MagnifyingGlassIcon";
+import AdjustmentsHorizontalIcon from "@heroicons/react/24/outline/AdjustmentsHorizontalIcon";
 
 interface TopBarProps {
   onFilterClick?: () => void;
