@@ -14,7 +14,16 @@
     "tagline": "مکان های تاریخی و فرهنگی را کاوش کنید.",
     "searchPlaceholder": "جستجوی مکان...",
     "filters": "فیلترها",
-    "locations": "مکان ها"
+    "locations": "مکان ها",
+    "adminPanel": "پنل مدیریت"
+  },
+  "Navigation": {
+    "home": "خانه",
+    "events": "رویدادها",
+    "menu": "منو",
+    "user": "کاربر",
+    "login": "ورود",
+    "filterTooltip": "فیلتر مکان‌ها"
   },
   "Common": {
     "loading": "در حال بارگذاری...",

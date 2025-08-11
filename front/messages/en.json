@@ -14,7 +14,16 @@
     "tagline": "Explore historical and cultural places.",
     "searchPlaceholder": "Search locations...",
     "filters": "Filters",
-    "locations": "Locations"
+    "locations": "Locations",
+    "adminPanel": "Admin Panel"
+  },
+  "Navigation": {
+    "home": "Home",
+    "events": "Events",
+    "menu": "Menu",
+    "user": "User",
+    "login": "Login",
+    "filterTooltip": "Filter locations"
   },
   "Common": {
     "loading": "Loading...",
