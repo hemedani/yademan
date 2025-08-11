@@ -39,7 +39,7 @@ export default function TopBar({
         <div className="flex-1 max-w-md">
           {isAdmin ? (
             <Link
-              href="/admin"
+              href="/admin/dashboard"
               className="inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors touch-manipulation min-h-[44px]"
             >
               <svg
