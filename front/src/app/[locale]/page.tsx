@@ -1,72 +1,85 @@
-import { Suspense } from "react";
-import MapSkeleton from "@/components/map/MapSkeleton";
+"use client";
+
+import { useState } from "react";
+import { useTranslations } from "next-intl";
+import TopBar from "@/components/layout/TopBar";
+import MobileNavBar from "@/components/layout/MobileNavBar";
+import MapView from "@/components/map/MapView";
 import FilterPanel from "@/components/filters/FilterPanel";
-import SearchBar from "@/components/search/SearchBar";
-import LocationList from "@/components/location/LocationList";
-import ClientMapWrapper from "@/components/ClientMapWrapper";
-import { getTranslations } from "next-intl/server";
+import { useFilterPanel } from "@/hooks/useFilterPanel";
 
-type Props = {
-  params: Promise<{ locale: string }>;
-};
+export default function HomePage() {
+  const t = useTranslations("HomePage");
+  const [searchValue, setSearchValue] = useState("");
+  const { isFilterOpen, toggleFilter, closeFilter } = useFilterPanel();
 
-export default async function HomePage({ params }: Props) {
-  const { locale } = await params;
-  const t = await getTranslations("HomePage");
+  const handleSearchChange = (value: string) => {
+    setSearchValue(value);
+    // Here you can add search functionality
+    console.log("Search:", value);
+  };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] w-full max-w-none overflow-x-hidden flex flex-col">
-      {/* Header with search - Mobile-first responsive */}
-      <header className="bg-white shadow-sm border-b relative z-10 w-full">
-        <div className="w-full px-4 py-3 sm:py-4">
-          {/* Mobile: Stack title and search vertically */}
-          <div className="flex flex-col space-y-3 sm:space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0">
-            {/* Title */}
-            <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 text-center lg:text-right">
-              {t("title")}
-            </h1>
+    <>
+      {/* Top Bar - Fixed */}
+      <TopBar
+        onFilterClick={toggleFilter}
+        searchValue={searchValue}
+        onSearchChange={handleSearchChange}
+      />
 
-            {/* Search Bar - Full width on mobile, constrained on desktop */}
-            <div className="w-full lg:flex-1 lg:max-w-2xl lg:mx-8">
-              <SearchBar />
-            </div>
+      {/* Main Content - Full height map with proper padding for fixed bars */}
+      <main className="pt-14 pb-14 h-screen overflow-hidden bg-gray-50">
+        <div className="relative h-full w-full">
+          {/* Map - Full height */}
+          <MapView className="h-full" />
 
-            {/* User menu area - Hidden on mobile, shown on desktop */}
-            <div className="hidden lg:flex items-center space-x-4 space-x-reverse">
-              {/* User menu will go here */}
-            </div>
-          </div>
+          {/* Filter Panel Overlay */}
+          {isFilterOpen && (
+            <>
+              {/* Backdrop */}
+              <div
+                className="fixed inset-0 bg-black bg-opacity-50 z-40 pt-14 pb-14"
+                onClick={closeFilter}
+              />
+
+              {/* Filter Panel */}
+              <div className="fixed top-14 left-0 right-0 bottom-14 z-50 bg-white shadow-lg overflow-y-auto">
+                <div className="sticky top-0 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    {t("filters")}
+                  </h2>
+                  <button
+                    onClick={closeFilter}
+                    className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
+                    aria-label="Close filters"
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                <div className="p-4">
+                  <FilterPanel />
+                </div>
+              </div>
+            </>
+          )}
         </div>
-      </header>
+      </main>
 
-      {/* Main content area - Mobile-first responsive layout */}
-      <div className="flex-1 flex flex-col lg:flex-row relative w-full overflow-hidden">
-        {/* Sidebar with filters and location list */}
-        {/* Mobile: Full width, stacked above map */}
-        {/* Desktop: Fixed width sidebar */}
-        <aside className="w-full lg:w-96 bg-white border-b lg:border-r lg:border-b-0 overflow-hidden flex flex-col lg:h-[calc(100vh-8rem)]">
-          {/* Filter Panel */}
-          <div className="p-3 sm:p-4 border-b">
-            <FilterPanel />
-          </div>
-
-          {/* Location List */}
-          <div className="flex-1 overflow-y-auto lg:max-h-[calc(100vh-16rem)]">
-            <LocationList />
-          </div>
-        </aside>
-
-        {/* Map area - Mobile-first responsive */}
-        {/* Mobile: Fixed height below sidebar */}
-        {/* Desktop: Takes remaining width */}
-        <main className="flex-1 relative h-64 sm:h-80 lg:h-[calc(100vh-8rem)] w-full">
-          <Suspense fallback={<MapSkeleton className="w-full h-full" />}>
-            <div className="w-full h-full">
-              <ClientMapWrapper />
-            </div>
-          </Suspense>
-        </main>
-      </div>
-    </div>
+      {/* Bottom Navigation - Fixed */}
+      <MobileNavBar />
+    </>
   );
 }

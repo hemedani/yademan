@@ -4,9 +4,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { MapComparisonProvider } from "@/context/MapComparisonContext";
 import { AuthInitializer } from "@/components/AuthInitializer";
 import { Toaster } from "react-hot-toast";
-import { Navbar } from "@/components/organisms/Navbar";
-import { getMe } from "../actions/user/getMe";
-import { Footer } from "@/components/organisms/NewFooter";
+
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -37,7 +35,7 @@ type Props = {
 export default async function RootLayout({ children, params }: Props) {
   const { locale } = await params;
   // Validate that the incoming `locale` parameter is valid
-  if (!routing.locales.includes(locale as any)) {
+  if (!routing.locales.includes(locale as "fa" | "en")) {
     notFound();
   }
 
@@ -68,13 +66,7 @@ export default async function RootLayout({ children, params }: Props) {
                 isAuthenticated={isAuthenticated}
                 userLevel={userLevel}
               />
-              <div className="min-h-screen flex flex-col">
-                <Navbar />
-                <main className="flex-1 px-2 sm:px-4 lg:px-6 py-4 bg-gray-50 mt-16 overflow-x-hidden">
-                  {children}
-                </main>
-                <Footer />
-              </div>
+              {children}
               <Toaster
                 position="top-center"
                 reverseOrder={false}
