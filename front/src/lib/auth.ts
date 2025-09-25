@@ -1,86 +1,39 @@
-// Purpose: Authentication utility functions for JWT handling, session management, and user validation
+// Purpose: Authentication utility functions for session management and user validation
 
 import { cookies } from "next/headers";
-import { NextRequest } from "next/server";
-import { SignJWT, jwtVerify } from "jose";
 import { User } from "@/types/auth";
-
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "your-secret-key-change-this-in-production"
-);
-
-const JWT_ALGORITHM = "HS256";
-
-export interface JWTPayload {
-  userId: string;
-  email: string;
-  name: string;
-  role: string;
-  iat: number;
-  exp: number;
-}
+import { getMe } from "@/app/actions/user/getMe";
 
 /**
- * Sign a JWT token with user data
- */
-export async function signJWT(
-  payload: Omit<JWTPayload, "iat" | "exp">,
-  expiresIn: string = "15m"
-): Promise<string> {
-  const now = Math.floor(Date.now() / 1000);
-  const expiration = now + parseExpirationTime(expiresIn);
-
-  return await new SignJWT({
-    ...payload,
-    iat: now,
-    exp: expiration,
-  })
-    .setProtectedHeader({ alg: JWT_ALGORITHM })
-    .sign(JWT_SECRET);
-}
-
-/**
- * Verify and decode a JWT token
- */
-export async function verifyJWT(token: string): Promise<JWTPayload | null> {
-  try {
-    const { payload } = await jwtVerify(token, JWT_SECRET);
-    return payload as JWTPayload;
-  } catch (error) {
-    console.error("JWT verification failed:", error);
-    return null;
-  }
-}
-
-/**
- * Get the current authenticated user from cookies
+ * Get the current authenticated user from backend API
  */
 export async function getCurrentUser(): Promise<User | null> {
   try {
-    const cookieStore = cookies();
-    const accessToken = cookieStore.get("accessToken");
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token");
 
-    if (!accessToken) {
+    if (!token) {
       return null;
     }
 
-    const payload = await verifyJWT(accessToken.value);
+    const response = await getMe();
 
-    if (!payload) {
+    if (!response.success || !response.user) {
       return null;
     }
 
-    // In a real app, you'd fetch the full user data from the database
-    // For now, we'll return a user object based on the JWT payload
+    const backendUser = response.user;
+
+    // Transform backend user to frontend User type
     return {
-      id: payload.userId,
-      email: payload.email,
-      name: payload.name,
-      role: payload.role as "user" | "admin" | "moderator",
-      avatar: undefined,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      emailVerified: true,
+      id: backendUser._id,
+      email: backendUser.email,
+      name: `${backendUser.first_name} ${backendUser.last_name}`,
+      role: mapBackendRoleToFrontend(backendUser.level),
+      avatar: undefined, // Avatar not included in current user type
+      createdAt: backendUser.createdAt || new Date().toISOString(),
+      updatedAt: backendUser.updatedAt || new Date().toISOString(),
+      emailVerified: backendUser.is_verified || false,
       preferences: {
         notifications: {
           email: true,
@@ -110,67 +63,30 @@ export async function getCurrentUser(): Promise<User | null> {
 }
 
 /**
- * Extract user from request (for API routes)
+ * Map backend user level to frontend role
  */
-export async function getUserFromRequest(request: NextRequest): Promise<User | null> {
-  try {
-    const authHeader = request.headers.get("authorization");
-    const cookieToken = request.cookies.get("accessToken");
-
-    let token: string | undefined;
-
-    if (authHeader && authHeader.startsWith("Bearer ")) {
-      token = authHeader.slice(7);
-    } else if (cookieToken) {
-      token = cookieToken.value;
-    }
-
-    if (!token) {
-      return null;
-    }
-
-    const payload = await verifyJWT(token);
-
-    if (!payload) {
-      return null;
-    }
-
-    // Return user object based on JWT payload
-    return {
-      id: payload.userId,
-      email: payload.email,
-      name: payload.name,
-      role: payload.role as "user" | "admin" | "moderator",
-      avatar: undefined,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      emailVerified: true,
-      preferences: {
-        notifications: {
-          email: true,
-          push: true,
-          newReviews: true,
-          locationUpdates: true,
-          marketing: false,
-          weeklyDigest: true,
-        },
-        privacy: {
-          publicProfile: true,
-          shareLocation: false,
-          showEmail: false,
-          showFavorites: true,
-          allowMessages: true,
-        },
-        language: "en",
-        theme: "light",
-        mapStyle: "streets",
-        units: "metric",
-      },
-    };
-  } catch (error) {
-    console.error("Error extracting user from request:", error);
-    return null;
+function mapBackendRoleToFrontend(
+  level: string,
+): "user" | "admin" | "moderator" {
+  switch (level) {
+    case "Manager":
+    case "Ghost":
+      return "admin";
+    case "Editor":
+      return "moderator";
+    case "Ordinary":
+    default:
+      return "user";
   }
+}
+
+/**
+ * Extract user from request (for API routes) - simplified version
+ */
+export async function getUserFromRequest(): Promise<User | null> {
+  // For now, return null as we're using server-side authentication
+  // This would need to be implemented if we need API route authentication
+  return null;
 }
 
 /**
@@ -186,7 +102,8 @@ export function hasRole(user: User | null, requiredRole: string): boolean {
   };
 
   const userLevel = roleHierarchy[user.role] || 0;
-  const requiredLevel = roleHierarchy[requiredRole as keyof typeof roleHierarchy] || 0;
+  const requiredLevel =
+    roleHierarchy[requiredRole as keyof typeof roleHierarchy] || 0;
 
   return userLevel >= requiredLevel;
 }
@@ -197,7 +114,7 @@ export function hasRole(user: User | null, requiredRole: string): boolean {
 export function canAccessResource(
   user: User | null,
   resourceOwnerId: string,
-  requiredRole: string = "user"
+  requiredRole: string = "user",
 ): boolean {
   if (!user) return false;
 
@@ -214,8 +131,11 @@ export function canAccessResource(
 /**
  * Generate a secure random token
  */
-export function generateSecureToken(length: number = 32): string {
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+export async function generateSecureToken(
+  length: number = 32,
+): Promise<string> {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let result = "";
 
   // In a browser environment, use crypto.getRandomValues
@@ -227,10 +147,10 @@ export function generateSecureToken(length: number = 32): string {
     }
   } else {
     // Fallback for Node.js environment
-    const crypto = require("crypto");
-    const randomBytes = crypto.randomBytes(length);
+    const { randomBytes } = await import("crypto");
+    const randomBytesResult = randomBytes(length);
     for (let i = 0; i < length; i++) {
-      result += characters[randomBytes[i] % characters.length];
+      result += characters[randomBytesResult[i] % characters.length];
     }
   }
 
@@ -241,7 +161,7 @@ export function generateSecureToken(length: number = 32): string {
  * Hash password using Web Crypto API (browser) or crypto module (Node.js)
  */
 export async function hashPassword(password: string): Promise<string> {
-  const salt = generateSecureToken(16);
+  const salt = await generateSecureToken(16);
 
   if (typeof window !== "undefined" && window.crypto && window.crypto.subtle) {
     // Browser environment
@@ -249,12 +169,16 @@ export async function hashPassword(password: string): Promise<string> {
     const data = encoder.encode(password + salt);
     const hashBuffer = await window.crypto.subtle.digest("SHA-256", data);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+    const hashHex = hashArray
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
     return `${salt}:${hashHex}`;
   } else {
     // Node.js environment
-    const crypto = require("crypto");
-    const hash = crypto.createHash("sha256").update(password + salt).digest("hex");
+    const { createHash } = await import("crypto");
+    const hash = createHash("sha256")
+      .update(password + salt)
+      .digest("hex");
     return `${salt}:${hash}`;
   }
 }
@@ -262,22 +186,33 @@ export async function hashPassword(password: string): Promise<string> {
 /**
  * Verify password against hash
  */
-export async function verifyPassword(password: string, hash: string): Promise<boolean> {
+export async function verifyPassword(
+  password: string,
+  hash: string,
+): Promise<boolean> {
   try {
     const [salt, expectedHash] = hash.split(":");
 
-    if (typeof window !== "undefined" && window.crypto && window.crypto.subtle) {
+    if (
+      typeof window !== "undefined" &&
+      window.crypto &&
+      window.crypto.subtle
+    ) {
       // Browser environment
       const encoder = new TextEncoder();
       const data = encoder.encode(password + salt);
       const hashBuffer = await window.crypto.subtle.digest("SHA-256", data);
       const hashArray = Array.from(new Uint8Array(hashBuffer));
-      const actualHash = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+      const actualHash = hashArray
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
       return actualHash === expectedHash;
     } else {
       // Node.js environment
-      const crypto = require("crypto");
-      const actualHash = crypto.createHash("sha256").update(password + salt).digest("hex");
+      const { createHash } = await import("crypto");
+      const actualHash = createHash("sha256")
+        .update(password + salt)
+        .digest("hex");
       return actualHash === expectedHash;
     }
   } catch (error) {
@@ -341,32 +276,6 @@ export function validatePasswordStrength(password: string): {
     errors,
     score: Math.min(score, 5), // Max score of 5
   };
-}
-
-/**
- * Parse expiration time string to seconds
- */
-function parseExpirationTime(expiresIn: string): number {
-  const match = expiresIn.match(/^(\d+)([smhd])$/);
-  if (!match) {
-    throw new Error("Invalid expiration time format");
-  }
-
-  const value = parseInt(match[1]);
-  const unit = match[2];
-
-  switch (unit) {
-    case "s":
-      return value;
-    case "m":
-      return value * 60;
-    case "h":
-      return value * 60 * 60;
-    case "d":
-      return value * 60 * 60 * 24;
-    default:
-      throw new Error("Invalid time unit");
-  }
 }
 
 /**

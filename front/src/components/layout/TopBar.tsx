@@ -6,6 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import { Link } from "../../../i18n/routing";
 import MagnifyingGlassIcon from "@heroicons/react/24/outline/MagnifyingGlassIcon";
 import AdjustmentsHorizontalIcon from "@heroicons/react/24/outline/AdjustmentsHorizontalIcon";
+import UserDropdown from "@/components/user/UserDropdown";
 
 interface TopBarProps {
   onFilterClick?: () => void;
@@ -89,16 +90,20 @@ export default function TopBar({
           )}
         </div>
 
-        {/* Right side - Filter Button */}
-        <button
-          onClick={onFilterClick}
-          className="flex items-center justify-center w-12 h-12 ltr:ml-4 rtl:mr-4 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all duration-200 touch-manipulation focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 active:scale-95"
-          title={t("Navigation.filterTooltip")}
-          aria-label={t("Navigation.filterButtonAriaLabel")}
-          type="button"
-        >
-          <AdjustmentsHorizontalIcon className="h-6 w-6" aria-hidden="true" />
-        </button>
+        {/* Right side - User Dropdown + Filter Button */}
+        <div className="flex items-center space-x-3 rtl:space-x-reverse">
+          {isAuthenticated && <UserDropdown />}
+
+          <button
+            onClick={onFilterClick}
+            className="flex items-center justify-center w-12 h-12 ltr:ml-4 rtl:mr-4 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all duration-200 touch-manipulation focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 active:scale-95"
+            title={t("Navigation.filterTooltip")}
+            aria-label={t("Navigation.filterButtonAriaLabel")}
+            type="button"
+          >
+            <AdjustmentsHorizontalIcon className="h-6 w-6" aria-hidden="true" />
+          </button>
+        </div>
       </header>
     </div>
   );

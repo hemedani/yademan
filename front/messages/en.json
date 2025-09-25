@@ -15,7 +15,9 @@
     "searchPlaceholder": "Search locations...",
     "filters": "Filters",
     "locations": "Locations",
-    "adminPanel": "Admin Panel"
+    "adminPanel": "Admin Panel",
+    "welcome": "Welcome",
+    "exploreLocations": "Explore amazing locations around you"
   },
   "Navigation": {
     "home": "Home",
@@ -31,7 +33,13 @@
     "loginAriaLabel": "Navigate to login page",
     "adminPanelAriaLabel": "Navigate to Admin Dashboard - Manage system settings and users",
     "searchAriaLabel": "Search locations",
-    "filterButtonAriaLabel": "Open filters menu"
+    "filterButtonAriaLabel": "Open filters menu",
+    "userMenuAriaLabel": "Open user menu",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout",
+    "logoutAriaLabel": "Sign out of your account",
+    "loggingOut": "Signing out..."
   },
   "Common": {
     "loading": "Loading...",
