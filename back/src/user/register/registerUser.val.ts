@@ -1,13 +1,10 @@
 import { object } from "@deps";
 import { selectStruct } from "../../../mod.ts";
-import { is_valid_national_number_struct, mobile_pattern } from "@model";
+import { user_pure } from "@model";
 
 export const registerUserValidator = () => {
 	return object({
-		set: object({
-			mobile: mobile_pattern,
-			national_number: is_valid_national_number_struct,
-		}),
+		set: object(user_pure),
 		get: selectStruct("user", 1),
 	});
 };

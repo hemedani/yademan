@@ -12,7 +12,7 @@ export const addFn: ActFn = async (body) => {
 	return await tag.insertOne({
 		doc: rest,
 		relations: {
-			registrer: {
+			registrar: {
 				_ids: user._id,
 			},
 		},

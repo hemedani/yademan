@@ -1,10 +1,11 @@
-import { lesan, MongoClient, redis } from "@deps";
+import { lesan, MongoClient } from "@deps";
 import {
 	categories,
 	cities,
 	city_zones,
+	comments,
 	files,
-	locations,
+	places,
 	provinces,
 	tags,
 	users,
@@ -12,16 +13,10 @@ import {
 import { functionsSetup } from "./src/mod.ts";
 
 const MONGO_URI = Deno.env.get("MONGO_URI") || "mongodb://127.0.0.1:27017/";
-const REDIS_URI = Deno.env.get("REDIS_URI");
-
-export const myRedis = await redis.connect({
-	hostname: REDIS_URI ? "redis" : "127.0.0.1",
-	port: 6379,
-});
 
 export const coreApp = lesan();
 const client = await new MongoClient(MONGO_URI).connect();
-const db = client.db("nejat");
+const db = client.db("yademan");
 coreApp.odm.setDb(db);
 
 export const user = users();
@@ -29,7 +24,8 @@ export const file = files();
 export const province = provinces();
 export const city = cities();
 export const city_zone = city_zones();
-export const location = locations();
+export const place = places();
+export const comment = comments();
 export const tag = tags();
 export const category = categories();
 

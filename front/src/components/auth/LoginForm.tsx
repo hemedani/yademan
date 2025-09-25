@@ -2,7 +2,9 @@
 
 import React, { useState } from "react";
 import { useTranslations } from "next-intl";
-import { useRouter } from "../../../navigation";
+import { useRouter, Link } from "../../../navigation";
+import { loginAction } from "@/app/actions/auth/login";
+import { useAuth } from "@/context/AuthContext";
 
 interface LoginFormData {
   email: string;
@@ -13,6 +15,7 @@ interface LoginFormData {
 const LoginForm: React.FC = () => {
   const t = useTranslations("Auth");
   const router = useRouter();
+  const { login } = useAuth();
   const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
@@ -37,21 +40,20 @@ const LoginForm: React.FC = () => {
     setError(null);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const result = await loginAction(formData.email, formData.password);
 
-      // Mock validation
-      if (
-        formData.email === "test@example.com" &&
-        formData.password === "password"
-      ) {
-        // Simulate successful login
+      if (result.success && result.token && result.user) {
+        // Update AuthContext
+        login(result.token, result.user.level as any, result.user.email);
+
+        // Successful login, redirect to home page
         router.push("/");
+        router.refresh(); // Refresh to update auth state
       } else {
-        throw new Error("نام کاربری یا رمز عبور اشتباه است");
+        setError(result.error || "نام کاربری یا رمز عبور اشتباه است");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "خطای غیرمنتظره");
+      setError("خطای غیرمنتظره رخ داد. لطفا دوباره تلاش کنید.");
     } finally {
       setIsLoading(false);
     }
@@ -192,20 +194,13 @@ const LoginForm: React.FC = () => {
       <div className="text-center">
         <p className="text-sm text-gray-600">
           حساب کاربری ندارید؟{" "}
-          <a
-            href="/signup"
+          <Link
+            href="/register"
             className="font-medium text-blue-600 hover:text-blue-500"
           >
             {t("signup")}
-          </a>
+          </Link>
         </p>
-      </div>
-
-      {/* Demo Credentials */}
-      <div className="mt-6 p-4 bg-gray-50 rounded-md">
-        <h4 className="text-sm font-medium text-gray-900 mb-2">اطلاعات تست:</h4>
-        <p className="text-xs text-gray-600">ایمیل: test@example.com</p>
-        <p className="text-xs text-gray-600">رمز عبور: password</p>
       </div>
     </form>
   );

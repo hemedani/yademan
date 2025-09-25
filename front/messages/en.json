@@ -15,7 +15,9 @@
     "searchPlaceholder": "Search locations...",
     "filters": "Filters",
     "locations": "Locations",
-    "adminPanel": "Admin Panel"
+    "adminPanel": "Admin Panel",
+    "welcome": "Welcome",
+    "exploreLocations": "Explore amazing locations around you"
   },
   "Navigation": {
     "home": "Home",
@@ -23,7 +25,21 @@
     "menu": "Menu",
     "user": "User",
     "login": "Login",
-    "filterTooltip": "Filter locations"
+    "filterTooltip": "Filter locations",
+    "homeAriaLabel": "Navigate to homepage",
+    "eventsAriaLabel": "Navigate to events page",
+    "menuAriaLabel": "Navigate to menu page",
+    "userAriaLabel": "Navigate to user profile",
+    "loginAriaLabel": "Navigate to login page",
+    "adminPanelAriaLabel": "Navigate to Admin Dashboard - Manage system settings and users",
+    "searchAriaLabel": "Search locations",
+    "filterButtonAriaLabel": "Open filters menu",
+    "userMenuAriaLabel": "Open user menu",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout",
+    "logoutAriaLabel": "Sign out of your account",
+    "loggingOut": "Signing out..."
   },
   "Common": {
     "loading": "Loading...",

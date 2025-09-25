@@ -15,7 +15,9 @@
     "searchPlaceholder": "جستجوی مکان...",
     "filters": "فیلترها",
     "locations": "مکان ها",
-    "adminPanel": "پنل مدیریت"
+    "adminPanel": "پنل مدیریت",
+    "welcome": "خوش آمدید",
+    "exploreLocations": "مکان‌های شگفت‌انگیز اطراف خود را کاوش کنید"
   },
   "Navigation": {
     "home": "خانه",
@@ -23,7 +25,21 @@
     "menu": "منو",
     "user": "کاربر",
     "login": "ورود",
-    "filterTooltip": "فیلتر مکان‌ها"
+    "filterTooltip": "فیلتر مکان‌ها",
+    "homeAriaLabel": "رفتن به صفحه اصلی",
+    "eventsAriaLabel": "رفتن به صفحه رویدادها",
+    "menuAriaLabel": "رفتن به صفحه منو",
+    "userAriaLabel": "رفتن به پروفایل کاربر",
+    "loginAriaLabel": "رفتن به صفحه ورود",
+    "adminPanelAriaLabel": "رفتن به پنل مدیریت - مدیریت تنظیمات سیستم و کاربران",
+    "searchAriaLabel": "جستجوی مکان‌ها",
+    "filterButtonAriaLabel": "باز کردن منوی فیلترها",
+    "userMenuAriaLabel": "باز کردن منوی کاربر",
+    "profile": "پروفایل",
+    "settings": "تنظیمات",
+    "logout": "خروج",
+    "logoutAriaLabel": "خروج از حساب کاربری",
+    "loggingOut": "در حال خروج..."
   },
   "Common": {
     "loading": "در حال بارگذاری...",

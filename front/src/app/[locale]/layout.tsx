@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "../globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { MapComparisonProvider } from "@/context/MapComparisonContext";
-import { AuthInitializer } from "@/components/AuthInitializer";
+
 import { Toaster } from "react-hot-toast";
 
 import { NextIntlClientProvider } from "next-intl";
@@ -43,13 +43,6 @@ export default async function RootLayout({ children, params }: Props) {
   // side is the easiest way to get started
   const messages = await getMessages();
 
-  // Temporarily commented out API call to test frontend routing
-  // const me = await getMe();
-  // const isAuthenticated = me.success;
-  // const userLevel = me.success ? me.body.level : null;
-  const isAuthenticated = false;
-  const userLevel = null;
-
   return (
     <html lang={locale} dir={locale === "fa" ? "rtl" : "ltr"}>
       <head>
@@ -62,10 +55,6 @@ export default async function RootLayout({ children, params }: Props) {
         <NextIntlClientProvider messages={messages}>
           <MapComparisonProvider>
             <AuthProvider>
-              <AuthInitializer
-                isAuthenticated={isAuthenticated}
-                userLevel={userLevel}
-              />
               {children}
               <Toaster
                 position="top-center"

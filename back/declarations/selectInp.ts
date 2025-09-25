@@ -6,7 +6,8 @@
       avatar?: number | fileInp
 national_card?: number | fileInp
       uploadedAssets?: number | fileInp
-registered_locations?: number | locationInp
+registered_places?: number | placeInp
+comments?: number | commentInp
     }
 
 
@@ -14,45 +15,48 @@ registered_locations?: number | locationInp
 _id?: string;
 first_name: string;
 last_name: string;
-father_name: string;
-mobile: string;
+father_name?: string;
 gender: ("Male" | "Female" );
 birth_date?: Date;
 summary?: string;
-national_number: string;
-address: string;
+address?: string;
 level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
+email: string;
 is_verified: boolean;
 createdAt: Date;
 updatedAt: Date;
 avatar?: {
 _id?: string;
 name: string;
-type: string;
+mimType: string;
 size: number;
+alt_text?: string;
 createdAt: Date;
 updatedAt: Date;
 };
 national_card?: {
 _id?: string;
 name: string;
-type: string;
+mimType: string;
 size: number;
+alt_text?: string;
 createdAt: Date;
 updatedAt: Date;
 };
 uploadedAssets: {
 _id?: string;
 name: string;
-type: string;
+mimType: string;
 size: number;
+alt_text?: string;
 createdAt: Date;
 updatedAt: Date;
 }[];
-registered_locations: {
+registered_places: {
 _id?: string;
 name: string;
 description: string;
+slug?: string;
 center: {
 type: "Point";
 coordinates: any[];
@@ -61,6 +65,25 @@ area: {
 type: "MultiPolygon";
 coordinates: any[];
 };
+address?: string;
+contact?: {
+phone?: string;
+email?: string;
+website?: string;
+social?: string[];
+};
+hoursOfOperation?: string;
+meta?: Record<string, any>;
+status: ("draft" | "active" | "archived" );
+createdAt: Date;
+updatedAt: Date;
+}[];
+comments: {
+_id?: string;
+text: string;
+rating?: number;
+status: ("pending" | "approved" | "rejected" );
+is_anonymous: boolean;
 createdAt: Date;
 updatedAt: Date;
 }[];
@@ -77,22 +100,22 @@ updatedAt: Date;
     export type fileSchema = {
 _id?: string;
 name: string;
-type: string;
+mimType: string;
 size: number;
+alt_text?: string;
 createdAt: Date;
 updatedAt: Date;
 uploader: {
 _id?: string;
 first_name: string;
 last_name: string;
-father_name: string;
-mobile: string;
+father_name?: string;
 gender: ("Male" | "Female" );
 birth_date?: Date;
 summary?: string;
-national_number: string;
-address: string;
+address?: string;
 level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
+email: string;
 is_verified: boolean;
 createdAt: Date;
 updatedAt: Date;
@@ -102,10 +125,10 @@ updatedAt: Date;
 
 
     export type provinceInp = {
-      registrer?: number | userInp
+      registrar?: number | userInp
       cities?: number | cityInp
 center?: number | cityInp
-locations?: number | locationInp
+places?: number | placeInp
     }
 
 
@@ -117,24 +140,34 @@ area: {
 type: "MultiPolygon";
 coordinates: any[];
 };
-center_location: {
+center: {
+_id?: string;
+name: string;
+english_name: string;
+area: {
+type: "MultiPolygon";
+coordinates: any[];
+};
+center: {
 type: "Point";
 coordinates: any[];
 };
 createdAt: Date;
 updatedAt: Date;
-registrer?: {
+}[];
+createdAt: Date;
+updatedAt: Date;
+registrar?: {
 _id?: string;
 first_name: string;
 last_name: string;
-father_name: string;
-mobile: string;
+father_name?: string;
 gender: ("Male" | "Female" );
 birth_date?: Date;
 summary?: string;
-national_number: string;
-address: string;
+address?: string;
 level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
+email: string;
 is_verified: boolean;
 createdAt: Date;
 updatedAt: Date;
@@ -147,32 +180,18 @@ area: {
 type: "MultiPolygon";
 coordinates: any[];
 };
-center_location: {
-type: "Point";
-coordinates: any[];
-};
-createdAt: Date;
-updatedAt: Date;
-}[];
 center: {
-_id?: string;
-name: string;
-english_name: string;
-area: {
-type: "MultiPolygon";
-coordinates: any[];
-};
-center_location: {
 type: "Point";
 coordinates: any[];
 };
 createdAt: Date;
 updatedAt: Date;
 }[];
-locations: {
+places: {
 _id?: string;
 name: string;
 description: string;
+slug?: string;
 center: {
 type: "Point";
 coordinates: any[];
@@ -181,6 +200,16 @@ area: {
 type: "MultiPolygon";
 coordinates: any[];
 };
+address?: string;
+contact?: {
+phone?: string;
+email?: string;
+website?: string;
+social?: string[];
+};
+hoursOfOperation?: string;
+meta?: Record<string, any>;
+status: ("draft" | "active" | "archived" );
 createdAt: Date;
 updatedAt: Date;
 }[];
@@ -189,10 +218,10 @@ updatedAt: Date;
 
 
     export type cityInp = {
-      registrer?: number | userInp
+      registrar?: number | userInp
 province?: number | provinceInp
       city_zones?: number | city_zoneInp
-locations?: number | locationInp
+places?: number | placeInp
     }
 
 
@@ -204,24 +233,23 @@ area: {
 type: "MultiPolygon";
 coordinates: any[];
 };
-center_location: {
+center: {
 type: "Point";
 coordinates: any[];
 };
 createdAt: Date;
 updatedAt: Date;
-registrer?: {
+registrar?: {
 _id?: string;
 first_name: string;
 last_name: string;
-father_name: string;
-mobile: string;
+father_name?: string;
 gender: ("Male" | "Female" );
 birth_date?: Date;
 summary?: string;
-national_number: string;
-address: string;
+address?: string;
 level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
+email: string;
 is_verified: boolean;
 createdAt: Date;
 updatedAt: Date;
@@ -234,7 +262,7 @@ area: {
 type: "MultiPolygon";
 coordinates: any[];
 };
-center_location: {
+center: {
 type: "Point";
 coordinates: any[];
 };
@@ -255,10 +283,11 @@ coordinates: any[];
 createdAt: Date;
 updatedAt: Date;
 }[];
-locations: {
+places: {
 _id?: string;
 name: string;
 description: string;
+slug?: string;
 center: {
 type: "Point";
 coordinates: any[];
@@ -267,6 +296,16 @@ area: {
 type: "MultiPolygon";
 coordinates: any[];
 };
+address?: string;
+contact?: {
+phone?: string;
+email?: string;
+website?: string;
+social?: string[];
+};
+hoursOfOperation?: string;
+meta?: Record<string, any>;
+status: ("draft" | "active" | "archived" );
 createdAt: Date;
 updatedAt: Date;
 }[];
@@ -275,9 +314,9 @@ updatedAt: Date;
 
 
     export type city_zoneInp = {
-      registrer?: number | userInp
+      registrar?: number | userInp
 city?: number | cityInp
-      locations?: number | locationInp
+      places?: number | placeInp
     }
 
 
@@ -294,18 +333,17 @@ coordinates: any[];
 };
 createdAt: Date;
 updatedAt: Date;
-registrer?: {
+registrar?: {
 _id?: string;
 first_name: string;
 last_name: string;
-father_name: string;
-mobile: string;
+father_name?: string;
 gender: ("Male" | "Female" );
 birth_date?: Date;
 summary?: string;
-national_number: string;
-address: string;
+address?: string;
 level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
+email: string;
 is_verified: boolean;
 createdAt: Date;
 updatedAt: Date;
@@ -318,17 +356,18 @@ area: {
 type: "MultiPolygon";
 coordinates: any[];
 };
-center_location: {
+center: {
 type: "Point";
 coordinates: any[];
 };
 createdAt: Date;
 updatedAt: Date;
 };
-locations: {
+places: {
 _id?: string;
 name: string;
 description: string;
+slug?: string;
 center: {
 type: "Point";
 coordinates: any[];
@@ -337,6 +376,16 @@ area: {
 type: "MultiPolygon";
 coordinates: any[];
 };
+address?: string;
+contact?: {
+phone?: string;
+email?: string;
+website?: string;
+social?: string[];
+};
+hoursOfOperation?: string;
+meta?: Record<string, any>;
+status: ("draft" | "active" | "archived" );
 createdAt: Date;
 updatedAt: Date;
 }[];
@@ -345,7 +394,7 @@ updatedAt: Date;
 
 
     export type categoryInp = {
-      registrer?: number | userInp
+      registrar?: number | userInp
       
     }
 
@@ -354,20 +403,21 @@ updatedAt: Date;
 _id?: string;
 name: string;
 description: string;
+color?: string;
+icon?: string;
 createdAt: Date;
 updatedAt: Date;
-registrer?: {
+registrar?: {
 _id?: string;
 first_name: string;
 last_name: string;
-father_name: string;
-mobile: string;
+father_name?: string;
 gender: ("Male" | "Female" );
 birth_date?: Date;
 summary?: string;
-national_number: string;
-address: string;
+address?: string;
 level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
+email: string;
 is_verified: boolean;
 createdAt: Date;
 updatedAt: Date;
@@ -377,7 +427,7 @@ updatedAt: Date;
 
 
     export type tagInp = {
-      registrer?: number | userInp
+      registrar?: number | userInp
       
     }
 
@@ -386,20 +436,21 @@ updatedAt: Date;
 _id?: string;
 name: string;
 description: string;
+color?: string;
+icon?: string;
 createdAt: Date;
 updatedAt: Date;
-registrer?: {
+registrar?: {
 _id?: string;
 first_name: string;
 last_name: string;
-father_name: string;
-mobile: string;
+father_name?: string;
 gender: ("Male" | "Female" );
 birth_date?: Date;
 summary?: string;
-national_number: string;
-address: string;
+address?: string;
 level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
+email: string;
 is_verified: boolean;
 createdAt: Date;
 updatedAt: Date;
@@ -408,21 +459,24 @@ updatedAt: Date;
 ;
 
 
-    export type locationInp = {
-      registrer?: number | userInp
+    export type placeInp = {
+      registrar?: number | userInp
 province?: number | provinceInp
 city?: number | cityInp
 city_zone?: number | city_zoneInp
 category?: number | categoryInp
 tags?: number | tagInp
-      
+thumbnail?: number | fileInp
+gallery?: number | fileInp
+      comments?: number | commentInp
     }
 
 
-    export type locationSchema = {
+    export type placeSchema = {
 _id?: string;
 name: string;
 description: string;
+slug?: string;
 center: {
 type: "Point";
 coordinates: any[];
@@ -431,20 +485,29 @@ area: {
 type: "MultiPolygon";
 coordinates: any[];
 };
+address?: string;
+contact?: {
+phone?: string;
+email?: string;
+website?: string;
+social?: string[];
+};
+hoursOfOperation?: string;
+meta?: Record<string, any>;
+status: ("draft" | "active" | "archived" );
 createdAt: Date;
 updatedAt: Date;
-registrer?: {
+registrar?: {
 _id?: string;
 first_name: string;
 last_name: string;
-father_name: string;
-mobile: string;
+father_name?: string;
 gender: ("Male" | "Female" );
 birth_date?: Date;
 summary?: string;
-national_number: string;
-address: string;
+address?: string;
 level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
+email: string;
 is_verified: boolean;
 createdAt: Date;
 updatedAt: Date;
@@ -457,7 +520,7 @@ area: {
 type: "MultiPolygon";
 coordinates: any[];
 };
-center_location: {
+center: {
 type: "Point";
 coordinates: any[];
 };
@@ -472,7 +535,7 @@ area: {
 type: "MultiPolygon";
 coordinates: any[];
 };
-center_location: {
+center: {
 type: "Point";
 coordinates: any[];
 };
@@ -497,16 +560,107 @@ category?: {
 _id?: string;
 name: string;
 description: string;
+color?: string;
+icon?: string;
 createdAt: Date;
 updatedAt: Date;
-};
+}[];
 tags?: {
 _id?: string;
 name: string;
 description: string;
+color?: string;
+icon?: string;
 createdAt: Date;
 updatedAt: Date;
 }[];
+thumbnail?: {
+_id?: string;
+name: string;
+mimType: string;
+size: number;
+alt_text?: string;
+createdAt: Date;
+updatedAt: Date;
+};
+gallery?: {
+_id?: string;
+name: string;
+mimType: string;
+size: number;
+alt_text?: string;
+createdAt: Date;
+updatedAt: Date;
+}[];
+comments: {
+_id?: string;
+text: string;
+rating?: number;
+status: ("pending" | "approved" | "rejected" );
+is_anonymous: boolean;
+createdAt: Date;
+updatedAt: Date;
+}[];
+};
+;
+
+
+    export type commentInp = {
+      user?: number | userInp
+place?: number | placeInp
+      
+    }
+
+
+    export type commentSchema = {
+_id?: string;
+text: string;
+rating?: number;
+status: ("pending" | "approved" | "rejected" );
+is_anonymous: boolean;
+createdAt: Date;
+updatedAt: Date;
+user: {
+_id?: string;
+first_name: string;
+last_name: string;
+father_name?: string;
+gender: ("Male" | "Female" );
+birth_date?: Date;
+summary?: string;
+address?: string;
+level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
+email: string;
+is_verified: boolean;
+createdAt: Date;
+updatedAt: Date;
+};
+place: {
+_id?: string;
+name: string;
+description: string;
+slug?: string;
+center: {
+type: "Point";
+coordinates: any[];
+};
+area: {
+type: "MultiPolygon";
+coordinates: any[];
+};
+address?: string;
+contact?: {
+phone?: string;
+email?: string;
+website?: string;
+social?: string[];
+};
+hoursOfOperation?: string;
+meta?: Record<string, any>;
+status: ("draft" | "active" | "archived" );
+createdAt: Date;
+updatedAt: Date;
+};
 };
 ;
 
@@ -528,7 +682,7 @@ area: {
 type: "MultiPolygon";
 coordinates: any[];
 };
-center_location: {
+center: {
 type: "Point";
 coordinates: any[];
 };
@@ -542,21 +696,20 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -566,7 +719,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -578,12 +731,18 @@ area?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -610,21 +769,20 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -634,7 +792,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -646,12 +804,18 @@ area?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -668,54 +832,71 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -725,21 +906,28 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+};
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -749,25 +937,22 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-center?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-english_name?: (0 | 1 );
-area?: (0 | 1 );
-center_location?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -779,18 +964,17 @@ center?: (0 | 1 );
 area?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -800,40 +984,51 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 };
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -843,7 +1038,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -852,7 +1047,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -868,6 +1063,8 @@ category?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -875,6 +1072,35 @@ tags?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -894,54 +1120,71 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -951,21 +1194,28 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+};
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -975,25 +1225,22 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-center?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-english_name?: (0 | 1 );
-area?: (0 | 1 );
-center_location?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1005,18 +1252,17 @@ center?: (0 | 1 );
 area?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -1026,40 +1272,51 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 };
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -1069,7 +1326,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1078,7 +1335,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1094,6 +1351,8 @@ category?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1101,6 +1360,35 @@ tags?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1158,18 +1446,17 @@ center?: (0 | 1 );
 area?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -1179,16 +1466,22 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1212,18 +1505,17 @@ center?: (0 | 1 );
 area?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -1233,16 +1525,22 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1261,51 +1559,68 @@ center?: (0 | 1 );
 area?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1315,21 +1630,20 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -1339,7 +1653,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1351,36 +1665,47 @@ area?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 };
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -1390,7 +1715,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1399,7 +1724,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1415,6 +1740,8 @@ category?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1422,6 +1749,35 @@ tags?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1443,51 +1799,68 @@ center?: (0 | 1 );
 area?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1497,21 +1870,20 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -1521,7 +1893,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1533,36 +1905,47 @@ area?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 };
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -1572,7 +1955,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1581,7 +1964,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1597,6 +1980,8 @@ category?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1604,6 +1989,35 @@ tags?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1649,8 +2063,9 @@ type?: ("image" | "video" | "doc" );
 get: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 uploader?: {
@@ -1658,46 +2073,63 @@ _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1715,8 +2147,9 @@ updatedAt: Date;
 get: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 uploader?: {
@@ -1724,13 +2157,12 @@ _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -1753,7 +2185,7 @@ area: {
 type: "MultiPolygon";
 coordinates: any[];
 };
-center_location: {
+center: {
 type: "Point";
 coordinates: any[];
 };
@@ -1765,21 +2197,28 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+};
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -1789,25 +2228,22 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-center?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-english_name?: (0 | 1 );
-area?: (0 | 1 );
-center_location?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1834,21 +2270,28 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+};
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -1858,25 +2301,22 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-center?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-english_name?: (0 | 1 );
-area?: (0 | 1 );
-center_location?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1893,54 +2333,126 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city_zones?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1950,21 +2462,20 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -1974,7 +2485,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -1986,36 +2497,47 @@ area?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 };
-center?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-english_name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -2025,58 +2547,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
-city_zones?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
 center?: (0 | 1 );
-area?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
-locations?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-description?: (0 | 1 );
-center?: (0 | 1 );
-area?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
-};
-locations?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-description?: (0 | 1 );
-center?: (0 | 1 );
-area?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-registrer?: {
-_id?: (0 | 1 );
-first_name?: (0 | 1 );
-last_name?: (0 | 1 );
-father_name?: (0 | 1 );
-mobile?: (0 | 1 );
-gender?: (0 | 1 );
-birth_date?: (0 | 1 );
-summary?: (0 | 1 );
-national_number?: (0 | 1 );
-address?: (0 | 1 );
-level?: (0 | 1 );
-is_verified?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
-province?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-english_name?: (0 | 1 );
-area?: (0 | 1 );
-center_location?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2085,7 +2556,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2101,6 +2572,8 @@ category?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2108,6 +2581,35 @@ tags?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2127,54 +2629,126 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city_zones?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2184,21 +2758,20 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -2208,7 +2781,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2220,36 +2793,47 @@ area?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 };
-center?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-english_name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -2259,58 +2843,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
-city_zones?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
 center?: (0 | 1 );
-area?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
-locations?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-description?: (0 | 1 );
-center?: (0 | 1 );
-area?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
-};
-locations?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-description?: (0 | 1 );
-center?: (0 | 1 );
-area?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-registrer?: {
-_id?: (0 | 1 );
-first_name?: (0 | 1 );
-last_name?: (0 | 1 );
-father_name?: (0 | 1 );
-mobile?: (0 | 1 );
-gender?: (0 | 1 );
-birth_date?: (0 | 1 );
-summary?: (0 | 1 );
-national_number?: (0 | 1 );
-address?: (0 | 1 );
-level?: (0 | 1 );
-is_verified?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
-province?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-english_name?: (0 | 1 );
-area?: (0 | 1 );
-center_location?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2319,7 +2852,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2335,6 +2868,8 @@ category?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2342,6 +2877,35 @@ tags?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2398,46 +2962,63 @@ _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2453,21 +3034,21 @@ _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 uploader?: {
@@ -2475,13 +3056,12 @@ _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -2490,8 +3070,9 @@ updatedAt?: (0 | 1 );
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 uploader?: {
@@ -2499,13 +3080,12 @@ _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -2514,8 +3094,9 @@ updatedAt?: (0 | 1 );
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 uploader?: {
@@ -2523,38 +3104,42 @@ _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -2564,7 +3149,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2573,7 +3158,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2589,6 +3174,8 @@ category?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2596,6 +3183,74 @@ tags?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+user?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+place?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2613,21 +3268,21 @@ _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 uploader?: {
@@ -2635,13 +3290,12 @@ _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -2650,8 +3304,9 @@ updatedAt?: (0 | 1 );
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 uploader?: {
@@ -2659,13 +3314,12 @@ _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -2674,8 +3328,9 @@ updatedAt?: (0 | 1 );
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 uploader?: {
@@ -2683,38 +3338,42 @@ _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -2724,7 +3383,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2733,7 +3392,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2749,6 +3408,8 @@ category?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2756,6 +3417,74 @@ tags?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+user?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+place?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2766,8 +3495,8 @@ updatedAt?: (0 | 1 );
           
             login: {
 set: {
-national_number: string;
-code: string;
+email: string;
+password: string;
 };
 get?: {
 token?: (0 | 1 );
@@ -2776,61 +3505,67 @@ _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 };
-};
-};
-
-          
-            loginReq: {
-set: {
-national_number: string;
-};
-get: {
-mobile: (1 );
-national_number: (1 );
 };
 };
 
@@ -2848,46 +3583,63 @@ _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2911,46 +3663,63 @@ _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2960,69 +3729,85 @@ updatedAt?: (0 | 1 );
           
             registerUser: {
 set: {
-mobile: string;
-national_number: string;
+first_name: string;
+last_name: string;
+father_name?: string;
+gender: ("Male" | "Female" );
+birth_date?: Date;
+summary?: string;
+address?: string;
+level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
+email: string;
+password: string;
+is_verified: boolean;
+createdAt: Date;
+updatedAt: Date;
 };
 get: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
 };
-};
-
-          
-            changeMobile: {
-set: {
-national_number: string;
-mobile: string;
-};
-get: {
-mobile: (1 );
-national_number: (1 );
 };
 };
 
@@ -3038,21 +3823,21 @@ _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 uploader?: {
@@ -3060,13 +3845,12 @@ _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -3075,8 +3859,9 @@ updatedAt?: (0 | 1 );
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 uploader?: {
@@ -3084,13 +3869,12 @@ _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -3099,8 +3883,9 @@ updatedAt?: (0 | 1 );
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 uploader?: {
@@ -3108,38 +3893,42 @@ _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -3149,7 +3938,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3158,7 +3947,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3174,6 +3963,8 @@ category?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3181,6 +3972,74 @@ tags?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+user?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+place?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3219,46 +4078,63 @@ _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3277,46 +4153,63 @@ _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3342,7 +4235,7 @@ tags?: (0 | 1 );
           }
 
         
-        location: {
+        place: {
 
       
             add: {
@@ -3350,6 +4243,7 @@ set: {
 _id?: string;
 name: string;
 description: string;
+slug?: string;
 center: {
 type: "Point";
 coordinates: any[];
@@ -3358,6 +4252,16 @@ area: {
 type: "MultiPolygon";
 coordinates: any[];
 };
+address?: string;
+contact?: {
+phone?: string;
+email?: string;
+website?: string;
+social?: string[];
+};
+hoursOfOperation?: string;
+meta?: Record<string, any>;
+status: ("draft" | "active" | "archived" );
 createdAt: Date;
 updatedAt: Date;
 province: string;
@@ -3370,22 +4274,27 @@ get: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -3395,7 +4304,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3404,7 +4313,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3420,6 +4329,8 @@ category?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3427,6 +4338,35 @@ tags?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3439,6 +4379,13 @@ set: {
 _id: string;
 name?: string;
 description?: string;
+address?: string;
+contact?: {
+phone?: string;
+website?: string;
+};
+hoursOfOperation?: string;
+meta?: Record<string, any>;
 center?: {
 type: "Point";
 coordinates: any[];
@@ -3452,22 +4399,27 @@ get: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -3477,7 +4429,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3486,7 +4438,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3502,6 +4454,8 @@ category?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3509,6 +4463,35 @@ tags?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3524,55 +4507,78 @@ get: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3582,21 +4588,28 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+};
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -3606,25 +4619,22 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-center?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-english_name?: (0 | 1 );
-area?: (0 | 1 );
-center_location?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3634,21 +4644,20 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -3658,7 +4667,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3670,12 +4679,18 @@ area?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3687,18 +4702,17 @@ center?: (0 | 1 );
 area?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -3708,16 +4722,22 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3726,20 +4746,21 @@ category?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -3749,21 +4770,109 @@ tags?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+uploader?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+uploader?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+user?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+place?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3789,55 +4898,78 @@ get: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3847,21 +4979,28 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+};
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -3871,25 +5010,22 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-center?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-english_name?: (0 | 1 );
-area?: (0 | 1 );
-center_location?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3899,21 +5035,20 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -3923,7 +5058,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3935,12 +5070,18 @@ area?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3952,18 +5093,17 @@ center?: (0 | 1 );
 area?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -3973,16 +5113,22 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center_location?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-locations?: {
+places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3991,20 +5137,21 @@ category?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -4014,21 +5161,109 @@ tags?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+uploader?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+uploader?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+user?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+place?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -4069,6 +5304,514 @@ filtered?: (0 | 1 );
           }
 
         
+        comment: {
+
+      
+            add: {
+set: {
+text: string;
+rating?: number;
+status: ("pending" | "approved" | "rejected" );
+is_anonymous: boolean;
+createdAt: Date;
+updatedAt: Date;
+place: string;
+};
+get: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+user?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+place?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+};
+
+          
+            update: {
+set: {
+_id: string;
+text?: string;
+rating?: number;
+status?: ("pending" | "approved" | "rejected" );
+is_anonymous?: boolean;
+};
+get: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+user?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+place?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+};
+
+          
+            get: {
+set: {
+_id: string;
+};
+get: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+user?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+avatar?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+national_card?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+registered_places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+place?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city_zone?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+category?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+tags?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+};
+};
+
+          
+            gets: {
+set: {
+page: number;
+limit: number;
+text?: string;
+status?: string;
+rating?: number;
+is_anonymous?: boolean;
+place?: string;
+user?: string;
+};
+get: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+user?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+avatar?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+national_card?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+registered_places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+place?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city_zone?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+category?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+tags?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+size?: (0 | 1 );
+alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+};
+};
+
+          
+            remove: {
+set: {
+_id: string;
+hardCascade?: boolean;
+};
+get: {
+success?: (0 | 1 );
+};
+};
+
+          
+            count: {
+set: {
+text?: string;
+status?: string;
+rating?: number;
+is_anonymous?: boolean;
+place?: string;
+user?: string;
+};
+get: {
+total?: (0 | 1 );
+filtered?: (0 | 1 );
+};
+};
+
+          
+          }
+
+        
         tag: {
 
       
@@ -4076,6 +5819,8 @@ filtered?: (0 | 1 );
 set: {
 name: string;
 description: string;
+color?: string;
+icon?: string;
 createdAt: Date;
 updatedAt: Date;
 };
@@ -4083,20 +5828,21 @@ get: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -4115,20 +5861,21 @@ get: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -4145,53 +5892,72 @@ get: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -4210,53 +5976,72 @@ get: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -4296,6 +6081,8 @@ qty?: (0 | 1 );
 set: {
 name: string;
 description: string;
+color?: string;
+icon?: string;
 createdAt: Date;
 updatedAt: Date;
 };
@@ -4303,20 +6090,21 @@ get: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -4335,20 +6123,21 @@ get: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
@@ -4365,53 +6154,72 @@ get: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -4430,53 +6238,72 @@ get: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
-registrer?: {
+registrar?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
 father_name?: (0 | 1 );
-mobile?: (0 | 1 );
 gender?: (0 | 1 );
 birth_date?: (0 | 1 );
 summary?: (0 | 1 );
-national_number?: (0 | 1 );
 address?: (0 | 1 );
 level?: (0 | 1 );
+email?: (0 | 1 );
 is_verified?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 avatar?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 national_card?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
-type?: (0 | 1 );
+mimType?: (0 | 1 );
 size?: (0 | 1 );
+alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
-registered_locations?: {
+registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
+slug?: (0 | 1 );
 center?: (0 | 1 );
 area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };

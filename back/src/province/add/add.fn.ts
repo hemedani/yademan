@@ -10,7 +10,7 @@ export const addFn: ActFn = async (body) => {
 	return await province.insertOne({
 		doc: set,
 		relations: {
-			registrer: {
+			registrar: {
 				_ids: user._id,
 			},
 		},

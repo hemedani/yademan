@@ -4,15 +4,6 @@ import { lesanApi } from "@/types/declarations/selectInp";
 const envLesanUrl = process.env.LESAN_URL as string;
 const publicLesanUrl = process.env.NEXT_PUBLIC_LESAN_URL as string;
 
-// Debug logging for environment variables (only in development)
-if (process.env.NODE_ENV !== "production") {
-  console.log("API Environment Variables:", {
-    envLesanUrl,
-    publicLesanUrl,
-    NODE_ENV: process.env.NODE_ENV,
-  });
-}
-
 // Function to get the appropriate URL based on environment
 const getLesanUrl = (): string => {
   // Check if we're on the server side
@@ -31,11 +22,6 @@ const getLesanUrl = (): string => {
       // Default to localhost for development
       url = "http://localhost:1405/lesan";
     }
-  }
-
-  // Debug logging (only in development)
-  if (process.env.NODE_ENV !== "production") {
-    console.log(`getLesanUrl (${isServerSide ? "server" : "client"}):`, url);
   }
 
   return url;
@@ -62,18 +48,9 @@ export const getLesanBaseUrl = (): string => {
       }
     }
 
-    // Debug logging (only in development)
-    if (process.env.NODE_ENV !== "production") {
-      console.log(
-        `getLesanBaseUrl (${isServerSide ? "server" : "client"}):`,
-        baseUrl,
-      );
-    }
-
     return baseUrl;
   } catch (error) {
-    console.error("Error in getLesanBaseUrl:", error);
-    // Fallback to localhost
+    // Fallback to localhost on error
     return "http://localhost:1405";
   }
 };
@@ -85,11 +62,6 @@ export const AppApi = (lesanUrl?: string) => {
   try {
     const url = lesanUrl ? lesanUrl : getLesanUrl();
 
-    // Debug logging (only in development)
-    if (process.env.NODE_ENV !== "production") {
-      console.log("AppApi URL:", url);
-    }
-
     return lesanApi({
       URL: url,
       baseHeaders: {
@@ -97,8 +69,7 @@ export const AppApi = (lesanUrl?: string) => {
       },
     });
   } catch (error) {
-    console.error("Error creating AppApi:", error);
-    // Fallback to default URL
+    // Fallback to default URL on error
     return lesanApi({
       URL: "http://localhost:1405/lesan",
       baseHeaders: {

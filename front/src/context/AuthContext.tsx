@@ -9,15 +9,34 @@ import {
 } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { getMe } from "@/app/actions/user/getMe";
+import { AppApi } from "@/services/api";
 
 type UserLevel = "Ghost" | "Manager" | "Editor" | "Normal" | null;
+
+interface UserData {
+  _id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  level: string;
+  gender: string;
+  is_verified: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
 
 interface AuthContextType {
   isAuthenticated: boolean;
   userLevel: UserLevel;
+  user: UserData | null;
+  loading: boolean;
   login: (token: string, level: UserLevel, nationalNumber: string) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
   setInitialAuthState: (isAuth: boolean, level: UserLevel) => void;
+  refreshUserData: () => Promise<void>;
+  displayName: string;
+  initials: string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -33,44 +52,83 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [userLevel, setUserLevel] = useState<UserLevel>(null);
+  const [user, setUser] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [hydrated, setHydrated] = useState<boolean>(false);
   const router = useRouter();
 
+  // Hydration effect
   useEffect(() => {
-    // Check authentication status on initial load
-    const token = Cookies.get("token");
-    const userCookie = Cookies.get("user");
+    setHydrated(true);
+  }, []);
 
-    if (token && userCookie) {
-      try {
-        // Handle different formats of the user cookie
-        let level: UserLevel = null;
+  // Check authentication status on client-side only
+  useEffect(() => {
+    if (!hydrated) return;
 
-        // First try to parse as JSON
-        try {
-          const userData = JSON.parse(userCookie);
-          level = userData.level || null;
-        } catch (parseError) {
-          // If it's not valid JSON, the server might have set it in a different format
-          // Just use the default level
-          console.warn("Could not parse user cookie as JSON, using default level " + parseError);
-        }
+    const checkAuth = async () => {
+      const token = Cookies.get("token");
+      const userCookie = Cookies.get("user");
+      const nationalNumber = Cookies.get("national_number");
 
-        setIsAuthenticated(true);
-        setUserLevel(level);
-      } catch (error) {
-        console.error("Error processing user cookie:", error);
+      if (!token) {
         setIsAuthenticated(false);
         setUserLevel(null);
+        setUser(null);
+        setLoading(false);
+        return;
       }
-    } else {
-      setIsAuthenticated(false);
-      setUserLevel(null);
-    }
-  }, [isAuthenticated]);
 
-  const setInitialAuthState = (isAuth: boolean, level: UserLevel) => {
-    setIsAuthenticated(isAuth);
-    setUserLevel(level);
+      try {
+        const response = await getMe();
+
+        if (response.success && response.user) {
+          setUser(response.user);
+          setIsAuthenticated(true);
+          setUserLevel(response.user.level as UserLevel);
+        } else {
+          // Try fallback from cookies
+          try {
+            const userCookieData = userCookie ? JSON.parse(userCookie) : null;
+            if (userCookieData && userCookieData.level) {
+              const fallbackUser: UserData = {
+                _id: "temp_user",
+                first_name: "User",
+                last_name: "",
+                email: nationalNumber || "user@example.com",
+                level: userCookieData.level,
+                gender: "unknown",
+                is_verified: false,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+              };
+              setUser(fallbackUser);
+              setIsAuthenticated(true);
+              setUserLevel(userCookieData.level as UserLevel);
+            } else {
+              throw new Error("No valid fallback data");
+            }
+          } catch (cookieError) {
+            clearAuth();
+          }
+        }
+      } catch (error) {
+        clearAuth();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [hydrated]);
+
+  const clearAuth = () => {
+    setIsAuthenticated(false);
+    setUserLevel(null);
+    setUser(null);
+    Cookies.remove("token", { path: "/" });
+    Cookies.remove("national_number", { path: "/" });
+    Cookies.remove("user", { path: "/" });
   };
 
   const login = (token: string, level: UserLevel, nationalNumber: string) => {
@@ -79,26 +137,133 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     Cookies.set("national_number", nationalNumber, { path: "/" });
     Cookies.set("user", JSON.stringify({ level }), { path: "/" });
 
-    // Update state
+    // Update state immediately with temp user
     setIsAuthenticated(true);
     setUserLevel(level);
+
+    const tempUser: UserData = {
+      _id: "temp_user",
+      first_name: "User",
+      last_name: "",
+      email: nationalNumber,
+      level: level || "Normal",
+      gender: "unknown",
+      is_verified: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    setUser(tempUser);
+
+    // Refresh with real data
+    setTimeout(async () => {
+      try {
+        const response = await getMe();
+        if (response.success && response.user) {
+          setUser(response.user);
+          setUserLevel(response.user.level as UserLevel);
+        }
+      } catch (error) {
+        // Silently handle refresh errors
+      }
+    }, 100);
   };
 
-  const logout = () => {
-    // Remove cookies
-    Cookies.remove("token", { path: "/" });
-    Cookies.remove("national_number", { path: "/" });
-    Cookies.remove("user", { path: "/" });
+  const logout = async () => {
+    setLoading(true);
 
-    setInitialAuthState(false, null)
+    try {
+      const token = Cookies.get("token");
+      if (token) {
+        try {
+          await AppApi().send(
+            {
+              service: "main",
+              model: "user",
+              act: "logout",
+              details: { set: {}, get: {} },
+            },
+            { token },
+          );
+        } catch (error) {
+          // Silently handle backend logout errors
+        }
+      }
+    } catch (error) {
+      // Silently handle general logout errors
+    }
 
-    // Redirect to home page
+    clearAuth();
+    setLoading(false);
     router.replace("/");
   };
 
+  const refreshUserData = async () => {
+    if (!hydrated || !isAuthenticated) return;
+
+    try {
+      const response = await getMe();
+      if (response.success && response.user) {
+        setUser(response.user);
+        setUserLevel(response.user.level as UserLevel);
+      }
+    } catch (error) {
+      // Silently handle refresh errors
+    }
+  };
+
+  const setInitialAuthState = (isAuth: boolean, level: UserLevel) => {
+    setIsAuthenticated(isAuth);
+    setUserLevel(level);
+  };
+
+  // Helper to get display name
+  const displayName = user
+    ? `${user.first_name} ${user.last_name}`.trim() || user.email
+    : "";
+
+  // Helper to get initials
+  const initials = user
+    ? `${user.first_name?.[0] || ""}${user.last_name?.[0] || ""}`.toUpperCase() ||
+      user.email?.[0]?.toUpperCase() ||
+      "U"
+    : "";
+
+  // Don't render until hydrated to avoid hydration mismatch
+  if (!hydrated) {
+    return (
+      <AuthContext.Provider
+        value={{
+          isAuthenticated: false,
+          userLevel: null,
+          user: null,
+          loading: true,
+          login: () => {},
+          logout: async () => {},
+          setInitialAuthState: () => {},
+          refreshUserData: async () => {},
+          displayName: "",
+          initials: "",
+        }}
+      >
+        {children}
+      </AuthContext.Provider>
+    );
+  }
+
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, userLevel, login, logout, setInitialAuthState }}
+      value={{
+        isAuthenticated,
+        userLevel,
+        user,
+        loading,
+        login,
+        logout,
+        setInitialAuthState,
+        refreshUserData,
+        displayName,
+        initials,
+      }}
     >
       {children}
     </AuthContext.Provider>
