@@ -12,7 +12,7 @@ export const city_zone_pure = {
 };
 
 export const city_zone_relations = {
-	registrer: {
+	registrar: {
 		schemaName: "user",
 		type: "single" as RelationDataType,
 		optional: true,

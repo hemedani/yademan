@@ -32,6 +32,11 @@ export const is_valid_national_number_struct = refine(
 	},
 );
 
+export const emailPattern = pattern(
+	string(),
+	/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+);
+
 // export const is_valid_national_number_struct = define<string>(
 // 	"NationalNumber",
 // 	(value) => {
@@ -48,17 +53,20 @@ export const user_genders = enums(["Male", "Female"]);
 export const user_pure = {
 	first_name: string(),
 	last_name: string(),
-	father_name: string(),
-	mobile: mobile_pattern,
+	father_name: optional(string()), // Made optional
+	// mobile: mobile_pattern,
 	gender: user_genders,
 	birth_date: optional(coerce(date(), string(), (value) => new Date(value))),
 	summary: optional(string()),
 
 	// شماره ملی
-	national_number: is_valid_national_number_struct,
-	address: string(),
+	// national_number: is_valid_national_number_struct,
+	address: optional(string()),
 
-	level: user_level_emums,
+	level: defaulted(user_level_emums, "Ordinary"),
+
+	email: emailPattern,
+	password: string(),
 	is_verified: defaulted(boolean(), false),
 	...createUpdateAt,
 };
@@ -81,7 +89,8 @@ export const user_relations = {
 export const users = () =>
 	coreApp.odm.newModel("user", user_pure, user_relations, {
 		createIndex: {
-			indexSpec: { "national_number": 1 },
+			indexSpec: { "email": 1 },
 			options: { unique: true },
 		},
+		excludes: ["password"],
 	});

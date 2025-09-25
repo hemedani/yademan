@@ -5,7 +5,8 @@ import { provinceSetup } from "./province/mod.ts";
 import { cityZoneSetup } from "./city_zone/mod.ts";
 import { tagSetup } from "./tag/mod.ts";
 import { categorySetup } from "./category/mod.ts";
-import { locationSetup } from "./location/mod.ts";
+import { placeSetup } from "./place/mod.ts";
+import { commentSetup } from "./comment/mod.ts";
 
 export const functionsSetup = () => {
 	citySetup();
@@ -13,7 +14,8 @@ export const functionsSetup = () => {
 	fileSetup();
 	provinceSetup();
 	userSetup();
-	locationSetup();
+	placeSetup();
+	commentSetup();
 	tagSetup();
 	categorySetup();
 };

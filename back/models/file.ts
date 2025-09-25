@@ -1,5 +1,6 @@
 import {
 	number,
+	optional,
 	type RelationDataType,
 	type RelationSortOrderType,
 	string,
@@ -9,8 +10,9 @@ import { createUpdateAt } from "@lib";
 
 export const pure_file = {
 	name: string(),
-	type: string(),
+	mimType: string(),
 	size: number(),
+	alt_text: optional(string()),
 	...createUpdateAt,
 };
 

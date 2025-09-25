@@ -3,7 +3,7 @@ import {
 	category,
 	city,
 	city_zone,
-	location,
+	place,
 	province,
 	tag,
 	user,
@@ -13,7 +13,7 @@ export const dashboardStatisticFn: ActFn = async () => {
 	const categories = await category.countDocument({});
 	const cities = await city.countDocument({});
 	const city_zones = await city_zone.countDocument({});
-	const locations = await location.countDocument({}); // Added await
+	const places = await place.countDocument({}); // Added await
 	const provinces = await province.countDocument({});
 	const tags = await tag.countDocument({});
 	const users = await user.countDocument({});
@@ -22,7 +22,7 @@ export const dashboardStatisticFn: ActFn = async () => {
 		categories,
 		cities,
 		city_zones,
-		locations,
+		places,
 		provinces,
 		tags,
 		users,

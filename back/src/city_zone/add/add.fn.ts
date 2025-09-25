@@ -19,7 +19,7 @@ export const addFn: ActFn = async (body) => {
 				},
 			},
 
-			registrer: {
+			registrar: {
 				_ids: user._id,
 			},
 		},

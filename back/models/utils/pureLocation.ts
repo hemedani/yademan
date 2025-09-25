@@ -7,7 +7,7 @@ export const pure_location = {
 	english_name: string(),
 
 	area: geoJSONStruct("MultiPolygon"),
-	center_location: geoJSONStruct("Point"),
+	center: geoJSONStruct("Point"),
 
 	...createUpdateAt,
 };
