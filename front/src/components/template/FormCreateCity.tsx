@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import L from "leaflet";
+import { useMapEvents } from "react-leaflet";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
@@ -15,7 +16,6 @@ import { SelectOption } from "../atoms/MyAsyncMultiSelect";
 import SelectBox from "../atoms/Select";
 import React, { useState, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
-import MapClickHandler from "@/components/MapClickHandler";
 
 // Dynamically import map components
 const MapContainer = dynamic(
@@ -39,10 +39,23 @@ const SimpleDrawing = dynamic(() => import("@/components/SimpleDrawing"), {
 });
 const AsyncSelect = dynamic(() => import("react-select/async"), { ssr: false });
 
+// MapClickHandler component for handling map clicks
+const MapClickHandler = ({
+  onClick,
+}: {
+  onClick: (latlng: L.LatLng) => void;
+}) => {
+  const map = useMapEvents({
+    click(e) {
+      onClick(e.latlng);
+    },
+  });
+  return null;
+};
+
 export const CityCreateSchema = z.object({
   name: z.string().min(1, "نام شهر الزامی است"),
   english_name: z.string().min(1, "نام انگلیسی شهر الزامی است"),
-  population: z.coerce.number().min(0, "جمعیت نمی‌تواند منفی باشد"),
   provinceId: z.string().min(1, "انتخاب استان الزامی است"),
   isCenter: z.boolean(),
   area: z.object(
@@ -59,7 +72,7 @@ export const CityCreateSchema = z.object({
     },
     { required_error: "ترسیم منطقه بر روی نقشه الزامی است" },
   ),
-  center_location: z.object(
+  center: z.object(
     {
       type: z.literal("Point"),
       coordinates: z
@@ -113,7 +126,7 @@ export const FormCreateCity = ({
       provinceId: "",
       isCenter: false,
       area: { type: "MultiPolygon", coordinates: [] },
-      center_location: { type: "Point", coordinates: [] },
+      center: { type: "Point", coordinates: [] },
     },
   });
 
@@ -158,7 +171,15 @@ export const FormCreateCity = ({
             {
               _id: 1,
               name: 1,
-              center_location: 1,
+              center: {
+                _id: 1,
+                name: 1,
+                english_name: 1,
+                area: 1,
+                center: 1,
+                createdAt: 1,
+                updatedAt: 1,
+              },
             },
           );
 
@@ -190,9 +211,29 @@ export const FormCreateCity = ({
 
   // Handle polygon creation
   const handlePolygonCreated = useCallback(
-    (polygon: LatLng[]) => {
-      setDrawnPolygon(polygon);
-      const coordinates = polygon.map((point) => [point.lng, point.lat]);
+    (polygons: L.LatLng[][]) => {
+      if (polygons.length === 0) {
+        setDrawnPolygon(null);
+        setValue(
+          "area",
+          { type: "MultiPolygon", coordinates: [] },
+          { shouldValidate: true },
+        );
+        setIsDrawingMode(false);
+        trigger();
+        return;
+      }
+
+      const polygon = polygons[0];
+      const simplifiedPolygon = polygon.map((point) => ({
+        lat: point.lat,
+        lng: point.lng,
+      }));
+      setDrawnPolygon(simplifiedPolygon);
+      const coordinates = simplifiedPolygon.map((point) => [
+        point.lng,
+        point.lat,
+      ]);
       coordinates.push(coordinates[0]);
 
       const multiPolygon = {
@@ -220,12 +261,12 @@ export const FormCreateCity = ({
 
   // Handle map click for center point
   const handleMapClick = useCallback(
-    (e: L.LeafletMouseEvent) => {
+    (latlng: L.LatLng) => {
       if (isCenterMode) {
-        const { lat, lng } = e.latlng;
+        const { lat, lng } = latlng;
         setCenterPoint({ lat, lng });
         setValue(
-          "center_location",
+          "center",
           { type: "Point", coordinates: [lng, lat] },
           { shouldValidate: true },
         );
@@ -278,7 +319,7 @@ export const FormCreateCity = ({
   const clearCenterPoint = () => {
     setCenterPoint(null);
     setValue(
-      "center_location",
+      "center",
       { type: "Point", coordinates: [] },
       { shouldValidate: true },
     );
@@ -290,12 +331,11 @@ export const FormCreateCity = ({
     const createdCity = await add({
       name: data.name,
       english_name: data.english_name,
-      population: data.population,
       area: data.area as {
         type: "MultiPolygon";
         coordinates: number[][][][];
       },
-      center_location: data.center_location as {
+      center: data.center as {
         type: "Point";
         coordinates: number[];
       },
@@ -363,15 +403,6 @@ export const FormCreateCity = ({
               register={register}
               name="english_name"
               errMsg={errors.english_name?.message}
-            />
-
-            {/* Population Input */}
-            <MyInput
-              label="جمعیت"
-              register={register}
-              name="population"
-              type="number"
-              errMsg={errors.population?.message}
             />
           </div>
 
@@ -600,10 +631,6 @@ export const FormCreateCity = ({
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
-              <MapClickHandler
-                isActive={isCenterMode}
-                onMapClick={handleMapClick}
-              />
               {drawnPolygon && (
                 <Polygon
                   positions={drawnPolygon}
@@ -622,8 +649,8 @@ export const FormCreateCity = ({
               <SimpleDrawing
                 isActive={isDrawingMode}
                 onPolygonCreated={handlePolygonCreated}
-                onPolygonDeleted={handlePolygonDeleted}
               />
+              {isCenterMode && <MapClickHandler onClick={handleMapClick} />}
             </MapContainer>
           </div>
 
@@ -633,9 +660,9 @@ export const FormCreateCity = ({
             </p>
           )}
 
-          {errors.center_location && (
+          {errors.center && (
             <p className="text-red-500 text-sm mt-2 text-right">
-              {errors.center_location.message}
+              {errors.center.message}
             </p>
           )}
 

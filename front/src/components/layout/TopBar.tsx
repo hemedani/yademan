@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/context/AuthContext";
-import { Link } from "../../../i18n/routing";
+import Link from "next/link";
 import MagnifyingGlassIcon from "@heroicons/react/24/outline/MagnifyingGlassIcon";
 import AdjustmentsHorizontalIcon from "@heroicons/react/24/outline/AdjustmentsHorizontalIcon";
 import UserDropdown from "@/components/user/UserDropdown";
@@ -41,7 +41,7 @@ export default function TopBar({
         <div className="flex-1 max-w-md">
           {isAdmin ? (
             <Link
-              href="/admin/dashboard"
+              href="/admin"
               aria-label={t("Navigation.adminPanelAriaLabel")}
               className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-all duration-200 touch-manipulation min-h-[48px] min-w-[120px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-white focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 hover:shadow-md active:scale-95"
             >
@@ -83,7 +83,6 @@ export default function TopBar({
                 placeholder={t("HomePage.searchPlaceholder")}
                 aria-label={t("Navigation.searchAriaLabel")}
                 role="searchbox"
-                aria-expanded="false"
                 aria-autocomplete="list"
               />
             </div>

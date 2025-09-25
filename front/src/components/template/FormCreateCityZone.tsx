@@ -1,6 +1,8 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import L from "leaflet";
+import { useMapEvents } from "react-leaflet";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
@@ -27,14 +29,31 @@ const Polygon = dynamic(
   () => import("react-leaflet").then((mod) => mod.Polygon),
   { ssr: false },
 );
+const Marker = dynamic(
+  () => import("react-leaflet").then((mod) => mod.Marker),
+  { ssr: false },
+);
 const SimpleDrawing = dynamic(() => import("@/components/SimpleDrawing"), {
   ssr: false,
 });
 const AsyncSelect = dynamic(() => import("react-select/async"), { ssr: false });
 
+// MapClickHandler component for handling map clicks
+const MapClickHandler = ({
+  onClick,
+}: {
+  onClick: (latlng: L.LatLng) => void;
+}) => {
+  const map = useMapEvents({
+    click(e) {
+      onClick(e.latlng);
+    },
+  });
+  return null;
+};
+
 export const CityZoneCreateSchema = z.object({
   name: z.string().min(1, "نام منطقه الزامی است"),
-  population: z.coerce.number().min(0, "جمعیت نمی‌تواند منفی باشد"),
   cityId: z.string().min(1, "انتخاب شهر الزامی است"),
   area: z.object(
     {
@@ -49,6 +68,15 @@ export const CityZoneCreateSchema = z.object({
         }, "باید حداقل یک منطقه با حداقل 3 نقطه ترسیم شود"),
     },
     { required_error: "ترسیم منطقه بر روی نقشه الزامی است" },
+  ),
+  center: z.object(
+    {
+      type: z.literal("Point"),
+      coordinates: z
+        .array(z.number())
+        .length(2, "مختصات مرکز منطقه باید شامل طول و عرض جغرافیایی باشد"),
+    },
+    { required_error: "انتخاب مرکز منطقه بر روی نقشه الزامی است" },
   ),
 });
 
@@ -68,12 +96,13 @@ export const FormCreateCityZone = ({
 }) => {
   const router = useRouter();
   const [drawnPolygon, setDrawnPolygon] = useState<LatLng[] | null>(null);
+  const [centerPoint, setCenterPoint] = useState<LatLng | null>(null);
   const [isDrawingMode, setIsDrawingMode] = useState(false);
+  const [isCenterMode, setIsCenterMode] = useState(false);
   const [mapCenter, setMapCenter] = useState<[number, number]>([
     32.4279, 53.688,
   ]);
   const [mapZoom, setMapZoom] = useState(6);
-  const [selectedCity, setSelectedCity] = useState<SelectOption | null>(null);
   const [mapKey, setMapKey] = useState(0);
 
   const {
@@ -89,6 +118,7 @@ export const FormCreateCityZone = ({
       name: "",
       cityId: "",
       area: { type: "MultiPolygon", coordinates: [] },
+      center: { type: "Point", coordinates: [] },
     },
   });
 
@@ -96,13 +126,11 @@ export const FormCreateCityZone = ({
   const loadCitiesOptions = async (
     inputValue?: string,
   ): Promise<SelectOption[]> => {
-    const setParams: { limit: number; page: number; name?: string } = {
-      limit: 20,
-      page: 1,
-    };
-    if (inputValue) {
-      setParams.name = inputValue;
+    const setParams: any = {};
+    if (inputValue && inputValue.trim() !== "") {
+      setParams.name = { $regex: inputValue.trim(), $options: "i" };
     }
+
     try {
       const response = await getCitiesAction({
         set: setParams,
@@ -114,16 +142,16 @@ export const FormCreateCityZone = ({
           label: item.name,
         }));
       }
+      return [];
     } catch (error) {
       console.error("Error loading cities:", error);
+      return [];
     }
-    return [];
   };
 
   // Handle city selection
   const handleCitySelect = useCallback(
     async (selectedOption: SelectOption | null) => {
-      setSelectedCity(selectedOption);
       if (selectedOption) {
         setValue("cityId", selectedOption.value, { shouldValidate: true });
 
@@ -131,15 +159,11 @@ export const FormCreateCityZone = ({
           const cityDetails = await getCityAction(selectedOption.value, {
             _id: 1,
             name: 1,
-            center_location: 1,
+            center: 1,
           });
 
-          if (
-            cityDetails &&
-            cityDetails.success &&
-            cityDetails.body.center_location
-          ) {
-            const coordinates = cityDetails.body.center_location.coordinates;
+          if (cityDetails && cityDetails.success && cityDetails.body.center) {
+            const coordinates = cityDetails.body.center.coordinates;
             if (coordinates && coordinates.length >= 2) {
               setMapCenter([coordinates[1], coordinates[0]]);
               setMapZoom(12);
@@ -147,7 +171,7 @@ export const FormCreateCityZone = ({
             }
           }
         } catch (error) {
-          console.error("Error getting city details:", error);
+          console.error("Error fetching city details:", error);
         }
       } else {
         setValue("cityId", "", { shouldValidate: true });
@@ -161,9 +185,29 @@ export const FormCreateCityZone = ({
 
   // Handle polygon creation
   const handlePolygonCreated = useCallback(
-    (polygon: LatLng[]) => {
-      setDrawnPolygon(polygon);
-      const coordinates = polygon.map((point) => [point.lng, point.lat]);
+    (polygons: L.LatLng[][]) => {
+      if (polygons.length === 0) {
+        setDrawnPolygon(null);
+        setValue(
+          "area",
+          { type: "MultiPolygon", coordinates: [] },
+          { shouldValidate: true },
+        );
+        setIsDrawingMode(false);
+        trigger();
+        return;
+      }
+
+      const polygon = polygons[0];
+      const simplifiedPolygon = polygon.map((point) => ({
+        lat: point.lat,
+        lng: point.lng,
+      }));
+      setDrawnPolygon(simplifiedPolygon);
+      const coordinates = simplifiedPolygon.map((point) => [
+        point.lng,
+        point.lat,
+      ]);
       coordinates.push(coordinates[0]);
 
       const multiPolygon = {
@@ -189,11 +233,28 @@ export const FormCreateCityZone = ({
     trigger();
   }, [setValue, trigger]);
 
+  // Handle map click for center point
+  const handleMapClick = useCallback(
+    (latlng: L.LatLng) => {
+      if (isCenterMode) {
+        const { lat, lng } = latlng;
+        setCenterPoint({ lat, lng });
+        setValue(
+          "center",
+          { type: "Point", coordinates: [lng, lat] },
+          { shouldValidate: true },
+        );
+        setIsCenterMode(false);
+        trigger();
+      }
+    },
+    [isCenterMode, setValue, trigger],
+  );
+
   // Toggle drawing mode
   const toggleDrawingMode = () => {
     if (isDrawingMode) {
       setIsDrawingMode(false);
-      // Clear any drawn polygon when cancelling drawing mode
       setDrawnPolygon(null);
       setValue(
         "area",
@@ -203,6 +264,17 @@ export const FormCreateCityZone = ({
       trigger();
     } else {
       setIsDrawingMode(true);
+      setIsCenterMode(false);
+    }
+  };
+
+  // Toggle center mode
+  const toggleCenterMode = () => {
+    if (isCenterMode) {
+      setIsCenterMode(false);
+    } else {
+      setIsCenterMode(true);
+      setIsDrawingMode(false);
     }
   };
 
@@ -217,13 +289,27 @@ export const FormCreateCityZone = ({
     trigger();
   };
 
+  // Clear center point
+  const clearCenterPoint = () => {
+    setCenterPoint(null);
+    setValue(
+      "center",
+      { type: "Point", coordinates: [] },
+      { shouldValidate: true },
+    );
+    trigger();
+  };
+
   // Form submission
   const onSubmit: SubmitHandler<CityZoneFormCreateSchemaType> = async (
     data,
   ) => {
     const createdCityZone = await add({
       name: data.name,
-      population: data.population,
+      center: data.center as {
+        type: "Point";
+        coordinates: number[];
+      },
       area: data.area as {
         type: "MultiPolygon";
         coordinates: number[][][][];
@@ -233,7 +319,7 @@ export const FormCreateCityZone = ({
 
     if (createdCityZone.success) {
       ToastNotify("success", "منطقه شهری با موفقیت ایجاد شد");
-      router.replace("/admin/city-zone");
+      router.replace("/admin/city_zone");
     } else {
       ToastNotify(
         "error",
@@ -242,26 +328,18 @@ export const FormCreateCityZone = ({
     }
   };
 
-  // Setup Leaflet
+  // Setup leaflet CSS
   useEffect(() => {
-    if (typeof window === "undefined") return;
-
     const leafletCSS = document.createElement("link");
     leafletCSS.rel = "stylesheet";
     leafletCSS.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
-    document.head.appendChild(leafletCSS);
+    leafletCSS.integrity =
+      "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=";
+    leafletCSS.crossOrigin = "";
 
-    import("leaflet").then((L) => {
-      delete (L.Icon.Default.prototype as any)._getIconUrl;
-      L.Icon.Default.mergeOptions({
-        iconRetinaUrl:
-          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png",
-        iconUrl:
-          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png",
-        shadowUrl:
-          "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
-      });
-    });
+    if (!document.head.contains(leafletCSS)) {
+      document.head.appendChild(leafletCSS);
+    }
 
     return () => {
       if (document.head.contains(leafletCSS)) {
@@ -273,12 +351,11 @@ export const FormCreateCityZone = ({
   return (
     <div className="p-8">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* Form Fields */}
-        <div className="bg-gray-100 p-6 border rounded-lg space-y-4">
+        {/* Basic Information */}
+        <div className="bg-white p-6 border rounded-lg shadow-sm">
           <h2 className="text-lg font-semibold text-gray-700 mb-4">
-            اطلاعات منطقه شهری
+            اطلاعات پایه منطقه شهری
           </h2>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Name Input */}
             <MyInput
@@ -287,26 +364,16 @@ export const FormCreateCityZone = ({
               name="name"
               errMsg={errors.name?.message}
             />
-
-            {/* Population Input */}
-            <MyInput
-              label="جمعیت"
-              register={register}
-              name="population"
-              type="number"
-              errMsg={errors.population?.message}
-            />
           </div>
 
           {/* City Selection */}
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-slate-700 text-right">
-              انتخاب شهر
+          <div className="mt-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              شهر *
             </label>
             <AsyncSelect
               cacheOptions
               defaultOptions
-              value={selectedCity}
               loadOptions={loadCitiesOptions}
               onChange={(newValue) =>
                 handleCitySelect(newValue as SelectOption | null)
@@ -314,26 +381,14 @@ export const FormCreateCityZone = ({
               placeholder="شهر را انتخاب کنید"
               noOptionsMessage={() => "شهری یافت نشد"}
               loadingMessage={() => "در حال بارگذاری..."}
-              isRtl={true}
               isClearable
               styles={{
-                control: (provided: any, state: any) => ({
+                control: (provided: any) => ({
                   ...provided,
-                  minHeight: "48px",
-                  backgroundColor: errors.cityId ? "#fef2f2" : "white",
-                  borderColor: errors.cityId
-                    ? state.isFocused
-                      ? "#ef4444"
-                      : "#fca5a5"
-                    : state.isFocused
-                      ? "#3b82f6"
-                      : "#cbd5e1",
-                  borderRadius: "12px",
-                  direction: "rtl",
-                }),
-                valueContainer: (provided: any) => ({
-                  ...provided,
-                  padding: "2px 16px",
+                  minHeight: "44px",
+                  border: "1px solid #d1d5db",
+                  borderRadius: "0.5rem",
+                  fontSize: "14px",
                   direction: "rtl",
                 }),
                 placeholder: (provided: any) => ({
@@ -373,9 +428,67 @@ export const FormCreateCityZone = ({
         <div className="bg-gray-100 p-6 border rounded-lg">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-gray-700">
-              ترسیم منطقه بر روی نقشه
+              ترسیم منطقه و انتخاب مرکز بر روی نقشه
             </h2>
             <div className="flex gap-2">
+              {centerPoint && (
+                <button
+                  type="button"
+                  onClick={clearCenterPoint}
+                  className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
+                >
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                  حذف مرکز
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={toggleCenterMode}
+                className={`${
+                  isCenterMode
+                    ? "bg-red-600 hover:bg-red-700"
+                    : "bg-green-600 hover:bg-green-700"
+                } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2`}
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+                {isCenterMode ? "لغو انتخاب مرکز" : "انتخاب مرکز"}
+              </button>
               {drawnPolygon && (
                 <button
                   type="button"
@@ -434,6 +547,14 @@ export const FormCreateCityZone = ({
             </div>
           )}
 
+          {isCenterMode && (
+            <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-sm text-green-800 font-medium">
+                📍 روی نقشه کلیک کنید تا مرکز منطقه را انتخاب کنید
+              </p>
+            </div>
+          )}
+
           <div className="h-96 rounded-lg overflow-hidden border border-gray-300">
             <MapContainer
               key={mapKey}
@@ -458,11 +579,14 @@ export const FormCreateCityZone = ({
                   }}
                 />
               )}
+              {centerPoint && (
+                <Marker position={[centerPoint.lat, centerPoint.lng]} />
+              )}
               <SimpleDrawing
                 isActive={isDrawingMode}
                 onPolygonCreated={handlePolygonCreated}
-                onPolygonDeleted={handlePolygonDeleted}
               />
+              {isCenterMode && <MapClickHandler onClick={handleMapClick} />}
             </MapContainer>
           </div>
 
@@ -472,35 +596,78 @@ export const FormCreateCityZone = ({
             </p>
           )}
 
-          {drawnPolygon && (
-            <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-              <div className="flex items-center gap-2 mb-2">
-                <svg
-                  className="w-5 h-5 text-green-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-                <p className="text-sm text-green-800 font-semibold">
-                  منطقه شهری ترسیم شد
+          {errors.center && (
+            <p className="text-red-500 text-sm mt-2 text-right">
+              {errors.center.message}
+            </p>
+          )}
+
+          <div className="mt-4 space-y-3">
+            {drawnPolygon && (
+              <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg
+                    className="w-5 h-5 text-green-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <span className="text-green-800 font-medium">
+                    منطقه ترسیم شده
+                  </span>
+                </div>
+                <p className="text-sm text-green-700">
+                  • تعداد نقاط: {drawnPolygon.length}
                 </p>
-              </div>
-              <div className="text-xs text-green-700 space-y-1">
-                <p>• تعداد نقاط: {drawnPolygon.length}</p>
-                <p>• منطقه بر روی نقشه نمایش داده شده و آماده ثبت است</p>
-                <p>
+                <p className="text-sm text-green-700">
+                  • منطقه بر روی نقشه نمایش داده شده و آماده ثبت است
+                </p>
+                <p className="text-sm text-green-700">
                   • برای تغییر منطقه، دکمه &quot;حذف منطقه&quot; را فشار دهید
                 </p>
               </div>
-            </div>
-          )}
+            )}
+
+            {centerPoint && (
+              <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <svg
+                    className="w-5 h-5 text-orange-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                  <span className="text-orange-800 font-medium">
+                    مرکز منطقه انتخاب شده
+                  </span>
+                </div>
+                <p className="text-sm text-orange-700">
+                  📍 موقعیت: {centerPoint.lat.toFixed(6)},{" "}
+                  {centerPoint.lng.toFixed(6)}
+                </p>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Submit Button */}

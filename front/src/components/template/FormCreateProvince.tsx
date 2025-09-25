@@ -37,7 +37,6 @@ const SimpleDrawing = dynamic(() => import("@/components/SimpleDrawing"), {
 export const ProvinceCreateSchema = z.object({
   name: z.string().min(1, "نام استان الزامی است"),
   english_name: z.string().min(1, "نام انگلیسی استان الزامی است"),
-  population: z.coerce.number().min(0, "جمعیت نمی‌تواند منفی باشد"),
   area: z.object(
     {
       type: z.literal("MultiPolygon"),
@@ -52,7 +51,7 @@ export const ProvinceCreateSchema = z.object({
     },
     { required_error: "ترسیم منطقه بر روی نقشه الزامی است" },
   ),
-  center_location: z.object(
+  center: z.object(
     {
       type: z.literal("Point"),
       coordinates: z
@@ -101,15 +100,35 @@ export const FormCreateProvince = ({
       name: "",
       english_name: "",
       area: { type: "MultiPolygon", coordinates: [] },
-      center_location: { type: "Point", coordinates: [] },
+      center: { type: "Point", coordinates: [] },
     },
   });
 
   // Handle polygon creation
   const handlePolygonCreated = useCallback(
-    (polygon: LatLng[]) => {
-      setDrawnPolygon(polygon);
-      const coordinates = polygon.map((point) => [point.lng, point.lat]);
+    (polygons: L.LatLng[][]) => {
+      if (polygons.length === 0) {
+        setDrawnPolygon(null);
+        setValue(
+          "area",
+          { type: "MultiPolygon", coordinates: [] },
+          { shouldValidate: true },
+        );
+        setIsDrawingMode(false);
+        trigger();
+        return;
+      }
+
+      const polygon = polygons[0];
+      const simplifiedPolygon = polygon.map((point) => ({
+        lat: point.lat,
+        lng: point.lng,
+      }));
+      setDrawnPolygon(simplifiedPolygon);
+      const coordinates = simplifiedPolygon.map((point) => [
+        point.lng,
+        point.lat,
+      ]);
       coordinates.push(coordinates[0]);
 
       const multiPolygon = {
@@ -137,12 +156,12 @@ export const FormCreateProvince = ({
 
   // Handle map click for center point
   const handleMapClick = useCallback(
-    (e: L.LeafletMouseEvent) => {
+    (latlng: L.LatLng) => {
       if (isCenterMode) {
-        const { lat, lng } = e.latlng;
+        const { lat, lng } = latlng;
         setCenterPoint({ lat, lng });
         setValue(
-          "center_location",
+          "center",
           { type: "Point", coordinates: [lng, lat] },
           { shouldValidate: true },
         );
@@ -195,7 +214,7 @@ export const FormCreateProvince = ({
   const clearCenterPoint = () => {
     setCenterPoint(null);
     setValue(
-      "center_location",
+      "center",
       { type: "Point", coordinates: [] },
       { shouldValidate: true },
     );
@@ -209,12 +228,11 @@ export const FormCreateProvince = ({
     const createdProvince = await add({
       name: data.name,
       english_name: data.english_name,
-      population: data.population,
       area: data.area as {
         type: "MultiPolygon";
         coordinates: number[][][][];
       },
-      center_location: data.center_location as {
+      center: data.center as {
         type: "Point";
         coordinates: number[];
       },
@@ -283,15 +301,6 @@ export const FormCreateProvince = ({
               register={register}
               name="english_name"
               errMsg={errors.english_name?.message}
-            />
-
-            {/* Population Input */}
-            <MyInput
-              label="جمعیت"
-              register={register}
-              name="population"
-              type="number"
-              errMsg={errors.population?.message}
             />
           </div>
         </div>
@@ -461,7 +470,6 @@ export const FormCreateProvince = ({
               <SimpleDrawing
                 isActive={isDrawingMode}
                 onPolygonCreated={handlePolygonCreated}
-                onPolygonDeleted={handlePolygonDeleted}
               />
             </MapContainer>
           </div>
@@ -472,9 +480,9 @@ export const FormCreateProvince = ({
             </p>
           )}
 
-          {errors.center_location && (
+          {errors.center && (
             <p className="text-red-500 text-sm mt-2 text-right">
-              {errors.center_location.message}
+              {errors.center.message}
             </p>
           )}
 

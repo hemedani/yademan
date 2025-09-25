@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React, { useRef, useEffect } from 'react';
-import { FeatureGroup } from 'react-leaflet';
-import { EditControl } from 'react-leaflet-draw';
-import L from 'leaflet';
+import React, { useRef, useEffect } from "react";
+import { FeatureGroup } from "react-leaflet";
+import { EditControl } from "react-leaflet-draw";
+import L from "leaflet";
 
 interface SimpleDrawingProps {
   isActive: boolean;
@@ -14,7 +14,7 @@ interface SimpleDrawingProps {
 const SimpleDrawing: React.FC<SimpleDrawingProps> = ({
   isActive,
   onPolygonCreated,
-  existingPolygon
+  existingPolygon,
 }) => {
   const featureGroupRef = useRef<L.FeatureGroup>(null);
 
@@ -29,7 +29,7 @@ const SimpleDrawing: React.FC<SimpleDrawingProps> = ({
     }
   }, [existingPolygon]);
 
-  const handleCreated = (e: any) => {
+  const handleCreated = (e: L.DrawEvents.Created) => {
     const { layer } = e;
     if (layer instanceof L.Polygon) {
       const latlngs = layer.getLatLngs()[0] as L.LatLng[];
@@ -37,9 +37,9 @@ const SimpleDrawing: React.FC<SimpleDrawingProps> = ({
     }
   };
 
-  const handleEdited = (e: any) => {
+  const handleEdited = (e: L.DrawEvents.Edited) => {
     const layers = e.layers;
-    layers.eachLayer((layer: any) => {
+    layers.eachLayer((layer: L.Layer) => {
       if (layer instanceof L.Polygon) {
         const latlngs = layer.getLatLngs()[0] as L.LatLng[];
         onPolygonCreated([latlngs]);
@@ -71,20 +71,19 @@ const SimpleDrawing: React.FC<SimpleDrawingProps> = ({
           polygon: {
             allowIntersection: false,
             drawError: {
-              color: '#e1e100',
-              message: '<strong>Error!</strong> Polygon cannot intersect itself!'
+              color: "#e1e100",
+              message:
+                "<strong>Error!</strong> Polygon cannot intersect itself!",
             },
             shapeOptions: {
-              color: '#2563eb',
+              color: "#2563eb",
               weight: 3,
-              fillOpacity: 0.2
-            }
-          }
+              fillOpacity: 0.2,
+            },
+          },
         }}
         edit={{
-          featureGroup: featureGroupRef.current!,
           remove: true,
-          edit: true
         }}
       />
     </FeatureGroup>

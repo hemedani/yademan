@@ -14,6 +14,7 @@ export const config = {
 
     // Enable redirects that add missing locales
     // (e.g. `/products` -> `/fa/products`)
-    "/((?!_next|_vercel|.*\\..*).*)",
+    // Exclude admin routes from locale-based routing
+    "/((?!_next|_vercel|admin|.*\\..*).*)",
   ],
 };

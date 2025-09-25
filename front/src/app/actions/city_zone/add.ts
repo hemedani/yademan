@@ -5,7 +5,10 @@ import { cookies } from "next/headers";
 
 export const add = async (data: {
   name: string;
-  population: number;
+  center: {
+    type: "Point";
+    coordinates: number[];
+  };
   area: {
     type: "MultiPolygon";
     coordinates: number[][][][];
@@ -22,14 +25,14 @@ export const add = async (data: {
       details: {
         set: {
           name: data.name,
-          population: data.population,
+          center: data.center,
           area: data.area,
           cityId: data.cityId,
         },
         get: {
           _id: 1,
           name: 1,
-          population: 1,
+          center: 1,
           area: 1,
           createdAt: 1,
           updatedAt: 1,
