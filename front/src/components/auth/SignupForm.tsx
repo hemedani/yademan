@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { useRouter } from '../../../navigation';
+import React, { useState } from "react";
+import { useTranslations } from "next-intl";
+import { useRouter, Link } from "../../../navigation";
 
 interface SignupFormData {
   name: string;
@@ -13,23 +13,23 @@ interface SignupFormData {
 }
 
 const SignupForm: React.FC = () => {
-  const t = useTranslations('Auth');
+  const t = useTranslations("Auth");
   const router = useRouter();
   const [formData, setFormData] = useState<SignupFormData>({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    agreeToTerms: false
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    agreeToTerms: false,
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
     // Clear error when user starts typing
     if (error) setError(null);
@@ -37,22 +37,22 @@ const SignupForm: React.FC = () => {
 
   const validateForm = (): string | null => {
     if (!formData.name.trim()) {
-      return 'نام و نام خانوادگی الزامی است';
+      return "نام و نام خانوادگی الزامی است";
     }
     if (!formData.email.trim()) {
-      return 'ایمیل الزامی است';
+      return "ایمیل الزامی است";
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      return 'ایمیل معتبر نیست';
+      return "ایمیل معتبر نیست";
     }
     if (formData.password.length < 8) {
-      return 'رمز عبور باید حداقل ۸ کاراکتر باشد';
+      return "رمز عبور باید حداقل ۸ کاراکتر باشد";
     }
     if (formData.password !== formData.confirmPassword) {
-      return 'رمز عبور و تکرار آن مطابقت ندارند';
+      return "رمز عبور و تکرار آن مطابقت ندارند";
     }
     if (!formData.agreeToTerms) {
-      return 'پذیرش شرایط و قوانین الزامی است';
+      return "پذیرش شرایط و قوانین الزامی است";
     }
     return null;
   };
@@ -71,12 +71,12 @@ const SignupForm: React.FC = () => {
 
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Simulate successful signup
-      router.push('/login?message=signup-success');
-    } catch (err) {
-      setError('خطا در ثبت نام. لطفاً دوباره تلاش کنید.');
+      router.push("/login?message=signup-success");
+    } catch {
+      setError("خطا در ثبت نام. لطفاً دوباره تلاش کنید.");
     } finally {
       setIsLoading(false);
     }
@@ -89,14 +89,20 @@ const SignupForm: React.FC = () => {
         <div className="rounded-md bg-red-50 p-4">
           <div className="flex">
             <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+              <svg
+                className="h-5 w-5 text-red-400"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clipRule="evenodd"
+                />
               </svg>
             </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">
-                {error}
-              </h3>
+              <h3 className="text-sm font-medium text-red-800">{error}</h3>
             </div>
           </div>
         </div>
@@ -104,7 +110,10 @@ const SignupForm: React.FC = () => {
 
       {/* Name Field */}
       <div>
-        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+        <label
+          htmlFor="name"
+          className="block text-sm font-medium text-gray-700"
+        >
           نام و نام خانوادگی
         </label>
         <div className="mt-1">
@@ -124,8 +133,11 @@ const SignupForm: React.FC = () => {
 
       {/* Email Field */}
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-          {t('email')}
+        <label
+          htmlFor="email"
+          className="block text-sm font-medium text-gray-700"
+        >
+          {t("email")}
         </label>
         <div className="mt-1">
           <input
@@ -144,8 +156,11 @@ const SignupForm: React.FC = () => {
 
       {/* Password Field */}
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-          {t('password')}
+        <label
+          htmlFor="password"
+          className="block text-sm font-medium text-gray-700"
+        >
+          {t("password")}
         </label>
         <div className="mt-1">
           <input
@@ -164,8 +179,11 @@ const SignupForm: React.FC = () => {
 
       {/* Confirm Password Field */}
       <div>
-        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-          {t('confirmPassword')}
+        <label
+          htmlFor="confirmPassword"
+          className="block text-sm font-medium text-gray-700"
+        >
+          {t("confirmPassword")}
         </label>
         <div className="mt-1">
           <input
@@ -192,16 +210,19 @@ const SignupForm: React.FC = () => {
           onChange={handleInputChange}
           className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
         />
-        <label htmlFor="agreeToTerms" className="ml-2 block text-sm text-gray-900">
-          با{' '}
-          <a href="/terms" className="text-blue-600 hover:text-blue-500">
+        <label
+          htmlFor="agreeToTerms"
+          className="ml-2 block text-sm text-gray-900"
+        >
+          با{" "}
+          <Link href="/terms" className="text-blue-600 hover:text-blue-500">
             شرایط و قوانین
-          </a>
-          {' '}و{' '}
-          <a href="/privacy" className="text-blue-600 hover:text-blue-500">
+          </Link>{" "}
+          و{" "}
+          <Link href="/privacy" className="text-blue-600 hover:text-blue-500">
             حریم خصوصی
-          </a>
-          {' '}موافقم
+          </Link>{" "}
+          موافقم
         </label>
       </div>
 
@@ -225,12 +246,10 @@ const SignupForm: React.FC = () => {
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
-                  <path
-                    d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"
-                  />
+                  <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
                 </svg>
               </span>
-              {t('signup')}
+              {t("signup")}
             </>
           )}
         </button>
@@ -238,11 +257,14 @@ const SignupForm: React.FC = () => {
 
       {/* Login Link */}
       <div className="text-center">
-        <p className="text-sm text-gray-600">
-          حساب کاربری دارید؟{' '}
-          <a href="/login" className="font-medium text-blue-600 hover:text-blue-500">
-            {t('login')}
-          </a>
+        <p className="mt-2 text-center text-sm text-gray-600">
+          حساب کاربری دارید؟{" "}
+          <Link
+            href="/login"
+            className="font-medium text-blue-600 hover:text-blue-500"
+          >
+            {t("login")}
+          </Link>
         </p>
       </div>
     </form>

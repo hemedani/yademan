@@ -9,12 +9,11 @@ interface CityData {
   _id: string;
   name: string;
   english_name: string;
-  population: number;
   area: {
     type: "MultiPolygon";
     coordinates: number[][][][];
   };
-  center_location: {
+  center: {
     type: "Point";
     coordinates: number[];
   };
@@ -62,9 +61,8 @@ const CityUpdateModal: React.FC<CityUpdateModalProps> = ({
               _id: 1,
               name: 1,
               english_name: 1,
-              population: 1,
               area: 1,
-              center_location: 1,
+              center: 1,
             },
           },
         },

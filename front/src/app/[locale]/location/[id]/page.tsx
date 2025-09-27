@@ -13,11 +13,12 @@ import ShareButton from "@/components/location/ShareButton";
 import { getLocationById } from "@/lib/api/locations";
 
 interface LocationPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export async function generateMetadata({ params }: LocationPageProps) {
-  const location = await getLocationById(params.id);
+  const resolvedParams = await params;
+  const location = await getLocationById(resolvedParams.id);
 
   if (!location) {
     return {
@@ -26,13 +27,14 @@ export async function generateMetadata({ params }: LocationPageProps) {
   }
 
   return {
-    title: `${location.name} - Yademan`,
+    title: `${location.title} - Yademan`,
     description: location.description,
   };
 }
 
 export default async function LocationPage({ params }: LocationPageProps) {
-  const location = await getLocationById(params.id);
+  const resolvedParams = await params;
+  const location = await getLocationById(resolvedParams.id);
 
   if (!location) {
     notFound();
@@ -44,18 +46,39 @@ export default async function LocationPage({ params }: LocationPageProps) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main content */}
           <div className="lg:col-span-2 space-y-6">
-            <LocationHeader location={location} />
+            <LocationHeader
+              title={location.title}
+              category={location.category}
+              rating={location.rating}
+              reviewCount={location.reviewCount}
+              images={location.images}
+              address={location.address}
+              coordinates={location.coordinates}
+            />
 
             <div className="flex items-center space-x-4">
               <FavoriteButton locationId={location.id} />
-              <ShareButton location={location} />
+              <ShareButton
+                title={location.title}
+                description={location.description}
+              />
             </div>
 
-            <LocationGallery images={location.images} />
-            <LocationInfo location={location} />
+            <LocationGallery images={location.images} title={location.title} />
+            <LocationInfo
+              description={location.description}
+              category={location.category}
+              historicalPeriod={location.historicalPeriod}
+              features={location.features}
+              accessibility={location.accessibility}
+              visitingHours={location.visitingHours}
+              ticketPrice={location.ticketPrice}
+              website={location.website}
+              phone={location.phone}
+            />
 
             <Suspense fallback={<div>Loading reviews...</div>}>
-              <LocationReviews locationId={location.id} />
+              <LocationReviews />
             </Suspense>
           </div>
 
@@ -63,17 +86,13 @@ export default async function LocationPage({ params }: LocationPageProps) {
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
               <LocationMap
-                latitude={location.latitude}
-                longitude={location.longitude}
-                name={location.name}
+                coordinates={location.coordinates}
+                title={location.title}
               />
             </div>
 
             <Suspense fallback={<div>Loading related locations...</div>}>
-              <RelatedLocations
-                currentLocationId={location.id}
-                category={location.category}
-              />
+              <RelatedLocations currentLocationId={location.id} />
             </Suspense>
           </div>
         </div>

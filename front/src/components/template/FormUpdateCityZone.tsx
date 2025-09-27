@@ -31,7 +31,6 @@ const SimpleDrawing = dynamic(() => import("@/components/SimpleDrawing"), {
 
 export const CityZoneUpdateSchema = z.object({
   name: z.string().min(1, "نام منطقه شهری الزامی است"),
-  population: z.coerce.number().min(0, "جمعیت نمی‌تواند منفی باشد"),
   area: z.object(
     {
       type: z.literal("MultiPolygon"),
@@ -58,7 +57,6 @@ interface LatLng {
 interface CityZoneData {
   _id: string;
   name: string;
-  population: number;
   area: {
     type: "MultiPolygon";
     coordinates: number[][][][];
@@ -96,7 +94,6 @@ export const FormUpdateCityZone = ({
     mode: "onChange",
     defaultValues: {
       name: cityZoneData?.name || "",
-      population: cityZoneData?.population || 0,
       area: cityZoneData?.area || { type: "MultiPolygon", coordinates: [] },
     },
   });
@@ -106,7 +103,6 @@ export const FormUpdateCityZone = ({
     if (cityZoneData) {
       // Set form values
       setValue("name", cityZoneData.name || "");
-      setValue("population", cityZoneData.population || 0);
       setValue(
         "area",
         cityZoneData.area || { type: "MultiPolygon", coordinates: [] },
@@ -137,8 +133,12 @@ export const FormUpdateCityZone = ({
 
               // Center map on the polygon
               if (latLngArray.length > 0) {
-                const avgLat = latLngArray.reduce((sum, point) => sum + point.lat, 0) / latLngArray.length;
-                const avgLng = latLngArray.reduce((sum, point) => sum + point.lng, 0) / latLngArray.length;
+                const avgLat =
+                  latLngArray.reduce((sum, point) => sum + point.lat, 0) /
+                  latLngArray.length;
+                const avgLng =
+                  latLngArray.reduce((sum, point) => sum + point.lng, 0) /
+                  latLngArray.length;
                 setMapCenter([avgLat, avgLng]);
                 setMapZoom(10);
               }
@@ -159,10 +159,14 @@ export const FormUpdateCityZone = ({
 
   // Handle polygon creation
   const handlePolygonCreated = useCallback(
-    (polygon: LatLng[]) => {
-      setDrawnPolygon(polygon);
-      const coordinates = polygon.map((point) => [point.lng, point.lat]);
-      coordinates.push(coordinates[0]);
+    (polygon: LatLng[][]) => {
+      // Take the first polygon from the multi-polygon array
+      const firstPolygon = polygon[0] || [];
+      setDrawnPolygon(firstPolygon);
+      const coordinates = firstPolygon.map((point) => [point.lng, point.lat]);
+      if (coordinates.length > 0) {
+        coordinates.push(coordinates[0]);
+      }
 
       const multiPolygon = {
         type: "MultiPolygon" as const,
@@ -226,7 +230,6 @@ export const FormUpdateCityZone = ({
     const updatedCityZone = await update(
       cityZoneData._id,
       data.name,
-      data.population,
       data.area as {
         type: "MultiPolygon";
         coordinates: number[][][][];
@@ -279,7 +282,9 @@ export const FormUpdateCityZone = ({
         <div className="flex items-center justify-center py-12">
           <div className="flex flex-col items-center gap-4">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-            <p className="text-gray-600">در حال بارگذاری اطلاعات منطقه شهری...</p>
+            <p className="text-gray-600">
+              در حال بارگذاری اطلاعات منطقه شهری...
+            </p>
           </div>
         </div>
       </div>
@@ -302,15 +307,6 @@ export const FormUpdateCityZone = ({
               register={register}
               name="name"
               errMsg={errors.name?.message}
-            />
-
-            {/* Population Input */}
-            <MyInput
-              label="جمعیت"
-              register={register}
-              name="population"
-              type="number"
-              errMsg={errors.population?.message}
             />
           </div>
         </div>
@@ -374,8 +370,8 @@ export const FormUpdateCityZone = ({
           {isDrawingMode && (
             <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
               <p className="text-sm text-blue-800 font-medium">
-                🖱️ حالت ترسیم منطقه: کلیک چپ: اضافه کردن نقطه | راست کلیک:
-                تمام کردن شکل | ESC: لغو
+                🖱️ حالت ترسیم منطقه: کلیک چپ: اضافه کردن نقطه | راست کلیک: تمام
+                کردن شکل | ESC: لغو
               </p>
             </div>
           )}
@@ -407,7 +403,6 @@ export const FormUpdateCityZone = ({
               <SimpleDrawing
                 isActive={isDrawingMode}
                 onPolygonCreated={handlePolygonCreated}
-                onPolygonDeleted={handlePolygonDeleted}
               />
             </MapContainer>
           </div>

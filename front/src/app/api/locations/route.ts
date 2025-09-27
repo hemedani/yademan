@@ -6,44 +6,34 @@ import {
   getLocations,
   createLocation,
   updateLocation,
-  deleteLocation
+  deleteLocation,
 } from "@/lib/api/locations";
-import { LocationFilters, CreateLocationData } from "@/types/location";
+import { CreateLocationRequest } from "@/lib/api/locations";
+import { LocationsFilters } from "@/lib/api/locations";
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
 
     // Parse query parameters
-    const filters: LocationFilters = {
+    const filters: LocationsFilters = {
       category: searchParams.get("category") || undefined,
       search: searchParams.get("search") || undefined,
-      bounds: searchParams.get("bounds") ? JSON.parse(searchParams.get("bounds")!) : undefined,
       limit: parseInt(searchParams.get("limit") || "50"),
-      offset: parseInt(searchParams.get("offset") || "0"),
-      sortBy: searchParams.get("sortBy") as "name" | "created_at" | "rating" || "name",
-      sortOrder: searchParams.get("sortOrder") as "asc" | "desc" || "asc",
+      page: parseInt(searchParams.get("page") || "1"),
+      rating: searchParams.get("rating")
+        ? parseInt(searchParams.get("rating")!)
+        : undefined,
     };
 
     const result = await getLocations(filters);
 
-    if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json({
-      locations: result.data,
-      total: result.total,
-      hasMore: result.hasMore,
-    });
+    return NextResponse.json(result);
   } catch (error) {
     console.error("Locations GET error:", error);
     return NextResponse.json(
       { error: "Failed to fetch locations" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -55,38 +45,52 @@ export async function POST(request: NextRequest) {
     if (!user) {
       return NextResponse.json(
         { error: "Authentication required" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
-    const locationData: CreateLocationData = await request.json();
+    const locationData = await request.json();
 
     // Validate required fields
-    if (!locationData.name || !locationData.latitude || !locationData.longitude) {
+    if (
+      !locationData.name ||
+      !locationData.latitude ||
+      !locationData.longitude
+    ) {
       return NextResponse.json(
         { error: "Missing required fields: name, latitude, longitude" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    const result = await createLocation({
-      ...locationData,
-      createdBy: user.id,
-    });
+    // Convert to CreateLocationRequest format
+    const createRequest: CreateLocationRequest = {
+      title: locationData.name,
+      description: locationData.description || "",
+      category: locationData.category || "",
+      images: locationData.images || [],
+      address: locationData.address || "",
+      coordinates: {
+        lat: locationData.latitude,
+        lng: locationData.longitude,
+      },
+      historicalPeriod: locationData.historicalPeriod,
+      features: locationData.features || [],
+      accessibility: locationData.accessibility,
+      visitingHours: locationData.visitingHours,
+      ticketPrice: locationData.ticketPrice,
+      website: locationData.website,
+      phone: locationData.phone,
+    };
 
-    if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 400 }
-      );
-    }
+    const result = await createLocation(createRequest);
 
-    return NextResponse.json(result.data, { status: 201 });
+    return NextResponse.json(result, { status: 201 });
   } catch (error) {
     console.error("Locations POST error:", error);
     return NextResponse.json(
       { error: "Failed to create location" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -98,7 +102,7 @@ export async function PUT(request: NextRequest) {
     if (!user) {
       return NextResponse.json(
         { error: "Authentication required" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -107,25 +111,25 @@ export async function PUT(request: NextRequest) {
     if (!id) {
       return NextResponse.json(
         { error: "Location ID is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    const result = await updateLocation(id, updateData, user.id);
+    const result = await updateLocation({ id, ...updateData });
 
-    if (!result.success) {
+    if (!result) {
       return NextResponse.json(
-        { error: result.error },
-        { status: result.error === "Not found" ? 404 : 403 }
+        { error: "Location not found or update failed" },
+        { status: 404 },
       );
     }
 
-    return NextResponse.json(result.data);
+    return NextResponse.json(result);
   } catch (error) {
     console.error("Locations PUT error:", error);
     return NextResponse.json(
       { error: "Failed to update location" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -137,7 +141,7 @@ export async function DELETE(request: NextRequest) {
     if (!user) {
       return NextResponse.json(
         { error: "Authentication required" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -147,16 +151,16 @@ export async function DELETE(request: NextRequest) {
     if (!id) {
       return NextResponse.json(
         { error: "Location ID is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    const result = await deleteLocation(id, user.id);
+    const result = await deleteLocation(id);
 
-    if (!result.success) {
+    if (!result) {
       return NextResponse.json(
-        { error: result.error },
-        { status: result.error === "Not found" ? 404 : 403 }
+        { error: "Location not found or delete failed" },
+        { status: 404 },
       );
     }
 
@@ -165,7 +169,7 @@ export async function DELETE(request: NextRequest) {
     console.error("Locations DELETE error:", error);
     return NextResponse.json(
       { error: "Failed to delete location" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -131,7 +131,7 @@ const CommentsManagement: React.FC = () => {
       const response = await api.send({
         service: "main",
         model: "comment",
-        act: "getComments",
+        act: "gets",
         details: {
           set: {
             page: currentPage,
@@ -186,9 +186,12 @@ const CommentsManagement: React.FC = () => {
       const response = await api.send({
         service: "main",
         model: "comment",
-        act: "updateStatus",
+        act: "update",
         details: {
-          set: { _id: commentId, status: newStatus },
+          set: {
+            _id: commentId,
+            status: newStatus as "pending" | "approved" | "rejected",
+          },
           get: {},
         },
       });
@@ -226,7 +229,7 @@ const CommentsManagement: React.FC = () => {
       const response = await api.send({
         service: "main",
         model: "comment",
-        act: "deleteComment",
+        act: "remove",
         details: {
           set: { _id: commentId },
           get: {},

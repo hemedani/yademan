@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
 
 interface Category {
   _id: string;
@@ -36,7 +35,6 @@ interface PlaceFormData {
 
 export default function AddPlacePage() {
   const router = useRouter();
-  const { user, userLevel } = useAuth();
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
@@ -164,7 +162,7 @@ export default function AddPlacePage() {
       });
 
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       alert("مکان با موفقیت اضافه شد!");
       router.push("/admin/places");
@@ -176,49 +174,59 @@ export default function AddPlacePage() {
     }
   };
 
-  const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleInputChange = (
+    field: string,
+    value: string | number | boolean | null | File[],
+  ) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: "" }));
+      setErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 
   const handleTagToggle = (tagId: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       tags: prev.tags.includes(tagId)
-        ? prev.tags.filter(id => id !== tagId)
-        : [...prev.tags, tagId]
+        ? prev.tags.filter((id) => id !== tagId)
+        : [...prev.tags, tagId],
     }));
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    setFormData(prev => ({ ...prev, images: [...prev.images, ...files] }));
+    setFormData((prev) => ({ ...prev, images: [...prev.images, ...files] }));
   };
 
   const removeImage = (index: number) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      images: prev.images.filter((_, i) => i !== index)
+      images: prev.images.filter((_, i) => i !== index),
     }));
   };
 
-  const handleOpeningHoursChange = (day: string, field: "open" | "close" | "closed", value: string | boolean) => {
-    setFormData(prev => ({
+  const handleOpeningHoursChange = (
+    day: string,
+    field: "open" | "close" | "closed",
+    value: string | boolean,
+  ) => {
+    setFormData((prev) => ({
       ...prev,
       openingHours: {
         ...prev.openingHours,
         [day]: {
           ...prev.openingHours[day],
-          [field]: value
-        }
-      }
+          [field]: value,
+        },
+      },
     }));
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-6" dir="rtl">
+    <div
+      className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-6"
+      dir="rtl"
+    >
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -244,7 +252,9 @@ export default function AddPlacePage() {
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Basic Information */}
           <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20">
-            <h2 className="text-xl font-bold text-slate-800 mb-6">اطلاعات پایه</h2>
+            <h2 className="text-xl font-bold text-slate-800 mb-6">
+              اطلاعات پایه
+            </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
@@ -255,7 +265,7 @@ export default function AddPlacePage() {
                   type="text"
                   value={formData.name}
                   onChange={(e) => handleInputChange("name", e.target.value)}
-                  className={`w-full px-4 py-3 rounded-xl border ${errors.name ? 'border-red-500' : 'border-slate-200'} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200`}
+                  className={`w-full px-4 py-3 rounded-xl border ${errors.name ? "border-red-500" : "border-slate-200"} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200`}
                   placeholder="نام مکان را وارد کنید"
                 />
                 {errors.name && (
@@ -269,8 +279,10 @@ export default function AddPlacePage() {
                 </label>
                 <select
                   value={formData.category}
-                  onChange={(e) => handleInputChange("category", e.target.value)}
-                  className={`w-full px-4 py-3 rounded-xl border ${errors.category ? 'border-red-500' : 'border-slate-200'} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200`}
+                  onChange={(e) =>
+                    handleInputChange("category", e.target.value)
+                  }
+                  className={`w-full px-4 py-3 rounded-xl border ${errors.category ? "border-red-500" : "border-slate-200"} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200`}
                 >
                   <option value="">دسته‌بندی را انتخاب کنید</option>
                   {categories.map((category) => (
@@ -292,7 +304,9 @@ export default function AddPlacePage() {
               <input
                 type="text"
                 value={formData.shortDescription}
-                onChange={(e) => handleInputChange("shortDescription", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("shortDescription", e.target.value)
+                }
                 className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
                 placeholder="توضیح کوتاه مکان"
                 maxLength={150}
@@ -305,20 +319,26 @@ export default function AddPlacePage() {
               </label>
               <textarea
                 value={formData.description}
-                onChange={(e) => handleInputChange("description", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("description", e.target.value)
+                }
                 rows={5}
-                className={`w-full px-4 py-3 rounded-xl border ${errors.description ? 'border-red-500' : 'border-slate-200'} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200`}
+                className={`w-full px-4 py-3 rounded-xl border ${errors.description ? "border-red-500" : "border-slate-200"} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200`}
                 placeholder="توضیحات کاملی از مکان ارائه دهید"
               />
               {errors.description && (
-                <p className="text-red-500 text-sm mt-1">{errors.description}</p>
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.description}
+                </p>
               )}
             </div>
           </div>
 
           {/* Location Information */}
           <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20">
-            <h2 className="text-xl font-bold text-slate-800 mb-6">اطلاعات موقعیت</h2>
+            <h2 className="text-xl font-bold text-slate-800 mb-6">
+              اطلاعات موقعیت
+            </h2>
 
             <div className="mb-6">
               <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -328,7 +348,7 @@ export default function AddPlacePage() {
                 value={formData.address}
                 onChange={(e) => handleInputChange("address", e.target.value)}
                 rows={3}
-                className={`w-full px-4 py-3 rounded-xl border ${errors.address ? 'border-red-500' : 'border-slate-200'} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200`}
+                className={`w-full px-4 py-3 rounded-xl border ${errors.address ? "border-red-500" : "border-slate-200"} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200`}
                 placeholder="آدرس کامل مکان"
               />
               {errors.address && (
@@ -345,7 +365,12 @@ export default function AddPlacePage() {
                   type="number"
                   step="any"
                   value={formData.latitude || ""}
-                  onChange={(e) => handleInputChange("latitude", parseFloat(e.target.value) || null)}
+                  onChange={(e) =>
+                    handleInputChange(
+                      "latitude",
+                      parseFloat(e.target.value) || null,
+                    )
+                  }
                   className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
                   placeholder="29.6037"
                 />
@@ -358,7 +383,12 @@ export default function AddPlacePage() {
                   type="number"
                   step="any"
                   value={formData.longitude || ""}
-                  onChange={(e) => handleInputChange("longitude", parseFloat(e.target.value) || null)}
+                  onChange={(e) =>
+                    handleInputChange(
+                      "longitude",
+                      parseFloat(e.target.value) || null,
+                    )
+                  }
                   className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
                   placeholder="52.5384"
                 />
@@ -371,7 +401,9 @@ export default function AddPlacePage() {
 
           {/* Contact Information */}
           <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20">
-            <h2 className="text-xl font-bold text-slate-800 mb-6">اطلاعات تماس</h2>
+            <h2 className="text-xl font-bold text-slate-800 mb-6">
+              اطلاعات تماس
+            </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
@@ -425,7 +457,9 @@ export default function AddPlacePage() {
 
           {/* Opening Hours */}
           <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20">
-            <h2 className="text-xl font-bold text-slate-800 mb-6">ساعات کاری</h2>
+            <h2 className="text-xl font-bold text-slate-800 mb-6">
+              ساعات کاری
+            </h2>
 
             <div className="space-y-4">
               {weekDays.map((day) => (
@@ -437,8 +471,16 @@ export default function AddPlacePage() {
                     <label className="flex items-center">
                       <input
                         type="checkbox"
-                        checked={formData.openingHours[day.key]?.closed || false}
-                        onChange={(e) => handleOpeningHoursChange(day.key, "closed", e.target.checked)}
+                        checked={
+                          formData.openingHours[day.key]?.closed || false
+                        }
+                        onChange={(e) =>
+                          handleOpeningHoursChange(
+                            day.key,
+                            "closed",
+                            e.target.checked,
+                          )
+                        }
                         className="ml-2"
                       />
                       <span className="text-sm text-slate-600">تعطیل</span>
@@ -448,14 +490,26 @@ export default function AddPlacePage() {
                         <input
                           type="time"
                           value={formData.openingHours[day.key]?.open || ""}
-                          onChange={(e) => handleOpeningHoursChange(day.key, "open", e.target.value)}
+                          onChange={(e) =>
+                            handleOpeningHoursChange(
+                              day.key,
+                              "open",
+                              e.target.value,
+                            )
+                          }
                           className="px-3 py-2 border border-slate-200 rounded-lg text-sm"
                         />
                         <span className="text-slate-400">تا</span>
                         <input
                           type="time"
                           value={formData.openingHours[day.key]?.close || ""}
-                          onChange={(e) => handleOpeningHoursChange(day.key, "close", e.target.value)}
+                          onChange={(e) =>
+                            handleOpeningHoursChange(
+                              day.key,
+                              "close",
+                              e.target.value,
+                            )
+                          }
                           className="px-3 py-2 border border-slate-200 rounded-lg text-sm"
                         />
                       </>
@@ -508,7 +562,12 @@ export default function AddPlacePage() {
 
             <select
               value={formData.status}
-              onChange={(e) => handleInputChange("status", e.target.value as "active" | "pending" | "inactive")}
+              onChange={(e) =>
+                handleInputChange(
+                  "status",
+                  e.target.value as "active" | "pending" | "inactive",
+                )
+              }
               className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
             >
               <option value="pending">در انتظار تأیید</option>

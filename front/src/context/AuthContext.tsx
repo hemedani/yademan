@@ -11,8 +11,9 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { getMe } from "@/app/actions/user/getMe";
 import { AppApi } from "@/services/api";
+import { Cookie } from "next/font/google";
 
-type UserLevel = "Ghost" | "Manager" | "Editor" | "Normal" | null;
+export type UserLevel = "Ghost" | "Manager" | "Editor" | "Normal" | null;
 
 interface UserData {
   _id: string;
@@ -108,11 +109,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             } else {
               throw new Error("No valid fallback data");
             }
-          } catch (cookieError) {
+          } catch {
             clearAuth();
           }
         }
-      } catch (error) {
+      } catch {
         clearAuth();
       } finally {
         setLoading(false);
@@ -162,7 +163,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setUser(response.user);
           setUserLevel(response.user.level as UserLevel);
         }
-      } catch (error) {
+      } catch {
         // Silently handle refresh errors
       }
     }, 100);
@@ -174,21 +175,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const token = Cookies.get("token");
       if (token) {
-        try {
-          await AppApi().send(
-            {
-              service: "main",
-              model: "user",
-              act: "logout",
-              details: { set: {}, get: {} },
-            },
-            { token },
-          );
-        } catch (error) {
-          // Silently handle backend logout errors
-        }
+        Cookies.remove("token", { path: "/" });
       }
-    } catch (error) {
+    } catch {
       // Silently handle general logout errors
     }
 
@@ -206,7 +195,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(response.user);
         setUserLevel(response.user.level as UserLevel);
       }
-    } catch (error) {
+    } catch {
       // Silently handle refresh errors
     }
   };

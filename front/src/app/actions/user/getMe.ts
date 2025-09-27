@@ -68,7 +68,7 @@ export const getMe = async (
         error: response.body.message || "Failed to get user information",
       };
     }
-  } catch (error) {
+  } catch {
     return {
       success: false,
       error: "An unexpected error occurred",

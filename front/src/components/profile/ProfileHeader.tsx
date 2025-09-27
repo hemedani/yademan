@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { useTranslations } from 'next-intl';
+import React from "react";
+import { useTranslations } from "next-intl";
 
 interface ProfileHeaderProps {
   user?: {
@@ -14,13 +14,14 @@ interface ProfileHeaderProps {
 }
 
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
-  const t = useTranslations('Profile');
+  const t = useTranslations("Profile");
 
   const defaultUser = {
-    name: 'کاربر تست',
-    email: 'test@example.com',
-    level: 'کاربر عادی',
-    joinDate: '۱۴۰۳/۰۱/۰۱'
+    name: "کاربر تست",
+    email: "test@example.com",
+    avatar: undefined,
+    level: "کاربر عادی",
+    joinDate: "۱۴۰۳/۰۱/۰۱",
   };
 
   const userData = user || defaultUser;

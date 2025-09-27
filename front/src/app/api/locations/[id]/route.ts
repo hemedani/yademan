@@ -5,97 +5,88 @@ import { getCurrentUser } from "@/lib/auth";
 import {
   getLocationById,
   updateLocation,
-  deleteLocation
+  deleteLocation,
 } from "@/lib/api/locations";
 
 interface RouteParams {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export async function GET(
-  request: NextRequest,
-  { params }: RouteParams
-) {
+export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     const result = await getLocationById(id);
 
-    if (!result.success) {
+    if (!result) {
       return NextResponse.json(
-        { error: result.error },
-        { status: result.error === "Not found" ? 404 : 400 }
+        { error: "Location not found" },
+        { status: 404 },
       );
     }
 
-    return NextResponse.json(result.data);
+    return NextResponse.json(result);
   } catch (error) {
     console.error("Location GET error:", error);
     return NextResponse.json(
       { error: "Failed to fetch location" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: RouteParams
-) {
+export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
     const user = await getCurrentUser();
 
     if (!user) {
       return NextResponse.json(
         { error: "Authentication required" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
-    const { id } = params;
+    const { id } = await params;
     const updateData = await request.json();
 
-    const result = await updateLocation(id, updateData, user.id);
+    const result = await updateLocation({ id, ...updateData });
 
-    if (!result.success) {
+    if (!result) {
       return NextResponse.json(
-        { error: result.error },
-        { status: result.error === "Not found" ? 404 : 403 }
+        { error: "Location not found or update failed" },
+        { status: 404 },
       );
     }
 
-    return NextResponse.json(result.data);
+    return NextResponse.json(result);
   } catch (error) {
     console.error("Location PUT error:", error);
     return NextResponse.json(
       { error: "Failed to update location" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: RouteParams
-) {
+export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     const user = await getCurrentUser();
 
     if (!user) {
       return NextResponse.json(
         { error: "Authentication required" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
-    const { id } = params;
+    const { id } = await params;
 
-    const result = await deleteLocation(id, user.id);
+    const result = await deleteLocation(id);
 
-    if (!result.success) {
+    if (!result) {
       return NextResponse.json(
-        { error: result.error },
-        { status: result.error === "Not found" ? 404 : 403 }
+        { error: "Location not found or delete failed" },
+        { status: 404 },
       );
     }
 
@@ -104,7 +95,7 @@ export async function DELETE(
     console.error("Location DELETE error:", error);
     return NextResponse.json(
       { error: "Failed to delete location" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

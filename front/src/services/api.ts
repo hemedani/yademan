@@ -49,7 +49,7 @@ export const getLesanBaseUrl = (): string => {
     }
 
     return baseUrl;
-  } catch (error) {
+  } catch {
     // Fallback to localhost on error
     return "http://localhost:1405";
   }
@@ -68,7 +68,7 @@ export const AppApi = (lesanUrl?: string) => {
         connection: "keep-alive",
       },
     });
-  } catch (error) {
+  } catch {
     // Fallback to default URL on error
     return lesanApi({
       URL: "http://localhost:1405/lesan",

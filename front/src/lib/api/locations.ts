@@ -241,3 +241,81 @@ export async function getNearbyLocations(
     return distance <= radius;
   });
 }
+
+export interface CreateLocationRequest {
+  title: string;
+  description: string;
+  category: string;
+  images: string[];
+  address: string;
+  coordinates: {
+    lat: number;
+    lng: number;
+  };
+  historicalPeriod?: string;
+  features: string[];
+  accessibility?: string;
+  visitingHours?: string;
+  ticketPrice?: string;
+  website?: string;
+  phone?: string;
+}
+
+export interface UpdateLocationRequest extends Partial<CreateLocationRequest> {
+  id: string;
+}
+
+export async function createLocation(
+  data: CreateLocationRequest,
+): Promise<Location> {
+  // Simulate API delay
+  await new Promise((resolve) => setTimeout(resolve, 800));
+
+  const newLocation: Location = {
+    id: Math.random().toString(36).substring(2, 15),
+    ...data,
+    rating: 0,
+    reviewCount: 0,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  // In a real app, this would save to the database
+  mockLocations.push(newLocation);
+
+  return newLocation;
+}
+
+export async function updateLocation(
+  data: UpdateLocationRequest,
+): Promise<Location | null> {
+  // Simulate API delay
+  await new Promise((resolve) => setTimeout(resolve, 600));
+
+  const index = mockLocations.findIndex((loc) => loc.id === data.id);
+  if (index === -1) return null;
+
+  const updatedLocation = {
+    ...mockLocations[index],
+    ...data,
+    updatedAt: new Date().toISOString(),
+  };
+
+  // In a real app, this would update the database
+  mockLocations[index] = updatedLocation;
+
+  return updatedLocation;
+}
+
+export async function deleteLocation(id: string): Promise<boolean> {
+  // Simulate API delay
+  await new Promise((resolve) => setTimeout(resolve, 400));
+
+  const index = mockLocations.findIndex((loc) => loc.id === id);
+  if (index === -1) return false;
+
+  // In a real app, this would delete from the database
+  mockLocations.splice(index, 1);
+
+  return true;
+}

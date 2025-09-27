@@ -8,7 +8,6 @@ import { useScrollLock } from "@/hooks/useScrollLock";
 interface CityZoneData {
   _id: string;
   name: string;
-  population: number;
   area: {
     type: "MultiPolygon";
     coordinates: number[][][][];
@@ -58,7 +57,6 @@ const CityZoneUpdateModal: React.FC<CityZoneUpdateModalProps> = ({
             get: {
               _id: 1,
               name: 1,
-              population: 1,
               area: 1,
             },
           },

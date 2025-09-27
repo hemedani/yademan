@@ -6,12 +6,11 @@ export const update = async (
   _id: string,
   name?: string,
   english_name?: string,
-  population?: number,
   area?: {
     type: "MultiPolygon";
     coordinates: number[][][][];
   },
-  center_location?: {
+  center?: {
     type: "Point";
     coordinates: number[];
   },
@@ -23,9 +22,8 @@ export const update = async (
 
   if (name !== undefined) set.name = name;
   if (english_name !== undefined) set.english_name = english_name;
-  if (population !== undefined) set.population = population;
   if (area !== undefined) set.area = area;
-  if (center_location !== undefined) set.center_location = center_location;
+  if (center !== undefined) set.center = center;
 
   return await AppApi().send(
     {
@@ -38,9 +36,8 @@ export const update = async (
           _id: 1,
           name: 1,
           english_name: 1,
-          population: 1,
           area: 1,
-          center_location: 1,
+          center: 1,
         },
       },
     },

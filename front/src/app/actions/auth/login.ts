@@ -98,7 +98,7 @@ export const loginAction = async (
         error: response.body?.message || "Login failed",
       };
     }
-  } catch (error) {
+  } catch {
     return {
       success: false,
       error: "An unexpected error occurred. Please try again.",
@@ -117,7 +117,7 @@ export const logoutAction = async (): Promise<{
     return {
       success: true,
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       error: "An error occurred during logout",

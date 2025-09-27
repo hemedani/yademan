@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter, Link } from "../../../navigation";
 import { loginAction } from "@/app/actions/auth/login";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth, UserLevel } from "@/context/AuthContext";
 
 interface LoginFormData {
   email: string;
@@ -44,7 +44,7 @@ const LoginForm: React.FC = () => {
 
       if (result.success && result.token && result.user) {
         // Update AuthContext
-        login(result.token, result.user.level as any, result.user.email);
+        login(result.token, result.user.level as UserLevel, result.user.email);
 
         // Successful login, redirect to home page
         router.push("/");
@@ -52,7 +52,7 @@ const LoginForm: React.FC = () => {
       } else {
         setError(result.error || "نام کاربری یا رمز عبور اشتباه است");
       }
-    } catch (err) {
+    } catch {
       setError("خطای غیرمنتظره رخ داد. لطفا دوباره تلاش کنید.");
     } finally {
       setIsLoading(false);

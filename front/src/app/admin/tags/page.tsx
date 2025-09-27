@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
 
 interface Tag {
   _id: string;
@@ -25,8 +23,6 @@ interface TagFormData {
 }
 
 export default function TagsPage() {
-  const router = useRouter();
-  const { user, userLevel } = useAuth();
   const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");

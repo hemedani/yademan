@@ -11,7 +11,7 @@ import { useFilterPanel } from "@/hooks/useFilterPanel";
 
 export default function HomePage() {
   const t = useTranslations("HomePage");
-  const { isAuthenticated, displayName, loading, user, userLevel } = useAuth();
+  const { isAuthenticated, displayName, loading } = useAuth();
   const [searchValue, setSearchValue] = useState("");
   const [showWelcome, setShowWelcome] = useState(true);
   const { isFilterOpen, toggleFilter, closeFilter } = useFilterPanel();

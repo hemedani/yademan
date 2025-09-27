@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useLocale } from 'next-intl';
-import { useRouter, usePathname } from '../../../navigation';
-import { locales } from '../../../i18n';
+import { useLocale } from "next-intl";
+import { useRouter, usePathname } from "../../i18n/routing";
+import { routing } from "../../i18n/routing";
 
 export default function LanguageSwitcher() {
   const locale = useLocale();
@@ -10,7 +10,7 @@ export default function LanguageSwitcher() {
   const pathname = usePathname();
 
   const handleLocaleChange = (newLocale: string) => {
-    router.replace(pathname, { locale: newLocale });
+    window.location.href = `/${newLocale}${pathname}`;
   };
 
   return (
@@ -21,9 +21,9 @@ export default function LanguageSwitcher() {
         className="appearance-none bg-white border border-gray-300 rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:border-blue-500"
         aria-label="Language Switcher"
       >
-        {locales.map((loc) => (
+        {routing.locales.map((loc) => (
           <option key={loc} value={loc}>
-            {loc === 'fa' ? '🇮🇷 فارسی' : '🇺🇸 English'}
+            {loc === "fa" ? "🇮🇷 فارسی" : "🇺🇸 English"}
           </option>
         ))}
       </select>

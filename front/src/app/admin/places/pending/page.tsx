@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
 
 interface PendingPlace {
   _id: string;
@@ -38,7 +37,6 @@ interface PendingPlace {
 
 export default function PendingPlacesPage() {
   const router = useRouter();
-  const { user, userLevel } = useAuth();
   const [pendingPlaces, setPendingPlaces] = useState<PendingPlace[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -58,7 +56,7 @@ export default function PendingPlacesPage() {
     try {
       // Replace with actual API call
       // Simulate loading data
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const mockData: PendingPlace[] = [
         {
@@ -72,11 +70,11 @@ export default function PendingPlacesPage() {
           category: {
             _id: "1",
             name: "رستوران",
-            slug: "restaurant"
+            slug: "restaurant",
           },
           tags: [
             { _id: "1", name: "خانوادگی", slug: "family" },
-            { _id: "2", name: "سنتی", slug: "traditional" }
+            { _id: "2", name: "سنتی", slug: "traditional" },
           ],
           phone: "071-12345678",
           website: "https://restaurant-example.com",
@@ -85,11 +83,11 @@ export default function PendingPlacesPage() {
             _id: "user1",
             first_name: "احمد",
             last_name: "محمدی",
-            email: "ahmad@example.com"
+            email: "ahmad@example.com",
           },
           submittedAt: "2024-01-15T10:30:00Z",
           status: "pending",
-          reasonForPending: "نیاز به بررسی اطلاعات تماس"
+          reasonForPending: "نیاز به بررسی اطلاعات تماس",
         },
         {
           _id: "2",
@@ -102,22 +100,22 @@ export default function PendingPlacesPage() {
           category: {
             _id: "3",
             name: "پارک",
-            slug: "park"
+            slug: "park",
           },
           tags: [
             { _id: "1", name: "خانوادگی", slug: "family" },
-            { _id: "3", name: "طبیعی", slug: "natural" }
+            { _id: "3", name: "طبیعی", slug: "natural" },
           ],
           images: ["/placeholder-park.jpg"],
           submittedBy: {
             _id: "user2",
             first_name: "فاطمه",
             last_name: "احمدی",
-            email: "fateme@example.com"
+            email: "fateme@example.com",
           },
           submittedAt: "2024-01-14T14:20:00Z",
-          status: "pending"
-        }
+          status: "pending",
+        },
       ];
 
       setPendingPlaces(mockData);
@@ -128,27 +126,33 @@ export default function PendingPlacesPage() {
     }
   };
 
-  const filteredPlaces = pendingPlaces.filter(place => {
-    const matchesSearch = place.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         place.address.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = !selectedCategory || place.category._id === selectedCategory;
+  const filteredPlaces = pendingPlaces.filter((place) => {
+    const matchesSearch =
+      place.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      place.address.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      !selectedCategory || place.category._id === selectedCategory;
 
     return matchesSearch && matchesCategory;
   });
 
   const totalPages = Math.ceil(filteredPlaces.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedPlaces = filteredPlaces.slice(startIndex, startIndex + itemsPerPage);
+  const paginatedPlaces = filteredPlaces.slice(
+    startIndex,
+    startIndex + itemsPerPage,
+  );
 
   const handleApprove = async (placeId: string) => {
-    if (!confirm("آیا مطمئن هستید که می‌خواهید این مکان را تأیید کنید؟")) return;
+    if (!confirm("آیا مطمئن هستید که می‌خواهید این مکان را تأیید کنید؟"))
+      return;
 
     setActionLoading(true);
     try {
       // Replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      setPendingPlaces(prev => prev.filter(place => place._id !== placeId));
+      setPendingPlaces((prev) => prev.filter((place) => place._id !== placeId));
       alert("مکان با موفقیت تأیید شد!");
     } catch (error) {
       console.error("Error approving place:", error);
@@ -165,9 +169,9 @@ export default function PendingPlacesPage() {
     setActionLoading(true);
     try {
       // Replace with actual API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      setPendingPlaces(prev => prev.filter(place => place._id !== placeId));
+      setPendingPlaces((prev) => prev.filter((place) => place._id !== placeId));
       alert("مکان رد شد!");
     } catch (error) {
       console.error("Error rejecting place:", error);
@@ -179,11 +183,11 @@ export default function PendingPlacesPage() {
 
   const formatPersianDate = (dateString: string) => {
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('fa-IR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      timeZone: 'Asia/Tehran'
+    return new Intl.DateTimeFormat("fa-IR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      timeZone: "Asia/Tehran",
     }).format(date);
   };
 
@@ -196,7 +200,10 @@ export default function PendingPlacesPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 flex items-center justify-center" dir="rtl">
+      <div
+        className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 flex items-center justify-center"
+        dir="rtl"
+      >
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
           <p className="text-slate-600">در حال بارگذاری...</p>
@@ -206,7 +213,10 @@ export default function PendingPlacesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-6" dir="rtl">
+    <div
+      className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-6"
+      dir="rtl"
+    >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -216,7 +226,8 @@ export default function PendingPlacesPage() {
                 مکان‌های در انتظار تأیید
               </h1>
               <p className="text-slate-600 mt-2">
-                {formatPersianNumber(pendingPlaces.length)} مکان در انتظار بررسی و تأیید شما
+                {formatPersianNumber(pendingPlaces.length)} مکان در انتظار بررسی
+                و تأیید شما
               </p>
             </div>
             <button
@@ -269,9 +280,7 @@ export default function PendingPlacesPage() {
             <h3 className="text-xl font-bold text-slate-600 mb-2">
               هیچ مکان در انتظاری وجود ندارد
             </h3>
-            <p className="text-slate-500">
-              همه مکان‌ها بررسی و تأیید شده‌اند
-            </p>
+            <p className="text-slate-500">همه مکان‌ها بررسی و تأیید شده‌اند</p>
           </div>
         ) : (
           <div className="space-y-6">
@@ -292,8 +301,16 @@ export default function PendingPlacesPage() {
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-slate-400">
-                          <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                          <svg
+                            className="w-12 h-12"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                              clipRule="evenodd"
+                            />
                           </svg>
                         </div>
                       )}
@@ -311,15 +328,40 @@ export default function PendingPlacesPage() {
                           {place.shortDescription}
                         </p>
                         <div className="flex items-center text-sm text-slate-500 mb-2">
-                          <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <svg
+                            className="w-4 h-4 ml-2"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                            />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                            />
                           </svg>
                           {place.address}
                         </div>
                         <div className="flex items-center text-sm text-slate-500 mb-4">
-                          <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                          <svg
+                            className="w-4 h-4 ml-2"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+                            />
                           </svg>
                           {place.category.name}
                         </div>
@@ -347,16 +389,27 @@ export default function PendingPlacesPage() {
 
                     {/* Submitter Info */}
                     <div className="mb-4 p-3 bg-slate-50 rounded-lg">
-                      <h4 className="text-sm font-medium text-slate-700 mb-1">ارسال شده توسط:</h4>
+                      <h4 className="text-sm font-medium text-slate-700 mb-1">
+                        ارسال شده توسط:
+                      </h4>
                       <div className="text-sm text-slate-600">
-                        <p>{place.submittedBy.first_name} {place.submittedBy.last_name}</p>
+                        <p>
+                          {place.submittedBy.first_name}{" "}
+                          {place.submittedBy.last_name}
+                        </p>
                         <p>{place.submittedBy.email}</p>
-                        <p>تاریخ ارسال: {formatPersianDate(place.submittedAt)}</p>
+                        <p>
+                          تاریخ ارسال: {formatPersianDate(place.submittedAt)}
+                        </p>
                       </div>
                       {place.reasonForPending && (
                         <div className="mt-2">
-                          <p className="text-sm font-medium text-amber-700">دلیل در انتظار:</p>
-                          <p className="text-sm text-amber-600">{place.reasonForPending}</p>
+                          <p className="text-sm font-medium text-amber-700">
+                            دلیل در انتظار:
+                          </p>
+                          <p className="text-sm text-amber-600">
+                            {place.reasonForPending}
+                          </p>
                         </div>
                       )}
                     </div>
@@ -405,7 +458,7 @@ export default function PendingPlacesPage() {
           <div className="mt-8 flex justify-center">
             <div className="flex items-center space-x-2 space-x-reverse">
               <button
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
                 className="px-3 py-2 text-sm font-medium text-slate-500 hover:text-slate-700 disabled:opacity-50"
               >
@@ -427,7 +480,9 @@ export default function PendingPlacesPage() {
               ))}
 
               <button
-                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
                 disabled={currentPage === totalPages}
                 className="px-3 py-2 text-sm font-medium text-slate-500 hover:text-slate-700 disabled:opacity-50"
               >
@@ -444,13 +499,25 @@ export default function PendingPlacesPage() {
           <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-slate-800">جزئیات مکان</h2>
+                <h2 className="text-2xl font-bold text-slate-800">
+                  جزئیات مکان
+                </h2>
                 <button
                   onClick={() => setShowModal(false)}
                   className="p-2 hover:bg-slate-100 rounded-lg transition-colors duration-200"
                 >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
@@ -462,8 +529,12 @@ export default function PendingPlacesPage() {
                 </div>
 
                 <div>
-                  <h3 className="font-bold text-slate-700 mb-2">توضیحات کامل</h3>
-                  <p className="text-slate-600 leading-relaxed">{selectedPlace.description}</p>
+                  <h3 className="font-bold text-slate-700 mb-2">
+                    توضیحات کامل
+                  </h3>
+                  <p className="text-slate-600 leading-relaxed">
+                    {selectedPlace.description}
+                  </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -474,7 +545,9 @@ export default function PendingPlacesPage() {
 
                   <div>
                     <h3 className="font-bold text-slate-700 mb-2">دسته‌بندی</h3>
-                    <p className="text-slate-600">{selectedPlace.category.name}</p>
+                    <p className="text-slate-600">
+                      {selectedPlace.category.name}
+                    </p>
                   </div>
 
                   {selectedPlace.phone && (
@@ -487,7 +560,12 @@ export default function PendingPlacesPage() {
                   {selectedPlace.website && (
                     <div>
                       <h3 className="font-bold text-slate-700 mb-2">وب‌سایت</h3>
-                      <a href={selectedPlace.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                      <a
+                        href={selectedPlace.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline"
+                      >
                         {selectedPlace.website}
                       </a>
                     </div>

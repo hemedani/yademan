@@ -37,7 +37,6 @@ const SimpleDrawing = dynamic(() => import("@/components/SimpleDrawing"), {
 export const ProvinceUpdateSchema = z.object({
   name: z.string().min(1, "نام استان الزامی است"),
   english_name: z.string().min(1, "نام انگلیسی استان الزامی است"),
-  population: z.coerce.number().min(0, "جمعیت نمی‌تواند منفی باشد"),
   area: z.object(
     {
       type: z.literal("MultiPolygon"),
@@ -52,7 +51,7 @@ export const ProvinceUpdateSchema = z.object({
     },
     { required_error: "ترسیم منطقه بر روی نقشه الزامی است" },
   ),
-  center_location: z.object(
+  center: z.object(
     {
       type: z.literal("Point"),
       coordinates: z
@@ -74,12 +73,11 @@ interface ProvinceData {
   _id: string;
   name: string;
   english_name: string;
-  population: number;
   area: {
     type: "MultiPolygon";
     coordinates: number[][][][];
   };
-  center_location: {
+  center: {
     type: "Point";
     coordinates: number[];
   };
@@ -119,9 +117,8 @@ export const FormUpdateProvince = ({
     defaultValues: {
       name: provinceData?.name || "",
       english_name: provinceData?.english_name || "",
-      population: provinceData?.population || 0,
       area: provinceData?.area || { type: "MultiPolygon", coordinates: [] },
-      center_location: provinceData?.center_location || {
+      center: provinceData?.center || {
         type: "Point",
         coordinates: [],
       },
@@ -134,14 +131,13 @@ export const FormUpdateProvince = ({
       // Set form values
       setValue("name", provinceData.name || "");
       setValue("english_name", provinceData.english_name || "");
-      setValue("population", provinceData.population || 0);
       setValue(
         "area",
         provinceData.area || { type: "MultiPolygon", coordinates: [] },
       );
       setValue(
-        "center_location",
-        provinceData.center_location || { type: "Point", coordinates: [] },
+        "center",
+        provinceData.center || { type: "Point", coordinates: [] },
       );
 
       // Set map polygon
@@ -178,18 +174,18 @@ export const FormUpdateProvince = ({
 
       // Set center point
       if (
-        provinceData.center_location?.coordinates &&
-        Array.isArray(provinceData.center_location.coordinates) &&
-        provinceData.center_location.coordinates.length === 2
+        provinceData.center?.coordinates &&
+        Array.isArray(provinceData.center.coordinates) &&
+        provinceData.center.coordinates.length === 2
       ) {
-        const [lng, lat] = provinceData.center_location.coordinates;
+        const [lng, lat] = provinceData.center.coordinates;
         if (typeof lng === "number" && typeof lat === "number") {
           setCenterPoint({ lat, lng });
           setMapCenter([lat, lng]);
         } else {
           console.error(
             "Invalid center coordinates:",
-            provinceData.center_location.coordinates,
+            provinceData.center.coordinates,
           );
         }
       } else {
@@ -203,10 +199,14 @@ export const FormUpdateProvince = ({
 
   // Handle polygon creation
   const handlePolygonCreated = useCallback(
-    (polygon: LatLng[]) => {
-      setDrawnPolygon(polygon);
-      const coordinates = polygon.map((point) => [point.lng, point.lat]);
-      coordinates.push(coordinates[0]);
+    (polygon: LatLng[][]) => {
+      // Take the first polygon from the multi-polygon array
+      const firstPolygon = polygon[0] || [];
+      setDrawnPolygon(firstPolygon);
+      const coordinates = firstPolygon.map((point) => [point.lng, point.lat]);
+      if (coordinates.length > 0) {
+        coordinates.push(coordinates[0]);
+      }
 
       const multiPolygon = {
         type: "MultiPolygon" as const,
@@ -233,12 +233,12 @@ export const FormUpdateProvince = ({
 
   // Handle map click for center point
   const handleMapClick = useCallback(
-    (e: L.LeafletMouseEvent) => {
+    (latlng: L.LatLng) => {
       if (isCenterMode) {
-        const { lat, lng } = e.latlng;
+        const { lat, lng } = latlng;
         setCenterPoint({ lat, lng });
         setValue(
-          "center_location",
+          "center",
           { type: "Point", coordinates: [lng, lat] },
           { shouldValidate: true },
         );
@@ -291,7 +291,7 @@ export const FormUpdateProvince = ({
   const clearCenterPoint = () => {
     setCenterPoint(null);
     setValue(
-      "center_location",
+      "center",
       { type: "Point", coordinates: [] },
       { shouldValidate: true },
     );
@@ -311,12 +311,11 @@ export const FormUpdateProvince = ({
       provinceData._id,
       data.name,
       data.english_name,
-      data.population,
       data.area as {
         type: "MultiPolygon";
         coordinates: number[][][][];
       },
-      data.center_location as {
+      data.center as {
         type: "Point";
         coordinates: number[];
       },
@@ -399,15 +398,6 @@ export const FormUpdateProvince = ({
               register={register}
               name="english_name"
               errMsg={errors.english_name?.message}
-            />
-
-            {/* Population Input */}
-            <MyInput
-              label="جمعیت"
-              register={register}
-              name="population"
-              type="number"
-              errMsg={errors.population?.message}
             />
           </div>
         </div>
@@ -577,7 +567,6 @@ export const FormUpdateProvince = ({
               <SimpleDrawing
                 isActive={isDrawingMode}
                 onPolygonCreated={handlePolygonCreated}
-                onPolygonDeleted={handlePolygonDeleted}
               />
             </MapContainer>
           </div>
@@ -588,9 +577,9 @@ export const FormUpdateProvince = ({
             </p>
           )}
 
-          {errors.center_location && (
+          {errors.center && (
             <p className="text-red-500 text-sm mt-2 text-right">
-              {errors.center_location.message}
+              {errors.center.message}
             </p>
           )}
 

@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 
 interface ProfileSettingsProps {
   user?: {
@@ -21,11 +21,11 @@ interface ProfileSettingsProps {
 }
 
 const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
-  const t = useTranslations('Profile');
+  const t = useTranslations("Profile");
   const [formData, setFormData] = useState({
-    name: user?.name || 'کاربر تست',
-    email: user?.email || 'test@example.com',
-    phone: user?.phone || '',
+    name: user?.name || "کاربر تست",
+    email: user?.email || "test@example.com",
+    phone: user?.phone || "",
     notifications: {
       email: user?.notifications.email ?? true,
       push: user?.notifications.push ?? true,
@@ -34,28 +34,37 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
     privacy: {
       profileVisible: user?.privacy.profileVisible ?? true,
       activityVisible: user?.privacy.activityVisible ?? true,
-    }
+    },
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
 
-    if (name.includes('.')) {
-      const [parent, child] = name.split('.');
-      setFormData(prev => ({
-        ...prev,
-        [parent]: {
-          ...prev[parent as keyof typeof prev],
-          [child]: type === 'checkbox' ? checked : value
+    if (name.includes(".")) {
+      const [parent, child] = name.split(".");
+      setFormData((prev) => {
+        const parentValue = prev[parent as keyof typeof prev];
+        if (typeof parentValue === "object" && parentValue !== null) {
+          return {
+            ...prev,
+            [parent]: {
+              ...parentValue,
+              [child]: type === "checkbox" ? checked : value,
+            },
+          };
         }
-      }));
+        return prev;
+      });
     } else {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        [name]: type === 'checkbox' ? checked : value
+        [name]: type === "checkbox" ? checked : value,
       }));
     }
   };
@@ -67,10 +76,10 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
 
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setMessage({ type: 'success', text: 'تنظیمات با موفقیت ذخیره شد' });
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      setMessage({ type: "success", text: "تنظیمات با موفقیت ذخیره شد" });
     } catch (error) {
-      setMessage({ type: 'error', text: 'خطا در ذخیره تنظیمات' });
+      setMessage({ type: "error", text: "خطا در ذخیره تنظیمات" });
     } finally {
       setIsLoading(false);
     }
@@ -81,11 +90,13 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
       <h2 className="text-xl font-bold text-gray-900 mb-6">تنظیمات پروفایل</h2>
 
       {message && (
-        <div className={`mb-6 p-4 rounded-lg ${
-          message.type === 'success'
-            ? 'bg-green-50 border border-green-200 text-green-800'
-            : 'bg-red-50 border border-red-200 text-red-800'
-        }`}>
+        <div
+          className={`mb-6 p-4 rounded-lg ${
+            message.type === "success"
+              ? "bg-green-50 border border-green-200 text-green-800"
+              : "bg-red-50 border border-red-200 text-red-800"
+          }`}
+        >
           {message.text}
         </div>
       )}
@@ -93,10 +104,15 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Personal Information */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">اطلاعات شخصی</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            اطلاعات شخصی
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 نام و نام خانوادگی
               </label>
               <input
@@ -109,7 +125,10 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
               />
             </div>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 ایمیل
               </label>
               <input
@@ -122,7 +141,10 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
               />
             </div>
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 شماره تلفن
               </label>
               <input
@@ -140,12 +162,16 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
 
         {/* Notification Settings */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">تنظیمات اعلان‌ها</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            تنظیمات اعلان‌ها
+          </h3>
           <div className="space-y-4">
             <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
               <div>
                 <h4 className="font-medium text-gray-900">اعلان‌های ایمیل</h4>
-                <p className="text-sm text-gray-600">دریافت اعلان‌ها از طریق ایمیل</p>
+                <p className="text-sm text-gray-600">
+                  دریافت اعلان‌ها از طریق ایمیل
+                </p>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
@@ -162,7 +188,9 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
             <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
               <div>
                 <h4 className="font-medium text-gray-900">اعلان‌های پوش</h4>
-                <p className="text-sm text-gray-600">دریافت اعلان‌ها در مرورگر</p>
+                <p className="text-sm text-gray-600">
+                  دریافت اعلان‌ها در مرورگر
+                </p>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
@@ -179,7 +207,9 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
             <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
               <div>
                 <h4 className="font-medium text-gray-900">اعلان‌های پیامکی</h4>
-                <p className="text-sm text-gray-600">دریافت اعلان‌ها از طریق پیامک</p>
+                <p className="text-sm text-gray-600">
+                  دریافت اعلان‌ها از طریق پیامک
+                </p>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
@@ -197,12 +227,16 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
 
         {/* Privacy Settings */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">تنظیمات حریم خصوصی</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            تنظیمات حریم خصوصی
+          </h3>
           <div className="space-y-4">
             <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
               <div>
                 <h4 className="font-medium text-gray-900">نمایش پروفایل</h4>
-                <p className="text-sm text-gray-600">امکان مشاهده پروفایل شما توسط دیگران</p>
+                <p className="text-sm text-gray-600">
+                  امکان مشاهده پروفایل شما توسط دیگران
+                </p>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
@@ -219,7 +253,9 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
             <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
               <div>
                 <h4 className="font-medium text-gray-900">نمایش فعالیت‌ها</h4>
-                <p className="text-sm text-gray-600">امکان مشاهده فعالیت‌های شما توسط دیگران</p>
+                <p className="text-sm text-gray-600">
+                  امکان مشاهده فعالیت‌های شما توسط دیگران
+                </p>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
@@ -248,7 +284,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ user }) => {
                 در حال ذخیره...
               </div>
             ) : (
-              'ذخیره تغییرات'
+              "ذخیره تغییرات"
             )}
           </button>
         </div>

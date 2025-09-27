@@ -13,27 +13,36 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({
-    className,
-    type = "text",
-    label,
-    error,
-    helperText,
-    leftIcon,
-    rightIcon,
-    variant = "default",
-    disabled,
-    ...props
-  }, ref) => {
-    const baseStyles = "w-full px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
+  (
+    {
+      className,
+      type = "text",
+      label,
+      error,
+      helperText,
+      leftIcon,
+      rightIcon,
+      variant = "default",
+      disabled,
+      ...props
+    },
+    ref,
+  ) => {
+    const baseStyles =
+      "w-full px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
 
     const variants = {
-      default: "border border-gray-300 rounded-lg bg-white hover:border-gray-400 focus:border-blue-500",
-      filled: "border-0 rounded-lg bg-gray-100 hover:bg-gray-200 focus:bg-white focus:ring-1",
-      outline: "border-2 border-gray-200 rounded-lg bg-transparent hover:border-gray-300 focus:border-blue-500",
+      default:
+        "border border-gray-300 rounded-lg bg-white hover:border-gray-400 focus:border-blue-500",
+      filled:
+        "border-0 rounded-lg bg-gray-100 hover:bg-gray-200 focus:bg-white focus:ring-1",
+      outline:
+        "border-2 border-gray-200 rounded-lg bg-transparent hover:border-gray-300 focus:border-blue-500",
     };
 
-    const errorStyles = error ? "border-red-500 focus:border-red-500 focus:ring-red-500" : "";
+    const errorStyles = error
+      ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+      : "";
 
     return (
       <div className="w-full">
@@ -57,9 +66,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               baseStyles,
               variants[variant],
               errorStyles,
-              leftIcon && "pl-10",
-              rightIcon && "pr-10",
-              className
+              leftIcon ? "pl-10" : undefined,
+              rightIcon ? "pr-10" : undefined,
+              className,
             )}
             disabled={disabled}
             ref={ref}
@@ -75,8 +84,18 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 
         {error && (
           <p className="mt-1 text-sm text-red-600 flex items-center">
-            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.996-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            <svg
+              className="w-4 h-4 mr-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.996-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+              />
             </svg>
             {error}
           </p>
@@ -87,7 +106,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 Input.displayName = "Input";

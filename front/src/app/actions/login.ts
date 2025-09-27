@@ -2,7 +2,7 @@
 
 import { AppApi } from "@/services/api";
 
-export const loginAction = async ({
+export const login = async ({
   national_number,
   code,
 }: {
@@ -17,7 +17,7 @@ export const loginAction = async ({
       set: {
         national_number,
         code,
-      },
+      } as any,
       get: {
         token: 1,
         user: {
@@ -26,9 +26,9 @@ export const loginAction = async ({
           last_name: 1,
           mobile: 1,
           national_number: 1,
-          level: 1
+          level: 1,
         },
-      },
+      } as any,
     },
   });
 };

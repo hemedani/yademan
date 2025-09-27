@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
 
 interface GalleryImage {
   _id: string;
@@ -23,7 +21,6 @@ interface GalleryImage {
 }
 
 export default function GalleryPage() {
-  const { user, userLevel } = useAuth();
   const [images, setImages] = useState<GalleryImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");

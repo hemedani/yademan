@@ -37,7 +37,6 @@ const SimpleDrawing = dynamic(() => import("@/components/SimpleDrawing"), {
 export const CityUpdateSchema = z.object({
   name: z.string().min(1, "نام شهر الزامی است"),
   english_name: z.string().min(1, "نام انگلیسی شهر الزامی است"),
-  population: z.coerce.number().min(0, "جمعیت نمی‌تواند منفی باشد"),
   area: z.object(
     {
       type: z.literal("MultiPolygon"),
@@ -52,7 +51,7 @@ export const CityUpdateSchema = z.object({
     },
     { required_error: "ترسیم منطقه بر روی نقشه الزامی است" },
   ),
-  center_location: z.object(
+  center: z.object(
     {
       type: z.literal("Point"),
       coordinates: z
@@ -74,12 +73,11 @@ interface CityData {
   _id: string;
   name: string;
   english_name: string;
-  population: number;
   area: {
     type: "MultiPolygon";
     coordinates: number[][][][];
   };
-  center_location: {
+  center: {
     type: "Point";
     coordinates: number[];
   };
@@ -119,9 +117,8 @@ export const FormUpdateCity = ({
     defaultValues: {
       name: cityData?.name || "",
       english_name: cityData?.english_name || "",
-      population: cityData?.population || 0,
       area: cityData?.area || { type: "MultiPolygon", coordinates: [] },
-      center_location: cityData?.center_location || {
+      center: cityData?.center || {
         type: "Point",
         coordinates: [],
       },
@@ -134,15 +131,11 @@ export const FormUpdateCity = ({
       // Set form values
       setValue("name", cityData.name || "");
       setValue("english_name", cityData.english_name || "");
-      setValue("population", cityData.population || 0);
       setValue(
         "area",
         cityData.area || { type: "MultiPolygon", coordinates: [] },
       );
-      setValue(
-        "center_location",
-        cityData.center_location || { type: "Point", coordinates: [] },
-      );
+      setValue("center", cityData.center || { type: "Point", coordinates: [] });
 
       // Set map polygon
       if (
@@ -178,18 +171,18 @@ export const FormUpdateCity = ({
 
       // Set center point
       if (
-        cityData.center_location?.coordinates &&
-        Array.isArray(cityData.center_location.coordinates) &&
-        cityData.center_location.coordinates.length === 2
+        cityData.center?.coordinates &&
+        Array.isArray(cityData.center.coordinates) &&
+        cityData.center.coordinates.length === 2
       ) {
-        const [lng, lat] = cityData.center_location.coordinates;
+        const [lng, lat] = cityData.center.coordinates;
         if (typeof lng === "number" && typeof lat === "number") {
           setCenterPoint({ lat, lng });
           setMapCenter([lat, lng]);
         } else {
           console.error(
             "Invalid center coordinates:",
-            cityData.center_location.coordinates,
+            cityData.center.coordinates,
           );
         }
       } else {
@@ -203,10 +196,14 @@ export const FormUpdateCity = ({
 
   // Handle polygon creation
   const handlePolygonCreated = useCallback(
-    (polygon: LatLng[]) => {
-      setDrawnPolygon(polygon);
-      const coordinates = polygon.map((point) => [point.lng, point.lat]);
-      coordinates.push(coordinates[0]);
+    (polygon: LatLng[][]) => {
+      // Take the first polygon from the multi-polygon array
+      const firstPolygon = polygon[0] || [];
+      setDrawnPolygon(firstPolygon);
+      const coordinates = firstPolygon.map((point) => [point.lng, point.lat]);
+      if (coordinates.length > 0) {
+        coordinates.push(coordinates[0]);
+      }
 
       const multiPolygon = {
         type: "MultiPolygon" as const,
@@ -233,12 +230,12 @@ export const FormUpdateCity = ({
 
   // Handle map click for center point
   const handleMapClick = useCallback(
-    (e: L.LeafletMouseEvent) => {
+    (latlng: L.LatLng) => {
       if (isCenterMode) {
-        const { lat, lng } = e.latlng;
+        const { lat, lng } = latlng;
         setCenterPoint({ lat, lng });
         setValue(
-          "center_location",
+          "center",
           { type: "Point", coordinates: [lng, lat] },
           { shouldValidate: true },
         );
@@ -291,7 +288,7 @@ export const FormUpdateCity = ({
   const clearCenterPoint = () => {
     setCenterPoint(null);
     setValue(
-      "center_location",
+      "center",
       { type: "Point", coordinates: [] },
       { shouldValidate: true },
     );
@@ -299,9 +296,7 @@ export const FormUpdateCity = ({
   };
 
   // Form submission
-  const onSubmit: SubmitHandler<CityFormUpdateSchemaType> = async (
-    data,
-  ) => {
+  const onSubmit: SubmitHandler<CityFormUpdateSchemaType> = async (data) => {
     if (!cityData?._id) {
       ToastNotify("error", "خطا: شناسه شهر موجود نیست");
       return;
@@ -311,12 +306,11 @@ export const FormUpdateCity = ({
       cityData._id,
       data.name,
       data.english_name,
-      data.population,
       data.area as {
         type: "MultiPolygon";
         coordinates: number[][][][];
       },
-      data.center_location as {
+      data.center as {
         type: "Point";
         coordinates: number[];
       },
@@ -326,10 +320,7 @@ export const FormUpdateCity = ({
       ToastNotify("success", "شهر با موفقیت ویرایش شد");
       onSuccessAction();
     } else {
-      ToastNotify(
-        "error",
-        updatedCity.body.message || "خطا در ویرایش شهر",
-      );
+      ToastNotify("error", updatedCity.body.message || "خطا در ویرایش شهر");
     }
   };
 
@@ -399,15 +390,6 @@ export const FormUpdateCity = ({
               register={register}
               name="english_name"
               errMsg={errors.english_name?.message}
-            />
-
-            {/* Population Input */}
-            <MyInput
-              label="جمعیت"
-              register={register}
-              name="population"
-              type="number"
-              errMsg={errors.population?.message}
             />
           </div>
         </div>
@@ -577,7 +559,6 @@ export const FormUpdateCity = ({
               <SimpleDrawing
                 isActive={isDrawingMode}
                 onPolygonCreated={handlePolygonCreated}
-                onPolygonDeleted={handlePolygonDeleted}
               />
             </MapContainer>
           </div>
@@ -588,9 +569,9 @@ export const FormUpdateCity = ({
             </p>
           )}
 
-          {errors.center_location && (
+          {errors.center && (
             <p className="text-red-500 text-sm mt-2 text-right">
-              {errors.center_location.message}
+              {errors.center.message}
             </p>
           )}
 

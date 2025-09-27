@@ -26,36 +26,30 @@ export default async function ProfilePage() {
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
-          <ProfileHeader user={user} />
+          <ProfileHeader
+            user={{
+              name: user.name,
+              email: user.email,
+              avatar: user.avatar,
+              level: user.role,
+              joinDate: user.createdAt,
+            }}
+          />
 
           <div className="mt-8">
-            <ProfileTabs
-              tabs={[
-                {
-                  id: "favorites",
-                  label: "Favorite Locations",
-                  content: (
-                    <Suspense fallback={<div>Loading favorites...</div>}>
-                      <FavoriteLocations userId={user.id} />
-                    </Suspense>
-                  ),
-                },
-                {
-                  id: "activity",
-                  label: "Activity History",
-                  content: (
-                    <Suspense fallback={<div>Loading activity...</div>}>
-                      <ActivityHistory userId={user.id} />
-                    </Suspense>
-                  ),
-                },
-                {
-                  id: "settings",
-                  label: "Settings",
-                  content: <ProfileSettings user={user} />,
-                },
-              ]}
-            />
+            <ProfileTabs defaultTab="favorites" />
+
+            <div className="mt-8 space-y-8">
+              <Suspense fallback={<div>Loading favorites...</div>}>
+                <FavoriteLocations />
+              </Suspense>
+
+              <Suspense fallback={<div>Loading activity...</div>}>
+                <ActivityHistory />
+              </Suspense>
+
+              <ProfileSettings />
+            </div>
           </div>
         </div>
       </div>

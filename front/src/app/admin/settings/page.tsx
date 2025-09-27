@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
 
 interface SiteSettings {
   siteName: string;
@@ -38,8 +36,6 @@ interface ContentSettings {
 }
 
 export default function SettingsPage() {
-  const router = useRouter();
-  const { user, userLevel } = useAuth();
   const [activeTab, setActiveTab] = useState("site");
   const [loading, setLoading] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
@@ -743,15 +739,18 @@ export default function SettingsPage() {
                         type="text"
                         placeholder="کلمه جدید اضافه کنید..."
                         onKeyPress={(e) => {
-                          if (e.key === "Enter" && e.target.value.trim()) {
+                          if (
+                            e.key === "Enter" &&
+                            (e.target as HTMLInputElement).value.trim()
+                          ) {
                             setContentSettings((prev) => ({
                               ...prev,
                               moderationKeywords: [
                                 ...prev.moderationKeywords,
-                                e.target.value.trim(),
+                                (e.target as HTMLInputElement).value.trim(),
                               ],
                             }));
-                            e.target.value = "";
+                            (e.target as HTMLInputElement).value = "";
                           }
                         }}
                         className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"

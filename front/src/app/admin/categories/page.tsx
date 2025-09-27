@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
 
 interface Category {
   _id: string;
@@ -27,8 +25,6 @@ interface CategoryFormData {
 }
 
 export default function CategoriesPage() {
-  const router = useRouter();
-  const { user, userLevel } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");

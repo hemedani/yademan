@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useTranslations } from "next-intl";
+
 import { Link } from "../../../navigation";
 
 interface AuthLayoutProps {
@@ -17,8 +17,6 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({
   subtitle,
   showBackToHome = true,
 }) => {
-  const t = useTranslations("Auth");
-
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">

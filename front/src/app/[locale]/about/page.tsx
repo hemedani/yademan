@@ -39,9 +39,10 @@ export default function AboutPage() {
                     Our Mission
                   </h2>
                   <p className="text-lg text-gray-600 mb-6">
-                    Yademan (یادمان) means "memorial" or "remembrance" in
-                    Persian. We believe that every place has a story, and every
-                    story deserves to be remembered and shared.
+                    Yademan (یادمان) means &quot;memorial&quot; or
+                    &quot;remembrance&quot; in Persian. We believe that every
+                    place has a story, and every story deserves to be remembered
+                    and shared.
                   </p>
                   <p className="text-lg text-gray-600 mb-6">
                     Our platform helps you discover meaningful locations,
@@ -163,7 +164,7 @@ export default function AboutPage() {
                 Our Team
               </h2>
               <p className="text-lg text-gray-600 mb-12">
-                We're a passionate team of developers, designers, and
+                We&apos;re a passionate team of developers, designers, and
                 storytellers dedicated to creating meaningful digital
                 experiences.
               </p>

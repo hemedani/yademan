@@ -16,7 +16,7 @@ interface Place {
   };
   area?: {
     type: "MultiPolygon";
-    coordinates: any[];
+    coordinates: number[][][][];
   };
   address?: string;
   contact?: {
@@ -75,7 +75,7 @@ interface PlaceFilters {
 
 const PlacesManagement: React.FC = () => {
   const router = useRouter();
-  const { user, userLevel } = useAuth();
+  const { userLevel } = useAuth();
   const [places, setPlaces] = useState<Place[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -166,37 +166,37 @@ const PlacesManagement: React.FC = () => {
 
       const response = await api.send({
         model: "place",
-        act: "getPaginatedPlaces",
+        act: "gets",
         details: {
           set: queryParams,
           get: {
-            name: true,
-            description: true,
-            slug: true,
-            center: true,
-            address: true,
-            contact: true,
-            hoursOfOperation: true,
-            status: true,
-            createdAt: true,
-            updatedAt: true,
+            name: 1,
+            description: 1,
+            slug: 1,
+            center: 1,
+            address: 1,
+            contact: 1,
+            hoursOfOperation: 1,
+            status: 1,
+            createdAt: 1,
+            updatedAt: 1,
             registrar: {
-              first_name: true,
-              last_name: true,
+              first_name: 1,
+              last_name: 1,
             },
             category: {
-              name: true,
-              color: true,
+              name: 1,
+              color: 1,
             },
             tags: {
-              name: true,
-              color: true,
+              name: 1,
+              color: 1,
             },
             gallery: {
-              name: true,
-              alt_text: true,
+              name: 1,
+              alt_text: 1,
             },
-            meta: true,
+            meta: 1,
           },
         },
       });
@@ -207,7 +207,7 @@ const PlacesManagement: React.FC = () => {
       } else {
         setError(response.body?.message || "خطا در دریافت اطلاعات مکان‌ها");
       }
-    } catch (err) {
+    } catch {
       setError("خطا در اتصال به سرور");
     } finally {
       setLoading(false);
@@ -220,14 +220,14 @@ const PlacesManagement: React.FC = () => {
       const api = AppApi();
       const response = await api.send({
         model: "category",
-        act: "getCategories",
+        act: "gets",
         details: {
           set: {},
           get: {
-            name: true,
-            description: true,
-            color: true,
-            icon: true,
+            name: 1,
+            description: 1,
+            color: 1,
+            icon: 1,
           },
         },
       });
@@ -250,7 +250,7 @@ const PlacesManagement: React.FC = () => {
 
       const response = await api.send({
         model: "place",
-        act: "deletePlace",
+        act: "remove",
         details: {
           set: { _id: placeId },
           get: {},
@@ -264,7 +264,7 @@ const PlacesManagement: React.FC = () => {
       } else {
         setError(response.body?.message || "خطا در حذف مکان");
       }
-    } catch (err) {
+    } catch {
       setError("خطا در اتصال به سرور");
     } finally {
       setActionLoading(null);
@@ -272,14 +272,17 @@ const PlacesManagement: React.FC = () => {
   };
 
   // Update place status
-  const handleStatusChange = async (placeId: string, newStatus: string) => {
+  const handleStatusChange = async (
+    placeId: string,
+    newStatus: "active" | "pending" | "inactive",
+  ) => {
     try {
       setActionLoading(placeId);
       const api = AppApi();
 
       const response = await api.send({
         model: "place",
-        act: "updatePlaceStatus",
+        act: "update",
         details: {
           set: { _id: placeId, status: newStatus },
           get: {},
@@ -289,13 +292,15 @@ const PlacesManagement: React.FC = () => {
       if (response.success) {
         setPlaces(
           places.map((p) =>
-            p._id === placeId ? { ...p, status: newStatus as any } : p,
+            p._id === placeId
+              ? { ...p, status: newStatus as "draft" | "active" | "archived" }
+              : p,
           ),
         );
       } else {
         setError(response.body?.message || "خطا در به‌روزرسانی وضعیت");
       }
-    } catch (err) {
+    } catch {
       setError("خطا در اتصال به سرور");
     } finally {
       setActionLoading(null);
@@ -916,7 +921,13 @@ const PlacesManagement: React.FC = () => {
                         <select
                           value={place.status}
                           onChange={(e) =>
-                            handleStatusChange(place._id, e.target.value)
+                            handleStatusChange(
+                              place._id,
+                              e.target.value as
+                                | "active"
+                                | "pending"
+                                | "inactive",
+                            )
                           }
                           disabled={actionLoading === place._id}
                           className="text-xs border border-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50"
