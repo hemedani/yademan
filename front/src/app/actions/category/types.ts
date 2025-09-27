@@ -46,7 +46,6 @@ export const availableIcons = [
   "🏛️", // Museum & Gallery
   "🌳", // Park & Green Space
   "🕌", // Mosque & Shrine
-  "🏪", // Shop & Store
   "🏥", // Hospital & Medical
   "🎭", // Theater & Performance
   "🏋️", // Gym & Sports
