@@ -1,178 +1,97 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import {
+  addCategory,
+  updateCategory,
+  getCategories,
+  removeCategory,
+  countCategories,
+  availableIcons as importedIcons,
+  availableColors as importedColors,
+  type Category as ImportedCategory,
+  type CategoryFormData as ImportedCategoryFormData,
+} from "@/app/actions/category";
+import { useAuth } from "@/context/AuthContext";
+import toast from "react-hot-toast";
 
-interface Category {
-  _id: string;
-  name: string;
-  slug: string;
-  description: string;
-  icon: string;
-  color: string;
-  placesCount: number;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
+interface Category extends ImportedCategory {
+  placesCount?: number;
+  isActive?: boolean;
 }
 
 interface CategoryFormData {
   name: string;
-  slug: string;
   description: string;
   icon: string;
   color: string;
-  isActive: boolean;
 }
 
 export default function CategoriesPage() {
+  const { user } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
-  const [actionLoading, setActionLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(12);
+  const [totalCategories, setTotalCategories] = useState(0);
 
   const [formData, setFormData] = useState<CategoryFormData>({
     name: "",
-    slug: "",
     description: "",
     icon: "📍",
     color: "#3B82F6",
-    isActive: true,
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const availableIcons = [
-    "🍽️",
-    "🏛️",
-    "🌳",
-    "🕌",
-    "🏪",
-    "🏥",
-    "🎭",
-    "🏋️",
-    "☕",
-    "🛍️",
-    "🏨",
-    "⛽",
-    "💊",
-    "📚",
-    "🎪",
-    "🏊",
-    "📍",
-    "🎯",
-    "🎨",
-    "🎵",
-    "💼",
-    "🚗",
-    "✈️",
-    "🎢",
-  ];
-
-  const availableColors = [
-    "#3B82F6",
-    "#EF4444",
-    "#10B981",
-    "#F59E0B",
-    "#8B5CF6",
-    "#06B6D4",
-    "#F97316",
-    "#84CC16",
-    "#EC4899",
-    "#6366F1",
-  ];
+  // Use imported icons and colors with fallback
+  const availableIcons = importedIcons;
+  const availableColors = importedColors;
 
   useEffect(() => {
     loadCategories();
+    loadCategoryCount();
   }, []);
-
-  useEffect(() => {
-    if (formData.name && !editingCategory) {
-      const slug = formData.name
-        .toLowerCase()
-        .replace(/\s+/g, "-")
-        .replace(/[^a-z0-9\u0600-\u06FF-]/g, "");
-      setFormData((prev) => ({ ...prev, slug }));
-    }
-  }, [formData.name, editingCategory]);
 
   const loadCategories = async () => {
     setLoading(true);
     try {
-      // Replace with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await getCategories({
+        page: 1,
+        limit: 100, // Load all categories for now
+      });
 
-      const mockCategories: Category[] = [
-        {
-          _id: "1",
-          name: "رستوران و کافه",
-          slug: "restaurant-cafe",
-          description: "رستوران‌ها، کافه‌ها و اماکن غذاخوری",
-          icon: "🍽️",
-          color: "#EF4444",
-          placesCount: 45,
-          isActive: true,
-          createdAt: "2024-01-01T10:00:00Z",
-          updatedAt: "2024-01-15T14:30:00Z",
-        },
-        {
-          _id: "2",
-          name: "موزه و گالری",
-          slug: "museum-gallery",
-          description: "موزه‌ها، گالری‌ها و اماکن فرهنگی",
-          icon: "🏛️",
-          color: "#8B5CF6",
-          placesCount: 23,
-          isActive: true,
-          createdAt: "2024-01-02T11:00:00Z",
-          updatedAt: "2024-01-16T15:45:00Z",
-        },
-        {
-          _id: "3",
-          name: "پارک و فضای سبز",
-          slug: "park-green-space",
-          description: "پارک‌ها، باغ‌ها و فضاهای سبز شهری",
-          icon: "🌳",
-          color: "#10B981",
-          placesCount: 32,
-          isActive: true,
-          createdAt: "2024-01-03T09:30:00Z",
-          updatedAt: "2024-01-17T16:20:00Z",
-        },
-        {
-          _id: "4",
-          name: "مسجد و امامزاده",
-          slug: "mosque-shrine",
-          description: "مساجد، امامزاده‌ها و اماکن مذهبی",
-          icon: "🕌",
-          color: "#06B6D4",
-          placesCount: 18,
-          isActive: true,
-          createdAt: "2024-01-04T12:15:00Z",
-          updatedAt: "2024-01-18T17:10:00Z",
-        },
-        {
-          _id: "5",
-          name: "مرکز خرید",
-          slug: "shopping-center",
-          description: "مراکز خرید، بازار و فروشگاه‌ها",
-          icon: "🛍️",
-          color: "#F59E0B",
-          placesCount: 27,
-          isActive: false,
-          createdAt: "2024-01-05T13:20:00Z",
-          updatedAt: "2024-01-19T18:30:00Z",
-        },
-      ];
-
-      setCategories(mockCategories);
+      if (response.success && response.body) {
+        // Add isActive property and placesCount (you may want to get this from a different API)
+        const categoriesWithExtra = response.body.map((cat: any) => ({
+          ...cat,
+          isActive: true, // Default to active since backend doesn't have this
+          placesCount: 0, // You'll need to get this from places API
+        }));
+        setCategories(categoriesWithExtra);
+      } else {
+        toast.error("خطا در دریافت دسته‌بندی‌ها");
+      }
     } catch (error) {
       console.error("Error loading categories:", error);
+      toast.error("خطا در دریافت دسته‌بندی‌ها");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadCategoryCount = async () => {
+    try {
+      const response = await countCategories();
+      if (response.success && response.body) {
+        setTotalCategories(response.body.qty);
+      }
+    } catch (error) {
+      console.error("Error counting categories:", error);
     }
   };
 
@@ -183,10 +102,6 @@ export default function CategoriesPage() {
       newErrors.name = "نام دسته‌بندی الزامی است";
     }
 
-    if (!formData.slug.trim()) {
-      newErrors.slug = "نامک (slug) الزامی است";
-    }
-
     if (!formData.description.trim()) {
       newErrors.description = "توضیحات الزامی است";
     }
@@ -195,12 +110,12 @@ export default function CategoriesPage() {
       newErrors.icon = "انتخاب آیکن الزامی است";
     }
 
-    // Check for duplicate slug
+    // Check for duplicate name
     const existingCategory = categories.find(
-      (cat) => cat.slug === formData.slug && cat._id !== editingCategory?._id,
+      (cat) => cat.name === formData.name && cat._id !== editingCategory?._id,
     );
     if (existingCategory) {
-      newErrors.slug = "این نامک قبلاً استفاده شده است";
+      newErrors.name = "این نام قبلاً استفاده شده است";
     }
 
     setErrors(newErrors);
@@ -212,45 +127,61 @@ export default function CategoriesPage() {
 
     if (!validateForm()) return;
 
-    setActionLoading(true);
+    setActionLoading(editingCategory ? editingCategory._id : "new");
     try {
-      // Replace with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
       if (editingCategory) {
         // Update existing category
-        const updatedCategory: Category = {
-          ...editingCategory,
-          ...formData,
-          updatedAt: new Date().toISOString(),
-        };
+        const response = await updateCategory({
+          _id: editingCategory._id,
+          name: formData.name,
+          description: formData.description,
+          color: formData.color,
+          icon: formData.icon,
+        });
 
-        setCategories((prev) =>
-          prev.map((cat) =>
-            cat._id === editingCategory._id ? updatedCategory : cat,
-          ),
-        );
-        alert("دسته‌بندی با موفقیت به‌روزرسانی شد!");
+        if (response.success && response.body) {
+          const updatedCategory = {
+            ...response.body,
+            isActive: editingCategory.isActive,
+            placesCount: editingCategory.placesCount,
+          };
+          setCategories((prev) =>
+            prev.map((cat) =>
+              cat._id === editingCategory._id ? updatedCategory : cat,
+            ),
+          );
+          toast.success("دسته‌بندی با موفقیت به‌روزرسانی شد!");
+          resetForm();
+        } else {
+          toast.error("خطا در به‌روزرسانی دسته‌بندی");
+        }
       } else {
         // Create new category
-        const newCategory: Category = {
-          _id: Date.now().toString(),
-          ...formData,
-          placesCount: 0,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
+        const response = await addCategory({
+          name: formData.name,
+          description: formData.description,
+          color: formData.color,
+          icon: formData.icon,
+        });
 
-        setCategories((prev) => [newCategory, ...prev]);
-        alert("دسته‌بندی جدید با موفقیت ایجاد شد!");
+        if (response.success && response.body) {
+          const newCategory = {
+            ...response.body,
+            isActive: true,
+            placesCount: 0,
+          };
+          setCategories((prev) => [newCategory, ...prev]);
+          toast.success("دسته‌بندی جدید با موفقیت ایجاد شد!");
+          resetForm();
+        } else {
+          toast.error("خطا در ایجاد دسته‌بندی");
+        }
       }
-
-      resetForm();
     } catch (error) {
       console.error("Error saving category:", error);
-      alert("خطا در ذخیره دسته‌بندی");
+      toast.error("خطا در ذخیره دسته‌بندی");
     } finally {
-      setActionLoading(false);
+      setActionLoading(null);
     }
   };
 
@@ -258,8 +189,8 @@ export default function CategoriesPage() {
     const category = categories.find((cat) => cat._id === categoryId);
     if (!category) return;
 
-    if (category.placesCount > 0) {
-      alert("این دسته‌بندی دارای مکان است و قابل حذف نیست");
+    if (category.placesCount && category.placesCount > 0) {
+      toast.error("این دسته‌بندی دارای مکان است و قابل حذف نیست");
       return;
     }
 
@@ -271,18 +202,24 @@ export default function CategoriesPage() {
       return;
     }
 
-    setActionLoading(true);
+    setActionLoading(categoryId);
     try {
-      // Replace with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const response = await removeCategory({
+        _id: categoryId,
+        hardCascade: false,
+      });
 
-      setCategories((prev) => prev.filter((cat) => cat._id !== categoryId));
-      alert("دسته‌بندی با موفقیت حذف شد!");
+      if (response.success) {
+        setCategories((prev) => prev.filter((cat) => cat._id !== categoryId));
+        toast.success("دسته‌بندی با موفقیت حذف شد!");
+      } else {
+        toast.error("خطا در حذف دسته‌بندی");
+      }
     } catch (error) {
       console.error("Error deleting category:", error);
-      alert("خطا در حذف دسته‌بندی");
+      toast.error("خطا در حذف دسته‌بندی");
     } finally {
-      setActionLoading(false);
+      setActionLoading(null);
     }
   };
 
@@ -290,11 +227,10 @@ export default function CategoriesPage() {
     const category = categories.find((cat) => cat._id === categoryId);
     if (!category) return;
 
-    setActionLoading(true);
+    setActionLoading(categoryId);
     try {
-      // Replace with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
+      // Since the backend doesn't have an isActive field, we'll manage it locally
+      // You might want to implement this in the backend later
       setCategories((prev) =>
         prev.map((cat) =>
           cat._id === categoryId
@@ -306,22 +242,22 @@ export default function CategoriesPage() {
             : cat,
         ),
       );
+
+      toast.success("وضعیت دسته‌بندی با موفقیت تغییر کرد");
     } catch (error) {
       console.error("Error toggling category status:", error);
-      alert("خطا در تغییر وضعیت دسته‌بندی");
+      toast.error("خطا در تغییر وضعیت دسته‌بندی");
     } finally {
-      setActionLoading(false);
+      setActionLoading(null);
     }
   };
 
   const resetForm = () => {
     setFormData({
       name: "",
-      slug: "",
       description: "",
       icon: "📍",
       color: "#3B82F6",
-      isActive: true,
     });
     setErrors({});
     setEditingCategory(null);
@@ -331,11 +267,9 @@ export default function CategoriesPage() {
   const openEditModal = (category: Category) => {
     setFormData({
       name: category.name,
-      slug: category.slug,
       description: category.description,
-      icon: category.icon,
-      color: category.color,
-      isActive: category.isActive,
+      icon: category.icon || "📍",
+      color: category.color || "#3B82F6",
     });
     setEditingCategory(category);
     setShowModal(true);
@@ -466,7 +400,9 @@ export default function CategoriesPage() {
             {paginatedCategories.map((category) => (
               <div
                 key={category._id}
-                className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+                className={`relative bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 ${
+                  actionLoading === category._id ? "opacity-60" : ""
+                }`}
               >
                 {/* Category Header */}
                 <div className="flex items-center justify-between mb-4">
@@ -482,7 +418,7 @@ export default function CategoriesPage() {
                   <div className="flex items-center space-x-reverse space-x-2">
                     <button
                       onClick={() => handleToggleStatus(category._id)}
-                      disabled={actionLoading}
+                      disabled={actionLoading !== null}
                       className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 ${
                         category.isActive
                           ? "bg-green-100 text-green-600"
@@ -520,7 +456,11 @@ export default function CategoriesPage() {
                         </button>
                         <button
                           onClick={() => handleDelete(category._id)}
-                          disabled={category.placesCount > 0 || actionLoading}
+                          disabled={
+                            (category.placesCount &&
+                              category.placesCount > 0) ||
+                            actionLoading !== null
+                          }
                           className="w-full px-4 py-2 text-right text-sm text-red-600 hover:bg-red-50 rounded-b-lg disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           حذف
@@ -529,6 +469,13 @@ export default function CategoriesPage() {
                     </div>
                   </div>
                 </div>
+
+                {/* Loading Overlay */}
+                {actionLoading === category._id && (
+                  <div className="absolute inset-0 bg-white/80 rounded-2xl flex items-center justify-center z-10">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                  </div>
+                )}
 
                 {/* Category Info */}
                 <div>
@@ -540,7 +487,7 @@ export default function CategoriesPage() {
                   </p>
                   <div className="flex items-center justify-between text-xs text-slate-500">
                     <span>
-                      {formatPersianNumber(category.placesCount)} مکان
+                      {formatPersianNumber(category.placesCount || 0)} مکان
                     </span>
                     <span
                       className={`px-2 py-1 rounded-full ${
@@ -652,30 +599,6 @@ export default function CategoriesPage() {
                   )}
                 </div>
 
-                {/* Slug */}
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
-                    نامک (URL Slug) *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.slug}
-                    onChange={(e) => {
-                      setFormData((prev) => ({
-                        ...prev,
-                        slug: e.target.value,
-                      }));
-                      if (errors.slug)
-                        setErrors((prev) => ({ ...prev, slug: "" }));
-                    }}
-                    className={`w-full px-4 py-3 rounded-xl border ${errors.slug ? "border-red-500" : "border-slate-200"} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200`}
-                    placeholder="restaurant-cafe"
-                  />
-                  {errors.slug && (
-                    <p className="text-red-500 text-sm mt-1">{errors.slug}</p>
-                  )}
-                </div>
-
                 {/* Description */}
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -754,26 +677,6 @@ export default function CategoriesPage() {
                   </div>
                 </div>
 
-                {/* Active Status */}
-                <div>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={formData.isActive}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          isActive: e.target.checked,
-                        }))
-                      }
-                      className="ml-2"
-                    />
-                    <span className="text-sm font-medium text-slate-700">
-                      فعال
-                    </span>
-                  </label>
-                </div>
-
                 {/* Buttons */}
                 <div className="flex justify-end gap-3 pt-6 border-t">
                   <button
@@ -785,10 +688,10 @@ export default function CategoriesPage() {
                   </button>
                   <button
                     type="submit"
-                    disabled={actionLoading}
+                    disabled={actionLoading !== null}
                     className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-colors duration-200 disabled:opacity-50"
                   >
-                    {actionLoading
+                    {actionLoading !== null
                       ? "در حال ذخیره..."
                       : editingCategory
                         ? "به‌روزرسانی"
