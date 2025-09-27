@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA Icon Generator</title>
+</head>
+<body>
+    <h1>PWA Icon Generator for یادمان</h1>
+    <p>Right-click each icon and save it with the appropriate filename</p>
+    <div id="icons"></div>
+
+    <script>
+        // Icon sizes needed for PWA
+        const sizes = [48, 72, 96, 128, 144, 152, 192, 384, 512];
+
+        // Function to create an icon
+        function createIcon(size) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+
+            // Create gradient background
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#3B82F6');
+            gradient.addColorStop(0.5, '#8B5CF6');
+            gradient.addColorStop(1, '#EC4899');
+
+            // Draw rounded rectangle background
+            const radius = size * 0.15;
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.moveTo(radius, 0);
+            ctx.lineTo(size - radius, 0);
+            ctx.quadraticCurveTo(size, 0, size, radius);
+            ctx.lineTo(size, size - radius);
+            ctx.quadraticCurveTo(size, size, size - radius, size);
+            ctx.lineTo(radius, size);
+            ctx.quadraticCurveTo(0, size, 0, size - radius);
+            ctx.lineTo(0, radius);
+            ctx.quadraticCurveTo(0, 0, radius, 0);
+            ctx.closePath();
+            ctx.fill();
+
+            // Draw location pin icon
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = size * 0.03;
+
+            const centerX = size / 2;
+            const centerY = size * 0.45;
+            const pinRadius = size * 0.15;
+
+            // Draw pin shape
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, pinRadius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Draw pin point
+            ctx.beginPath();
+            ctx.moveTo(centerX - pinRadius * 0.7, centerY + pinRadius * 0.7);
+            ctx.lineTo(centerX, centerY + pinRadius * 2.5);
+            ctx.lineTo(centerX + pinRadius * 0.7, centerY + pinRadius * 0.7);
+            ctx.fill();
+
+            // Draw inner circle
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, pinRadius * 0.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Add Persian text "ی" (first letter of یادمان) if size is large enough
+            if (size >= 128) {
+                ctx.fillStyle = 'white';
+                ctx.font = `bold ${size * 0.12}px Arial, sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('ی', centerX, size * 0.85);
+            }
+
+            // Add subtle shadow effect
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+            ctx.shadowBlur = size * 0.05;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = size * 0.02;
+
+            return canvas;
+        }
+
+        // Generate all icons
+        const container = document.getElementById('icons');
+        sizes.forEach(size => {
+            const wrapper = document.createElement('div');
+            wrapper.style.margin = '20px';
+            wrapper.style.display = 'inline-block';
+            wrapper.style.textAlign = 'center';
+
+            const canvas = createIcon(size);
+            const label = document.createElement('p');
+            label.textContent = `icon-${size}x${size}.png`;
+            label.style.fontFamily = 'monospace';
+            label.style.fontSize = '12px';
+
+            // Convert to image for easy saving
+            const img = document.createElement('img');
+            img.src = canvas.toDataURL('image/png');
+            img.style.border = '1px solid #ccc';
+            img.style.display = 'block';
+            img.style.marginBottom = '5px';
+
+            // Add download button
+            const downloadBtn = document.createElement('a');
+            downloadBtn.href = canvas.toDataURL('image/png');
+            downloadBtn.download = `icon-${size}x${size}.png`;
+            downloadBtn.textContent = 'Download';
+            downloadBtn.style.display = 'inline-block';
+            downloadBtn.style.padding = '5px 10px';
+            downloadBtn.style.backgroundColor = '#3B82F6';
+            downloadBtn.style.color = 'white';
+            downloadBtn.style.textDecoration = 'none';
+            downloadBtn.style.borderRadius = '3px';
+            downloadBtn.style.fontSize = '12px';
+            downloadBtn.style.marginTop = '5px';
+
+            wrapper.appendChild(img);
+            wrapper.appendChild(label);
+            wrapper.appendChild(downloadBtn);
+            container.appendChild(wrapper);
+        });
+
+        // Also create special icons for shortcuts
+        function createSpecialIcon(size, type) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+
+            // Create gradient background
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#3B82F6');
+            gradient.addColorStop(0.5, '#8B5CF6');
+            gradient.addColorStop(1, '#EC4899');
+
+            // Draw circle background
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size/2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Draw icon based on type
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = size * 0.06;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            const centerX = size / 2;
+            const centerY = size / 2;
+
+            if (type === 'search') {
+                // Draw search icon
+                const radius = size * 0.25;
+                ctx.beginPath();
+                ctx.arc(centerX - size * 0.08, centerY - size * 0.08, radius, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(centerX + radius * 0.5, centerY + radius * 0.5);
+                ctx.lineTo(centerX + radius * 1.5, centerY + radius * 1.5);
+                ctx.stroke();
+            } else if (type === 'nearby') {
+                // Draw nearby/radar icon
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, size * 0.3, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, size * 0.2, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, size * 0.1, 0, Math.PI * 2);
+                ctx.fill();
+                // Add radiating lines
+                for (let i = 0; i < 4; i++) {
+                    const angle = (i * Math.PI) / 2;
+                    ctx.beginPath();
+                    ctx.moveTo(centerX, centerY);
+                    ctx.lineTo(
+                        centerX + Math.cos(angle) * size * 0.35,
+                        centerY + Math.sin(angle) * size * 0.35
+                    );
+                    ctx.stroke();
+                }
+            }
+
+            return canvas;
+        }
+
+        // Add special icons section
+        const specialSection = document.createElement('div');
+        specialSection.innerHTML = '<h2 style="margin-top: 40px;">Special Icons for Shortcuts</h2>';
+        container.appendChild(specialSection);
+
+        // Create search icon
+        const searchWrapper = document.createElement('div');
+        searchWrapper.style.margin = '20px';
+        searchWrapper.style.display = 'inline-block';
+        searchWrapper.style.textAlign = 'center';
+
+        const searchCanvas = createSpecialIcon(96, 'search');
+        const searchImg = document.createElement('img');
+        searchImg.src = searchCanvas.toDataURL('image/png');
+        searchImg.style.border = '1px solid #ccc';
+        searchImg.style.display = 'block';
+        searchImg.style.marginBottom = '5px';
+
+        const searchLabel = document.createElement('p');
+        searchLabel.textContent = 'search-96x96.png';
+        searchLabel.style.fontFamily = 'monospace';
+        searchLabel.style.fontSize = '12px';
+
+        const searchDownload = document.createElement('a');
+        searchDownload.href = searchCanvas.toDataURL('image/png');
+        searchDownload.download = 'search-96x96.png';
+        searchDownload.textContent = 'Download';
+        searchDownload.style.display = 'inline-block';
+        searchDownload.style.padding = '5px 10px';
+        searchDownload.style.backgroundColor = '#3B82F6';
+        searchDownload.style.color = 'white';
+        searchDownload.style.textDecoration = 'none';
+        searchDownload.style.borderRadius = '3px';
+        searchDownload.style.fontSize = '12px';
+        searchDownload.style.marginTop = '5px';
+
+        searchWrapper.appendChild(searchImg);
+        searchWrapper.appendChild(searchLabel);
+        searchWrapper.appendChild(searchDownload);
+        container.appendChild(searchWrapper);
+
+        // Create nearby icon
+        const nearbyWrapper = document.createElement('div');
+        nearbyWrapper.style.margin = '20px';
+        nearbyWrapper.style.display = 'inline-block';
+        nearbyWrapper.style.textAlign = 'center';
+
+        const nearbyCanvas = createSpecialIcon(96, 'nearby');
+        const nearbyImg = document.createElement('img');
+        nearbyImg.src = nearbyCanvas.toDataURL('image/png');
+        nearbyImg.style.border = '1px solid #ccc';
+        nearbyImg.style.display = 'block';
+        nearbyImg.style.marginBottom = '5px';
+
+        const nearbyLabel = document.createElement('p');
+        nearbyLabel.textContent = 'nearby-96x96.png';
+        nearbyLabel.style.fontFamily = 'monospace';
+        nearbyLabel.style.fontSize = '12px';
+
+        const nearbyDownload = document.createElement('a');
+        nearbyDownload.href = nearbyCanvas.toDataURL('image/png');
+        nearbyDownload.download = 'nearby-96x96.png';
+        nearbyDownload.textContent = 'Download';
+        nearbyDownload.style.display = 'inline-block';
+        nearbyDownload.style.padding = '5px 10px';
+        nearbyDownload.style.backgroundColor = '#3B82F6';
+        nearbyDownload.style.color = 'white';
+        nearbyDownload.style.textDecoration = 'none';
+        nearbyDownload.style.borderRadius = '3px';
+        nearbyDownload.style.fontSize = '12px';
+        nearbyDownload.style.marginTop = '5px';
+
+        nearbyWrapper.appendChild(nearbyImg);
+        nearbyWrapper.appendChild(nearbyLabel);
+        nearbyWrapper.appendChild(nearbyDownload);
+        container.appendChild(nearbyWrapper);
+    </script>
+</body>
+</html>

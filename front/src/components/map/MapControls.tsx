@@ -1,138 +1,176 @@
-// Purpose: Map control buttons for style switching, layer toggles, and user interactions
-
 "use client";
 
-import { useState } from "react";
-import { useMapStore } from "@/stores/mapStore";
-import Button from "@/components/ui/Button";
+import React from "react";
+import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 interface MapControlsProps {
-  onStyleChange?: (style: string) => void;
+  onZoomIn: () => void;
+  onZoomOut: () => void;
+  onResetView: () => void;
+  onToggleRouting: () => void;
+  onLocateUser: () => void;
 }
 
-const MapControls = ({ onStyleChange }: MapControlsProps) => {
-  const [isStyleMenuOpen, setIsStyleMenuOpen] = useState(false);
-  const [isLayerMenuOpen, setIsLayerMenuOpen] = useState(false);
+const MapControls: React.FC<MapControlsProps> = ({
+  onZoomIn,
+  onZoomOut,
+  onResetView,
+  onToggleRouting,
+  onLocateUser,
+}) => {
+  const t = useTranslations();
 
-  const { style, showTraffic, showTerrain, setStyle, setShowTraffic, setShowTerrain } = useMapStore();
-
-  const mapStyles = [
-    { id: "streets", name: "Streets", url: "https://api.maptiler.com/maps/streets/style.json?key=YOUR_MAPTILER_KEY" },
-    { id: "satellite", name: "Satellite", url: "https://api.maptiler.com/maps/satellite/style.json?key=YOUR_MAPTILER_KEY" },
-    { id: "hybrid", name: "Hybrid", url: "https://api.maptiler.com/maps/hybrid/style.json?key=YOUR_MAPTILER_KEY" },
-    { id: "terrain", name: "Terrain", url: "https://api.maptiler.com/maps/terrain/style.json?key=YOUR_MAPTILER_KEY" },
-    { id: "dark", name: "Dark", url: "https://api.maptiler.com/maps/dark/style.json?key=YOUR_MAPTILER_KEY" },
-  ];
-
-  const handleStyleChange = (newStyle: string) => {
-    setStyle(newStyle);
-    onStyleChange?.(newStyle);
-    setIsStyleMenuOpen(false);
-  };
+  const buttonClass =
+    "w-10 h-10 bg-white hover:bg-gray-50 rounded-lg shadow-md border border-gray-200 flex items-center justify-center transition-all duration-200 hover:shadow-lg active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2";
 
   return (
-    <div className="absolute top-4 left-4 z-10 flex flex-col space-y-2">
-      {/* Style Selector */}
-      <div className="relative">
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => setIsStyleMenuOpen(!isStyleMenuOpen)}
-          className="bg-white shadow-lg border"
-        >
-          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-          </svg>
-          Map Style
-        </Button>
-
-        {isStyleMenuOpen && (
-          <div className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border min-w-[120px] z-20">
-            {mapStyles.map((mapStyle) => (
-              <button
-                key={mapStyle.id}
-                className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100 first:rounded-t-lg last:rounded-b-lg"
-                onClick={() => handleStyleChange(mapStyle.url)}
-              >
-                {mapStyle.name}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Layer Controls */}
-      <div className="relative">
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={() => setIsLayerMenuOpen(!isLayerMenuOpen)}
-          className="bg-white shadow-lg border"
-        >
-          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-          </svg>
-          Layers
-        </Button>
-
-        {isLayerMenuOpen && (
-          <div className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-lg border min-w-[140px] z-20 p-2">
-            <label className="flex items-center space-x-2 py-1">
-              <input
-                type="checkbox"
-                checked={showTraffic}
-                onChange={(e) => setShowTraffic(e.target.checked)}
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-              <span className="text-sm">Traffic</span>
-            </label>
-            <label className="flex items-center space-x-2 py-1">
-              <input
-                type="checkbox"
-                checked={showTerrain}
-                onChange={(e) => setShowTerrain(e.target.checked)}
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-              <span className="text-sm">Terrain</span>
-            </label>
-          </div>
-        )}
-      </div>
-
-      {/* Add Location Button */}
-      <Button
-        variant="primary"
-        size="sm"
-        className="shadow-lg"
-        onClick={() => {
-          // This will be handled by the map click event
-          console.log("Add location mode activated");
-        }}
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      className="absolute left-4 top-20 z-40 flex flex-col gap-2"
+    >
+      {/* Zoom In */}
+      <button
+        onClick={onZoomIn}
+        className={buttonClass}
+        aria-label="Zoom in"
+        title="بزرگنمایی"
       >
-        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        <svg
+          className="w-5 h-5 text-gray-700"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 6v12m6-6H6"
+          />
         </svg>
-        Add Location
-      </Button>
+      </button>
 
-      {/* Full Screen Toggle */}
-      <Button
-        variant="secondary"
-        size="icon"
-        className="bg-white shadow-lg border"
-        onClick={() => {
-          if (document.fullscreenElement) {
-            document.exitFullscreen();
-          } else {
-            document.documentElement.requestFullscreen();
-          }
-        }}
+      {/* Zoom Out */}
+      <button
+        onClick={onZoomOut}
+        className={buttonClass}
+        aria-label="Zoom out"
+        title="کوچک‌نمایی"
       >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+        <svg
+          className="w-5 h-5 text-gray-700"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M18 12H6"
+          />
         </svg>
-      </Button>
-    </div>
+      </button>
+
+      <div className="w-10 h-px bg-gray-300 my-1" />
+
+      {/* Reset View */}
+      <button
+        onClick={onResetView}
+        className={buttonClass}
+        aria-label="Reset view"
+        title="نمای پیش‌فرض"
+      >
+        <svg
+          className="w-5 h-5 text-gray-700"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+          />
+        </svg>
+      </button>
+
+      {/* Locate User */}
+      <button
+        onClick={onLocateUser}
+        className={buttonClass}
+        aria-label="Find my location"
+        title="موقعیت من"
+      >
+        <svg
+          className="w-5 h-5 text-gray-700"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+          />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+          />
+        </svg>
+      </button>
+
+      <div className="w-10 h-px bg-gray-300 my-1" />
+
+      {/* Toggle Routing */}
+      <button
+        onClick={onToggleRouting}
+        className={`${buttonClass} bg-blue-50 hover:bg-blue-100 border-blue-200`}
+        aria-label="Toggle routing"
+        title="مسیریابی"
+      >
+        <svg
+          className="w-5 h-5 text-blue-600"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+          />
+        </svg>
+      </button>
+
+      {/* Measure Distance (Optional) */}
+      <button
+        className={buttonClass}
+        aria-label="Measure distance"
+        title="اندازه‌گیری فاصله"
+      >
+        <svg
+          className="w-5 h-5 text-gray-700"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+          />
+        </svg>
+      </button>
+    </motion.div>
   );
 };
 

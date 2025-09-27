@@ -1,8 +1,8 @@
 // Purpose: Zustand store for managing map state including center, zoom, style, and layers
 
-import { create } from 'zustand';
-import { devtools, persist } from 'zustand/middleware';
-import maplibregl from 'maplibre-gl';
+import { create } from "zustand";
+import { devtools, persist } from "zustand/middleware";
+import maplibregl from "maplibre-gl";
 
 export interface MapBounds {
   sw: { lat: number; lng: number };
@@ -38,6 +38,15 @@ interface MapState {
   isDrawingPolygon: boolean;
   selectedLocationId: string | null;
 
+  // Search and filters
+  searchQuery: string;
+  filters: {
+    categories?: string[];
+    tags?: string[];
+    rating?: number;
+    distance?: number;
+  };
+
   // Actions
   setMap: (map: maplibregl.Map | null) => void;
   setCenter: (center: MapCenter) => void;
@@ -52,6 +61,8 @@ interface MapState {
   setIsAddingLocation: (isAdding: boolean) => void;
   setIsDrawingPolygon: (isDrawing: boolean) => void;
   setSelectedLocationId: (id: string | null) => void;
+  setSearchQuery: (query: string) => void;
+  setFilters: (filters: Partial<MapState["filters"]>) => void;
 
   // Convenience methods
   flyTo: (center: MapCenter, zoom?: number) => void;
@@ -63,11 +74,12 @@ interface MapState {
 // Default map center (Tehran, Iran)
 const DEFAULT_CENTER: MapCenter = {
   lat: 35.6892,
-  lng: 51.3890,
+  lng: 51.389,
 };
 
 const DEFAULT_ZOOM = 10;
-const DEFAULT_STYLE = "https://api.maptiler.com/maps/streets/style.json?key=YOUR_MAPTILER_KEY";
+const DEFAULT_STYLE =
+  "https://api.maptiler.com/maps/streets/style.json?key=YOUR_MAPTILER_KEY";
 
 export const useMapStore = create<MapState>()(
   devtools(
@@ -87,6 +99,8 @@ export const useMapStore = create<MapState>()(
         isAddingLocation: false,
         isDrawingPolygon: false,
         selectedLocationId: null,
+        searchQuery: "",
+        filters: {},
 
         // Basic setters
         setMap: (map) => set({ map }),
@@ -101,7 +115,13 @@ export const useMapStore = create<MapState>()(
         setError: (error) => set({ error }),
         setIsAddingLocation: (isAddingLocation) => set({ isAddingLocation }),
         setIsDrawingPolygon: (isDrawingPolygon) => set({ isDrawingPolygon }),
-        setSelectedLocationId: (selectedLocationId) => set({ selectedLocationId }),
+        setSelectedLocationId: (selectedLocationId) =>
+          set({ selectedLocationId }),
+        setSearchQuery: (searchQuery) => set({ searchQuery }),
+        setFilters: (newFilters) =>
+          set((state) => ({
+            filters: { ...state.filters, ...newFilters },
+          })),
 
         // Convenience methods
         flyTo: (center, zoom) => {
@@ -124,7 +144,7 @@ export const useMapStore = create<MapState>()(
                 [bounds.sw.lng, bounds.sw.lat],
                 [bounds.ne.lng, bounds.ne.lat],
               ],
-              { padding }
+              { padding },
             );
           }
           set({ bounds });
@@ -146,6 +166,8 @@ export const useMapStore = create<MapState>()(
             selectedLocationId: null,
             isAddingLocation: false,
             isDrawingPolygon: false,
+            searchQuery: "",
+            filters: {},
           });
         },
 
@@ -161,7 +183,7 @@ export const useMapStore = create<MapState>()(
         },
       }),
       {
-        name: 'map-store',
+        name: "map-store",
         // Only persist certain values
         partialize: (state) => ({
           center: state.center,
@@ -171,12 +193,12 @@ export const useMapStore = create<MapState>()(
           showTerrain: state.showTerrain,
           showClusters: state.showClusters,
         }),
-      }
+      },
     ),
     {
-      name: 'map-store',
-    }
-  )
+      name: "map-store",
+    },
+  ),
 );
 
 // Selectors for commonly used combinations
@@ -186,8 +208,10 @@ export const useMapStyle = () => useMapStore((state) => state.style);
 export const useMapBounds = () => useMapStore((state) => state.bounds);
 export const useMapLoading = () => useMapStore((state) => state.isLoading);
 export const useMapError = () => useMapStore((state) => state.error);
-export const useSelectedLocation = () => useMapStore((state) => state.selectedLocationId);
-export const useInteractionModes = () => useMapStore((state) => ({
-  isAddingLocation: state.isAddingLocation,
-  isDrawingPolygon: state.isDrawingPolygon,
-}));
+export const useSelectedLocation = () =>
+  useMapStore((state) => state.selectedLocationId);
+export const useInteractionModes = () =>
+  useMapStore((state) => ({
+    isAddingLocation: state.isAddingLocation,
+    isDrawingPolygon: state.isDrawingPolygon,
+  }));

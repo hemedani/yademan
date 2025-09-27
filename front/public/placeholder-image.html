@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placeholder Image Generator</title>
+</head>
+<body>
+    <h1>Placeholder Image Generator for یادمان</h1>
+    <p>Right-click and save as placeholder-image.jpg</p>
+
+    <canvas id="placeholder" width="800" height="600"></canvas>
+    <br>
+    <a id="download" href="#" download="placeholder-image.jpg">Download as JPG</a>
+
+    <script>
+        const canvas = document.getElementById('placeholder');
+        const ctx = canvas.getContext('2d');
+
+        // Create gradient background
+        const gradient = ctx.createLinearGradient(0, 0, 800, 600);
+        gradient.addColorStop(0, '#E0E7FF');
+        gradient.addColorStop(0.5, '#C7D2FE');
+        gradient.addColorStop(1, '#A5B4FC');
+
+        // Fill background
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 800, 600);
+
+        // Add pattern overlay
+        ctx.globalAlpha = 0.1;
+        ctx.strokeStyle = '#6366F1';
+        ctx.lineWidth = 1;
+
+        // Draw grid pattern
+        for (let x = 0; x < 800; x += 20) {
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, 600);
+            ctx.stroke();
+        }
+
+        for (let y = 0; y < 600; y += 20) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(800, y);
+            ctx.stroke();
+        }
+
+        ctx.globalAlpha = 1;
+
+        // Draw central icon
+        const centerX = 400;
+        const centerY = 280;
+
+        // Mountain icon
+        ctx.fillStyle = '#6366F1';
+        ctx.beginPath();
+        ctx.moveTo(centerX - 100, centerY + 50);
+        ctx.lineTo(centerX - 30, centerY - 50);
+        ctx.lineTo(centerX + 10, centerY + 10);
+        ctx.lineTo(centerX + 40, centerY - 30);
+        ctx.lineTo(centerX + 100, centerY + 50);
+        ctx.closePath();
+        ctx.fill();
+
+        // Sun/circle
+        ctx.fillStyle = '#FCD34D';
+        ctx.beginPath();
+        ctx.arc(centerX + 50, centerY - 70, 25, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Add text
+        ctx.fillStyle = '#4C51BF';
+        ctx.font = 'bold 24px Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('یادمان', centerX, centerY + 120);
+
+        ctx.fillStyle = '#6B7280';
+        ctx.font = '16px Arial, sans-serif';
+        ctx.fillText('تصویر در دسترس نیست', centerX, centerY + 150);
+
+        // Convert to data URL and set download link
+        canvas.toBlob((blob) => {
+            const url = URL.createObjectURL(blob);
+            document.getElementById('download').href = url;
+        }, 'image/jpeg', 0.9);
+    </script>
+</body>
+</html>

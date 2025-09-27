@@ -53,7 +53,8 @@
     "back": "بازگشت",
     "next": "بعدی",
     "previous": "قبلی",
-    "close": "بستن"
+    "close": "بستن",
+    "moreInfo": "اطلاعات بیشتر"
   },
   "Auth": {
     "login": "ورود",
@@ -84,7 +85,14 @@
     "share": "اشتراک‌گذاری",
     "noLocationsFound": "مکانی یافت نشد",
     "tryDifferentFilters": "فیلترهای مختلف را امتحان کنید",
-    "locationsFound": "مکان یافت شد"
+    "locationsFound": "مکان یافت شد",
+    "navigate": "مسیریابی",
+    "info": "اطلاعات",
+    "description": "توضیحات",
+    "tags": "برچسب‌ها",
+    "contact": "اطلاعات تماس",
+    "hours": "ساعات کاری",
+    "noReviews": "هنوز نظری ثبت نشده است"
   },
   "Footer": {
     "aboutUs": "درباره ما",
