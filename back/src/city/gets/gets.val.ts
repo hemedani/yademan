@@ -1,4 +1,4 @@
-import { number, object, optional, string } from "@deps";
+import { number, object, objectIdValidation, optional, string } from "@deps";
 import { selectStruct } from "../../../mod.ts";
 
 export const getsValidator = () => {
@@ -7,6 +7,7 @@ export const getsValidator = () => {
 			page: number(),
 			limit: number(),
 			name: optional(string()),
+			provinceId: optional(objectIdValidation),
 		}),
 		get: selectStruct("city", 2),
 	});

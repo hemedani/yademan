@@ -1,9 +1,9 @@
-import type { ActFn } from "@deps";
+import { type ActFn, ObjectId } from "@deps";
 import { city } from "../../../mod.ts";
 
 export const getsFn: ActFn = async (body) => {
 	const {
-		set: { page, limit, name },
+		set: { page, limit, name, provinceId },
 		get,
 	} = body.details;
 
@@ -13,6 +13,13 @@ export const getsFn: ActFn = async (body) => {
 		pipeline.push({
 			$match: {
 				name: { $regex: new RegExp(name, "i") },
+			},
+		});
+
+	provinceId &&
+		pipeline.push({
+			$match: {
+				"province._id": new ObjectId(provinceId as string),
 			},
 		});
 
