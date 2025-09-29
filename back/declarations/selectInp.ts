@@ -1114,6 +1114,7 @@ set: {
 page: number;
 limit: number;
 name?: string;
+provinceId?: string;
 };
 get: {
 _id?: (0 | 1 );
@@ -4886,15 +4887,31 @@ set: {
 page: number;
 limit: number;
 name?: string;
+slug?: string;
+status?: ("draft" | "active" | "archived" );
 province?: string;
 city?: string;
 cityZone?: string;
+registrarId?: string;
+categoryIds?: string[];
+tagIds?: string[];
 polygon?: {
 type: "Polygon";
 coordinates: any[];
 };
+area?: {
+type: "Polygon";
+coordinates: any[];
+};
+near?: {
+type: "Point";
+coordinates: any[];
+};
+maxDistance?: number;
+minDistance?: number;
 };
 get: {
+data: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -5267,6 +5284,13 @@ status?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+};
+};
+metadata: {
+total?: (0 | 1 );
+page?: (0 | 1 );
+limit?: (0 | 1 );
+pageCount?: (0 | 1 );
 };
 };
 };
