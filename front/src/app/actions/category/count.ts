@@ -1,10 +1,9 @@
 "use server";
 import { AppApi } from "@/services/api";
+import { ReqType } from "@/types/declarations/selectInp";
 import { cookies } from "next/headers";
 
-export const count = async (params: {
-  name?: string;
-} = {}) => {
+export const count = async ({ set, get }: ReqType["main"]["category"]["count"]) => {
   const token = (await cookies()).get("token");
 
   return await AppApi().send(
@@ -12,14 +11,7 @@ export const count = async (params: {
       service: "main",
       model: "category",
       act: "count",
-      details: {
-        set: {
-          ...(params.name && { name: params.name }),
-        },
-        get: {
-          qty: 1,
-        },
-      },
+      details: { set, get },
     },
     { token: token?.value },
   );

@@ -2,10 +2,10 @@
 import { AppApi } from "@/services/api";
 import { cookies } from "next/headers";
 
-export const remove = async (data: {
-  _id: string;
-  hardCascade?: boolean;
-}) => {
+export const remove = async (
+  _id: string,
+  hardCascade?: boolean
+) => {
   const token = (await cookies()).get("token");
 
   return await AppApi().send(
@@ -15,8 +15,8 @@ export const remove = async (data: {
       act: "remove",
       details: {
         set: {
-          _id: data._id,
-          ...(data.hardCascade !== undefined && { hardCascade: data.hardCascade }),
+          _id: _id,
+          ...(hardCascade !== undefined && { hardCascade }),
         },
         get: {
           success: 1,
