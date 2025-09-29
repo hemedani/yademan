@@ -12,24 +12,57 @@ export const getsFn: ActFn = async (body) => {
 		page,
 		limit,
 
+		// Basic filters
 		name,
+		slug,
+		status,
 
+		// Location context
 		province,
 		city,
 		cityZone,
 
+		// Relations
+		registrarId,
+		categoryIds,
+		tagIds,
+
+		// GeoJSON
 		polygon,
+		area,
+		near,
+		maxDistance,
+		minDistance,
 	} = set;
 
 	const pipeline: any[] = [];
 	const matchConditions: any = {};
 
-	// --- Location & Context (exact match on embedded object's 'name' field) ---
-	if (province) matchConditions["province.name"] = province;
-	if (city) matchConditions["city.name"] = city;
-	if (cityZone) matchConditions["city_zone.name"] = cityZone;
+	// --- Basic Filters ---
+	if (name) matchConditions.name = { $regex: new RegExp(name, "i") };
+	if (slug) matchConditions.slug = slug;
+	if (status) matchConditions.status = status;
 
-	// --- GeoJSON Location Filter ---
+	// --- Location & Context ---
+	// For related collections, we need to use their IDs
+	if (province) matchConditions["province._id"] = province;
+	if (city) matchConditions["city._id"] = city;
+	if (cityZone) matchConditions["city_zone._id"] = cityZone;
+
+	// --- Relations ---
+	if (registrarId) matchConditions["registrar._id"] = registrarId;
+
+	// Handle arrays of IDs for categories and tags
+	if (categoryIds && categoryIds.length > 0) {
+		matchConditions["category._id"] = { $in: categoryIds };
+	}
+
+	if (tagIds && tagIds.length > 0) {
+		matchConditions["tags._id"] = { $in: tagIds };
+	}
+
+	// --- GeoJSON Filters ---
+	// $geoIntersects with polygon
 	if (polygon) {
 		matchConditions.center = {
 			$geoIntersects: {
@@ -38,24 +71,82 @@ export const getsFn: ActFn = async (body) => {
 		};
 	}
 
-	if (name) {
-		matchConditions.name = { $regex: new RegExp(name, "i") };
+	// $geoIntersects with area
+	if (area) {
+		matchConditions.area = {
+			$geoIntersects: {
+				$geometry: area,
+			},
+		};
+	}
+
+	// $geoNear for proximity search (using near point)
+	if (near) {
+		// Need to handle $geoNear as a separate pipeline stage since it must be the first stage
+		const geoNearStage = {
+			$geoNear: {
+				near: near,
+				distanceField: "distance", // This will add a 'distance' field to the results
+				spherical: true,
+			},
+		};
+
+		// Add optional max and min distance if provided (in meters)
+		if (maxDistance) geoNearStage.$geoNear.maxDistance = maxDistance;
+		if (minDistance) geoNearStage.$geoNear.minDistance = minDistance;
+
+		// Add the $geoNear stage as the first in the pipeline
+		pipeline.push(geoNearStage);
 	}
 
 	// Add the $match stage to the pipeline if there are any conditions
 	if (Object.keys(matchConditions).length > 0) {
+		// If we already have $geoNear, we need to add $match after it
 		pipeline.push({ $match: matchConditions });
 	}
 
 	// --- Pagination and Sorting ---
-	pipeline.push({ $sort: { _id: -1 } }); // Default sort, can be made dynamic
+	// Only add sorting if $geoNear is not used (it already sorts by distance)
+	if (!near) {
+		pipeline.push({ $sort: { _id: -1 } }); // Default sort by most recent
+	}
+
+	// Always add pagination
 	pipeline.push({ $skip: (page - 1) * limit });
 	pipeline.push({ $limit: limit });
 
-	return await place
-		.aggregation({
+	// Add a count of total results
+	const countPipeline = [...pipeline];
+
+	// Remove pagination from count pipeline
+	countPipeline.pop(); // Remove $limit
+	countPipeline.pop(); // Remove $skip
+
+	// Add $count stage to get total documents
+	countPipeline.push({ $count: 'total' });
+
+	// Execute both pipelines in parallel for efficiency
+	const [results, countResult] = await Promise.all([
+		place.aggregation({
 			pipeline,
 			projection: get,
-		})
-		.toArray();
+		}).toArray(),
+		place.aggregation({
+			pipeline: countPipeline,
+		}).toArray(),
+	]);
+
+	// Get total count (default to 0 if no results)
+	const total = countResult.length > 0 ? countResult[0].total : 0;
+
+	// Return results with metadata
+	return {
+		data: results,
+		metadata: {
+			total,
+			page,
+			limit,
+			pageCount: Math.ceil(total / limit)
+		}
+	};
 };
