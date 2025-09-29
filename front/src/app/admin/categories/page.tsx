@@ -25,7 +25,8 @@ export default async function AirStatusDashboard({
     _id: 1,
     name: 1,
     icon: 1,
-    description: 1
+    description: 1,
+    color: 1,
   };
 
   const data = await gets({ set, get });
@@ -48,7 +49,13 @@ export default async function AirStatusDashboard({
         </div>
       </div>
       <SearchBox title="name" defaultValue={name} />
-      <ClientCommonModelDashboard data={data.success ? data.body : []} model="category" remove={remove} add={add} update={update} />
+      <ClientCommonModelDashboard
+        data={data.success ? data.body : []}
+        model="category"
+        remove={remove}
+        add={add}
+        update={update}
+      />
       <Pagination countPage={counted?.body.qty} initialPage={+page} />
     </div>
   );
