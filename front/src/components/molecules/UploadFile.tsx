@@ -43,7 +43,7 @@ export const UploadImage = ({
       model: "file",
       act: "uploadFile",
       details: {
-        get: { type: 1, _id: 1 },
+        get: { mimType: 1, _id: 1 },
         set: type ? { type } : {},
       },
     };

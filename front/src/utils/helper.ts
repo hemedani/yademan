@@ -58,12 +58,13 @@ const ArrayToSelectOptions = <T>(
   data: T[],
   valueKey: keyof T,
   labelKey: keyof T,
-  secondaryLabelKey?: keyof T
+  secondaryLabelKey?: keyof T,
 ) => {
   return data.map((item) => ({
     value: String(item[valueKey]),
-    label: `${item[labelKey]} ${secondaryLabelKey ? item[secondaryLabelKey] : ""
-      }`,
+    label: `${item[labelKey]} ${
+      secondaryLabelKey ? item[secondaryLabelKey] : ""
+    }`,
   }));
 };
 
@@ -75,6 +76,7 @@ export type ModelName =
   | "category"
   | "place"
   | "tag"
+  | "virtual_tour";
 
 function translateModelNameToPersian(modelName: ModelName): string {
   switch (modelName) {
@@ -92,11 +94,12 @@ function translateModelNameToPersian(modelName: ModelName): string {
       return "برچسب";
     case "place":
       return "مکان";
+    case "virtual_tour":
+      return "تور مجازی";
     default:
       return "نامشخص";
   }
 }
-
 
 function snakeToKebabCase(input: string): string {
   return input.replace(/_/g, "-");
@@ -111,5 +114,5 @@ export {
   translateGender,
   translateLevel,
   translateModelNameToPersian,
-  snakeToKebabCase
+  snakeToKebabCase,
 };
