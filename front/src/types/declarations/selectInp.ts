@@ -1792,6 +1792,8 @@ export type ReqType = {
           page: number;
           limit: number;
           name?: string;
+          provinceId?: string;
+          cityId?: string;
         };
         get: {
           _id?: (0 | 1);
