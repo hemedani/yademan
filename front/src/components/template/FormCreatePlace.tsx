@@ -12,6 +12,7 @@ import { gets as getCitiesAction } from "@/app/actions/city/gets";
 import { gets as getCityZonesAction } from "@/app/actions/city_zone/gets";
 import { gets as getTagsAction } from "@/app/actions/tag/gets";
 import dynamic from "next/dynamic";
+import L from "leaflet";
 import { useEffect, useState, useCallback } from "react";
 import React from "react";
 import SelectBox from "../atoms/Select";
@@ -155,6 +156,18 @@ const FormCreatePlace = ({
   ]); // Default to Tehran, Iran
   const [mapZoom, setMapZoom] = useState(6);
   const [mapKey, setMapKey] = useState(0);
+  const [isMapReady, setIsMapReady] = useState(false);
+
+  // Fix Leaflet touch events
+  useEffect(() => {
+    if (typeof window !== "undefined" && L) {
+      // Fix for "wrong event specified: touchleave" error
+      if (L.Browser && L.Browser.touch && !L.Browser.pointer) {
+        L.DomEvent.disableClickPropagation = L.DomUtil.falseFn;
+      }
+      setIsMapReady(true);
+    }
+  }, []);
 
   // Relationship state
   const [selectedProvince, setSelectedProvince] = useState<SelectOption | null>(
@@ -221,17 +234,26 @@ const FormCreatePlace = ({
     if (inputValue) {
       setParams.name = inputValue;
     }
+
+    console.log("Fetching provinces with params:", setParams);
     try {
       const response = await getProvincesAction({
         set: setParams,
         get: { _id: 1, name: 1 },
       });
+      console.log("Provinces API response:", response);
+
       if (response && response.success) {
-        return response.body.map((item: { _id: string; name: string }) => ({
-          value: item._id,
-          label: item.name,
-        }));
+        const provinces = response.body.map(
+          (item: { _id: string; name: string }) => ({
+            value: item._id,
+            label: item.name,
+          }),
+        );
+        console.log("Parsed provinces:", provinces);
+        return provinces;
       }
+      console.log("No successful response from provinces API");
       return [];
     } catch (error) {
       console.error("Error loading provinces:", error);
@@ -243,7 +265,11 @@ const FormCreatePlace = ({
   const loadCitiesOptions = async (
     inputValue?: string,
   ): Promise<SelectOption[]> => {
-    if (!selectedProvince?.value) return [];
+    console.log("loadCitiesOptions called with province:", selectedProvince);
+    if (!selectedProvince?.value) {
+      console.log("No province selected, returning empty array");
+      return [];
+    }
 
     const setParams: {
       limit: number;
@@ -258,17 +284,26 @@ const FormCreatePlace = ({
     if (inputValue) {
       setParams.name = inputValue;
     }
+
     try {
+      console.log("Fetching cities with params:", setParams);
       const response = await getCitiesAction({
         set: setParams,
         get: { _id: 1, name: 1 },
       });
+      console.log("Cities API response:", response);
+
       if (response && response.success) {
-        return response.body.map((item: { _id: string; name: string }) => ({
-          value: item._id,
-          label: item.name,
-        }));
+        const cities = response.body.map(
+          (item: { _id: string; name: string }) => ({
+            value: item._id,
+            label: item.name,
+          }),
+        );
+        console.log("Parsed cities:", cities);
+        return cities;
       }
+      console.log("No successful response from cities API");
       return [];
     } catch (error) {
       console.error("Error loading cities:", error);
@@ -280,7 +315,11 @@ const FormCreatePlace = ({
   const loadCityZonesOptions = async (
     inputValue?: string,
   ): Promise<SelectOption[]> => {
-    if (!selectedCity?.value) return [];
+    console.log("loadCityZonesOptions called with city:", selectedCity);
+    if (!selectedCity?.value) {
+      console.log("No city selected, returning empty array");
+      return [];
+    }
 
     const setParams: {
       limit: number;
@@ -295,17 +334,26 @@ const FormCreatePlace = ({
     if (inputValue) {
       setParams.name = inputValue;
     }
+
     try {
+      console.log("Fetching city zones with params:", setParams);
       const response = await getCityZonesAction({
         set: setParams,
         get: { _id: 1, name: 1 },
       });
+      console.log("City zones API response:", response);
+
       if (response && response.success) {
-        return response.body.map((item: { _id: string; name: string }) => ({
-          value: item._id,
-          label: item.name,
-        }));
+        const cityZones = response.body.map(
+          (item: { _id: string; name: string }) => ({
+            value: item._id,
+            label: item.name,
+          }),
+        );
+        console.log("Parsed city zones:", cityZones);
+        return cityZones;
       }
+      console.log("No successful response from city zones API");
       return [];
     } catch (error) {
       console.error("Error loading city zones:", error);
@@ -372,7 +420,8 @@ const FormCreatePlace = ({
   };
 
   // Handle province selection
-  const handleProvinceSelect = (option: SelectOption | null) => {
+  const handleProvinceSelect = async (option: SelectOption | null) => {
+    console.log("Province selected:", option);
     setSelectedProvince(option);
     setValue("province", option?.value || "", { shouldValidate: true });
     setValue("city", "", { shouldValidate: true });
@@ -380,25 +429,38 @@ const FormCreatePlace = ({
     setSelectedCity(null);
     setSelectedCityZone(null);
 
+    // If a province is selected, fetch the associated cities
+    if (option) {
+      await loadCitiesOptions();
+    }
+
     // If a province is selected, try to center the map on it
     if (option) {
+      console.log("Setting province with value:", option.value);
       // In a real app, you would get the province's center point from the database
       // For now, we'll just use a hardcoded value for Tehran province
       setMapCenter([35.6892, 51.389]);
       setMapZoom(8);
-      setMapKey((prev) => prev + 1);
+
+      // Don't recreate the map immediately, use setTimeout to allow React to finish its current update cycle
+      setTimeout(() => {
+        setMapKey((prev) => prev + 1);
+      }, 100); // Increased timeout to ensure React has time to update
     }
   };
 
   // Handle city selection
-  const handleCitySelect = (option: SelectOption | null) => {
+  const handleCitySelect = async (option: SelectOption | null) => {
     setSelectedCity(option);
     setValue("city", option?.value || "", { shouldValidate: true });
     setValue("city_zone", "", { shouldValidate: true });
     setSelectedCityZone(null);
 
-    // If a city is selected, try to center the map on it
+    // If a city is selected, load city zones and try to center the map on it
     if (option) {
+      // Load city zones for the newly selected city
+      await loadCityZonesOptions();
+
       // In a real app, you would get the city's center point from the database
       // For now, we'll just zoom in a bit
       setMapZoom(10);
@@ -548,7 +610,7 @@ const FormCreatePlace = ({
     const fetchCategories = async () => {
       try {
         const result = await getCategoriesAction({
-          set: {},
+          set: { page: 1, limit: 50 },
           get: { _id: 1, name: 1 },
         });
         if (result.success) {
@@ -657,7 +719,7 @@ const FormCreatePlace = ({
               انتخاب استان *
             </label>
             <AsyncSelect
-              cacheOptions
+              cacheOptions={false}
               defaultOptions
               value={selectedProvince}
               loadOptions={loadProvincesOptions}
@@ -727,14 +789,15 @@ const FormCreatePlace = ({
               انتخاب شهر *
             </label>
             <AsyncSelect
-              cacheOptions
-              defaultOptions
+              cacheOptions={false}
+              defaultOptions={selectedProvince !== null}
               value={selectedCity}
               loadOptions={loadCitiesOptions}
               onChange={(newValue) =>
                 handleCitySelect(newValue as SelectOption | null)
               }
               placeholder="شهر را انتخاب کنید"
+              key={selectedProvince?.value || "no-province"}
               noOptionsMessage={() =>
                 selectedProvince
                   ? "شهری یافت نشد"
@@ -802,14 +865,15 @@ const FormCreatePlace = ({
               انتخاب منطقه
             </label>
             <AsyncSelect
-              cacheOptions
-              defaultOptions
+              cacheOptions={false}
+              defaultOptions={selectedCity !== null}
               value={selectedCityZone}
               loadOptions={loadCityZonesOptions}
               onChange={(newValue) =>
                 handleCityZoneSelect(newValue as SelectOption | null)
               }
               placeholder="منطقه را انتخاب کنید"
+              key={selectedCity?.value || "no-city"}
               noOptionsMessage={() =>
                 selectedCity ? "منطقه‌ای یافت نشد" : "ابتدا شهر را انتخاب کنید"
               }
@@ -1004,6 +1068,11 @@ const FormCreatePlace = ({
                 center={mapCenter}
                 zoom={mapZoom}
                 style={{ height: "100%", width: "100%" }}
+                attributionControl={true}
+                zoomControl={true}
+                doubleClickZoom={true}
+                scrollWheelZoom={true}
+                touchZoom={true}
               >
                 <TileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

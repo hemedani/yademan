@@ -5,6 +5,16 @@ import { FeatureGroup } from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import L from "leaflet";
 
+// Fix for "wrong event specified: touchleave" error
+// This extends Leaflet's capabilities for touch devices
+if (typeof window !== "undefined") {
+  L.Draw.Polyline.prototype._onTouch = L.Util.falseFn;
+  L.Draw.Polygon.prototype._onTouch = L.Util.falseFn;
+  L.Draw.Rectangle.prototype._onTouch = L.Util.falseFn;
+  L.Draw.Circle.prototype._onTouch = L.Util.falseFn;
+  L.Draw.Marker.prototype._onTouch = L.Util.falseFn;
+}
+
 interface SimpleDrawingProps {
   isActive: boolean;
   onPolygonCreated: (polygon: L.LatLng[][]) => void;
@@ -17,6 +27,18 @@ const SimpleDrawing: React.FC<SimpleDrawingProps> = ({
   existingPolygon,
 }) => {
   const featureGroupRef = useRef<L.FeatureGroup>(null);
+
+  // Disable touch events that cause problems
+  useEffect(() => {
+    // Set Leaflet's tap handler to be disabled for browsers where touch !== pointer
+    if (
+      typeof window !== "undefined" &&
+      L.Browser.touch &&
+      !L.Browser.pointer
+    ) {
+      L.DomEvent.disableClickPropagation = L.DomUtil.falseFn;
+    }
+  }, []);
 
   useEffect(() => {
     if (existingPolygon && featureGroupRef.current) {
@@ -62,6 +84,8 @@ const SimpleDrawing: React.FC<SimpleDrawingProps> = ({
         onCreated={handleCreated}
         onEdited={handleEdited}
         onDeleted={handleDeleted}
+        onDrawStart={() => console.log("Draw started")}
+        onDrawStop={() => console.log("Draw stopped")}
         draw={{
           rectangle: false,
           circle: false,
@@ -80,10 +104,16 @@ const SimpleDrawing: React.FC<SimpleDrawingProps> = ({
               weight: 3,
               fillOpacity: 0.2,
             },
+            touchEnabled: false,
           },
         }}
         edit={{
           remove: true,
+          edit: true,
+          poly: {
+            allowIntersection: false,
+          },
+          featureGroup: featureGroupRef.current,
         }}
       />
     </FeatureGroup>
