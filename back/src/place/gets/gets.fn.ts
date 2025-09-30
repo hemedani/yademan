@@ -123,13 +123,13 @@ export const getsFn: ActFn = async (body) => {
 	countPipeline.pop(); // Remove $skip
 
 	// Add $count stage to get total documents
-	countPipeline.push({ $count: 'total' });
+	countPipeline.push({ $count: "total" });
 
 	// Execute both pipelines in parallel for efficiency
 	const [results, countResult] = await Promise.all([
 		place.aggregation({
 			pipeline,
-			projection: get,
+			projection: get.data,
 		}).toArray(),
 		place.aggregation({
 			pipeline: countPipeline,
@@ -146,7 +146,7 @@ export const getsFn: ActFn = async (body) => {
 			total,
 			page,
 			limit,
-			pageCount: Math.ceil(total / limit)
-		}
+			pageCount: Math.ceil(total / limit),
+		},
 	};
 };
