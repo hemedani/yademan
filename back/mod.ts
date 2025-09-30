@@ -9,6 +9,7 @@ import {
 	provinces,
 	tags,
 	users,
+	virtualTours,
 } from "@model";
 import { functionsSetup } from "./src/mod.ts";
 
@@ -28,6 +29,7 @@ export const place = places();
 export const comment = comments();
 export const tag = tags();
 export const category = categories();
+export const virtual_tour = virtualTours();
 
 export const { setAct, setService, getAtcsWithServices } = coreApp.acts;
 

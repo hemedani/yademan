@@ -7,6 +7,7 @@ import { tagSetup } from "./tag/mod.ts";
 import { categorySetup } from "./category/mod.ts";
 import { placeSetup } from "./place/mod.ts";
 import { commentSetup } from "./comment/mod.ts";
+import { virtualTourSetup } from "./virtual_tour/mod.ts";
 
 export const functionsSetup = () => {
 	citySetup();
@@ -18,4 +19,5 @@ export const functionsSetup = () => {
 	commentSetup();
 	tagSetup();
 	categorySetup();
+	virtualTourSetup();
 };
