@@ -556,7 +556,7 @@ export type placeSchema = {
     createdAt: Date;
     updatedAt: Date;
   };
-  category?: {
+  category: {
     _id?: string;
     name: string;
     description: string;
@@ -564,7 +564,7 @@ export type placeSchema = {
     icon?: string;
     createdAt: Date;
     updatedAt: Date;
-  }[];
+  };
   tags?: {
     _id?: string;
     name: string;

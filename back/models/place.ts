@@ -111,8 +111,8 @@ export const place_relations = {
 	},
 	category: {
 		schemaName: "category",
-		type: "multiple" as RelationDataType,
-		optional: true,
+		type: "single" as RelationDataType,
+		optional: false,
 		relatedRelations: {
 			places: {
 				type: "multiple" as RelationDataType,

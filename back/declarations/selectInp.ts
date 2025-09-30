@@ -556,7 +556,7 @@ coordinates: any[];
 createdAt: Date;
 updatedAt: Date;
 };
-category?: {
+category: {
 _id?: string;
 name: string;
 description: string;
@@ -564,7 +564,7 @@ color?: string;
 icon?: string;
 createdAt: Date;
 updatedAt: Date;
-}[];
+};
 tags?: {
 _id?: string;
 name: string;
