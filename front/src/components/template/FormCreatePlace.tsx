@@ -650,7 +650,7 @@ const FormCreatePlace = ({
         tags: data.tags || [],
       };
 
-      const result = await add(formData);
+      const result = await add({ set: formData, get: { _id: 1, name: 1, address: 1 } });
 
       if (result.success) {
         ToastNotify("success", "مکان با موفقیت ایجاد شد");
@@ -1007,11 +1007,10 @@ const FormCreatePlace = ({
             <button
               type="button"
               onClick={toggleDrawingMode}
-              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
-                isDrawingMode
-                  ? "bg-blue-500 text-white"
-                  : "bg-white text-gray-700 border"
-              }`}
+              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${isDrawingMode
+                ? "bg-blue-500 text-white"
+                : "bg-white text-gray-700 border"
+                }`}
             >
               <svg
                 className="w-4 h-4"
@@ -1032,11 +1031,10 @@ const FormCreatePlace = ({
             <button
               type="button"
               onClick={toggleCenterMode}
-              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
-                isCenterMode
-                  ? "bg-purple-500 text-white"
-                  : "bg-white text-gray-700 border"
-              }`}
+              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${isCenterMode
+                ? "bg-purple-500 text-white"
+                : "bg-white text-gray-700 border"
+                }`}
             >
               <svg
                 className="w-4 h-4"
@@ -1379,10 +1377,9 @@ const FormCreatePlace = ({
               text-right transition-all duration-200 ease-in-out
               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 focus:border-blue-500
               hover:border-gray-400
-              ${
-                errors.status
-                  ? "border-red-300 bg-red-50/30 focus:ring-red-500 focus:border-red-500"
-                  : "border-gray-300 hover:bg-gray-50/50"
+              ${errors.status
+                ? "border-red-300 bg-red-50/30 focus:ring-red-500 focus:border-red-500"
+                : "border-gray-300 hover:bg-gray-50/50"
               }
             `}
           >
