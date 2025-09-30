@@ -469,6 +469,7 @@ export type placeInp = {
   thumbnail?: number | fileInp
   gallery?: number | fileInp
   comments?: number | commentInp
+  virtual_tours?: number | virtual_tourInp
 }
 
 
@@ -601,6 +602,20 @@ export type placeSchema = {
     createdAt: Date;
     updatedAt: Date;
   }[];
+  virtual_tours: {
+    _id?: string;
+    name: string;
+    description?: string;
+    hotspots?: {
+      pitch: number;
+      yaw: number;
+      description?: string;
+      target?: string;
+    }[];
+    status: ("draft" | "active" | "archived");
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
 };
 ;
 
@@ -658,6 +673,81 @@ export type commentSchema = {
     hoursOfOperation?: string;
     meta?: Record<string, any>;
     status: ("draft" | "active" | "archived");
+    createdAt: Date;
+    updatedAt: Date;
+  };
+};
+;
+
+
+export type virtual_tourInp = {
+  place?: number | placeInp
+  panorama?: number | fileInp
+  registrar?: number | userInp
+
+}
+
+
+export type virtual_tourSchema = {
+  _id?: string;
+  name: string;
+  description?: string;
+  hotspots?: {
+    pitch: number;
+    yaw: number;
+    description?: string;
+    target?: string;
+  }[];
+  status: ("draft" | "active" | "archived");
+  createdAt: Date;
+  updatedAt: Date;
+  place: {
+    _id?: string;
+    name: string;
+    description: string;
+    slug?: string;
+    center: {
+      type: "Point";
+      coordinates: any[];
+    };
+    area: {
+      type: "MultiPolygon";
+      coordinates: any[];
+    };
+    address?: string;
+    contact?: {
+      phone?: string;
+      email?: string;
+      website?: string;
+      social?: string[];
+    };
+    hoursOfOperation?: string;
+    meta?: Record<string, any>;
+    status: ("draft" | "active" | "archived");
+    createdAt: Date;
+    updatedAt: Date;
+  };
+  panorama?: {
+    _id?: string;
+    name: string;
+    mimType: string;
+    size: number;
+    alt_text?: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+  registrar?: {
+    _id?: string;
+    first_name: string;
+    last_name: string;
+    father_name?: string;
+    gender: ("Male" | "Female");
+    birth_date?: Date;
+    summary?: string;
+    address?: string;
+    level: ("Ghost" | "Manager" | "Editor" | "Ordinary");
+    email: string;
+    is_verified: boolean;
     createdAt: Date;
     updatedAt: Date;
   };
@@ -1104,6 +1194,15 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            virtual_tours?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              hotspots?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
           };
         };
       };
@@ -1390,6 +1489,15 @@ export type ReqType = {
               rating?: (0 | 1);
               status?: (0 | 1);
               is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            virtual_tours?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              hotspots?: (0 | 1);
+              status?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -1782,6 +1890,15 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            virtual_tours?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              hotspots?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
           };
         };
       };
@@ -2021,6 +2138,15 @@ export type ReqType = {
               rating?: (0 | 1);
               status?: (0 | 1);
               is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            virtual_tours?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              hotspots?: (0 | 1);
+              status?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -2616,6 +2742,15 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            virtual_tours?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              hotspots?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
           };
         };
       };
@@ -2909,6 +3044,15 @@ export type ReqType = {
               rating?: (0 | 1);
               status?: (0 | 1);
               is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            virtual_tours?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              hotspots?: (0 | 1);
+              status?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -3218,6 +3362,15 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            virtual_tours?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              hotspots?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
           };
           comments?: {
             _id?: (0 | 1);
@@ -3449,6 +3602,15 @@ export type ReqType = {
               rating?: (0 | 1);
               status?: (0 | 1);
               is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            virtual_tours?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              hotspots?: (0 | 1);
+              status?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -4007,6 +4169,15 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            virtual_tours?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              hotspots?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
           };
           comments?: {
             _id?: (0 | 1);
@@ -4373,6 +4544,15 @@ export type ReqType = {
             createdAt?: (0 | 1);
             updatedAt?: (0 | 1);
           };
+          virtual_tours?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            hotspots?: (0 | 1);
+            status?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
         };
       };
 
@@ -4495,6 +4675,15 @@ export type ReqType = {
             rating?: (0 | 1);
             status?: (0 | 1);
             is_anonymous?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          virtual_tours?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            hotspots?: (0 | 1);
+            status?: (0 | 1);
             createdAt?: (0 | 1);
             updatedAt?: (0 | 1);
           };
@@ -4876,6 +5065,54 @@ export type ReqType = {
               hoursOfOperation?: (0 | 1);
               meta?: (0 | 1);
               status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+          };
+          virtual_tours?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            hotspots?: (0 | 1);
+            status?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+            place?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              slug?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              address?: (0 | 1);
+              contact?: (0 | 1);
+              hoursOfOperation?: (0 | 1);
+              meta?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            panorama?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            registrar?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -5287,6 +5524,54 @@ export type ReqType = {
                 updatedAt?: (0 | 1);
               };
             };
+            virtual_tours?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              hotspots?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+              place?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                slug?: (0 | 1);
+                center?: (0 | 1);
+                area?: (0 | 1);
+                address?: (0 | 1);
+                contact?: (0 | 1);
+                hoursOfOperation?: (0 | 1);
+                meta?: (0 | 1);
+                status?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              panorama?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                mimType?: (0 | 1);
+                size?: (0 | 1);
+                alt_text?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              registrar?: {
+                _id?: (0 | 1);
+                first_name?: (0 | 1);
+                last_name?: (0 | 1);
+                father_name?: (0 | 1);
+                gender?: (0 | 1);
+                birth_date?: (0 | 1);
+                summary?: (0 | 1);
+                address?: (0 | 1);
+                level?: (0 | 1);
+                email?: (0 | 1);
+                is_verified?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+            };
           };
           metadata: {
             total?: (0 | 1);
@@ -5613,6 +5898,15 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            virtual_tours?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              hotspots?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
           };
         };
       };
@@ -5800,6 +6094,15 @@ export type ReqType = {
               rating?: (0 | 1);
               status?: (0 | 1);
               is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            virtual_tours?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              hotspots?: (0 | 1);
+              status?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -6352,6 +6655,600 @@ export type ReqType = {
       count: {
         set: {
           name?: string;
+        };
+        get: {
+          qty?: (0 | 1);
+        };
+      };
+
+
+    }
+
+
+    virtual_tour: {
+
+
+      add: {
+        set: {
+          name: string;
+          description?: string;
+          hotspots?: {
+            pitch: number;
+            yaw: number;
+            description?: string;
+            target?: string;
+          }[];
+          status: ("draft" | "active" | "archived");
+          createdAt: Date;
+          updatedAt: Date;
+          placeId: string;
+          panoramaId: string;
+        };
+        get: {
+          _id?: (0 | 1);
+          name?: (0 | 1);
+          description?: (0 | 1);
+          hotspots?: (0 | 1);
+          status?: (0 | 1);
+          createdAt?: (0 | 1);
+          updatedAt?: (0 | 1);
+          place?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            slug?: (0 | 1);
+            center?: (0 | 1);
+            area?: (0 | 1);
+            address?: (0 | 1);
+            contact?: (0 | 1);
+            hoursOfOperation?: (0 | 1);
+            meta?: (0 | 1);
+            status?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          panorama?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            mimType?: (0 | 1);
+            size?: (0 | 1);
+            alt_text?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          registrar?: {
+            _id?: (0 | 1);
+            first_name?: (0 | 1);
+            last_name?: (0 | 1);
+            father_name?: (0 | 1);
+            gender?: (0 | 1);
+            birth_date?: (0 | 1);
+            summary?: (0 | 1);
+            address?: (0 | 1);
+            level?: (0 | 1);
+            email?: (0 | 1);
+            is_verified?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+        };
+      };
+
+
+      update: {
+        set: {
+          _id: string;
+          name?: string;
+          description?: string;
+          hotspots?: {
+            pitch: number;
+            yaw: number;
+            description?: string;
+            target?: string;
+          }[];
+          status?: ("draft" | "active" | "archived");
+        };
+        get: {
+          _id?: (0 | 1);
+          name?: (0 | 1);
+          description?: (0 | 1);
+          hotspots?: (0 | 1);
+          status?: (0 | 1);
+          createdAt?: (0 | 1);
+          updatedAt?: (0 | 1);
+          place?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            slug?: (0 | 1);
+            center?: (0 | 1);
+            area?: (0 | 1);
+            address?: (0 | 1);
+            contact?: (0 | 1);
+            hoursOfOperation?: (0 | 1);
+            meta?: (0 | 1);
+            status?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          panorama?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            mimType?: (0 | 1);
+            size?: (0 | 1);
+            alt_text?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          registrar?: {
+            _id?: (0 | 1);
+            first_name?: (0 | 1);
+            last_name?: (0 | 1);
+            father_name?: (0 | 1);
+            gender?: (0 | 1);
+            birth_date?: (0 | 1);
+            summary?: (0 | 1);
+            address?: (0 | 1);
+            level?: (0 | 1);
+            email?: (0 | 1);
+            is_verified?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+        };
+      };
+
+
+      get: {
+        set: {
+          _id: string;
+        };
+        get: {
+          _id?: (0 | 1);
+          name?: (0 | 1);
+          description?: (0 | 1);
+          hotspots?: (0 | 1);
+          status?: (0 | 1);
+          createdAt?: (0 | 1);
+          updatedAt?: (0 | 1);
+          place?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            slug?: (0 | 1);
+            center?: (0 | 1);
+            area?: (0 | 1);
+            address?: (0 | 1);
+            contact?: (0 | 1);
+            hoursOfOperation?: (0 | 1);
+            meta?: (0 | 1);
+            status?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+            registrar?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            province?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city_zone?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            category?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            tags?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            thumbnail?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            gallery?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            comments?: {
+              _id?: (0 | 1);
+              text?: (0 | 1);
+              rating?: (0 | 1);
+              status?: (0 | 1);
+              is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            virtual_tours?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              hotspots?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+          };
+          panorama?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            mimType?: (0 | 1);
+            size?: (0 | 1);
+            alt_text?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+            uploader?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+          };
+          registrar?: {
+            _id?: (0 | 1);
+            first_name?: (0 | 1);
+            last_name?: (0 | 1);
+            father_name?: (0 | 1);
+            gender?: (0 | 1);
+            birth_date?: (0 | 1);
+            summary?: (0 | 1);
+            address?: (0 | 1);
+            level?: (0 | 1);
+            email?: (0 | 1);
+            is_verified?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+            avatar?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            national_card?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            uploadedAssets?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            registered_places?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              slug?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              address?: (0 | 1);
+              contact?: (0 | 1);
+              hoursOfOperation?: (0 | 1);
+              meta?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            comments?: {
+              _id?: (0 | 1);
+              text?: (0 | 1);
+              rating?: (0 | 1);
+              status?: (0 | 1);
+              is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+          };
+        };
+      };
+
+
+      gets: {
+        set: {
+          page: number;
+          limit: number;
+          name?: string;
+          placeId?: string;
+        };
+        get: {
+          _id?: (0 | 1);
+          name?: (0 | 1);
+          description?: (0 | 1);
+          hotspots?: (0 | 1);
+          status?: (0 | 1);
+          createdAt?: (0 | 1);
+          updatedAt?: (0 | 1);
+          place?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            slug?: (0 | 1);
+            center?: (0 | 1);
+            area?: (0 | 1);
+            address?: (0 | 1);
+            contact?: (0 | 1);
+            hoursOfOperation?: (0 | 1);
+            meta?: (0 | 1);
+            status?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+            registrar?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            province?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city_zone?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            category?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            tags?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            thumbnail?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            gallery?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            comments?: {
+              _id?: (0 | 1);
+              text?: (0 | 1);
+              rating?: (0 | 1);
+              status?: (0 | 1);
+              is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            virtual_tours?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              hotspots?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+          };
+          panorama?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            mimType?: (0 | 1);
+            size?: (0 | 1);
+            alt_text?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+            uploader?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+          };
+          registrar?: {
+            _id?: (0 | 1);
+            first_name?: (0 | 1);
+            last_name?: (0 | 1);
+            father_name?: (0 | 1);
+            gender?: (0 | 1);
+            birth_date?: (0 | 1);
+            summary?: (0 | 1);
+            address?: (0 | 1);
+            level?: (0 | 1);
+            email?: (0 | 1);
+            is_verified?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+            avatar?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            national_card?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            uploadedAssets?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            registered_places?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              slug?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              address?: (0 | 1);
+              contact?: (0 | 1);
+              hoursOfOperation?: (0 | 1);
+              meta?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            comments?: {
+              _id?: (0 | 1);
+              text?: (0 | 1);
+              rating?: (0 | 1);
+              status?: (0 | 1);
+              is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+          };
+        };
+      };
+
+
+      remove: {
+        set: {
+          _id: string;
+          hardCascade?: boolean;
+        };
+        get: {
+          success?: (0 | 1);
+        };
+      };
+
+
+      count: {
+        set: {
+          name?: string;
+          placeId?: string;
         };
         get: {
           qty?: (0 | 1);
