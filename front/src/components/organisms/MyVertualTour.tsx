@@ -99,7 +99,7 @@ const MyVertualTour: React.FC<MyVertualTourProps> = ({ imageUrl }) => {
 
         // Add core event listeners
         viewerRef.current.addEventListener("ready", onReady);
-        viewerRef.current.addEventListener("progress", onProgress);
+        viewerRef.current.addEventListener("load-progress", onProgress);
         viewerRef.current.addEventListener("panorama-error", onError);
       } catch (err) {
         const errorMsg = err instanceof Error ? err.message : String(err);
