@@ -11,6 +11,8 @@ export const addValidator = () => {
 			city_zone: objectIdValidation,
 			category: objectIdValidation,
 			tags: optional(array(objectIdValidation)),
+			gallery: optional(array(objectIdValidation)),
+			thumbnail: optional(objectIdValidation),
 		}),
 		get: selectStruct("place", 1),
 	});

@@ -8,7 +8,16 @@ export const addFn: ActFn = async (body) => {
 	const { user }: MyContext = coreApp.contextFns
 		.getContextModel() as MyContext;
 
-	const { province, city, city_zone, category, tags, ...rest } = set;
+	const {
+		province,
+		city,
+		city_zone,
+		category,
+		tags,
+		gallery,
+		thumbnail,
+		...rest
+	} = set;
 
 	const relations: TInsertRelations<typeof place_relations> = {
 		registrar: {
@@ -50,6 +59,18 @@ export const addFn: ActFn = async (body) => {
 	tags && tags.length > 0 &&
 		(relations.tags = {
 			_ids: tags.map((t: string) => new ObjectId(t)),
+			relatedRelations: { places: true },
+		});
+
+	gallery && gallery.length > 0 &&
+		(relations.gallery = {
+			_ids: gallery.map((t: string) => new ObjectId(t)),
+			relatedRelations: { places: true },
+		});
+
+	thumbnail && thumbnail.length > 0 &&
+		(relations.thumbnail = {
+			_ids: new ObjectId(thumbnail as string),
 			relatedRelations: { places: true },
 		});
 
