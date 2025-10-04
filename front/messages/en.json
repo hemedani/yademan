@@ -93,6 +93,43 @@
     "terms": "Terms of Use",
     "copyright": "All rights reserved"
   },
+  "errors": {
+    "failedToFetchPlaces": "Failed to fetch places",
+    "unexpectedError": "An unexpected error occurred",
+    "dataNotFound": "Data not found",
+    "networkError": "Network connection error",
+    "serverError": "Server error",
+    "authError": "Authentication error"
+  },
+  "map": {
+    "errorLoadingPlaces": "Error loading places",
+    "noPlacesFound": "No places found",
+    "zoomIn": "Zoom in to see more places",
+    "filters": "Map filters",
+    "layers": "Map layers",
+    "loading": "Loading map"
+  },
+  "place": {
+    "virtualTour": "Virtual Tour",
+    "directions": "Directions",
+    "tags": "Tags",
+    "address": "Address",
+    "hours": "Hours",
+    "contact": "Contact",
+    "gallery": "Gallery",
+    "lastUpdated": "Last updated",
+    "details": "Place Details",
+    "noDescription": "No description available",
+    "notFound": "Place not found"
+  },
+  "virtualTour": {
+    "loading": "Loading virtual tour",
+    "errorTitle": "Failed to load virtual tour",
+    "errorMessage": "There was an error loading the virtual tour. Please try again later.",
+    "hotspot": "Information point",
+    "noTours": "No virtual tours available",
+    "missingPanorama": "The panorama image for this tour is missing or unavailable"
+  },
   "Contact": {
     "name": "Name",
     "email": "Email",

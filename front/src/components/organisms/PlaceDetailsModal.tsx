@@ -99,7 +99,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
               <button
                 onClick={onClose}
                 className="p-2 rounded-full bg-black/20 hover:bg-black/40 transition-colors text-white"
-                aria-label={t("common.close")}
+                aria-label={t("Common.close")}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -148,9 +148,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                     onClick={() => setIsFullScreen(!isFullScreen)}
                     className="p-2 rounded-full bg-black/20 hover:bg-black/40 transition-colors text-white"
                     aria-label={
-                      isFullScreen
-                        ? t("common.exitFullscreen")
-                        : t("common.fullscreen")
+                      isFullScreen ? t("Common.close") : t("Common.moreInfo")
                     }
                   >
                     {isFullScreen ? (
@@ -376,7 +374,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                             prev === 0 ? place.gallery!.length - 1 : prev - 1,
                           );
                         }}
-                        aria-label={t("common.previous")}
+                        aria-label={t("Common.previous")}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -400,7 +398,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                             prev === place.gallery!.length - 1 ? 0 : prev + 1,
                           );
                         }}
-                        aria-label={t("common.next")}
+                        aria-label={t("Common.next")}
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -463,10 +461,10 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
               >
                 {place?.updatedAt
                   ? new Intl.DateTimeFormat(undefined, {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  }).format(new Date(place.updatedAt))
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    }).format(new Date(place.updatedAt))
                   : "-"}
               </time>
             </div>
