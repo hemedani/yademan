@@ -12,6 +12,32 @@ import FilterPanel from "@/components/filters/FilterPanel";
 import { useFilterPanel } from "@/hooks/useFilterPanel";
 import { useMapStore } from "@/stores/mapStore";
 import toast from "react-hot-toast";
+import PlaceDetailsModal from "@/components/organisms/PlaceDetailsModal";
+import VirtualTourViewer from "@/components/organisms/VirtualTourViewer";
+import { PlaceData } from "@/components/atoms/PlaceMarker";
+import { Link } from "../../../i18n/routing";
+import MyVertualTour from "@/components/organisms/MyVertualTour";
+import { getLesanBaseUrl } from "@/services/api";
+
+// Extended PlaceData with virtual tours for HomePage
+interface ExtendedPlaceData extends PlaceData {
+  virtual_tours?: {
+    _id: string;
+    name: string;
+    description?: string;
+    panorama: {
+      _id?: string;
+      name: string;
+    };
+    hotspots?: {
+      pitch: number;
+      yaw: number;
+      description?: string;
+      target?: string;
+    }[];
+    status: "draft" | "active" | "archived";
+  }[];
+}
 
 // Dynamic imports for heavy components
 const SearchPanel = dynamic(() => import("@/components/search/SearchPanel"), {
@@ -26,8 +52,18 @@ export default function HomePage() {
   const [showSearch, setShowSearch] = useState(false);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
+  const [selectedPlace, setSelectedPlace] = useState<ExtendedPlaceData | null>(
+    null,
+  );
+  const [showPlaceDetails, setShowPlaceDetails] = useState(false);
+  const [selectedVirtualTour, setSelectedVirtualTour] = useState<any>(null);
+  const [isTourLoading, setIsTourLoading] = useState(false);
+  const [tourError, setTourError] = useState<string | null>(null);
   const { isFilterOpen, toggleFilter, closeFilter } = useFilterPanel();
-  const { searchQuery, setSearchQuery } = useMapStore();
+  const { searchQuery, setSearchQuery, getCurrentBounds, filters } =
+    useMapStore();
+  const [showTourDemo, setShowTourDemo] = useState(false);
+  const [tourDemoDismissed, setTourDemoDismissed] = useState(false);
 
   // PWA Install Prompt
   useEffect(() => {
@@ -46,6 +82,78 @@ export default function HomePage() {
       );
     };
   }, []);
+
+  // Auto-hide welcome screen after a delay when map is loaded
+  useEffect(() => {
+    if (isMapLoaded && showWelcome) {
+      const timer = setTimeout(() => setShowWelcome(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isMapLoaded, showWelcome]);
+
+  // Handle virtual tour launch
+  const handleLaunchVirtualTour = (tourId: string) => {
+    setTourError(null);
+    setIsTourLoading(true);
+
+    // Reset any existing tour first
+    setSelectedVirtualTour(null);
+
+    if (
+      !selectedPlace?.virtual_tours ||
+      selectedPlace.virtual_tours.length === 0
+    ) {
+      console.warn("No virtual tours available for this place");
+      setTourError("This place does not have virtual tours available");
+      setIsTourLoading(false);
+      return;
+    }
+
+    const tour = selectedPlace.virtual_tours.find(
+      (tour) => tour._id === tourId,
+    );
+
+    if (tour && tour.panorama && tour.panorama.name) {
+      console.log("Loading virtual tour:", tour.panorama.name);
+
+      // Check if the panorama URL is valid
+      const panoramaUrl = `${getLesanBaseUrl()}/uploads/images/${tour.panorama.name}`;
+
+      // Set the tour and close the place details
+      setSelectedVirtualTour(tour);
+      setShowPlaceDetails(false);
+      setIsTourLoading(false);
+    } else {
+      console.error("Virtual tour is missing panorama image:", tour);
+      setTourError("This virtual tour is missing its panorama image");
+      setIsTourLoading(false);
+    }
+  };
+
+  // Close the virtual tour
+  const handleCloseTour = () => {
+    setSelectedVirtualTour(null);
+    setTourError(null);
+    setIsTourLoading(false);
+  };
+
+  const handleCloseTourDemo = () => {
+    setShowTourDemo(false);
+  };
+
+  // Demo tour launch
+  const handleLaunchTourDemo = () => {
+    setShowTourDemo(true);
+    setTourDemoDismissed(true);
+    toast.success(t("Virtual Tour Started"), {
+      position: "bottom-center",
+    });
+  };
+
+  // Dismiss tour promo
+  const handleDismissTourPromo = () => {
+    setTourDemoDismissed(true);
+  };
 
   const handleInstallClick = async () => {
     const prompt = window.deferredPrompt;
@@ -292,8 +400,132 @@ export default function HomePage() {
               )}
           </AnimatePresence>
 
-          {/* Map View */}
+          {/* Map View - InteractiveMap handles fetching and displaying places */}
           {isMapLoaded && <MapView className="h-full" />}
+
+          {/* Virtual Tour Promo Section
+          {isMapLoaded && !tourDemoDismissed && (
+            <div className="absolute bottom-20 left-0 right-0 flex justify-center z-20 pointer-events-auto px-4 md:px-0">
+              <motion.div
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.5, duration: 0.5 }}
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-xl max-w-sm w-full p-3 text-white"
+              >
+                <div className="flex-1 mb-2">
+                  <p className="font-semibold text-sm">
+                    {t("Experience in 3D")}
+                  </p>
+                  <p className="text-xs opacity-90">
+                    {t("Explore our virtual tours")}
+                  </p>
+                </div>
+                <div className="flex gap-2 mt-1">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={handleLaunchTourDemo}
+                    className="flex-1 bg-white text-indigo-600 font-medium text-sm py-2 px-3 rounded-lg"
+                  >
+                    {t("Quick Demo")}
+                  </motion.button>
+                  <Link href="/virtual-tour" passHref>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex-1 bg-indigo-800 text-white border border-indigo-400 font-medium text-sm py-2 px-3 rounded-lg"
+                    >
+                      {t("Full Tours")}
+                    </motion.button>
+                  </Link>
+                </div>
+              </motion.div>
+            </div>
+          )}
+          */}
+
+          {/* Place Details Modal */}
+          {selectedPlace && showPlaceDetails && (
+            <PlaceDetailsModal
+              place={selectedPlace}
+              onClose={() => setShowPlaceDetails(false)}
+              onLaunchVirtualTour={handleLaunchVirtualTour}
+            />
+          )}
+
+          {/***  Virtual Tour Viewer   **/}
+          {selectedVirtualTour &&
+            selectedVirtualTour.panorama &&
+            selectedVirtualTour.panorama.name && (
+              <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex flex-col">
+                {/* Tour Header */}
+                <div className="bg-gray-800 text-white p-2 flex justify-between items-center">
+                  <h2 className="text-lg font-medium">
+                    {selectedPlace?.name || "Virtual Tour"}
+                  </h2>
+                  <button
+                    onClick={handleCloseTour}
+                    className="p-1 rounded-full hover:bg-gray-700"
+                    aria-label="Close tour"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                {/* Tour Viewer */}
+                <div className="flex-1">
+                  <MyVertualTour
+                    imageUrl={`${getLesanBaseUrl()}/uploads/images/${selectedVirtualTour.panorama.name}`}
+                  />
+                </div>
+              </div>
+            )}
+
+          {/* Tour Error Message */}
+          {tourError && (
+            <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center">
+              <div className="bg-white p-6 rounded-lg max-w-md text-center">
+                <div className="text-red-500 mb-4">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-12 w-12 mx-auto"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  Virtual Tour Error
+                </h3>
+                <p className="text-gray-600 mb-4">{tourError}</p>
+                <button
+                  onClick={handleCloseTour}
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Floating Action Button for Mobile */}
           <motion.button
@@ -379,7 +611,7 @@ export default function HomePage() {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           strokeWidth={2}
-                          d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+                          d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
                         />
                       </svg>
                       {t("filters")}

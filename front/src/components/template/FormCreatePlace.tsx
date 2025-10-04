@@ -17,8 +17,11 @@ import { useEffect, useState, useCallback } from "react";
 import React from "react";
 import SelectBox from "../atoms/Select";
 import AsyncSelect from "react-select/async";
+import { UploadImage } from "@/components/molecules/UploadFile";
+import MapClickHandler from "@/components/MapClickHandler";
+import "leaflet/dist/leaflet.css";
 
-// Dynamically import map components to avoid SSR issues
+// Dynamically import map components
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
   { ssr: false },
@@ -38,29 +41,11 @@ const Marker = dynamic(
 const SimpleDrawing = dynamic(() => import("@/components/SimpleDrawing"), {
   ssr: false,
 });
-const useMapEvents = dynamic(
-  () => import("react-leaflet").then((mod) => mod.useMapEvents),
-  { ssr: false },
-);
 
 interface SelectOption {
   value: string;
   label: string;
 }
-
-// MapClickHandler component for handling map clicks
-const MapClickHandler = ({
-  onClick,
-}: {
-  onClick: (latlng: L.LatLng) => void;
-}) => {
-  const map = useMapEvents({
-    click(e) {
-      onClick(e.latlng);
-    },
-  });
-  return null;
-};
 
 interface LatLng {
   lat: number;
@@ -86,6 +71,8 @@ const placeSchema = z.object({
     .max(100, { message: "نامک نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد" })
     .optional()
     .or(z.literal("")),
+  thumbnail: z.string().optional().or(z.literal("")),
+  gallery: z.array(z.string()).optional(),
   address: z
     .string()
     .max(200, { message: "آدرس نمی‌تواند بیشتر از ۲۰۰ کاراکتر باشد" })
@@ -145,6 +132,7 @@ const FormCreatePlace = ({
 }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [galleryImages, setGalleryImages] = useState<string[]>([]);
 
   // Map state
   const [drawnPolygon, setDrawnPolygon] = useState<LatLng[][] | null>(null);
@@ -157,17 +145,6 @@ const FormCreatePlace = ({
   const [mapZoom, setMapZoom] = useState(6);
   const [mapKey, setMapKey] = useState(0);
   const [isMapReady, setIsMapReady] = useState(false);
-
-  // Fix Leaflet touch events
-  useEffect(() => {
-    if (typeof window !== "undefined" && L) {
-      // Fix for "wrong event specified: touchleave" error
-      if (L.Browser && L.Browser.touch && !L.Browser.pointer) {
-        L.DomEvent.disableClickPropagation = L.DomUtil.falseFn;
-      }
-      setIsMapReady(true);
-    }
-  }, []);
 
   // Relationship state
   const [selectedProvince, setSelectedProvince] = useState<SelectOption | null>(
@@ -214,7 +191,7 @@ const FormCreatePlace = ({
       tags: [],
       center: {
         type: "Point",
-        coordinates: [51.389, 35.6892], // [longitude, latitude]
+        coordinates: [51.389, 35.6892], // [longitude, latitude] - Tehran, Iran
       },
       area: {
         type: "MultiPolygon",
@@ -222,6 +199,28 @@ const FormCreatePlace = ({
       },
     },
   });
+
+  // Fix Leaflet touch events and initialize center point
+  useEffect(() => {
+    if (typeof window !== "undefined" && L) {
+      // Set up Leaflet default icon paths
+      // @ts-expect-error - _getIconUrl exists but is not in TypeScript definitions
+      delete L.Icon.Default.prototype._getIconUrl;
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl:
+          "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png",
+        iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
+        shadowUrl:
+          "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
+      });
+
+      // Fix for "wrong event specified: touchleave" error
+      if (L.Browser && L.Browser.touch && !L.Browser.pointer) {
+        L.DomEvent.disableClickPropagation = L.DomUtil.falseFn;
+      }
+      setIsMapReady(true);
+    }
+  }, []);
 
   // Load provinces options
   const loadProvincesOptions = async (
@@ -547,9 +546,9 @@ const FormCreatePlace = ({
 
   // Handle map click for center point
   const handleMapClick = useCallback(
-    (latlng: L.LatLng) => {
+    (e: LatLng) => {
       if (isCenterMode) {
-        const { lat, lng } = latlng;
+        const { lat, lng } = e;
         setCenterPoint({ lat, lng });
         setValue(
           "center",
@@ -575,12 +574,14 @@ const FormCreatePlace = ({
 
   // Toggle center mode
   const toggleCenterMode = () => {
+    console.log("Toggling center mode, current value:", isCenterMode);
     if (isCenterMode) {
       setIsCenterMode(false);
     } else {
       setIsCenterMode(true);
       setIsDrawingMode(false);
     }
+    console.log("Center mode will be set to:", !isCenterMode);
   };
 
   // Clear drawn polygon
@@ -596,10 +597,12 @@ const FormCreatePlace = ({
 
   // Clear center point
   const clearCenterPoint = () => {
+    // Set centerPoint to null to hide the marker
     setCenterPoint(null);
+    // Reset to default Tehran coordinates in the form
     setValue(
       "center",
-      { type: "Point", coordinates: [] },
+      { type: "Point", coordinates: [51.389, 35.6892] },
       { shouldValidate: true },
     );
     trigger();
@@ -633,7 +636,12 @@ const FormCreatePlace = ({
         name: data.name,
         description: data.description,
         slug: data.slug || undefined,
-        center: data.center,
+        center: {
+          type: "Point",
+          coordinates: centerPoint
+            ? [centerPoint.lng, centerPoint.lat]
+            : [51.389, 35.6892], // Default to Tehran if no center point selected
+        },
         area: data.area,
         address: data.address || undefined,
         contact: {
@@ -648,9 +656,14 @@ const FormCreatePlace = ({
         hoursOfOperation: data.hoursOfOperation || undefined,
         status: data.status,
         tags: data.tags || [],
+        thumbnail: data.thumbnail || undefined,
+        gallery: galleryImages.length > 0 ? galleryImages : undefined,
       };
 
-      const result = await add({ set: formData, get: { _id: 1, name: 1, address: 1 } });
+      const result = await add({
+        set: formData,
+        get: { _id: 1, name: 1, address: 1 },
+      });
 
       if (result.success) {
         ToastNotify("success", "مکان با موفقیت ایجاد شد");
@@ -681,19 +694,69 @@ const FormCreatePlace = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <MyInput
             name="name"
-            label="نام مکان *"
+            label="نام مکان"
             register={register}
             errMsg={errors.name?.message}
-            placeholder="مانند: موزه ملی ایران"
+            placeholder="مثال: موزه هنرهای معاصر"
           />
 
           <MyInput
             name="slug"
-            label="نامک (Slug)"
+            label="نامک (slug)"
             register={register}
             errMsg={errors.slug?.message}
-            placeholder="مانند: national-museum"
+            placeholder="مثال: museum-of-contemporary-art"
           />
+
+          <div className="col-span-1">
+            <span className="text-sm font-medium text-gray-700 block mb-2">
+              تصویر شاخص
+            </span>
+            <UploadImage
+              inputName="thumbnail"
+              setUploadedImage={(uploaded: string) =>
+                setValue("thumbnail", uploaded, { shouldValidate: true })
+              }
+              type="image"
+              token={token}
+            />
+            {errors.thumbnail && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.thumbnail.message}
+              </p>
+            )}
+          </div>
+
+          <div className="col-span-2">
+            <span className="text-sm font-medium text-gray-700 block mb-2">
+              گالری تصاویر
+            </span>
+            <div className="flex flex-wrap gap-4">
+              <UploadImage
+                inputName="gallery"
+                setUploadedImage={(uploaded: string) => {
+                  setGalleryImages((prev) => [...prev, uploaded]);
+                  setValue("gallery", [...galleryImages, uploaded], {
+                    shouldValidate: true,
+                  });
+                }}
+                type="image"
+                token={token}
+              />
+              {galleryImages.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  <p className="w-full text-sm text-gray-500">
+                    {galleryImages.length} تصویر آپلود شده
+                  </p>
+                </div>
+              )}
+            </div>
+            {errors.gallery && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.gallery.message}
+              </p>
+            )}
+          </div>
         </div>
 
         <MyInput
@@ -1060,45 +1123,42 @@ const FormCreatePlace = ({
           </div>
 
           <div className="h-[400px] rounded-lg overflow-hidden border">
-            {typeof window !== "undefined" && (
-              <MapContainer
-                key={mapKey}
-                center={mapCenter}
-                zoom={mapZoom}
-                style={{ height: "100%", width: "100%" }}
-                attributionControl={true}
-                zoomControl={true}
-                doubleClickZoom={true}
-                scrollWheelZoom={true}
-                touchZoom={true}
-              >
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            <MapContainer
+              key={mapKey}
+              center={mapCenter}
+              zoom={mapZoom}
+              className="h-full w-full"
+              style={{ height: "100%", width: "100%" }}
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <MapClickHandler
+                isActive={isCenterMode}
+                onMapClick={handleMapClick}
+              />
+              {drawnPolygon && (
+                <Polygon
+                  positions={drawnPolygon}
+                  pathOptions={{
+                    color: "#3b82f6",
+                    weight: 3,
+                    opacity: 0.8,
+                    fillOpacity: 0.2,
+                    fillColor: "#3b82f6",
+                  }}
                 />
-
-                {/* Drawn polygon */}
-                {drawnPolygon &&
-                  drawnPolygon.map((polygon, idx) => (
-                    <Polygon
-                      key={`polygon-${idx}`}
-                      positions={polygon}
-                      pathOptions={{ color: "#2563eb" }}
-                    />
-                  ))}
-
-                {/* Center point */}
-                {centerPoint && (
-                  <Marker position={[centerPoint.lat, centerPoint.lng]} />
-                )}
-
-                <SimpleDrawing
-                  isActive={isDrawingMode}
-                  onPolygonCreated={handlePolygonCreated}
-                />
-                {isCenterMode && <MapClickHandler onClick={handleMapClick} />}
-              </MapContainer>
-            )}
+              )}
+              {centerPoint && (
+                <Marker position={[centerPoint.lat, centerPoint.lng]} />
+              )}
+              <SimpleDrawing
+                isActive={isDrawingMode}
+                onPolygonCreated={handlePolygonCreated}
+                onPolygonDeleted={handlePolygonDeleted}
+              />
+            </MapContainer>
           </div>
 
           {errors.area && (

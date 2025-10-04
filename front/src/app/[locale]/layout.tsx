@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "../globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { MapComparisonProvider } from "@/context/MapComparisonContext";
+
+const inter = Inter({ subsets: ["latin"] });
 
 import { Toaster } from "react-hot-toast";
 
@@ -51,7 +54,7 @@ export default async function RootLayout({ children, params }: Props) {
           content="width=device-width, initial-scale=1, maximum-scale=5"
         />
       </head>
-      <body className="overflow-x-hidden">
+      <body className={`${inter.className} overflow-x-hidden`}>
         <NextIntlClientProvider messages={messages}>
           <MapComparisonProvider>
             <AuthProvider>

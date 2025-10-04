@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
+import { createRoot } from "react-dom/client";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
@@ -9,12 +10,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useMapStore } from "@/stores/mapStore";
 import { useAuth } from "@/context/AuthContext";
 import MapControls from "./MapControls";
+import { gets } from "@/app/actions/place/gets";
+import PlaceMarker, { PlaceData } from "@/components/atoms/PlaceMarker";
+import PlaceDetailsModal from "@/components/organisms/PlaceDetailsModal";
+import VirtualTourViewer from "@/components/organisms/VirtualTourViewer";
+import { toast } from "react-hot-toast";
 import PlacePopup from "@/components/map/PlacePopup";
 import PlaceSidebar from "@/components/map/PlaceSidebar";
 import RoutePanel from "@/components/map/RoutePanel";
 import MapLayerSwitcher from "@/components/map/MapLayerSwitcher";
+import MyVertualTour from "../organisms/MyVertualTour";
+import { getLesanBaseUrl } from "@/services/api";
 
 // Types
+// Custom Place interface compatible with PlaceData
 interface Place {
   _id: string;
   name: string;
@@ -23,16 +32,77 @@ interface Place {
     type: "Point";
     coordinates: [number, number];
   };
-  category?: string;
-  tags?: string[];
-  images?: string[];
-  rating?: number;
+  category?:
+    | {
+        _id?: string;
+        name: string;
+        color?: string;
+        icon?: string;
+      }
+    | string;
+  tags?:
+    | Array<{
+        _id?: string;
+        name: string;
+        color?: string;
+        icon?: string;
+      }>
+    | string[];
+  thumbnail?: {
+    _id?: string;
+    name: string;
+  };
+  gallery?: {
+    _id?: string;
+    name: string;
+    mimType: string;
+    size: number;
+    alt_text?: string;
+  }[];
+  virtual_tours?: {
+    _id: string;
+    name: string;
+    description?: string;
+    panorama: {
+      _id?: string;
+      name: string;
+    };
+    hotspots?: {
+      pitch: number;
+      yaw: number;
+      description?: string;
+      target?: string;
+    }[];
+    status: "draft" | "active" | "archived";
+  }[];
   address?: string;
+  hoursOfOperation?: string;
   contact?: {
     phone?: string;
     email?: string;
     website?: string;
+    social?: string[];
   };
+  updatedAt: Date;
+  createdAt: Date;
+}
+
+// For virtual tour type
+interface VirtualTour {
+  _id: string;
+  name: string;
+  description?: string;
+  panorama: {
+    _id?: string;
+    name: string;
+  };
+  hotspots?: {
+    pitch: number;
+    yaw: number;
+    description?: string;
+    target?: string;
+  }[];
+  status: "draft" | "active" | "archived";
 }
 
 interface MapLayer {
@@ -83,10 +153,16 @@ const IRAN_BOUNDS: [[number, number], [number, number]] = [
   [63.5, 39.8], // Northeast
 ];
 
-const InteractiveMap: React.FC = () => {
+interface InteractiveMapProps {
+  onLoad?: () => void;
+}
+
+const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
   const markersRef = useRef<Map<string, maplibregl.Marker>>(new Map());
+  const markerElementsRef = useRef<Map<string, HTMLDivElement>>(new Map());
+  const markerRootsRef = useRef<Map<string, any>>(new Map());
 
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [showSidebar, setShowSidebar] = useState(false);
@@ -97,11 +173,26 @@ const InteractiveMap: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [routeStart, setRouteStart] = useState<[number, number] | null>(null);
   const [routeEnd, setRouteEnd] = useState<[number, number] | null>(null);
+  const [showPlaceDetails, setShowPlaceDetails] = useState(false);
+  const [selectedVirtualTour, setSelectedVirtualTour] =
+    useState<VirtualTour | null>(null);
+  const [isTourLoading, setIsTourLoading] = useState(false);
+  const [tourError, setTourError] = useState<string | null>(null);
+  const [isFetchingPlaces, setIsFetchingPlaces] = useState(false);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   const t = useTranslations();
   const { isAuthenticated } = useAuth();
-  const { filters, searchQuery, center, zoom, setCenter, setZoom } =
-    useMapStore();
+  const {
+    filters,
+    searchQuery,
+    center,
+    zoom,
+    setCenter,
+    setZoom,
+    getCurrentBounds,
+    setBounds,
+  } = useMapStore();
 
   // Initialize map
   useEffect(() => {
@@ -169,154 +260,361 @@ const InteractiveMap: React.FC = () => {
         const mapCenter = map.current.getCenter();
         setCenter({ lng: mapCenter.lng, lat: mapCenter.lat });
         setZoom(map.current.getZoom());
+
+        // Update bounds in store
+        const bounds = map.current.getBounds();
+        setBounds({
+          sw: { lat: bounds.getSouth(), lng: bounds.getWest() },
+          ne: { lat: bounds.getNorth(), lng: bounds.getEast() },
+        });
+
+        // Places are loaded via the dedicated effect with debounce
       }
     });
 
-    // Load places data (mock data for now)
+    // Also call onLoad when the map is fully loaded
+    map.current.on("load", () => {
+      if (onLoad) {
+        onLoad();
+      }
+    });
+
+    // Load places data
     loadPlaces();
+
+    // Notify that map is loaded
+    if (onLoad) {
+      onLoad();
+    }
 
     // Cleanup
     return () => {
       map.current?.remove();
     };
-  }, []);
+    // We intentionally limit dependencies to avoid unnecessary re-initializations
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onLoad]);
 
-  // Load places from backend
-  const loadPlaces = async () => {
-    setIsLoading(true);
-    try {
-      // TODO: Replace with actual API call
-      // const response = await fetch('/api/places');
-      // const data = await response.json();
-
-      // Mock data for demonstration
-      const mockPlaces: Place[] = [
-        {
-          _id: "1",
-          name: "آرامگاه حافظ",
-          description: "آرامگاه حافظ شیرازی، شاعر بزرگ ایران",
-          center: { type: "Point", coordinates: [52.5589, 29.6257] },
-          category: "historical",
-          tags: ["تاریخی", "فرهنگی", "شیراز"],
-          rating: 4.8,
-          address: "شیراز، خیابان حافظ",
-        },
-        {
-          _id: "2",
-          name: "برج آزادی",
-          description: "نماد شهر تهران و یادبود ورود به دروازه تمدن",
-          center: { type: "Point", coordinates: [51.3381, 35.6997] },
-          category: "monument",
-          tags: ["یادبود", "معماری", "تهران"],
-          rating: 4.6,
-          address: "تهران، میدان آزادی",
-        },
-        {
-          _id: "3",
-          name: "پل خواجو",
-          description: "یکی از زیباترین پل‌های تاریخی اصفهان",
-          center: { type: "Point", coordinates: [51.681, 32.6353] },
-          category: "historical",
-          tags: ["پل", "معماری", "اصفهان"],
-          rating: 4.7,
-          address: "اصفهان، زاینده‌رود",
-        },
-      ];
-
-      setPlaces(mockPlaces);
-      setFilteredPlaces(mockPlaces);
-      addMarkers(mockPlaces);
-    } catch (error) {
-      console.error("Error loading places:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Add markers to map
+  // Add markers to the map
   const addMarkers = (placesToAdd: Place[]) => {
     if (!map.current) return;
+
+    // If there are no places, don't proceed with marker creation
+    if (!placesToAdd || placesToAdd.length === 0) {
+      return;
+    }
 
     // Clear existing markers
     markersRef.current.forEach((marker) => marker.remove());
     markersRef.current.clear();
 
+    // Clear existing marker element references and their roots
+    markerElementsRef.current.forEach((el, id) => {
+      if (el && el.parentElement) {
+        // Unmount the React component properly
+        const root = markerRootsRef.current.get(id);
+        if (root) {
+          root.unmount();
+        }
+
+        while (el.firstChild) {
+          el.removeChild(el.firstChild);
+        }
+      }
+    });
+    markerElementsRef.current.clear();
+    markerRootsRef.current.clear();
+
     // Add new markers
     placesToAdd.forEach((place) => {
-      // Create custom marker element
-      const el = document.createElement("div");
-      el.className = "custom-marker";
-      el.style.width = "40px";
-      el.style.height = "40px";
-      el.style.backgroundImage = getMarkerIcon(place.category);
-      el.style.backgroundSize = "cover";
-      el.style.cursor = "pointer";
-      el.style.borderRadius = "50%";
-      el.style.border = "3px solid white";
-      el.style.boxShadow = "0 2px 8px rgba(0,0,0,0.3)";
-      el.style.transition = "transform 0.2s";
+      // Create div element for the marker
+      const markerElement = document.createElement("div");
+      markerElement.className = "marker-container";
+      markerElementsRef.current.set(place._id, markerElement);
 
-      el.addEventListener("mouseenter", () => {
-        el.style.transform = "scale(1.1)";
-      });
+      // Ensure we have a valid place object
+      const placeData = place;
 
-      el.addEventListener("mouseleave", () => {
-        el.style.transform = "scale(1)";
-      });
+      // Create a React root and render PlaceMarker
+      const root = createRoot(markerElement);
+      markerRootsRef.current.set(place._id, root);
+      root.render(
+        <PlaceMarker
+          place={placeData as any}
+          isSelected={selectedPlace?._id === place._id}
+          onClick={(clickedPlace) => {
+            setSelectedPlace(clickedPlace);
+            setShowPlaceDetails(true);
 
-      // Create marker
+            // Fly to location
+            map.current?.flyTo({
+              center: clickedPlace.center.coordinates,
+              zoom: 14,
+              essential: true,
+            });
+          }}
+        />,
+      );
+
+      // Create maplibre marker
       const marker = new maplibregl.Marker({
-        element: el,
-        anchor: "center",
+        element: markerElement,
+        anchor: "bottom",
       })
         .setLngLat(place.center.coordinates)
-        .setPopup(
-          new maplibregl.Popup({ offset: 25, closeButton: false }).setHTML(`
-              <div class="p-3 min-w-[200px] max-w-[300px]">
-                <h3 class="font-semibold text-lg mb-1">${place.name}</h3>
-                <p class="text-sm text-gray-600 mb-2">${place.description}</p>
-                ${
-                  place.rating
-                    ? `
-                  <div class="flex items-center gap-1 mb-2">
-                    <span class="text-yellow-500">★</span>
-                    <span class="text-sm">${place.rating}</span>
-                  </div>
-                `
-                    : ""
-                }
-                ${
-                  place.address
-                    ? `
-                  <p class="text-xs text-gray-500">📍 ${place.address}</p>
-                `
-                    : ""
-                }
-              </div>
-            `),
-        )
         .addTo(map.current!);
-
-      // Handle marker click
-      el.addEventListener("click", (e) => {
-        e.stopPropagation();
-        setSelectedPlace(place);
-        setShowSidebar(true);
-
-        // Fly to location
-        map.current?.flyTo({
-          center: place.center.coordinates,
-          zoom: 14,
-          essential: true,
-        });
-      });
 
       markersRef.current.set(place._id, marker);
     });
   };
 
-  // Get marker icon based on category
-  const getMarkerIcon = (category?: string): string => {
+  // Load places from backend
+  const loadPlaces = useCallback(async () => {
+    if (isFetchingPlaces) return;
+
+    setIsLoading(true);
+    setIsFetchingPlaces(true);
+
+    try {
+      // Get current map bounds to fetch places within visible area
+      const mapBounds = getCurrentBounds();
+
+      // Call the backend API to fetch places
+      const response = await gets({
+        set: {
+          page: 1,
+          limit: 50,
+          status: "active",
+        },
+        get: {
+          data: {
+            _id: 1,
+            name: 1,
+            description: 1,
+            center: 1,
+            address: 1,
+            contact: 1,
+            hoursOfOperation: 1,
+            category: {
+              _id: 1,
+              name: 1,
+              color: 1,
+              icon: 1,
+            },
+            tags: {
+              _id: 1,
+              name: 1,
+              color: 1,
+              icon: 1,
+            },
+            thumbnail: {
+              _id: 1,
+              name: 1,
+            },
+            gallery: {
+              _id: 1,
+              name: 1,
+              mimType: 1,
+              size: 1,
+            },
+            virtual_tours: {
+              _id: 1,
+              name: 1,
+              description: 1,
+              panorama: {
+                _id: 1,
+                name: 1,
+              },
+              hotspots: 1,
+              status: 1,
+            },
+            updatedAt: 1,
+            createdAt: 1,
+          },
+          metadata: {
+            total: 1,
+            page: 1,
+            limit: 1,
+            pageCount: 1,
+          },
+        },
+      });
+
+      if (response.success) {
+        // Extract place data from response
+        const placesData = Array.isArray(response.body)
+          ? response.body
+          : response.body?.data || [];
+
+        if (placesData.length > 0) {
+          setPlaces(placesData);
+          setFilteredPlaces(placesData);
+          addMarkers(placesData);
+
+          // If first load, zoom to fit all places
+          if (isFirstLoad) {
+            fitMapToPlaces(placesData);
+            setIsFirstLoad(false);
+          }
+        } else {
+          setPlaces([]);
+          setFilteredPlaces([]);
+          toast(t("map.noPlacesFound") || "No places found");
+        }
+      } else {
+        setPlaces([]);
+        setFilteredPlaces([]);
+        toast.error(
+          t("errors.failedToFetchPlaces") || "Failed to fetch places",
+        );
+      }
+    } catch (error) {
+      console.error("Error loading places:", error);
+      toast.error(t("map.errorLoadingPlaces") || "Error loading places");
+      setPlaces([]);
+      setFilteredPlaces([]);
+    } finally {
+      setIsLoading(false);
+      setIsFetchingPlaces(false);
+    }
+  }, [
+    getCurrentBounds,
+    t,
+    isFirstLoad,
+    setFilteredPlaces,
+    setIsFirstLoad,
+    setIsFetchingPlaces,
+    setIsLoading,
+    setPlaces,
+    addMarkers,
+  ]);
+
+  // The addMarkers function has been moved up before loadPlaces
+
+  // Handle launching virtual tour
+  const handleLaunchVirtualTour = (tourId: string) => {
+    setTourError(null);
+    setIsTourLoading(true);
+
+    // Reset any existing tour first
+    setSelectedVirtualTour(null);
+
+    if (
+      !selectedPlace?.virtual_tours ||
+      selectedPlace.virtual_tours.length === 0
+    ) {
+      console.warn("No virtual tours available for this place");
+      setTourError("This place does not have virtual tours available");
+      setIsTourLoading(false);
+      return;
+    }
+
+    const tour = selectedPlace.virtual_tours.find(
+      (tour) => tour._id === tourId,
+    );
+
+    if (tour && tour.panorama && tour.panorama.name) {
+      console.log("Loading virtual tour:", tour.panorama.name);
+      setSelectedVirtualTour(tour);
+      setShowPlaceDetails(false);
+      setIsTourLoading(false);
+    } else {
+      console.error("Virtual tour is missing panorama image:", tour);
+      setTourError("This virtual tour is missing its panorama image");
+      setIsTourLoading(false);
+    }
+  };
+
+  // Close the virtual tour
+  const handleCloseTour = () => {
+    setSelectedVirtualTour(null);
+    setTourError(null);
+    setIsTourLoading(false);
+  };
+
+  // Fit map to show all places
+  const fitMapToPlaces = (places: Place[]) => {
+    if (!map.current || !places || places.length === 0) return;
+
+    try {
+      // Create a bounds object and extend it with all place coordinates
+      const bounds = new maplibregl.LngLatBounds();
+
+      places.forEach((place) => {
+        if (place.center && place.center.coordinates) {
+          bounds.extend(place.center.coordinates as [number, number]);
+        }
+      });
+
+      // Only fit bounds if we added coordinates
+      if (!bounds.isEmpty()) {
+        map.current.fitBounds(bounds, {
+          padding: 50,
+          maxZoom: 15,
+        });
+      }
+    } catch (error) {
+      console.error("Error fitting map to places:", error);
+    }
+  };
+
+  // Update markers when selected place changes
+  useEffect(() => {
+    if (!map.current) return;
+
+    // Re-render markers to update selected state
+    filteredPlaces.forEach((place) => {
+      const markerElement = markerElementsRef.current.get(place._id);
+      if (markerElement) {
+        // Reuse existing root instead of creating a new one
+        const root = markerRootsRef.current.get(place._id);
+        if (root) {
+          root.render(
+            <PlaceMarker
+              place={
+                {
+                  ...place,
+                  category:
+                    typeof place.category === "string"
+                      ? { name: place.category, color: "#4f46e5" }
+                      : place.category,
+                  tags: Array.isArray(place.tags)
+                    ? place.tags.map((tag) =>
+                        typeof tag === "string" ? { name: tag } : tag,
+                      )
+                    : place.tags,
+                } as any
+              }
+              isSelected={selectedPlace?._id === place._id}
+              onClick={(clickedPlace) => {
+                setSelectedPlace(clickedPlace);
+                setShowPlaceDetails(true);
+
+                // Fly to location
+                map.current?.flyTo({
+                  center: clickedPlace.center.coordinates,
+                  zoom: 14,
+                  essential: true,
+                });
+              }}
+            />,
+          );
+        }
+      }
+    });
+  }, [selectedPlace?._id, filteredPlaces, map]);
+
+  // Legacy function for backward compatibility - can be removed later
+  const getMarkerIcon = (category: any): string => {
+    // Check if category is undefined/null
+    if (!category) return DEFAULT_ICON;
+
+    // Convert category object to string if needed
+    const categoryName =
+      typeof category === "object" ? category?.name : category;
+
+    if (!categoryName) return DEFAULT_ICON;
+
     const iconMap: { [key: string]: string } = {
       historical:
         'url(\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="%23a855f7" viewBox="0 0 24 24"%3E%3Cpath d="M12 2l3 7h7l-5.5 4 2 7-6.5-5-6.5 5 2-7L2 9h7l3-7z"%3E%3C/path%3E%3C/svg%3E\')',
@@ -325,10 +623,20 @@ const InteractiveMap: React.FC = () => {
       nature:
         'url(\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="%2310b981" viewBox="0 0 24 24"%3E%3Cpath d="M14 6l-4.22 5.63 1.25 1.67L14 9.33 19 16h-8.46l-4.01-5.37L1 18h22L14 6zM5 16l1.52-2.03L8.04 16H5z"%3E%3C/path%3E%3C/svg%3E\')',
       default:
-        'url(\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="%23ef4444" viewBox="0 0 24 24"%3E%3Cpath d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"%3E%3C/path%3E%3C/svg%3E\')',
+        'url(\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="%23ef4444" viewBox="0 0 24 24"%3E%3Cpath d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"%3E%3C/path%3E%3C/svg%3E\')',
     };
-    return iconMap[category || "default"] || iconMap.default;
+
+    // Convert to lowercase string safely
+    let categoryKey = "";
+    if (typeof categoryName === "string") {
+      categoryKey = categoryName.toLowerCase();
+    }
+    return iconMap[categoryKey] || iconMap.default;
   };
+
+  // Default icon for fallback
+  const DEFAULT_ICON =
+    'url(\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="%23ef4444" viewBox="0 0 24 24"%3E%3Cpath d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"%3E%3C/path%3E%3C/svg%3E\')';
 
   // Filter places based on search and filters
   useEffect(() => {
@@ -363,6 +671,20 @@ const InteractiveMap: React.FC = () => {
     setFilteredPlaces(filtered);
     addMarkers(filtered);
   }, [searchQuery, filters, places]);
+
+  // Close place details when ESC is pressed
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (showPlaceDetails) {
+          setShowPlaceDetails(false);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [showPlaceDetails, setShowPlaceDetails]);
 
   // Handle layer change
   const handleLayerChange = (layer: MapLayer) => {
@@ -577,6 +899,109 @@ const InteractiveMap: React.FC = () => {
           </span>
         </div>
       </div>
+
+      {/* Place Details Modal */}
+      {selectedPlace && showPlaceDetails && (
+        <PlaceDetailsModal
+          place={selectedPlace as PlaceData}
+          onClose={() => setShowPlaceDetails(false)}
+          onLaunchVirtualTour={handleLaunchVirtualTour}
+        />
+      )}
+
+      {/* Virtual Tour Viewer
+      {selectedVirtualTour && (
+        <VirtualTourViewer
+          tour={selectedVirtualTour}
+          onClose={() => setSelectedVirtualTour(null)}
+          onNavigate={(targetTourId) => {
+            // Handle navigation between tours
+            if (selectedPlace?.virtual_tours) {
+              const targetTour = selectedPlace.virtual_tours.find(
+                (tour) => tour._id === targetTourId,
+              );
+              if (targetTour) {
+                setSelectedVirtualTour(targetTour);
+              }
+            }
+          }}
+        />
+      )}
+
+ */}
+
+      {selectedVirtualTour &&
+        selectedVirtualTour.panorama &&
+        selectedVirtualTour.panorama.name && (
+          <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex flex-col">
+            {/* Tour Header */}
+            <div className="bg-gray-800 text-white p-2 flex justify-between items-center">
+              <h2 className="text-lg font-medium">
+                {selectedPlace?.name || "Virtual Tour"}
+              </h2>
+              <button
+                onClick={handleCloseTour}
+                className="p-1 rounded-full hover:bg-gray-700"
+                aria-label="Close tour"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            {/* Tour Viewer */}
+            <div className="flex-1">
+              <MyVertualTour
+                imageUrl={`${getLesanBaseUrl()}/uploads/images/${selectedVirtualTour.panorama.name}`}
+              />
+            </div>
+          </div>
+        )}
+
+      {/* Tour Error Message */}
+      {tourError && (
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg max-w-md text-center">
+            <div className="text-red-500 mb-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-12 w-12 mx-auto"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              Virtual Tour Error
+            </h3>
+            <p className="text-gray-600 mb-4">{tourError}</p>
+            <button
+              onClick={handleCloseTour}
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

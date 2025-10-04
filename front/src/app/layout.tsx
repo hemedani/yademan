@@ -7,9 +7,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <html>
-      <body className={inter.className}>{children}</body>
-    </html>
-  );
+  // This is now just a simple wrapper - no HTML or BODY tags
+  // The actual HTML structure is defined in [locale]/layout.tsx
+  return children;
 }

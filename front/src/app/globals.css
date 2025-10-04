@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "leaflet/dist/leaflet.css";
 @import "leaflet-draw/dist/leaflet.draw.css";
+@import "@photo-sphere-viewer/core/index.css";
+@import "@photo-sphere-viewer/markers-plugin/index.css";
 
 * {
     font-family: vazir-matn;
@@ -570,4 +572,86 @@
 * {
     scrollbar-width: thin;
     scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+/* Virtual Tour Styles */
+.psv-marker-hotspot-info {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    position: relative;
+}
+
+.psv-marker-hotspot-info::before {
+    content: "i";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #333;
+    font-family: serif;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.psv-marker-hotspot-target {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(79, 70, 229, 0.8);
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    position: relative;
+}
+
+.psv-marker-hotspot-target::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    border: 2px solid white;
+    border-right: none;
+    border-top: none;
+    transform: translate(-50%, -75%) rotate(-45deg);
+}
+
+.custom-close-button {
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Marker container styles */
+.marker-container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Map Marker animations */
+@keyframes markerPulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0.2;
+    }
+}
+
+.marker-pulse {
+    animation: markerPulse 1.5s infinite ease-in-out;
 }

@@ -20,6 +20,12 @@ importers:
       '@maplibre/maplibre-gl-geocoder':
         specifier: ^1.9.1
         version: 1.9.1(maplibre-gl@5.7.3)
+      '@photo-sphere-viewer/core':
+        specifier: ^5.14.0
+        version: 5.14.0
+      '@photo-sphere-viewer/markers-plugin':
+        specifier: ^5.14.0
+        version: 5.14.0(@photo-sphere-viewer/core@5.14.0)
       date-fns-jalali:
         specifier: ^4.1.0-0
         version: 4.1.0-0
@@ -1092,6 +1098,14 @@ packages:
   '@nolyfill/is-core-module@1.0.39':
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
     engines: {node: '>=12.4.0'}
+
+  '@photo-sphere-viewer/core@5.14.0':
+    resolution: {integrity: sha512-V0JeDSB1D2Q60Zqn7+0FPjq8gqbKEwuxMzNdTLydefkQugVztLvdZykO+4k5XTpweZ2QAWPH/QOI1xZbsdvR9A==}
+
+  '@photo-sphere-viewer/markers-plugin@5.14.0':
+    resolution: {integrity: sha512-w7txVHtLxXMS61m0EbNjgvdNXQYRh6Aa0oatft5oruKgoXLg/UlCu1mG6Btg+zrNsG05W2zl4gRM3fcWoVdneA==}
+    peerDependencies:
+      '@photo-sphere-viewer/core': 5.14.0
 
   '@react-aria/focus@3.21.0':
     resolution: {integrity: sha512-7NEGtTPsBy52EZ/ToVKCu0HSelE3kq9qeis+2eEq90XSuJOMaDHUQrA7RC2Y89tlEwQB31bud/kKRi9Qme1dkA==}
@@ -3451,6 +3465,9 @@ packages:
   text-segmentation@1.0.3:
     resolution: {integrity: sha512-iOiPUo/BGnZ6+54OsWxZidGCsdU8YbE4PSpdPinp7DeMtUJNJBoJ/ouUSTJjHkh1KntHaltHl/gDs2FC4i5+Nw==}
 
+  three@0.179.1:
+    resolution: {integrity: sha512-5y/elSIQbrvKOISxpwXCR4sQqHtGiOI+MKLc3SsBdDXA2hz3Mdp3X59aUp8DyybMa34aeBwbFTpdoLJaUDEWSw==}
+
   tinyglobby@0.2.14:
     resolution: {integrity: sha512-tX5e7OM1HnYr2+a2C/4V0htOcSQcoSTH9KgJnVvNm5zm/cyEWKJ7j7YutsH9CxMdtOkkLFy2AHrMci9IM8IPZQ==}
     engines: {node: '>=12.0.0'}
@@ -4873,6 +4890,14 @@ snapshots:
       fastq: 1.19.1
 
   '@nolyfill/is-core-module@1.0.39': {}
+
+  '@photo-sphere-viewer/core@5.14.0':
+    dependencies:
+      three: 0.179.1
+
+  '@photo-sphere-viewer/markers-plugin@5.14.0(@photo-sphere-viewer/core@5.14.0)':
+    dependencies:
+      '@photo-sphere-viewer/core': 5.14.0
 
   '@react-aria/focus@3.21.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
@@ -7483,6 +7508,8 @@ snapshots:
   text-segmentation@1.0.3:
     dependencies:
       utrie: 1.0.2
+
+  three@0.179.1: {}
 
   tinyglobby@0.2.14:
     dependencies:

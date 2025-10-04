@@ -12,16 +12,23 @@ export const gets = async ({
 }) => {
   const token = (await cookies()).get("token");
 
+  // Ensure required pagination parameters are set
+  const paginatedSet = {
+    ...set,
+    page: set.page ?? 1,
+    limit: set.limit ?? 50,
+  };
+
   return await AppApi().send(
     {
       service: "main",
       model: "place",
       act: "gets",
       details: {
-        set,
+        set: paginatedSet,
         get,
       },
     },
-    { token: token?.value }
+    { token: token?.value },
   );
 };
