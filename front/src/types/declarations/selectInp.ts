@@ -4443,6 +4443,8 @@ export type ReqType = {
           city_zone: string;
           category: string;
           tags?: string[];
+          gallery?: string[];
+          thumbnail?: string;
         };
         get: {
           _id?: (0 | 1);
