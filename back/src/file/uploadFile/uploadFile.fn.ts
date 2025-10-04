@@ -10,7 +10,12 @@ export const uploadFileFn: ActFn = async (body) => {
 
 	const fileToUpload: File = formData.get("file") as File;
 
-	const fileName = `${new ObjectId()}-${fileToUpload.name}`;
+	const fileName = `${new ObjectId()}${
+		fileToUpload.name.slice(
+			fileToUpload.name.lastIndexOf("."),
+			fileToUpload.name.length,
+		)
+	}`;
 	const uploadDir = type === "image"
 		? "./uploads/images"
 		: type === "video"
