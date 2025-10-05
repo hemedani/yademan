@@ -13,9 +13,7 @@ import { useFilterPanel } from "@/hooks/useFilterPanel";
 import { useMapStore } from "@/stores/mapStore";
 import toast from "react-hot-toast";
 import PlaceDetailsModal from "@/components/organisms/PlaceDetailsModal";
-import VirtualTourViewer from "@/components/organisms/VirtualTourViewer";
 import { PlaceData } from "@/components/atoms/PlaceMarker";
-import { Link } from "../../../i18n/routing";
 import MyVertualTour from "@/components/organisms/MyVertualTour";
 import { getLesanBaseUrl } from "@/services/api";
 
@@ -403,47 +401,6 @@ export default function HomePage() {
           {/* Map View - InteractiveMap handles fetching and displaying places */}
           {isMapLoaded && <MapView className="h-full" />}
 
-          {/* Virtual Tour Promo Section
-          {isMapLoaded && !tourDemoDismissed && (
-            <div className="absolute bottom-20 left-0 right-0 flex justify-center z-20 pointer-events-auto px-4 md:px-0">
-              <motion.div
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.5, duration: 0.5 }}
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-xl max-w-sm w-full p-3 text-white"
-              >
-                <div className="flex-1 mb-2">
-                  <p className="font-semibold text-sm">
-                    {t("Experience in 3D")}
-                  </p>
-                  <p className="text-xs opacity-90">
-                    {t("Explore our virtual tours")}
-                  </p>
-                </div>
-                <div className="flex gap-2 mt-1">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={handleLaunchTourDemo}
-                    className="flex-1 bg-white text-indigo-600 font-medium text-sm py-2 px-3 rounded-lg"
-                  >
-                    {t("Quick Demo")}
-                  </motion.button>
-                  <Link href="/virtual-tour" passHref>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex-1 bg-indigo-800 text-white border border-indigo-400 font-medium text-sm py-2 px-3 rounded-lg"
-                    >
-                      {t("Full Tours")}
-                    </motion.button>
-                  </Link>
-                </div>
-              </motion.div>
-            </div>
-          )}
-          */}
-
           {/* Place Details Modal */}
           {selectedPlace && showPlaceDetails && (
             <PlaceDetailsModal
@@ -710,8 +667,9 @@ export default function HomePage() {
         </motion.div>
       </main>
 
-      {/* Bottom Navigation - Mobile Only */}
+      {/* Bottom Navigation - Mobile Only 
       <MobileNavBar />
+      */}
     </div>
   );
 }

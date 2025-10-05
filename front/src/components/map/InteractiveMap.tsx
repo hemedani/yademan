@@ -13,7 +13,6 @@ import MapControls from "./MapControls";
 import { gets } from "@/app/actions/place/gets";
 import PlaceMarker, { PlaceData } from "@/components/atoms/PlaceMarker";
 import PlaceDetailsModal from "@/components/organisms/PlaceDetailsModal";
-import VirtualTourViewer from "@/components/organisms/VirtualTourViewer";
 import { toast } from "react-hot-toast";
 import PlacePopup from "@/components/map/PlacePopup";
 import PlaceSidebar from "@/components/map/PlaceSidebar";
@@ -33,21 +32,21 @@ interface Place {
     coordinates: [number, number];
   };
   category?:
-    | {
-        _id?: string;
-        name: string;
-        color?: string;
-        icon?: string;
-      }
-    | string;
+  | {
+    _id?: string;
+    name: string;
+    color?: string;
+    icon?: string;
+  }
+  | string;
   tags?:
-    | Array<{
-        _id?: string;
-        name: string;
-        color?: string;
-        icon?: string;
-      }>
-    | string[];
+  | Array<{
+    _id?: string;
+    name: string;
+    color?: string;
+    icon?: string;
+  }>
+  | string[];
   thumbnail?: {
     _id?: string;
     name: string;
@@ -228,17 +227,17 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       attributionControl: false,
     });
 
-    // Add navigation controls
-    map.current.addControl(new maplibregl.NavigationControl(), "top-right");
+    // // Add navigation controls
+    // map.current.addControl(new maplibregl.NavigationControl(), "top-right");
 
-    // Add geolocate control
-    const geolocateControl = new maplibregl.GeolocateControl({
-      positionOptions: {
-        enableHighAccuracy: true,
-      },
-      trackUserLocation: true,
-    });
-    map.current.addControl(geolocateControl, "top-right");
+    // // Add geolocate control
+    // const geolocateControl = new maplibregl.GeolocateControl({
+    //   positionOptions: {
+    //     enableHighAccuracy: true,
+    //   },
+    //   trackUserLocation: true,
+    // });
+    // map.current.addControl(geolocateControl, "top-right");
 
     // Add scale control
     map.current.addControl(
@@ -580,8 +579,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
                       : place.category,
                   tags: Array.isArray(place.tags)
                     ? place.tags.map((tag) =>
-                        typeof tag === "string" ? { name: tag } : tag,
-                      )
+                      typeof tag === "string" ? { name: tag } : tag,
+                    )
                     : place.tags,
                 } as any
               }
@@ -908,27 +907,6 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           onLaunchVirtualTour={handleLaunchVirtualTour}
         />
       )}
-
-      {/* Virtual Tour Viewer
-      {selectedVirtualTour && (
-        <VirtualTourViewer
-          tour={selectedVirtualTour}
-          onClose={() => setSelectedVirtualTour(null)}
-          onNavigate={(targetTourId) => {
-            // Handle navigation between tours
-            if (selectedPlace?.virtual_tours) {
-              const targetTour = selectedPlace.virtual_tours.find(
-                (tour) => tour._id === targetTourId,
-              );
-              if (targetTour) {
-                setSelectedVirtualTour(targetTour);
-              }
-            }
-          }}
-        />
-      )}
-
- */}
 
       {selectedVirtualTour &&
         selectedVirtualTour.panorama &&
