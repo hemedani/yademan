@@ -1,16 +1,11 @@
-import { object, string } from "@deps";
+import { object } from "@deps";
 import { selectStruct } from "../../../mod.ts";
-import { is_valid_national_number_struct, mobile_pattern } from "@model";
+import { user_pure } from "@model";
 
 export const tempUserValidator = () => {
+	const { level, is_verified, ...rest } = user_pure;
 	return object({
-		set: object({
-			first_name: string(),
-			last_name: string(),
-			father_name: string(),
-			mobile: mobile_pattern,
-			national_number: is_valid_national_number_struct,
-		}),
+		set: object({ ...rest }),
 		get: selectStruct("user", 1),
 	});
 };

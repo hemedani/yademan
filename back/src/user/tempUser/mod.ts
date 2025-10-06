@@ -7,5 +7,6 @@ export const tempUserSetup = () =>
 		schema: "user",
 		fn: tempUserFn,
 		actName: "tempUser",
+		validationRunType: "create",
 		validator: tempUserValidator(),
 	});

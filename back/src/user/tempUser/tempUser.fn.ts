@@ -1,10 +1,23 @@
 import type { ActFn } from "@deps";
 import { user } from "../../../mod.ts";
 import { throwError } from "@lib";
+import { hash } from "@da/bcrypt";
 
 export const tempUserFn: ActFn = async (body) => {
 	const {
-		set: { first_name, last_name, father_name, mobile, national_number },
+		set: {
+			first_name,
+			last_name,
+			email,
+			password,
+			father_name,
+			gender,
+			birth_date,
+			summary,
+			address,
+			createdAt,
+			updatedAt,
+		},
 		get,
 	} = body.details;
 
@@ -18,18 +31,17 @@ export const tempUserFn: ActFn = async (body) => {
 		doc: {
 			first_name,
 			last_name,
+			email,
+			password: await hash(password),
 			father_name,
-			national_number,
-			mobile,
-			address: "همدان - اعتمادیه",
-			gender: "Male",
-			birth_date: new Date(),
+			gender,
+			birth_date,
+			summary,
+			address,
 			level: "Ghost",
-			is_verified: true,
-			createdAt: new Date(),
-			updatedAt: new Date(),
+			createdAt,
+			updatedAt,
 		},
-		relations: {},
 		projection: get,
 	});
 };
