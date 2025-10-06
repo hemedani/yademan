@@ -1,6 +1,4 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import L from "leaflet";
 import { useMapEvents } from "react-leaflet";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -19,19 +17,19 @@ import dynamic from "next/dynamic";
 // Dynamically import map components
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
-  { ssr: false }
+  { ssr: false },
 );
 const TileLayer = dynamic(
   () => import("react-leaflet").then((mod) => mod.TileLayer),
-  { ssr: false }
+  { ssr: false },
 );
 const Polygon = dynamic(
   () => import("react-leaflet").then((mod) => mod.Polygon),
-  { ssr: false }
+  { ssr: false },
 );
 const Marker = dynamic(
   () => import("react-leaflet").then((mod) => mod.Marker),
-  { ssr: false }
+  { ssr: false },
 );
 const SimpleDrawing = dynamic(() => import("@/components/SimpleDrawing"), {
   ssr: false,
@@ -63,11 +61,11 @@ export const CityZoneCreateSchema = z.object({
         .refine((coords) => {
           if (coords.length === 0) return false;
           return coords.every((polygon) =>
-            polygon.every((ring) => ring.length >= 4)
+            polygon.every((ring) => ring.length >= 4),
           );
         }, "باید حداقل یک منطقه با حداقل 3 نقطه ترسیم شود"),
     },
-    { required_error: "ترسیم منطقه بر روی نقشه الزامی است" }
+    { required_error: "ترسیم منطقه بر روی نقشه الزامی است" },
   ),
   center: z.object(
     {
@@ -76,7 +74,7 @@ export const CityZoneCreateSchema = z.object({
         .array(z.number())
         .length(2, "مختصات مرکز منطقه باید شامل طول و عرض جغرافیایی باشد"),
     },
-    { required_error: "انتخاب مرکز منطقه بر روی نقشه الزامی است" }
+    { required_error: "انتخاب مرکز منطقه بر روی نقشه الزامی است" },
   ),
 });
 
@@ -124,7 +122,7 @@ export const FormCreateCityZone = ({
 
   // Load cities options
   const loadCitiesOptions = async (
-    inputValue?: string
+    inputValue?: string,
   ): Promise<SelectOption[]> => {
     const setParams: any = { page: 1, limit: 50 };
     if (inputValue && inputValue.trim() !== "") {
@@ -180,7 +178,7 @@ export const FormCreateCityZone = ({
         setMapKey((prev) => prev + 1);
       }
     },
-    [setValue]
+    [setValue],
   );
 
   // Handle polygon creation
@@ -191,7 +189,7 @@ export const FormCreateCityZone = ({
         setValue(
           "area",
           { type: "MultiPolygon", coordinates: [] },
-          { shouldValidate: true }
+          { shouldValidate: true },
         );
         setIsDrawingMode(false);
         trigger();
@@ -219,7 +217,7 @@ export const FormCreateCityZone = ({
       setIsDrawingMode(false);
       trigger();
     },
-    [setValue, trigger]
+    [setValue, trigger],
   );
 
   // Handle polygon deletion
@@ -228,7 +226,7 @@ export const FormCreateCityZone = ({
     setValue(
       "area",
       { type: "MultiPolygon", coordinates: [] },
-      { shouldValidate: true }
+      { shouldValidate: true },
     );
     trigger();
   }, [setValue, trigger]);
@@ -242,13 +240,13 @@ export const FormCreateCityZone = ({
         setValue(
           "center",
           { type: "Point", coordinates: [lng, lat] },
-          { shouldValidate: true }
+          { shouldValidate: true },
         );
         setIsCenterMode(false);
         trigger();
       }
     },
-    [isCenterMode, setValue, trigger]
+    [isCenterMode, setValue, trigger],
   );
 
   // Toggle drawing mode
@@ -259,7 +257,7 @@ export const FormCreateCityZone = ({
       setValue(
         "area",
         { type: "MultiPolygon", coordinates: [] },
-        { shouldValidate: true }
+        { shouldValidate: true },
       );
       trigger();
     } else {
@@ -284,7 +282,7 @@ export const FormCreateCityZone = ({
     setValue(
       "area",
       { type: "MultiPolygon", coordinates: [] },
-      { shouldValidate: true }
+      { shouldValidate: true },
     );
     trigger();
   };
@@ -295,14 +293,14 @@ export const FormCreateCityZone = ({
     setValue(
       "center",
       { type: "Point", coordinates: [] },
-      { shouldValidate: true }
+      { shouldValidate: true },
     );
     trigger();
   };
 
   // Form submission
   const onSubmit: SubmitHandler<CityZoneFormCreateSchemaType> = async (
-    data
+    data,
   ) => {
     const createdCityZone = await add({
       name: data.name,
@@ -323,7 +321,7 @@ export const FormCreateCityZone = ({
     } else {
       ToastNotify(
         "error",
-        createdCityZone.body.message || "خطا در ایجاد منطقه شهری"
+        createdCityZone.body.message || "خطا در ایجاد منطقه شهری",
       );
     }
   };
@@ -408,8 +406,8 @@ export const FormCreateCityZone = ({
                   backgroundColor: state.isSelected
                     ? "#3b82f6"
                     : state.isFocused
-                    ? "#f1f5f9"
-                    : "transparent",
+                      ? "#f1f5f9"
+                      : "transparent",
                   color: state.isSelected ? "white" : "#1e293b",
                   direction: "rtl",
                   textAlign: "right",

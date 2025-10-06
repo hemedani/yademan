@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   # Backend service (development)
@@ -10,6 +10,7 @@ services:
     volumes:
       - ./back:/app
       - /app/declarations # Exclude declarations directory from mounting
+      - ./back/uploads:/app/uploads # Ensure uploads directory is mounted correctly
     environment:
       - APP_PORT=8000
       - ENV=development
@@ -52,3 +53,4 @@ services:
 
 volumes:
   frontend_node_modules:
+    driver: local

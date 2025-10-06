@@ -1,0 +1,9 @@
+I cannot create a binary WOFF2 font file directly in this text response. WOFF2 files are binary data and cannot be represented as plain text that can be pasted into a file.
+
+Instead, I recommend one of these approaches:
+
+1. Download an open-source Inter font from Google Fonts or another legitimate source
+2. Use the following command to download a minimal Inter font file:
+   curl -o naghshe/front/src/assets/fonts/fallback.woff2 https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ck-8.woff2
+
+3. Or modify the layout.tsx file to use only system fonts without requiring local font files:

@@ -1,7 +1,15 @@
 import FormUpdatePlace from "@/components/template/FormUpdatePlace";
 import { translateModelNameToPersian } from "@/utils/helper";
+import { Metadata } from "next";
 
-export default function EditPlace({ params }: { params: { id: string } }) {
+interface PageProps {
+  params: { id: string };
+}
+
+/**
+ * Edit Place page component
+ */
+export default function EditPlace({ params }: PageProps) {
   return (
     <div className="relative min-h-full">
       <div className="mb-8">
@@ -21,4 +29,13 @@ export default function EditPlace({ params }: { params: { id: string } }) {
       <FormUpdatePlace placeId={params.id} />
     </div>
   );
+}
+
+/**
+ * Generate metadata for the page
+ */
+export function generateMetadata({ params }: PageProps): Metadata {
+  return {
+    title: `ویرایش ${translateModelNameToPersian("place")} | نقشه شهر`,
+  };
 }

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -31,15 +30,14 @@ interface CreateUpdateModalProps {
     description: string;
     color?: string;
     icon?: string;
-  }) => Promise<any>
+  }) => Promise<any>;
   update: (data: {
-    _id: string,
+    _id: string;
     name: string;
     description: string;
     color?: string;
     icon?: string;
-  }) => Promise<any>
-
+  }) => Promise<any>;
 }
 
 const itemSchema = z.object({
@@ -51,18 +49,18 @@ const itemSchema = z.object({
     .string()
     .min(1, "نام برچسب الزامی است")
     .max(50, "حداکثر 50 کاراکتر مجاز است"),
-  color: z
-    .optional(
-      z.string()
-        .min(1, "نام برچسب الزامی است")
-        .max(50, "حداکثر 50 کاراکتر مجاز است"),
-    ),
-  icon: z
-    .optional(
-      z.string()
-        .min(1, "نام برچسب الزامی است")
-        .max(50, "حداکثر 50 کاراکتر مجاز است"),
-    )
+  color: z.optional(
+    z
+      .string()
+      .min(1, "نام برچسب الزامی است")
+      .max(50, "حداکثر 50 کاراکتر مجاز است"),
+  ),
+  icon: z.optional(
+    z
+      .string()
+      .min(1, "نام برچسب الزامی است")
+      .max(50, "حداکثر 50 کاراکتر مجاز است"),
+  ),
 });
 
 type ItemFormValues = z.infer<typeof itemSchema>;
@@ -95,7 +93,7 @@ const CreateUpdateModal = ({
       name: itemToEdit?.name || "",
       description: itemToEdit?.description || "",
       color: itemToEdit?.color || "#3B82F6",
-      icon: itemToEdit?.icon || "📍"
+      icon: itemToEdit?.icon || "📍",
     },
   });
 
@@ -110,7 +108,7 @@ const CreateUpdateModal = ({
         name: itemToEdit.name || "",
         description: itemToEdit.description || "",
         color: itemToEdit.color || "#3B82F6",
-        icon: itemToEdit.icon || "📍"
+        icon: itemToEdit.icon || "📍",
       });
     } else {
       setSelectedColor("#3B82F6");
@@ -119,7 +117,7 @@ const CreateUpdateModal = ({
         name: "",
         description: "",
         color: "#3B82F6",
-        icon: "📍"
+        icon: "📍",
       });
     }
   }, [itemToEdit, reset]);
@@ -150,14 +148,16 @@ const CreateUpdateModal = ({
 
   return (
     <div
-      className={`fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center transition-opacity duration-500 z-[2000] ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"
-        }`}
+      className={`fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center transition-opacity duration-500 z-[2000] ${
+        isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+      }`}
     >
       <div
-        className={`bg-white p-6 rounded-lg shadow-lg w-1/3 transform transition-all duration-500 ${isOpen
-          ? "scale-100 opacity-100 translate-y-0"
-          : "scale-90 opacity-0 translate-y-10"
-          }`}
+        className={`bg-white p-6 rounded-lg shadow-lg w-1/3 transform transition-all duration-500 ${
+          isOpen
+            ? "scale-100 opacity-100 translate-y-0"
+            : "scale-90 opacity-0 translate-y-10"
+        }`}
       >
         <h2 className="text-lg font-bold mb-4">
           {itemToEdit
@@ -192,8 +192,11 @@ const CreateUpdateModal = ({
                   <button
                     key={icon}
                     type="button"
-                    className={`text-2xl p-2 rounded-md hover:bg-gray-100 ${watchedIcon === icon ? "bg-blue-100 border-2 border-blue-500" : ""
-                      }`}
+                    className={`text-2xl p-2 rounded-md hover:bg-gray-100 ${
+                      watchedIcon === icon
+                        ? "bg-blue-100 border-2 border-blue-500"
+                        : ""
+                    }`}
                     onClick={() => {
                       setValue("icon", icon);
                     }}
@@ -214,7 +217,9 @@ const CreateUpdateModal = ({
                 />
               </div>
               {errors.icon?.message && (
-                <p className="text-red-500 text-xs mt-1">{errors.icon.message}</p>
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.icon.message}
+                </p>
               )}
             </div>
 
@@ -227,8 +232,11 @@ const CreateUpdateModal = ({
                   <button
                     key={color}
                     type="button"
-                    className={`w-8 h-8 rounded-full border-2 ${watchedColor === color ? "border-gray-800 ring-2 ring-offset-2" : "border-gray-200"
-                      }`}
+                    className={`w-8 h-8 rounded-full border-2 ${
+                      watchedColor === color
+                        ? "border-gray-800 ring-2 ring-offset-2"
+                        : "border-gray-200"
+                    }`}
                     style={{ backgroundColor: color }}
                     onClick={() => {
                       setValue("color", color);
@@ -254,7 +262,9 @@ const CreateUpdateModal = ({
                 />
               </div>
               {errors.color?.message && (
-                <p className="text-red-500 text-xs mt-1">{errors.color.message}</p>
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.color.message}
+                </p>
               )}
             </div>
           </>

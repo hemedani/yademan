@@ -1,6 +1,4 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import L from "leaflet";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";

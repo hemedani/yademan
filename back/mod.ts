@@ -1,15 +1,15 @@
 import { lesan, MongoClient } from "@deps";
 import {
-	categories,
-	cities,
-	city_zones,
-	comments,
-	files,
-	places,
-	provinces,
-	tags,
-	users,
-	virtualTours,
+  categories,
+  cities,
+  city_zones,
+  comments,
+  files,
+  places,
+  provinces,
+  tags,
+  users,
+  virtualTours,
 } from "@model";
 import { functionsSetup } from "./src/mod.ts";
 
@@ -38,12 +38,13 @@ export const { selectStruct, getSchemas } = coreApp.schemas;
 functionsSetup();
 
 coreApp.runServer({
-	port: 1405,
-	typeGeneration: true,
-	playground: true,
-	staticPath: ["/uploads"],
-	cors: [
-		"http://localhost:3000",
-		"http://localhost:4000",
-	],
+  port: 1405,
+  typeGeneration: true,
+  playground: true,
+  staticPath: ["/uploads"],
+  cors: [
+    "http://localhost:3000",
+    "http://localhost:3005",
+    "http://localhost:4000",
+  ],
 });

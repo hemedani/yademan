@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useTranslations } from "next-intl";
 
 interface SearchResult {
@@ -19,26 +19,29 @@ const SearchBar: React.FC = () => {
   const searchRef = useRef<HTMLDivElement>(null);
 
   // Mock search results
-  const mockResults: SearchResult[] = [
-    {
-      id: "1",
-      title: "تخت جمشید",
-      category: "مکان تاریخی",
-      address: "فارس، شیراز، مرودشت",
-    },
-    {
-      id: "2",
-      title: "میدان نقش جهان",
-      category: "میراث جهانی",
-      address: "اصفهان، میدان امام",
-    },
-    {
-      id: "3",
-      title: "برج آزادی",
-      category: "بنای یادبود",
-      address: "تهران، میدان آزادی",
-    },
-  ];
+  const mockResults = useMemo(
+    () => [
+      {
+        id: "1",
+        title: "تخت جمشید",
+        category: "مکان تاریخی",
+        address: "فارس، شیراز، مرودشت",
+      },
+      {
+        id: "2",
+        title: "میدان نقش جهان",
+        category: "میراث جهانی",
+        address: "اصفهان، میدان امام",
+      },
+      {
+        id: "3",
+        title: "برج آزادی",
+        category: "بنای یادبود",
+        address: "تهران، میدان آزادی",
+      },
+    ],
+    [],
+  );
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -79,7 +82,7 @@ const SearchBar: React.FC = () => {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [query]);
+  }, [query, mockResults]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);

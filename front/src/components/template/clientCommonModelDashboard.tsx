@@ -1,11 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
 import EntityCard from "../organisms/EntityCard";
 import { DeleteModal } from "./DeleteModal";
 import { useRouter } from "next/navigation";
-import { ModelName, ToastNotify, translateModelNameToPersian } from "@/utils/helper";
+import {
+  ModelName,
+  ToastNotify,
+  translateModelNameToPersian,
+} from "@/utils/helper";
 import CreateUpdateModal from "./CreateUpdateModal";
 import toast from "react-hot-toast";
 
@@ -21,20 +24,20 @@ interface TData {
 interface ClientDashboardProps {
   data: TData[];
   model: ModelName;
-  remove: (_id: string, hardCascade: boolean) => Promise<any>
+  remove: (_id: string, hardCascade: boolean) => Promise<any>;
   add: (data: {
     name: string;
     description: string;
     color?: string;
     icon?: string;
-  }) => Promise<any>
+  }) => Promise<any>;
   update: (data: {
-    _id: string,
+    _id: string;
     name: string;
     description: string;
     color?: string;
     icon?: string;
-  }) => Promise<any>
+  }) => Promise<any>;
 }
 
 const formatPersianNumber = (num: number): string => {
@@ -44,12 +47,17 @@ const formatPersianNumber = (num: number): string => {
     .replace(/[0-9]/g, (digit) => persianDigits[parseInt(digit)]);
 };
 
-
-const ClientCommonModelDashboard: React.FC<ClientDashboardProps> = ({ data, model, remove, add, update }) => {
+const ClientCommonModelDashboard: React.FC<ClientDashboardProps> = ({
+  data,
+  model,
+  remove,
+  add,
+  update,
+}) => {
   const router = useRouter();
 
   const [activeModal, setActiveModal] = useState<"edit" | "delete" | null>(
-    null
+    null,
   );
   const [selectedItem, setSelectedItem] = useState<TData | null>(null);
 
@@ -72,16 +80,21 @@ const ClientCommonModelDashboard: React.FC<ClientDashboardProps> = ({ data, mode
       const removedItem = await remove(selectedItem._id, hardCascade);
 
       if (removedItem.success) {
-        ToastNotify("success", `${translateModelNameToPersian(model)} با موفقیت حذف شد`);
+        ToastNotify(
+          "success",
+          `${translateModelNameToPersian(model)} با موفقیت حذف شد`,
+        );
       } else {
-        ToastNotify("error", `مشکلی در حذف ${translateModelNameToPersian(model)} وجود دارد - ${removedItem.body.message}}`);
+        ToastNotify(
+          "error",
+          `مشکلی در حذف ${translateModelNameToPersian(model)} وجود دارد - ${removedItem.body.message}}`,
+        );
       }
 
       router.refresh();
     }
     closeModal();
   };
-
 
   const handleToggleStatus = async (categoryId: string) => {
     const category = data.find((cat) => cat._id === categoryId);
@@ -112,7 +125,6 @@ const ClientCommonModelDashboard: React.FC<ClientDashboardProps> = ({ data, mode
     }
   };
 
-
   return (
     <div>
       <button
@@ -121,7 +133,6 @@ const ClientCommonModelDashboard: React.FC<ClientDashboardProps> = ({ data, mode
       >
         ایجاد {translateModelNameToPersian(model)} جدید
       </button>
-
 
       {/* Categories Grid */}
       {data.length === 0 ? (
@@ -139,8 +150,9 @@ const ClientCommonModelDashboard: React.FC<ClientDashboardProps> = ({ data, mode
           {data.map((item) => (
             <div
               key={item._id}
-              className={`relative bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 ${actionLoading === item._id ? "opacity-60" : ""
-                }`}
+              className={`relative bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 ${
+                actionLoading === item._id ? "opacity-60" : ""
+              }`}
             >
               {/* Category Header */}
               <div className="flex items-center justify-between mb-4">
@@ -157,10 +169,11 @@ const ClientCommonModelDashboard: React.FC<ClientDashboardProps> = ({ data, mode
                   <button
                     onClick={() => handleToggleStatus(item._id)}
                     disabled={actionLoading !== null}
-                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 ${item.isActive
-                      ? "bg-green-100 text-green-600"
-                      : "bg-slate-100 text-slate-400"
-                      }`}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 ${
+                      item.isActive
+                        ? "bg-green-100 text-green-600"
+                        : "bg-slate-100 text-slate-400"
+                    }`}
                   >
                     <svg
                       className="w-4 h-4"
@@ -225,10 +238,11 @@ const ClientCommonModelDashboard: React.FC<ClientDashboardProps> = ({ data, mode
                     {formatPersianNumber(data.length || 0)} مکان
                   </span>
                   <span
-                    className={`px-2 py-1 rounded-full ${item.isActive
-                      ? "bg-green-100 text-green-600"
-                      : "bg-slate-100 text-slate-500"
-                      }`}
+                    className={`px-2 py-1 rounded-full ${
+                      item.isActive
+                        ? "bg-green-100 text-green-600"
+                        : "bg-slate-100 text-slate-500"
+                    }`}
                   >
                     {item.isActive ? "فعال" : "غیرفعال"}
                   </span>
@@ -240,7 +254,14 @@ const ClientCommonModelDashboard: React.FC<ClientDashboardProps> = ({ data, mode
       )}
 
       {activeModal === "edit" && (
-        <CreateUpdateModal isOpen onClose={closeModal} itemToEdit={selectedItem} model={model} add={add} update={update} />
+        <CreateUpdateModal
+          isOpen
+          onClose={closeModal}
+          itemToEdit={selectedItem}
+          model={model}
+          add={add}
+          update={update}
+        />
       )}
 
       {activeModal === "delete" && (

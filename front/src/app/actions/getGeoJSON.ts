@@ -107,8 +107,16 @@ export const getGeoJSON = async (
     const geoJsonFeatures = features
       .filter((feature: GeoFeature) => feature.area) // Only include features with area data
       .map((feature: GeoFeature) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const properties: any = {
+        interface FeatureProperties {
+          id: string;
+          name: string;
+          provinceId?: string;
+          provinceName?: string;
+          cityId?: string;
+          cityName?: string;
+        }
+
+        const properties: FeatureProperties = {
           id: feature._id,
           name: feature.name,
         };

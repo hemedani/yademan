@@ -32,21 +32,21 @@ interface Place {
     coordinates: [number, number];
   };
   category?:
-  | {
-    _id?: string;
-    name: string;
-    color?: string;
-    icon?: string;
-  }
-  | string;
+    | {
+        _id?: string;
+        name: string;
+        color?: string;
+        icon?: string;
+      }
+    | string;
   tags?:
-  | Array<{
-    _id?: string;
-    name: string;
-    color?: string;
-    icon?: string;
-  }>
-  | string[];
+    | Array<{
+        _id?: string;
+        name: string;
+        color?: string;
+        icon?: string;
+      }>
+    | string[];
   thumbnail?: {
     _id?: string;
     name: string;
@@ -295,77 +295,88 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
   }, [onLoad]);
 
   // Add markers to the map
-  const addMarkers = (placesToAdd: Place[]) => {
-    if (!map.current) return;
+  const addMarkers = useCallback(
+    (placesToAdd: Place[]) => {
+      if (!map.current) return;
 
-    // If there are no places, don't proceed with marker creation
-    if (!placesToAdd || placesToAdd.length === 0) {
-      return;
-    }
-
-    // Clear existing markers
-    markersRef.current.forEach((marker) => marker.remove());
-    markersRef.current.clear();
-
-    // Clear existing marker element references and their roots
-    markerElementsRef.current.forEach((el, id) => {
-      if (el && el.parentElement) {
-        // Unmount the React component properly
-        const root = markerRootsRef.current.get(id);
-        if (root) {
-          root.unmount();
-        }
-
-        while (el.firstChild) {
-          el.removeChild(el.firstChild);
-        }
+      // If there are no places, don't proceed with marker creation
+      if (!placesToAdd || placesToAdd.length === 0) {
+        return;
       }
-    });
-    markerElementsRef.current.clear();
-    markerRootsRef.current.clear();
 
-    // Add new markers
-    placesToAdd.forEach((place) => {
-      // Create div element for the marker
-      const markerElement = document.createElement("div");
-      markerElement.className = "marker-container";
-      markerElementsRef.current.set(place._id, markerElement);
+      // Clear existing markers
+      markersRef.current.forEach((marker) => marker.remove());
+      markersRef.current.clear();
 
-      // Ensure we have a valid place object
-      const placeData = place;
+      // Clear existing marker element references and their roots
+      markerElementsRef.current.forEach((el, id) => {
+        if (el && el.parentElement) {
+          // Unmount the React component properly
+          const root = markerRootsRef.current.get(id);
+          if (root) {
+            root.unmount();
+          }
 
-      // Create a React root and render PlaceMarker
-      const root = createRoot(markerElement);
-      markerRootsRef.current.set(place._id, root);
-      root.render(
-        <PlaceMarker
-          place={placeData as any}
-          isSelected={selectedPlace?._id === place._id}
-          onClick={(clickedPlace) => {
-            setSelectedPlace(clickedPlace);
-            setShowPlaceDetails(true);
+          while (el.firstChild) {
+            el.removeChild(el.firstChild);
+          }
+        }
+      });
+      markerElementsRef.current.clear();
+      markerRootsRef.current.clear();
 
-            // Fly to location
-            map.current?.flyTo({
-              center: clickedPlace.center.coordinates,
-              zoom: 14,
-              essential: true,
-            });
-          }}
-        />,
-      );
+      // Add new markers
+      placesToAdd.forEach((place) => {
+        // Create div element for the marker
+        const markerElement = document.createElement("div");
+        markerElement.className = "marker-container";
+        markerElementsRef.current.set(place._id, markerElement);
 
-      // Create maplibre marker
-      const marker = new maplibregl.Marker({
-        element: markerElement,
-        anchor: "bottom",
-      })
-        .setLngLat(place.center.coordinates)
-        .addTo(map.current!);
+        // Ensure we have a valid place object
+        const placeData = place;
 
-      markersRef.current.set(place._id, marker);
-    });
-  };
+        // Create a React root and render PlaceMarker
+        const root = createRoot(markerElement);
+        markerRootsRef.current.set(place._id, root);
+        root.render(
+          <PlaceMarker
+            place={placeData as any}
+            isSelected={selectedPlace?._id === place._id}
+            onClick={(clickedPlace) => {
+              setSelectedPlace(clickedPlace);
+              setShowPlaceDetails(true);
+
+              // Fly to location
+              map.current?.flyTo({
+                center: clickedPlace.center.coordinates,
+                zoom: 14,
+                essential: true,
+              });
+            }}
+          />,
+        );
+
+        // Create maplibre marker
+        const marker = new maplibregl.Marker({
+          element: markerElement,
+          anchor: "bottom",
+        })
+          .setLngLat(place.center.coordinates)
+          .addTo(map.current!);
+
+        markersRef.current.set(place._id, marker);
+      });
+    },
+    [
+      map,
+      markersRef,
+      markerElementsRef,
+      markerRootsRef,
+      setShowPlaceDetails,
+      setSelectedPlace,
+      selectedPlace?._id,
+    ],
+  );
 
   // Load places from backend
   const loadPlaces = useCallback(async () => {
@@ -486,6 +497,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     setIsLoading,
     setPlaces,
     addMarkers,
+    isFetchingPlaces,
   ]);
 
   // The addMarkers function has been moved up before loadPlaces
@@ -579,8 +591,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
                       : place.category,
                   tags: Array.isArray(place.tags)
                     ? place.tags.map((tag) =>
-                      typeof tag === "string" ? { name: tag } : tag,
-                    )
+                        typeof tag === "string" ? { name: tag } : tag,
+                      )
                     : place.tags,
                 } as any
               }
@@ -669,7 +681,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
 
     setFilteredPlaces(filtered);
     addMarkers(filtered);
-  }, [searchQuery, filters, places]);
+  }, [searchQuery, filters, places, addMarkers]);
 
   // Close place details when ESC is pressed
   useEffect(() => {

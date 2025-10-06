@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 
@@ -38,11 +38,35 @@ const RoutePanel: React.FC<RoutePanelProps> = ({
   const [endAddress, setEndAddress] = useState("");
   const [routeInfo, setRouteInfo] = useState<RouteInfo | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
-  const [transportMode, setTransportMode] = useState<"driving" | "walking" | "cycling">("driving");
+  const [transportMode, setTransportMode] = useState<
+    "driving" | "walking" | "cycling"
+  >("driving");
   const [showSteps, setShowSteps] = useState(false);
 
+  // Calculate distance between two points (Haversine formula)
+  const calculateDistance = useCallback(
+    (point1: [number, number], point2: [number, number]): number => {
+      const R = 6371; // Earth's radius in km
+      const lat1 = (point1[1] * Math.PI) / 180;
+      const lat2 = (point2[1] * Math.PI) / 180;
+      const deltaLat = ((point2[1] - point1[1]) * Math.PI) / 180;
+      const deltaLon = ((point2[0] - point1[0]) * Math.PI) / 180;
+
+      const a =
+        Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+        Math.cos(lat1) *
+          Math.cos(lat2) *
+          Math.sin(deltaLon / 2) *
+          Math.sin(deltaLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+      return Math.round(R * c * 10) / 10; // Round to 1 decimal place
+    },
+    [],
+  );
+
   // Use current location for start
-  const useCurrentLocation = () => {
+  const useCurrentLocation = useCallback(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -56,19 +80,13 @@ const RoutePanel: React.FC<RoutePanelProps> = ({
         (error) => {
           console.error("Error getting location:", error);
           // TODO: Show error toast
-        }
+        },
       );
     }
-  };
+  }, [onSetStart]);
 
-  // Calculate route when both start and end are set
-  useEffect(() => {
-    if (start && end) {
-      handleCalculateRoute();
-    }
-  }, [start, end, transportMode]);
-
-  const handleCalculateRoute = async () => {
+  // Define handleCalculateRoute with useCallback to avoid dependency issues
+  const handleCalculateRoute = useCallback(async () => {
     if (!start || !end) return;
 
     setIsCalculating(true);
@@ -112,37 +130,22 @@ const RoutePanel: React.FC<RoutePanelProps> = ({
     } finally {
       setIsCalculating(false);
     }
-  };
+  }, [start, end, onCalculateRoute, calculateDistance]);
 
-  // Calculate distance between two points (Haversine formula)
-  const calculateDistance = (
-    point1: [number, number],
-    point2: [number, number]
-  ): number => {
-    const R = 6371; // Earth's radius in km
-    const lat1 = (point1[1] * Math.PI) / 180;
-    const lat2 = (point2[1] * Math.PI) / 180;
-    const deltaLat = ((point2[1] - point1[1]) * Math.PI) / 180;
-    const deltaLon = ((point2[0] - point1[0]) * Math.PI) / 180;
+  // Calculate route when both start and end are set
+  useEffect(() => {
+    if (start && end) {
+      handleCalculateRoute();
+    }
+  }, [start, end, transportMode, handleCalculateRoute]);
 
-    const a =
-      Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
-      Math.cos(lat1) *
-        Math.cos(lat2) *
-        Math.sin(deltaLon / 2) *
-        Math.sin(deltaLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    return Math.round(R * c * 10) / 10; // Round to 1 decimal place
-  };
-
-  const clearRoute = () => {
+  const clearRoute = useCallback(() => {
     onSetStart(null);
     onSetEnd(null);
     setStartAddress("");
     setEndAddress("");
     setRouteInfo(null);
-  };
+  }, [onSetStart, onSetEnd]);
 
   const transportModes = [
     {
@@ -328,10 +331,7 @@ const RoutePanel: React.FC<RoutePanelProps> = ({
                 className="space-y-2 pt-3 border-t border-gray-100"
               >
                 {routeInfo.steps.map((step, index) => (
-                  <div
-                    key={index}
-                    className="flex items-start gap-3 text-sm"
-                  >
+                  <div key={index} className="flex items-start gap-3 text-sm">
                     <div className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-medium">
                       {index + 1}
                     </div>

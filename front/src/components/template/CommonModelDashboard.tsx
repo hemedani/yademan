@@ -1,11 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
 import EntityCard from "../organisms/EntityCard";
 import { DeleteModal } from "./DeleteModal";
 import { useRouter } from "next/navigation";
-import { ModelName, ToastNotify, translateModelNameToPersian } from "@/utils/helper";
+import {
+  ModelName,
+  ToastNotify,
+  translateModelNameToPersian,
+} from "@/utils/helper";
 
 interface TData {
   _id: string;
@@ -46,15 +49,15 @@ const CommonModelDashboard: React.FC<CommonDashboardProps> = ({
 }) => {
   const router = useRouter();
 
-  const [activeModal, setActiveModal] = useState<"edit" | "delete" | "seedZones" | null>(
-    null
-  );
+  const [activeModal, setActiveModal] = useState<
+    "edit" | "delete" | "seedZones" | null
+  >(null);
   const [selectedItem, setSelectedItem] = useState<TData | null>(null);
   const [hardCascade, setHardCascade] = useState<boolean>(false);
 
   const openModal = (
     type: "edit" | "delete" | "seedZones",
-    item: TData | null = null
+    item: TData | null = null,
   ) => {
     setSelectedItem(item);
     setActiveModal(type);
@@ -73,12 +76,12 @@ const CommonModelDashboard: React.FC<CommonDashboardProps> = ({
       if (removedItem.success) {
         ToastNotify(
           "success",
-          `${translateModelNameToPersian(model)} با موفقیت حذف شد`
+          `${translateModelNameToPersian(model)} با موفقیت حذف شد`,
         );
       } else {
         ToastNotify(
           "error",
-          `مشکلی در حذف ${translateModelNameToPersian(model)} وجود دارد - ${removedItem.body.message}}`
+          `مشکلی در حذف ${translateModelNameToPersian(model)} وجود دارد - ${removedItem.body.message}}`,
         );
       }
 
@@ -96,12 +99,12 @@ const CommonModelDashboard: React.FC<CommonDashboardProps> = ({
     <div>
       <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-2">
         {data?.map((item, index) => (
-          <div 
+          <div
             key={item._id}
             className="transform transition-all duration-500 ease-in-out"
-            style={{ 
+            style={{
               animationDelay: `${index * 0.05}s`,
-              animation: 'fadeInUp 0.5s ease-out forwards'
+              animation: "fadeInUp 0.5s ease-out forwards",
             }}
           >
             <EntityCard
@@ -115,7 +118,7 @@ const CommonModelDashboard: React.FC<CommonDashboardProps> = ({
           </div>
         ))}
       </div>
-      
+
       <style jsx global>{`
         @keyframes fadeInUp {
           from {

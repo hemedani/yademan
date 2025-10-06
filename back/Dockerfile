@@ -17,6 +17,10 @@ FROM base AS production
 # Copy application code
 COPY . .
 
+# Ensure uploads directory exists and has proper permissions
+RUN mkdir -p /app/uploads
+RUN chmod 777 /app/uploads
+
 # Cache all dependencies
 RUN deno cache mod.ts
 
@@ -28,16 +32,26 @@ USER deno
 
 # Set environment variables
 ENV ENV=production
-ENV APP_PORT=1404
+ENV APP_PORT=1405
 
 # Expose the application port
 EXPOSE ${APP_PORT}
+
+# Define volume for uploads (to persist data)
+VOLUME ["/app/uploads"]
 
 # Run the application
 CMD ["deno", "run", "-A", "./mod.ts"]
 
 # Stage 3: Development
 FROM base AS development
+
+# Copy application code for development
+COPY . .
+
+# Ensure uploads directory exists
+RUN mkdir -p /app/uploads
+RUN chmod 777 /app/uploads
 
 # Set permissions for the non-root user
 RUN chown -R deno:deno /app
@@ -51,6 +65,9 @@ ENV APP_PORT=1404
 
 # Expose the application port
 EXPOSE ${APP_PORT}
+
+# Define volume for uploads (to persist data)
+VOLUME ["/app/uploads"]
 
 # Run the application with watch mode
 CMD ["deno", "run", "-A", "--watch", "--watch-exclude=declarations", "--no-clear-screen", "./mod.ts"]

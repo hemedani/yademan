@@ -1,7 +1,3 @@
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
-
 export default function RootLayout({
   children,
 }: {
@@ -9,5 +5,6 @@ export default function RootLayout({
 }) {
   // This is now just a simple wrapper - no HTML or BODY tags
   // The actual HTML structure is defined in [locale]/layout.tsx
+  // Using system fonts to avoid network connectivity issues during builds
   return children;
 }
