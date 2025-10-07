@@ -19,7 +19,7 @@ importers:
         version: 5.2.1(react-hook-form@7.61.1(react@19.1.1))
       '@maplibre/maplibre-gl-geocoder':
         specifier: ^1.9.1
-        version: 1.9.1(maplibre-gl@5.7.3)
+        version: 1.9.1(maplibre-gl@5.8.0)
       '@photo-sphere-viewer/core':
         specifier: ^5.14.0
         version: 5.14.0
@@ -51,8 +51,8 @@ importers:
         specifier: ^1.5.3
         version: 1.5.3(leaflet@1.9.4)
       maplibre-gl:
-        specifier: ^5.7.3
-        version: 5.7.3
+        specifier: ^5.8.0
+        version: 5.8.0
       next:
         specifier: 15.3.2
         version: 15.3.2(@babel/core@7.28.4)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -2777,8 +2777,8 @@ packages:
     resolution: {integrity: sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==}
     engines: {node: '>=8'}
 
-  maplibre-gl@5.7.3:
-    resolution: {integrity: sha512-T6XsjwcSfOr0vtAt4GTzx4m/vD6nrbR0+61MgMzZ9REQwILSEnhqwNpFuFbDedX6LC3ZWjZWnxN7fN/I66WoDQ==}
+  maplibre-gl@5.8.0:
+    resolution: {integrity: sha512-zLblPFK+z5sxeitDF8RL2cnqfRaivNwxbGoQMfwAm9st6d1lRGTxgI7NNNr/U1AEPkp5+X+wjROagiHvJD8aqg==}
     engines: {node: '>=16.14.0', npm: '>=8.1.0'}
 
   math-intrinsics@1.1.0:
@@ -4811,11 +4811,11 @@ snapshots:
 
   '@mapbox/whoots-js@3.1.0': {}
 
-  '@maplibre/maplibre-gl-geocoder@1.9.1(maplibre-gl@5.7.3)':
+  '@maplibre/maplibre-gl-geocoder@1.9.1(maplibre-gl@5.8.0)':
     dependencies:
       events: 3.3.0
       lodash.debounce: 4.0.8
-      maplibre-gl: 5.7.3
+      maplibre-gl: 5.8.0
       subtag: 0.5.0
       suggestions-list: 0.0.2
       xtend: 4.0.2
@@ -6738,7 +6738,7 @@ snapshots:
     dependencies:
       semver: 6.3.1
 
-  maplibre-gl@5.7.3:
+  maplibre-gl@5.8.0:
     dependencies:
       '@mapbox/geojson-rewind': 0.5.2
       '@mapbox/jsonlint-lines-primitives': 2.0.2

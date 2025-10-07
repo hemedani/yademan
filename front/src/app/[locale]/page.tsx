@@ -6,7 +6,6 @@ import { useAuth } from "@/context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
 import TopBar from "@/components/layout/TopBar";
-import MobileNavBar from "@/components/layout/MobileNavBar";
 import MapView from "@/components/map/MapView";
 import FilterPanel from "@/components/filters/FilterPanel";
 import { useFilterPanel } from "@/hooks/useFilterPanel";
@@ -16,6 +15,7 @@ import PlaceDetailsModal from "@/components/organisms/PlaceDetailsModal";
 import { PlaceData } from "@/components/atoms/PlaceMarker";
 import MyVertualTour from "@/components/organisms/MyVertualTour";
 import { getLesanBaseUrl } from "@/services/api";
+import { useParams } from "next/navigation";
 
 // Extended PlaceData with virtual tours for HomePage
 interface ExtendedPlaceData extends PlaceData {
@@ -44,6 +44,8 @@ const SearchPanel = dynamic(() => import("@/components/search/SearchPanel"), {
 
 export default function HomePage() {
   const t = useTranslations("HomePage");
+  const params = useParams();
+  const locale = params.locale as string;
   const { isAuthenticated, displayName, loading } = useAuth();
   const [searchValue, setSearchValue] = useState("");
   const [showWelcome, setShowWelcome] = useState(true);
@@ -234,13 +236,20 @@ export default function HomePage() {
 
       {/* Top Bar - Fixed */}
       <TopBar
-        onFilterClick={toggleFilter}
+        onFilterClickAction={async () => toggleFilter()}
         searchValue={searchValue}
-        onSearchChange={handleSearchChange}
+        onSearchChangeAction={async (value) => handleSearchChange(value)}
+        onSearchSubmitAction={async (value) => {
+          setSearchQuery(value);
+          setSearchValue(value);
+          setShowSearch(false);
+        }}
+        locale={locale}
+        _filterOpen={isFilterOpen}
       />
 
       {/* Main Content */}
-      <main className="relative pt-16 pb-14 md:pb-0 h-full w-full">
+      <main className="relative pb-14 md:pb-0 h-full w-full">
         {/* Welcome Animation for First Visit */}
         <AnimatePresence>
           {!isMapLoaded && (
@@ -550,13 +559,18 @@ export default function HomePage() {
                 />
 
                 <motion.div
-                  initial={{ x: -400, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: -400, opacity: 0 }}
-                  transition={{ type: "spring", damping: 25 }}
-                  className="fixed top-16 left-0 bottom-14 md:bottom-0 w-full md:w-96 bg-white shadow-2xl z-50 overflow-y-auto"
+                  initial={{ y: -50, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -50, opacity: 0 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 30,
+                    bounce: 0.2,
+                  }}
+                  className="fixed top-20 left-1/2 transform -translate-x-1/2 w-[95%] max-w-xl max-h-[85vh] bg-white shadow-2xl rounded-2xl z-50 overflow-hidden flex flex-col"
                 >
-                  <div className="sticky top-0 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-4 flex items-center justify-between">
+                  <div className="sticky top-0 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-4 flex items-center justify-between rounded-t-2xl">
                     <h2 className="text-xl font-bold flex items-center gap-2">
                       <svg
                         className="w-6 h-6"
@@ -595,8 +609,16 @@ export default function HomePage() {
                       </svg>
                     </motion.button>
                   </div>
-                  <div className="p-6">
+                  <div className="p-5 overflow-y-auto">
                     <FilterPanel />
+                  </div>
+                  <div className="sticky bottom-0 bg-gradient-to-b from-transparent to-white pt-6 pb-4 px-6">
+                    <button
+                      onClick={closeFilter}
+                      className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-lg font-medium transition-all hover:shadow-lg active:scale-98 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    >
+                      {t("applyFilters")}
+                    </button>
                   </div>
                 </motion.div>
               </>
@@ -666,10 +688,6 @@ export default function HomePage() {
           </AnimatePresence>
         </motion.div>
       </main>
-
-      {/* Bottom Navigation - Mobile Only 
-      <MobileNavBar />
-      */}
     </div>
   );
 }

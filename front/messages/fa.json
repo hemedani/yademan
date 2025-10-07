@@ -17,7 +17,9 @@
     "locations": "مکان ها",
     "adminPanel": "پنل مدیریت",
     "welcome": "خوش آمدید",
-    "exploreLocations": "مکان‌های شگفت‌انگیز اطراف خود را کاوش کنید"
+    "exploreLocations": "مکان‌های شگفت‌انگیز اطراف خود را کاوش کنید",
+    "applyFilters": "اعمال فیلترها",
+    "searchTip": "راهنمای جستجو"
   },
   "Navigation": {
     "home": "خانه",
@@ -39,7 +41,16 @@
     "settings": "تنظیمات",
     "logout": "خروج",
     "logoutAriaLabel": "خروج از حساب کاربری",
-    "loggingOut": "در حال خروج..."
+    "loggingOut": "در حال خروج...",
+    "searchTooltip": "جستجو",
+    "searchButtonAriaLabel": "باز کردن نوار جستجو",
+    "eventsTooltip": "رویدادها",
+    "eventsButtonAriaLabel": "باز کردن پنل رویدادها",
+    "userButtonAriaLabel": "باز کردن منوی کاربر",
+    "adminPanelTooltip": "پنل مدیریت",
+    "loginTooltip": "راهنمای ورود",
+    "loginButtonAriaLabel": "دکمه ورود برچسب آریا",
+    "searchSubmitTooltip": "راهنمای ارسال جستجو"
   },
   "Common": {
     "loading": "در حال بارگذاری...",
@@ -161,5 +172,16 @@
     "phoneValue": "۰۲۱-۱۲۳۴۵۶۷۸",
     "emailValue": "info@yademan.ir",
     "workingHoursValue": "شنبه تا چهارشنبه: ۸:۰۰ تا ۱۷:۰۰"
+  },
+  "Events": {
+    "eventTitle1": "عنوان رویداد 1",
+    "eventLocation1": "مکان رویداد 1",
+    "eventTitle2": "عنوان رویداد 2",
+    "eventLocation2": "مکان رویداد 2",
+    "eventTitle3": "عنوان رویداد 3",
+    "eventLocation3": "مکان رویداد 3",
+    "viewAll": "مشاهده همه",
+    "createEvent": "ایجاد رویداد",
+    "upcomingEvents": "رویدادهای آینده"
   }
 }

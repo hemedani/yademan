@@ -17,7 +17,9 @@
     "locations": "Locations",
     "adminPanel": "Admin Panel",
     "welcome": "Welcome",
-    "exploreLocations": "Explore amazing locations around you"
+    "exploreLocations": "Explore amazing locations around you",
+    "applyFilters": "Apply Filters",
+    "searchTip": "Search Tip"
   },
   "Navigation": {
     "home": "Home",
@@ -39,7 +41,16 @@
     "settings": "Settings",
     "logout": "Logout",
     "logoutAriaLabel": "Sign out of your account",
-    "loggingOut": "Signing out..."
+    "loggingOut": "Signing out...",
+    "searchTooltip": "Search",
+    "searchButtonAriaLabel": "Open search bar",
+    "eventsTooltip": "Events",
+    "eventsButtonAriaLabel": "Open events panel",
+    "userButtonAriaLabel": "Open user menu",
+    "adminPanelTooltip": "Admin Panel",
+    "loginTooltip": "Login Tooltip",
+    "loginButtonAriaLabel": "Login Button Aria Label",
+    "searchSubmitTooltip": "Search Submit Tooltip"
   },
   "Common": {
     "loading": "Loading...",
@@ -153,5 +164,16 @@
     "phoneValue": "+98-21-12345678",
     "emailValue": "info@yademan.ir",
     "workingHoursValue": "Saturday to Wednesday: 8:00 AM to 5:00 PM"
+  },
+  "Events": {
+    "eventTitle1": "Event Title 1",
+    "eventLocation1": "Event Location 1",
+    "eventTitle2": "Event Title 2",
+    "eventLocation2": "Event Location 2",
+    "eventTitle3": "Event Title 3",
+    "eventLocation3": "Event Location 3",
+    "viewAll": "View All",
+    "createEvent": "Create Event",
+    "upcomingEvents": "Upcoming Events"
   }
 }
