@@ -433,19 +433,23 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
 // Wrapper component that provides AuthProvider
 export default function AdminLayout({ children }: AdminLayoutProps) {
   return (
-    <AuthProvider>
-      <InnerAdminLayout>{children}</InnerAdminLayout>
-      <Toaster
-        position="top-center"
-        reverseOrder={false}
-        toastOptions={{
-          duration: 4000,
-          style: {
-            fontSize: "14px",
-            maxWidth: "90vw",
-          },
-        }}
-      />
-    </AuthProvider>
+    <html>
+      <body className="overflow-x-hidden">
+        <AuthProvider>
+          <InnerAdminLayout>{children}</InnerAdminLayout>
+          <Toaster
+            position="top-center"
+            reverseOrder={false}
+            toastOptions={{
+              duration: 4000,
+              style: {
+                fontSize: "14px",
+                maxWidth: "90vw",
+              },
+            }}
+          />
+        </AuthProvider>
+      </body>
+    </html>
   );
 }

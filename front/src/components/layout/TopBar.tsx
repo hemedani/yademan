@@ -3,7 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/context/AuthContext";
-import { Link } from "../../../i18n/routing";
+import { Link as ILink } from "../../../i18n/routing";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
 // Icons
@@ -12,7 +13,6 @@ import AdjustmentsHorizontalIcon from "@heroicons/react/24/outline/AdjustmentsHo
 import UserIcon from "@heroicons/react/24/outline/UserIcon";
 import CalendarDaysIcon from "@heroicons/react/24/outline/CalendarDaysIcon";
 import ArrowRightOnRectangleIcon from "@heroicons/react/24/outline/ArrowRightOnRectangleIcon";
-import XMarkIcon from "@heroicons/react/24/outline/XMarkIcon";
 import Cog6ToothIcon from "@heroicons/react/24/outline/Cog6ToothIcon";
 
 interface TopBarProps {
@@ -252,7 +252,7 @@ export default function TopBar({
               </div>
             </button>
           ) : (
-            <Link
+            <ILink
               href="/login"
               locale={locale}
               className="p-3 text-gray-600 hover:text-blue-600 hover:bg-gray-100 rounded-full transition-all duration-200 touch-manipulation focus:outline-none focus:ring-2 focus:ring-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500 active:scale-95"
@@ -260,14 +260,13 @@ export default function TopBar({
               aria-label={t("Navigation.loginButtonAriaLabel")}
             >
               <UserIcon className="h-5 w-5" aria-hidden="true" />
-            </Link>
+            </ILink>
           )}
 
           {/* Admin Panel Button - If user is admin */}
           {isAdmin && (
             <Link
               href="/admin"
-              locale={locale}
               className="p-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full shadow-md hover:shadow-lg transition-all duration-200 touch-manipulation focus:outline-none focus:ring-2 focus:ring-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500 active:scale-95"
               title={t("Navigation.adminPanelTooltip")}
               aria-label={t("Navigation.adminPanelAriaLabel")}
@@ -377,7 +376,7 @@ export default function TopBar({
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.3 }}
             >
-              <Link
+              <ILink
                 href="/profile"
                 locale={locale}
                 className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150"
@@ -385,13 +384,13 @@ export default function TopBar({
               >
                 <UserIcon className="w-5 h-5 ml-3" />
                 {t("Navigation.profile")}
-              </Link>
+              </ILink>
 
               {/* Only show settings if user has appropriate level */}
               {isAuthenticated &&
                 userLevel &&
                 ["Manager", "Editor", "Ghost"].includes(userLevel) && (
-                  <Link
+                  <ILink
                     href="/settings"
                     locale={locale}
                     className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150"
@@ -399,7 +398,7 @@ export default function TopBar({
                   >
                     <Cog6ToothIcon className="w-5 h-5 ml-3" />
                     {t("Navigation.settings")}
-                  </Link>
+                  </ILink>
                 )}
 
               <div className="border-t border-gray-100 my-1"></div>
@@ -465,14 +464,14 @@ export default function TopBar({
               <h3 className="text-base font-semibold text-gray-900">
                 {t("Events.upcomingEvents")}
               </h3>
-              <Link
+              <ILink
                 href="/events"
                 locale={locale}
                 className="text-sm text-blue-500 hover:text-blue-600"
                 onClick={() => setShowEventsPanel(false)}
               >
                 {t("Events.viewAll")}
-              </Link>
+              </ILink>
             </motion.div>
 
             <div className="py-2 max-h-80 overflow-y-auto">
@@ -546,14 +545,14 @@ export default function TopBar({
             </div>
 
             <div className="p-4 border-t border-gray-100 text-center">
-              <Link
+              <ILink
                 href="/events/create"
                 locale={locale}
                 className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 onClick={() => setShowEventsPanel(false)}
               >
                 {t("Events.createEvent")}
-              </Link>
+              </ILink>
             </div>
           </motion.div>
         )}
