@@ -56,7 +56,7 @@ export const CityCreateSchema = z.object({
   name: z.string().min(1, "نام شهر الزامی است"),
   english_name: z.string().min(1, "نام انگلیسی شهر الزامی است"),
   provinceId: z.string().min(1, "انتخاب استان الزامی است"),
-  isCenter: z.boolean(),
+  isCapital: z.boolean(),
   area: z.object(
     {
       type: z.literal("MultiPolygon"),
@@ -123,7 +123,7 @@ export const FormCreateCity = ({
       name: "",
       english_name: "",
       provinceId: "",
-      isCenter: false,
+      isCapital: false,
       area: { type: "MultiPolygon", coordinates: [] },
       center: { type: "Point", coordinates: [] },
     },
@@ -170,7 +170,7 @@ export const FormCreateCity = ({
             {
               _id: 1,
               name: 1,
-              center: {
+              capital: {
                 _id: 1,
                 name: 1,
                 english_name: 1,
@@ -339,7 +339,7 @@ export const FormCreateCity = ({
         coordinates: number[];
       },
       provinceId: data.provinceId,
-      isCenter: data.isCenter,
+      isCapital: data.isCapital,
     });
 
     if (createdCity.success) {
@@ -478,8 +478,8 @@ export const FormCreateCity = ({
           {/* Is Center Checkbox */}
           <SelectBox
             label="مرکز استان"
-            name="isCenter"
-            setValue={(name, value) => setValue("isCenter", value === "true")}
+            name="isCapital"
+            setValue={(name, value) => setValue("isCapital", value === "true")}
             options={[
               { value: "true", label: "بله، این شهر مرکز استان است" },
               { value: "false", label: "خیر، این شهر مرکز استان نیست" },
@@ -547,11 +547,10 @@ export const FormCreateCity = ({
               <button
                 type="button"
                 onClick={toggleCenterMode}
-                className={`${
-                  isCenterMode
-                    ? "bg-orange-600 hover:bg-orange-700"
-                    : "bg-purple-600 hover:bg-purple-700"
-                } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2`}
+                className={`${isCenterMode
+                  ? "bg-orange-600 hover:bg-orange-700"
+                  : "bg-purple-600 hover:bg-purple-700"
+                  } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2`}
               >
                 <svg
                   className="w-4 h-4"
@@ -577,11 +576,10 @@ export const FormCreateCity = ({
               <button
                 type="button"
                 onClick={toggleDrawingMode}
-                className={`${
-                  isDrawingMode
-                    ? "bg-red-600 hover:bg-red-700"
-                    : "bg-blue-600 hover:bg-blue-700"
-                } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2`}
+                className={`${isDrawingMode
+                  ? "bg-red-600 hover:bg-red-700"
+                  : "bg-blue-600 hover:bg-blue-700"
+                  } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2`}
               >
                 <svg
                   className="w-4 h-4"

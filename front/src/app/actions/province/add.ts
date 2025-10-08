@@ -33,7 +33,7 @@ export const add = async (data: {
           name: 1,
           english_name: 1,
           area: 1,
-          center: {
+          capital: {
             _id: 1,
             name: 1,
             english_name: 1,

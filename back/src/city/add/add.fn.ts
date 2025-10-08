@@ -7,7 +7,7 @@ export const addFn: ActFn = async (body) => {
 	const { user }: MyContext = coreApp.contextFns
 		.getContextModel() as MyContext;
 
-	const { provinceId, isCenter, ...rest } = set;
+	const { provinceId, isCapital, ...rest } = set;
 
 	return await city.insertOne({
 		doc: rest,
@@ -19,7 +19,7 @@ export const addFn: ActFn = async (body) => {
 				_ids: new ObjectId(provinceId as string),
 				relatedRelations: {
 					cities: true,
-					center: isCenter,
+					capital: isCapital,
 				},
 			},
 		},

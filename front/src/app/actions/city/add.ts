@@ -14,7 +14,7 @@ export const add = async (data: {
     coordinates: number[];
   };
   provinceId: string;
-  isCenter: boolean;
+  isCapital: boolean;
 }) => {
   const token = (await cookies()).get("token");
 
@@ -30,7 +30,7 @@ export const add = async (data: {
           area: data.area,
           center: data.center,
           provinceId: data.provinceId,
-          isCenter: data.isCenter,
+          isCapital: data.isCapital,
         },
         get: {
           _id: 1,

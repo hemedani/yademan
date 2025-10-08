@@ -127,7 +127,7 @@ updatedAt: Date;
     export type provinceInp = {
       registrar?: number | userInp
       cities?: number | cityInp
-center?: number | cityInp
+capital?: number | cityInp
 places?: number | placeInp
     }
 
@@ -141,20 +141,9 @@ type: "MultiPolygon";
 coordinates: any[];
 };
 center: {
-_id?: string;
-name: string;
-english_name: string;
-area: {
-type: "MultiPolygon";
-coordinates: any[];
-};
-center: {
 type: "Point";
 coordinates: any[];
 };
-createdAt: Date;
-updatedAt: Date;
-}[];
 createdAt: Date;
 updatedAt: Date;
 registrar?: {
@@ -173,6 +162,21 @@ createdAt: Date;
 updatedAt: Date;
 };
 cities: {
+_id?: string;
+name: string;
+english_name: string;
+area: {
+type: "MultiPolygon";
+coordinates: any[];
+};
+center: {
+type: "Point";
+coordinates: any[];
+};
+createdAt: Date;
+updatedAt: Date;
+}[];
+capital: {
 _id?: string;
 name: string;
 english_name: string;
@@ -779,7 +783,7 @@ coordinates: any[];
 createdAt: Date;
 updatedAt: Date;
 provinceId: string;
-isCenter: boolean;
+isCapital: boolean;
 };
 get: {
 _id?: (0 | 1 );
@@ -996,15 +1000,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-english_name?: (0 | 1 );
-area?: (0 | 1 );
 center?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 registrar?: {
@@ -1023,6 +1019,15 @@ createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 cities?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+capital?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
@@ -1294,15 +1299,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-english_name?: (0 | 1 );
-area?: (0 | 1 );
 center?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 registrar?: {
@@ -1321,6 +1318,15 @@ createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 cities?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+capital?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
@@ -2326,15 +2332,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-english_name?: (0 | 1 );
-area?: (0 | 1 );
 center?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 registrar?: {
@@ -2353,6 +2351,15 @@ createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 cities?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+capital?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
@@ -2399,15 +2406,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-english_name?: (0 | 1 );
-area?: (0 | 1 );
 center?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 registrar?: {
@@ -2426,6 +2425,15 @@ createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 cities?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+capital?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
@@ -2462,62 +2470,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-english_name?: (0 | 1 );
-area?: (0 | 1 );
 center?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-registrar?: {
-_id?: (0 | 1 );
-first_name?: (0 | 1 );
-last_name?: (0 | 1 );
-father_name?: (0 | 1 );
-gender?: (0 | 1 );
-birth_date?: (0 | 1 );
-summary?: (0 | 1 );
-address?: (0 | 1 );
-level?: (0 | 1 );
-email?: (0 | 1 );
-is_verified?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
-province?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-english_name?: (0 | 1 );
-area?: (0 | 1 );
-center?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
-city_zones?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-center?: (0 | 1 );
-area?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
-places?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-description?: (0 | 1 );
-slug?: (0 | 1 );
-center?: (0 | 1 );
-area?: (0 | 1 );
-address?: (0 | 1 );
-contact?: (0 | 1 );
-hoursOfOperation?: (0 | 1 );
-meta?: (0 | 1 );
-status?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
-};
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 registrar?: {
@@ -2587,6 +2540,62 @@ updatedAt?: (0 | 1 );
 };
 };
 cities?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city_zones?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+capital?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
@@ -2767,62 +2776,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-english_name?: (0 | 1 );
-area?: (0 | 1 );
 center?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-registrar?: {
-_id?: (0 | 1 );
-first_name?: (0 | 1 );
-last_name?: (0 | 1 );
-father_name?: (0 | 1 );
-gender?: (0 | 1 );
-birth_date?: (0 | 1 );
-summary?: (0 | 1 );
-address?: (0 | 1 );
-level?: (0 | 1 );
-email?: (0 | 1 );
-is_verified?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
-province?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-english_name?: (0 | 1 );
-area?: (0 | 1 );
-center?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
-city_zones?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-center?: (0 | 1 );
-area?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
-places?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-description?: (0 | 1 );
-slug?: (0 | 1 );
-center?: (0 | 1 );
-area?: (0 | 1 );
-address?: (0 | 1 );
-contact?: (0 | 1 );
-hoursOfOperation?: (0 | 1 );
-meta?: (0 | 1 );
-status?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
-};
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 registrar?: {
@@ -2892,6 +2846,62 @@ updatedAt?: (0 | 1 );
 };
 };
 cities?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city_zones?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+capital?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
@@ -4786,15 +4796,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-english_name?: (0 | 1 );
-area?: (0 | 1 );
 center?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 registrar?: {
@@ -4813,6 +4815,15 @@ createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 cities?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+capital?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
@@ -5241,15 +5252,7 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );
 area?: (0 | 1 );
-center?: {
-_id?: (0 | 1 );
-name?: (0 | 1 );
-english_name?: (0 | 1 );
-area?: (0 | 1 );
 center?: (0 | 1 );
-createdAt?: (0 | 1 );
-updatedAt?: (0 | 1 );
-};
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 registrar?: {
@@ -5268,6 +5271,15 @@ createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 cities?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+capital?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 english_name?: (0 | 1 );

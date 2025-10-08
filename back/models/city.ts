@@ -32,7 +32,7 @@ export const city_relations = {
 					order: "desc" as RelationSortOrderType,
 				},
 			},
-			center: {
+			capital: {
 				type: "single" as RelationDataType,
 			},
 		},
