@@ -56,8 +56,10 @@ export const UploadImage = ({
       const response = await fetch(`${getLesanBaseUrl()}/lesan`, {
         method: "POST",
         body: formData,
+        mode: "cors",  // Force CORS mode
+        credentials: "include",  // If auth cookies are used; otherwise omit
         headers: {
-          token: token || "",
+          "token": token || "",  // Custom token header
         },
       });
       const data = await response.json();
