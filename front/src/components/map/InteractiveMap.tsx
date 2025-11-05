@@ -26,89 +26,11 @@ import RoutePanel from "@/components/map/RoutePanel";
 import MapLayerSwitcher from "@/components/map/MapLayerSwitcher";
 import MyVertualTour from "../organisms/MyVertualTour";
 import { getLesanBaseUrl } from "@/services/api";
+import { placeSchema } from "@/types/declarations/selectInp";
 
-// Types
-// Custom Place interface compatible with PlaceData
-interface Place {
-  _id: string;
-  name: string;
-  description: string;
-  center: {
-    type: "Point";
-    coordinates: [number, number];
-  };
-  category?:
-    | {
-        _id?: string;
-        name: string;
-        color?: string;
-        icon?: string;
-      }
-    | string;
-  tags?:
-    | Array<{
-        _id?: string;
-        name: string;
-        color?: string;
-        icon?: string;
-      }>
-    | string[];
-  thumbnail?: {
-    _id?: string;
-    name: string;
-  };
-  gallery?: {
-    _id?: string;
-    name: string;
-    mimType: string;
-    size: number;
-    alt_text?: string;
-  }[];
-  virtual_tours?: {
-    _id: string;
-    name: string;
-    description?: string;
-    panorama: {
-      _id?: string;
-      name: string;
-    };
-    hotspots?: {
-      pitch: number;
-      yaw: number;
-      description?: string;
-      target?: string;
-    }[];
-    status: "draft" | "active" | "archived";
-  }[];
-  address?: string;
-  hoursOfOperation?: string;
-  contact?: {
-    phone?: string;
-    email?: string;
-    website?: string;
-    social?: string[];
-  };
-  updatedAt: Date;
-  createdAt: Date;
-}
-
-// For virtual tour type
-interface VirtualTour {
-  _id: string;
-  name: string;
-  description?: string;
-  panorama: {
-    _id?: string;
-    name: string;
-  };
-  hotspots?: {
-    pitch: number;
-    yaw: number;
-    description?: string;
-    target?: string;
-  }[];
-  status: "draft" | "active" | "archived";
-}
+// Use placeSchema from selectInp as the base type
+type Place = placeSchema;
+type VirtualTour = placeSchema["virtual_tours"][0];
 
 interface MapLayer {
   id: string;
@@ -117,6 +39,8 @@ interface MapLayer {
   attribution: string;
   maxZoom: number;
 }
+
+const MAPTILER_KEY = "PWAcntNh2dhVx9XsqifY";
 
 const MAP_LAYERS: MapLayer[] = [
   {
@@ -130,7 +54,7 @@ const MAP_LAYERS: MapLayer[] = [
   {
     id: "osm-vector",
     name: "Vector Tiles",
-    url: "https://api.maptiler.com/maps/streets-v2/style.json?key=YOUR_MAPTILER_KEY",
+    url: `https://api.maptiler.com/maps/streets-v2/style.json?key=${MAPTILER_KEY}`,
     attribution:
       '© <a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
     maxZoom: 22,
@@ -138,7 +62,7 @@ const MAP_LAYERS: MapLayer[] = [
   {
     id: "satellite",
     name: "Satellite",
-    url: "https://api.maptiler.com/maps/hybrid/style.json?key=YOUR_MAPTILER_KEY",
+    url: `https://api.maptiler.com/maps/hybrid/style.json?key=${MAPTILER_KEY}`,
     attribution:
       '© <a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a>',
     maxZoom: 22,
@@ -146,7 +70,7 @@ const MAP_LAYERS: MapLayer[] = [
   {
     id: "terrain",
     name: "Terrain",
-    url: "https://api.maptiler.com/maps/outdoor-v2/style.json?key=YOUR_MAPTILER_KEY",
+    url: `https://api.maptiler.com/maps/outdoor-v2/style.json?key=${MAPTILER_KEY}`,
     attribution:
       '© <a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
     maxZoom: 22,
@@ -297,11 +221,6 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     // Load places data for initial view (without bounds)
     loadPlaces(false);
 
-    // Notify that map is loaded
-    if (onLoad) {
-      onLoad();
-    }
-
     // Cleanup
     return () => {
       // Clear any pending timeouts
@@ -318,7 +237,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     };
     // We intentionally limit dependencies to avoid unnecessary re-initializations
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onLoad]);
+  }, []);
 
   // Add markers to the map
   const addMarkers = useCallback(
@@ -356,17 +275,14 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         // Create div element for the marker
         const markerElement = document.createElement("div");
         markerElement.className = "marker-container";
-        markerElementsRef.current.set(place._id, markerElement);
-
-        // Ensure we have a valid place object
-        const placeData = place;
+        markerElementsRef.current.set(place._id!, markerElement);
 
         // Create a React root and render PlaceMarker
         const root = createRoot(markerElement);
-        markerRootsRef.current.set(place._id, root);
+        markerRootsRef.current.set(place._id!, root);
         root.render(
           <PlaceMarker
-            place={placeData as any}
+            place={place}
             isSelected={selectedPlace?._id === place._id}
             onClick={(clickedPlace) => {
               setSelectedPlace(clickedPlace);
@@ -374,7 +290,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
 
               // Fly to location
               map.current?.flyTo({
-                center: clickedPlace.center.coordinates,
+                center: clickedPlace.center.coordinates as [number, number],
                 zoom: 14,
                 essential: true,
               });
@@ -387,10 +303,10 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           element: markerElement,
           anchor: "bottom",
         })
-          .setLngLat(place.center.coordinates)
+          .setLngLat(place.center.coordinates as [number, number])
           .addTo(map.current!);
 
-        markersRef.current.set(place._id, marker);
+        markersRef.current.set(place._id!, marker);
       });
     },
     [
@@ -477,65 +393,64 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         }
 
         // Call the backend API to fetch places
-        const response = await gets(
-          {
-            set: setParams,
-            get: {
-              data: {
+        const response = await gets({
+          set: setParams,
+          get: {
+            data: {
+              _id: 1,
+              name: 1,
+              description: 1,
+              center: 1,
+              address: 1,
+              contact: 1,
+              hoursOfOperation: 1,
+              category: {
+                _id: 1,
+                name: 1,
+                color: 1,
+                icon: 1,
+              },
+              tags: {
+                _id: 1,
+                name: 1,
+                color: 1,
+                icon: 1,
+              },
+              thumbnail: {
+                _id: 1,
+                name: 1,
+              },
+              gallery: {
+                _id: 1,
+                name: 1,
+                mimType: 1,
+                size: 1,
+              },
+              virtual_tours: {
                 _id: 1,
                 name: 1,
                 description: 1,
-                center: 1,
-                address: 1,
-                contact: 1,
-                hoursOfOperation: 1,
-                category: {
-                  _id: 1,
-                  name: 1,
-                  color: 1,
-                  icon: 1,
-                },
-                tags: {
-                  _id: 1,
-                  name: 1,
-                  color: 1,
-                  icon: 1,
-                },
-                thumbnail: {
+                panorama: {
                   _id: 1,
                   name: 1,
                 },
-                gallery: {
-                  _id: 1,
-                  name: 1,
-                  mimType: 1,
-                  size: 1,
-                },
-                virtual_tours: {
-                  _id: 1,
-                  name: 1,
-                  description: 1,
-                  panorama: {
-                    _id: 1,
-                    name: 1,
-                  },
-                  hotspots: 1,
-                  status: 1,
-                },
-                updatedAt: 1,
-                createdAt: 1,
+                hotspots: 1,
+                status: 1,
               },
-              metadata: {
-                total: 1,
-                page: 1,
-                limit: 1,
-                pageCount: 1,
-              },
+              updatedAt: 1,
+              createdAt: 1,
+            },
+            metadata: {
+              total: 1,
+              page: 1,
+              limit: 1,
+              pageCount: 1,
             },
           },
-          { signal: abortController.signal },
-        );
+        });
 
+        // For server actions, we can't truly cancel the request
+        // but we can still check if the component is still mounted before updating state
         if (abortController.signal.aborted) {
           // Request was cancelled, don't update state
           return;
@@ -547,14 +462,27 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
             ? response.body
             : response.body?.data || [];
 
-          if (placesData.length > 0) {
-            setPlaces(placesData);
-            setFilteredPlaces(placesData);
-            addMarkers(placesData);
+          // Convert string dates to Date objects for compatibility
+          const convertedPlacesData = placesData.map((place: any) => ({
+            ...place,
+            updatedAt:
+              typeof place.updatedAt === "string"
+                ? new Date(place.updatedAt)
+                : place.updatedAt,
+            createdAt:
+              typeof place.createdAt === "string"
+                ? new Date(place.createdAt)
+                : place.createdAt,
+          }));
+
+          if (convertedPlacesData.length > 0) {
+            setPlaces(convertedPlacesData);
+            setFilteredPlaces(convertedPlacesData);
+            addMarkers(convertedPlacesData);
 
             // If first load, zoom to fit all places
             if (isFirstLoad && !useBounds) {
-              fitMapToPlaces(placesData);
+              fitMapToPlaces(convertedPlacesData);
               setIsFirstLoad(false);
             }
           } else {
@@ -582,9 +510,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       } catch (error: any) {
         if (error.name === "AbortError") {
           // Request was cancelled, don't show error
-          console.log("Request cancelled");
         } else {
-          console.error("Error loading places:", error);
           if (!useBounds) {
             toast.error(t("map.errorLoadingPlaces") || "Error loading places");
             setPlaces([]);
@@ -669,23 +595,23 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       !selectedPlace?.virtual_tours ||
       selectedPlace.virtual_tours.length === 0
     ) {
-      console.warn("No virtual tours available for this place");
       setTourError("This place does not have virtual tours available");
       setIsTourLoading(false);
       return;
     }
 
-    const tour = selectedPlace.virtual_tours.find(
-      (tour) => tour._id === tourId,
-    );
+    // Type assertion to handle API response with panorama
+    const tourWithPanorama = selectedPlace.virtual_tours.find(
+      (vt) => vt._id === tourId,
+    ) as
+      | (VirtualTour & { panorama: { _id?: string; name: string } })
+      | undefined;
 
-    if (tour && tour.panorama && tour.panorama.name) {
-      console.log("Loading virtual tour:", tour.panorama.name);
-      setSelectedVirtualTour(tour);
+    if (tourWithPanorama && tourWithPanorama.panorama?.name) {
+      setSelectedVirtualTour(tourWithPanorama);
       setShowPlaceDetails(false);
       setIsTourLoading(false);
     } else {
-      console.error("Virtual tour is missing panorama image:", tour);
       setTourError("This virtual tour is missing its panorama image");
       setIsTourLoading(false);
     }
@@ -707,8 +633,16 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       const bounds = new maplibregl.LngLatBounds();
 
       places.forEach((place) => {
-        if (place.center && place.center.coordinates) {
-          bounds.extend(place.center.coordinates as [number, number]);
+        if (
+          place.center &&
+          place.center.coordinates &&
+          Array.isArray(place.center.coordinates) &&
+          place.center.coordinates.length >= 2
+        ) {
+          bounds.extend([
+            place.center.coordinates[0],
+            place.center.coordinates[1],
+          ] as [number, number]);
         }
       });
 
@@ -720,7 +654,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         });
       }
     } catch (error) {
-      console.error("Error fitting map to places:", error);
+      // Error handling for fitMapToPlaces can be added if needed
     }
   };
 
@@ -730,27 +664,14 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
 
     // Re-render markers to update selected state
     filteredPlaces.forEach((place) => {
-      const markerElement = markerElementsRef.current.get(place._id);
+      const markerElement = markerElementsRef.current.get(place._id!);
       if (markerElement) {
         // Reuse existing root instead of creating a new one
-        const root = markerRootsRef.current.get(place._id);
+        const root = markerRootsRef.current.get(place._id!);
         if (root) {
           root.render(
             <PlaceMarker
-              place={
-                {
-                  ...place,
-                  category:
-                    typeof place.category === "string"
-                      ? { name: place.category, color: "#4f46e5" }
-                      : place.category,
-                  tags: Array.isArray(place.tags)
-                    ? place.tags.map((tag) =>
-                        typeof tag === "string" ? { name: tag } : tag,
-                      )
-                    : place.tags,
-                } as any
-              }
+              place={place}
               isSelected={selectedPlace?._id === place._id}
               onClick={(clickedPlace) => {
                 setSelectedPlace(clickedPlace);
@@ -758,7 +679,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
 
                 // Fly to location
                 map.current?.flyTo({
-                  center: clickedPlace.center.coordinates,
+                  center: clickedPlace.center.coordinates as [number, number],
                   zoom: 14,
                   essential: true,
                 });
@@ -770,40 +691,6 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     });
   }, [selectedPlace?._id, filteredPlaces, map]);
 
-  // Legacy function for backward compatibility - can be removed later
-  const getMarkerIcon = (category: any): string => {
-    // Check if category is undefined/null
-    if (!category) return DEFAULT_ICON;
-
-    // Convert category object to string if needed
-    const categoryName =
-      typeof category === "object" ? category?.name : category;
-
-    if (!categoryName) return DEFAULT_ICON;
-
-    const iconMap: { [key: string]: string } = {
-      historical:
-        'url(\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="%23a855f7" viewBox="0 0 24 24"%3E%3Cpath d="M12 2l3 7h7l-5.5 4 2 7-6.5-5-6.5 5 2-7L2 9h7l3-7z"%3E%3C/path%3E%3C/svg%3E\')',
-      monument:
-        'url(\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="%233b82f6" viewBox="0 0 24 24"%3E%3Cpath d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"%3E%3C/path%3E%3C/svg%3E\')',
-      nature:
-        'url(\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="%2310b981" viewBox="0 0 24 24"%3E%3Cpath d="M14 6l-4.22 5.63 1.25 1.67L14 9.33 19 16h-8.46l-4.01-5.37L1 18h22L14 6zM5 16l1.52-2.03L8.04 16H5z"%3E%3C/path%3E%3C/svg%3E\')',
-      default:
-        'url(\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="%23ef4444" viewBox="0 0 24 24"%3E%3Cpath d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"%3E%3C/path%3E%3C/svg%3E\')',
-    };
-
-    // Convert to lowercase string safely
-    let categoryKey = "";
-    if (typeof categoryName === "string") {
-      categoryKey = categoryName.toLowerCase();
-    }
-    return iconMap[categoryKey] || iconMap.default;
-  };
-
-  // Default icon for fallback
-  const DEFAULT_ICON =
-    'url(\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="%23ef4444" viewBox="0 0 24 24"%3E%3Cpath d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"%3E%3C/path%3E%3C/svg%3E\')';
-
   // Filter places based on search and filters
   useEffect(() => {
     let filtered = [...places];
@@ -814,23 +701,31 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         (place) =>
           place.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           place.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          place.tags?.some((tag) =>
-            tag.toLowerCase().includes(searchQuery.toLowerCase()),
-          ),
+          place.tags?.some((tag) => {
+            const tagName = typeof tag === "object" ? tag.name : tag;
+            return tagName.toLowerCase().includes(searchQuery.toLowerCase());
+          }),
       );
     }
 
     // Apply category filter
     if (filters.categories && filters.categories.length > 0) {
-      filtered = filtered.filter((place) =>
-        filters.categories?.includes(place.category || ""),
-      );
+      filtered = filtered.filter((place) => {
+        const categoryName =
+          typeof place.category === "object"
+            ? place.category.name
+            : place.category;
+        return categoryName && filters.categories?.includes(categoryName);
+      });
     }
 
     // Apply tag filter
     if (filters.tags && filters.tags.length > 0) {
       filtered = filtered.filter((place) =>
-        place.tags?.some((tag) => filters.tags?.includes(tag)),
+        place.tags?.some((tag) => {
+          const tagName = typeof tag === "object" ? tag.name : tag;
+          return filters.tags?.includes(tagName);
+        }),
       );
     }
 
@@ -943,7 +838,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       bounds.extend(end);
       map.current.fitBounds(bounds, { padding: 100 });
     } catch (error) {
-      console.error("Error calculating route:", error);
+      // Error handling for calculateRoute can be added if needed
     }
   };
 
@@ -1005,7 +900,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
                   });
                 },
                 (error) => {
-                  console.error("Error getting location:", error);
+                  // Error getting user location can be handled here if needed
                 },
               );
             }
@@ -1023,7 +918,33 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         <AnimatePresence>
           {showSidebar && selectedPlace && (
             <PlaceSidebar
-              place={selectedPlace}
+              place={{
+                ...selectedPlace,
+                _id: selectedPlace._id || "",
+                name: selectedPlace.name || "",
+                description: selectedPlace.description || "",
+                center: (selectedPlace.center as {
+                  type: "Point";
+                  coordinates: [number, number];
+                }) || {
+                  type: "Point",
+                  coordinates: [0, 0],
+                },
+                category:
+                  typeof selectedPlace.category === "object"
+                    ? selectedPlace.category.name
+                    : selectedPlace.category || "",
+                tags: Array.isArray(selectedPlace.tags)
+                  ? selectedPlace.tags.map((tag) =>
+                      typeof tag === "object" ? tag.name : tag,
+                    )
+                  : selectedPlace.tags || [],
+                images:
+                  selectedPlace.gallery?.map(
+                    (img) =>
+                      `${getLesanBaseUrl()}/uploads/images/${typeof img === "object" ? img.name : img || ""}`,
+                  ) || [],
+              }}
               onClose={() => {
                 setShowSidebar(false);
                 setSelectedPlace(null);
@@ -1082,15 +1003,18 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         {/* Place Details Modal */}
         {selectedPlace && showPlaceDetails && (
           <PlaceDetailsModal
-            place={selectedPlace as PlaceData}
+            place={selectedPlace}
             onClose={() => setShowPlaceDetails(false)}
             onLaunchVirtualTour={handleLaunchVirtualTour}
           />
         )}
 
-        {selectedVirtualTour &&
-          selectedVirtualTour.panorama &&
-          selectedVirtualTour.panorama.name && (
+        {(() => {
+          // Type assertion to handle API response with panorama
+          const tourWithPanorama = selectedVirtualTour as
+            | (VirtualTour & { panorama: { _id?: string; name: string } })
+            | undefined;
+          return tourWithPanorama && tourWithPanorama.panorama?.name ? (
             <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex flex-col">
               {/* Tour Header */}
               <div className="bg-gray-800 text-white p-2 flex justify-between items-center">
@@ -1121,11 +1045,12 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
               {/* Tour Viewer */}
               <div className="flex-1">
                 <MyVertualTour
-                  imageUrl={`${getLesanBaseUrl()}/uploads/images/${selectedVirtualTour.panorama.name}`}
+                  imageUrl={`${getLesanBaseUrl()}/uploads/images/${tourWithPanorama.panorama.name}`}
                 />
               </div>
             </div>
-          )}
+          ) : null;
+        })()}
 
         {/* Tour Error Message */}
         {tourError && (
