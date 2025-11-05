@@ -21,10 +21,12 @@ export const file_relations = {
 		schemaName: "user",
 		optional: false,
 		type: "single" as RelationDataType,
+		excludes: ["summary", "createdAt", "updatedAt"],
 		relatedRelations: {
 			uploadedAssets: {
 				type: "multiple" as RelationDataType,
 				limit: 50,
+				excludes: ["alt_text", "createdAt", "updatedAt"],
 				sort: {
 					field: "_id",
 					order: "desc" as RelationSortOrderType,
