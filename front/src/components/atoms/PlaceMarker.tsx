@@ -3,65 +3,9 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { MapCenter } from "@/stores/mapStore";
+import { placeSchema } from "@/types/declarations/selectInp";
 
-export interface PlaceData {
-  _id: string;
-  name: string;
-  description: string;
-  center: {
-    type: "Point";
-    coordinates: [number, number];
-  };
-  category?: {
-    _id?: string;
-    name: string;
-    color?: string;
-    icon?: string;
-  };
-  tags?: {
-    _id?: string;
-    name: string;
-    color?: string;
-    icon?: string;
-  }[];
-  thumbnail?: {
-    _id?: string;
-    name: string;
-  };
-  gallery?: {
-    _id?: string;
-    name: string;
-    mimType: string;
-    size: number;
-    alt_text?: string;
-  }[];
-  virtual_tours?: {
-    _id: string;
-    name: string;
-    description?: string;
-    panorama: {
-      _id?: string;
-      name: string;
-    };
-    hotspots?: {
-      pitch: number;
-      yaw: number;
-      description?: string;
-      target?: string;
-    }[];
-    status: "draft" | "active" | "archived";
-  }[];
-  address?: string;
-  hoursOfOperation?: string;
-  contact?: {
-    phone?: string;
-    email?: string;
-    website?: string;
-    social?: string[];
-  };
-  updatedAt: Date;
-  createdAt: Date;
-}
+export type PlaceData = placeSchema;
 
 interface PlaceMarkerProps {
   place: PlaceData;
