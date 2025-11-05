@@ -48,9 +48,6 @@ export type userSchema = {
     name: string;
     mimType: string;
     size: number;
-    alt_text?: string;
-    createdAt: Date;
-    updatedAt: Date;
   }[];
   registered_places: {
     _id?: string;
@@ -112,13 +109,10 @@ export type fileSchema = {
     father_name?: string;
     gender: ("Male" | "Female");
     birth_date?: Date;
-    summary?: string;
     address?: string;
     level: ("Ghost" | "Manager" | "Editor" | "Ordinary");
     email: string;
     is_verified: boolean;
-    createdAt: Date;
-    updatedAt: Date;
   };
 };
 ;
@@ -966,9 +960,6 @@ export type ReqType = {
               name?: (0 | 1);
               mimType?: (0 | 1);
               size?: (0 | 1);
-              alt_text?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
             registered_places?: {
               _id?: (0 | 1);
@@ -1265,9 +1256,6 @@ export type ReqType = {
               name?: (0 | 1);
               mimType?: (0 | 1);
               size?: (0 | 1);
-              alt_text?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
             registered_places?: {
               _id?: (0 | 1);
@@ -1711,9 +1699,6 @@ export type ReqType = {
               name?: (0 | 1);
               mimType?: (0 | 1);
               size?: (0 | 1);
-              alt_text?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
             registered_places?: {
               _id?: (0 | 1);
@@ -1962,9 +1947,6 @@ export type ReqType = {
               name?: (0 | 1);
               mimType?: (0 | 1);
               size?: (0 | 1);
-              alt_text?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
             registered_places?: {
               _id?: (0 | 1);
@@ -2210,13 +2192,10 @@ export type ReqType = {
             father_name?: (0 | 1);
             gender?: (0 | 1);
             birth_date?: (0 | 1);
-            summary?: (0 | 1);
             address?: (0 | 1);
             level?: (0 | 1);
             email?: (0 | 1);
             is_verified?: (0 | 1);
-            createdAt?: (0 | 1);
-            updatedAt?: (0 | 1);
             avatar?: {
               _id?: (0 | 1);
               name?: (0 | 1);
@@ -2240,9 +2219,6 @@ export type ReqType = {
               name?: (0 | 1);
               mimType?: (0 | 1);
               size?: (0 | 1);
-              alt_text?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
             registered_places?: {
               _id?: (0 | 1);
@@ -2294,13 +2270,10 @@ export type ReqType = {
             father_name?: (0 | 1);
             gender?: (0 | 1);
             birth_date?: (0 | 1);
-            summary?: (0 | 1);
             address?: (0 | 1);
             level?: (0 | 1);
             email?: (0 | 1);
             is_verified?: (0 | 1);
-            createdAt?: (0 | 1);
-            updatedAt?: (0 | 1);
           };
         };
       };
@@ -2510,9 +2483,6 @@ export type ReqType = {
               name?: (0 | 1);
               mimType?: (0 | 1);
               size?: (0 | 1);
-              alt_text?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
             registered_places?: {
               _id?: (0 | 1);
@@ -2816,9 +2786,6 @@ export type ReqType = {
               name?: (0 | 1);
               mimType?: (0 | 1);
               size?: (0 | 1);
-              alt_text?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
             registered_places?: {
               _id?: (0 | 1);
@@ -3151,9 +3118,6 @@ export type ReqType = {
             name?: (0 | 1);
             mimType?: (0 | 1);
             size?: (0 | 1);
-            alt_text?: (0 | 1);
-            createdAt?: (0 | 1);
-            updatedAt?: (0 | 1);
           };
           registered_places?: {
             _id?: (0 | 1);
@@ -3215,13 +3179,10 @@ export type ReqType = {
               father_name?: (0 | 1);
               gender?: (0 | 1);
               birth_date?: (0 | 1);
-              summary?: (0 | 1);
               address?: (0 | 1);
               level?: (0 | 1);
               email?: (0 | 1);
               is_verified?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
           };
           national_card?: {
@@ -3239,13 +3200,10 @@ export type ReqType = {
               father_name?: (0 | 1);
               gender?: (0 | 1);
               birth_date?: (0 | 1);
-              summary?: (0 | 1);
               address?: (0 | 1);
               level?: (0 | 1);
               email?: (0 | 1);
               is_verified?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
           };
           uploadedAssets?: {
@@ -3253,9 +3211,6 @@ export type ReqType = {
             name?: (0 | 1);
             mimType?: (0 | 1);
             size?: (0 | 1);
-            alt_text?: (0 | 1);
-            createdAt?: (0 | 1);
-            updatedAt?: (0 | 1);
             uploader?: {
               _id?: (0 | 1);
               first_name?: (0 | 1);
@@ -3263,13 +3218,10 @@ export type ReqType = {
               father_name?: (0 | 1);
               gender?: (0 | 1);
               birth_date?: (0 | 1);
-              summary?: (0 | 1);
               address?: (0 | 1);
               level?: (0 | 1);
               email?: (0 | 1);
               is_verified?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
           };
           registered_places?: {
@@ -3458,13 +3410,10 @@ export type ReqType = {
               father_name?: (0 | 1);
               gender?: (0 | 1);
               birth_date?: (0 | 1);
-              summary?: (0 | 1);
               address?: (0 | 1);
               level?: (0 | 1);
               email?: (0 | 1);
               is_verified?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
           };
           national_card?: {
@@ -3482,13 +3431,10 @@ export type ReqType = {
               father_name?: (0 | 1);
               gender?: (0 | 1);
               birth_date?: (0 | 1);
-              summary?: (0 | 1);
               address?: (0 | 1);
               level?: (0 | 1);
               email?: (0 | 1);
               is_verified?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
           };
           uploadedAssets?: {
@@ -3496,9 +3442,6 @@ export type ReqType = {
             name?: (0 | 1);
             mimType?: (0 | 1);
             size?: (0 | 1);
-            alt_text?: (0 | 1);
-            createdAt?: (0 | 1);
-            updatedAt?: (0 | 1);
             uploader?: {
               _id?: (0 | 1);
               first_name?: (0 | 1);
@@ -3506,13 +3449,10 @@ export type ReqType = {
               father_name?: (0 | 1);
               gender?: (0 | 1);
               birth_date?: (0 | 1);
-              summary?: (0 | 1);
               address?: (0 | 1);
               level?: (0 | 1);
               email?: (0 | 1);
               is_verified?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
           };
           registered_places?: {
@@ -3712,9 +3652,6 @@ export type ReqType = {
               name?: (0 | 1);
               mimType?: (0 | 1);
               size?: (0 | 1);
-              alt_text?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
             registered_places?: {
               _id?: (0 | 1);
@@ -3796,9 +3733,6 @@ export type ReqType = {
             name?: (0 | 1);
             mimType?: (0 | 1);
             size?: (0 | 1);
-            alt_text?: (0 | 1);
-            createdAt?: (0 | 1);
-            updatedAt?: (0 | 1);
           };
           registered_places?: {
             _id?: (0 | 1);
@@ -3876,9 +3810,6 @@ export type ReqType = {
             name?: (0 | 1);
             mimType?: (0 | 1);
             size?: (0 | 1);
-            alt_text?: (0 | 1);
-            createdAt?: (0 | 1);
-            updatedAt?: (0 | 1);
           };
           registered_places?: {
             _id?: (0 | 1);
@@ -3959,9 +3890,6 @@ export type ReqType = {
             name?: (0 | 1);
             mimType?: (0 | 1);
             size?: (0 | 1);
-            alt_text?: (0 | 1);
-            createdAt?: (0 | 1);
-            updatedAt?: (0 | 1);
           };
           registered_places?: {
             _id?: (0 | 1);
@@ -4026,13 +3954,10 @@ export type ReqType = {
               father_name?: (0 | 1);
               gender?: (0 | 1);
               birth_date?: (0 | 1);
-              summary?: (0 | 1);
               address?: (0 | 1);
               level?: (0 | 1);
               email?: (0 | 1);
               is_verified?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
           };
           national_card?: {
@@ -4050,13 +3975,10 @@ export type ReqType = {
               father_name?: (0 | 1);
               gender?: (0 | 1);
               birth_date?: (0 | 1);
-              summary?: (0 | 1);
               address?: (0 | 1);
               level?: (0 | 1);
               email?: (0 | 1);
               is_verified?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
           };
           uploadedAssets?: {
@@ -4064,9 +3986,6 @@ export type ReqType = {
             name?: (0 | 1);
             mimType?: (0 | 1);
             size?: (0 | 1);
-            alt_text?: (0 | 1);
-            createdAt?: (0 | 1);
-            updatedAt?: (0 | 1);
             uploader?: {
               _id?: (0 | 1);
               first_name?: (0 | 1);
@@ -4074,13 +3993,10 @@ export type ReqType = {
               father_name?: (0 | 1);
               gender?: (0 | 1);
               birth_date?: (0 | 1);
-              summary?: (0 | 1);
               address?: (0 | 1);
               level?: (0 | 1);
               email?: (0 | 1);
               is_verified?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
           };
           registered_places?: {
@@ -4298,9 +4214,6 @@ export type ReqType = {
             name?: (0 | 1);
             mimType?: (0 | 1);
             size?: (0 | 1);
-            alt_text?: (0 | 1);
-            createdAt?: (0 | 1);
-            updatedAt?: (0 | 1);
           };
           registered_places?: {
             _id?: (0 | 1);
@@ -4373,9 +4286,6 @@ export type ReqType = {
             name?: (0 | 1);
             mimType?: (0 | 1);
             size?: (0 | 1);
-            alt_text?: (0 | 1);
-            createdAt?: (0 | 1);
-            updatedAt?: (0 | 1);
           };
           registered_places?: {
             _id?: (0 | 1);
@@ -4762,9 +4672,6 @@ export type ReqType = {
               name?: (0 | 1);
               mimType?: (0 | 1);
               size?: (0 | 1);
-              alt_text?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
             registered_places?: {
               _id?: (0 | 1);
@@ -5014,13 +4921,10 @@ export type ReqType = {
               father_name?: (0 | 1);
               gender?: (0 | 1);
               birth_date?: (0 | 1);
-              summary?: (0 | 1);
               address?: (0 | 1);
               level?: (0 | 1);
               email?: (0 | 1);
               is_verified?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
           };
           gallery?: {
@@ -5038,13 +4942,10 @@ export type ReqType = {
               father_name?: (0 | 1);
               gender?: (0 | 1);
               birth_date?: (0 | 1);
-              summary?: (0 | 1);
               address?: (0 | 1);
               level?: (0 | 1);
               email?: (0 | 1);
               is_verified?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
           };
           comments?: {
@@ -5218,9 +5119,6 @@ export type ReqType = {
                 name?: (0 | 1);
                 mimType?: (0 | 1);
                 size?: (0 | 1);
-                alt_text?: (0 | 1);
-                createdAt?: (0 | 1);
-                updatedAt?: (0 | 1);
               };
               registered_places?: {
                 _id?: (0 | 1);
@@ -5470,13 +5368,10 @@ export type ReqType = {
                 father_name?: (0 | 1);
                 gender?: (0 | 1);
                 birth_date?: (0 | 1);
-                summary?: (0 | 1);
                 address?: (0 | 1);
                 level?: (0 | 1);
                 email?: (0 | 1);
                 is_verified?: (0 | 1);
-                createdAt?: (0 | 1);
-                updatedAt?: (0 | 1);
               };
             };
             gallery?: {
@@ -5494,13 +5389,10 @@ export type ReqType = {
                 father_name?: (0 | 1);
                 gender?: (0 | 1);
                 birth_date?: (0 | 1);
-                summary?: (0 | 1);
                 address?: (0 | 1);
                 level?: (0 | 1);
                 email?: (0 | 1);
                 is_verified?: (0 | 1);
-                createdAt?: (0 | 1);
-                updatedAt?: (0 | 1);
               };
             };
             comments?: {
@@ -5787,9 +5679,6 @@ export type ReqType = {
               name?: (0 | 1);
               mimType?: (0 | 1);
               size?: (0 | 1);
-              alt_text?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
             registered_places?: {
               _id?: (0 | 1);
@@ -5986,9 +5875,6 @@ export type ReqType = {
               name?: (0 | 1);
               mimType?: (0 | 1);
               size?: (0 | 1);
-              alt_text?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
             registered_places?: {
               _id?: (0 | 1);
@@ -6280,9 +6166,6 @@ export type ReqType = {
               name?: (0 | 1);
               mimType?: (0 | 1);
               size?: (0 | 1);
-              alt_text?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
             registered_places?: {
               _id?: (0 | 1);
@@ -6364,9 +6247,6 @@ export type ReqType = {
               name?: (0 | 1);
               mimType?: (0 | 1);
               size?: (0 | 1);
-              alt_text?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
             registered_places?: {
               _id?: (0 | 1);
@@ -6542,9 +6422,6 @@ export type ReqType = {
               name?: (0 | 1);
               mimType?: (0 | 1);
               size?: (0 | 1);
-              alt_text?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
             registered_places?: {
               _id?: (0 | 1);
@@ -6626,9 +6503,6 @@ export type ReqType = {
               name?: (0 | 1);
               mimType?: (0 | 1);
               size?: (0 | 1);
-              alt_text?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
             registered_places?: {
               _id?: (0 | 1);
@@ -6954,13 +6828,10 @@ export type ReqType = {
               father_name?: (0 | 1);
               gender?: (0 | 1);
               birth_date?: (0 | 1);
-              summary?: (0 | 1);
               address?: (0 | 1);
               level?: (0 | 1);
               email?: (0 | 1);
               is_verified?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
           };
           registrar?: {
@@ -7000,9 +6871,6 @@ export type ReqType = {
               name?: (0 | 1);
               mimType?: (0 | 1);
               size?: (0 | 1);
-              alt_text?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
             registered_places?: {
               _id?: (0 | 1);
@@ -7173,13 +7041,10 @@ export type ReqType = {
               father_name?: (0 | 1);
               gender?: (0 | 1);
               birth_date?: (0 | 1);
-              summary?: (0 | 1);
               address?: (0 | 1);
               level?: (0 | 1);
               email?: (0 | 1);
               is_verified?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
           };
           registrar?: {
@@ -7219,9 +7084,6 @@ export type ReqType = {
               name?: (0 | 1);
               mimType?: (0 | 1);
               size?: (0 | 1);
-              alt_text?: (0 | 1);
-              createdAt?: (0 | 1);
-              updatedAt?: (0 | 1);
             };
             registered_places?: {
               _id?: (0 | 1);
