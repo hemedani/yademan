@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 import { createRoot } from "react-dom/client";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -179,6 +185,15 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
   const [tourError, setTourError] = useState<string | null>(null);
   const [isFetchingPlaces, setIsFetchingPlaces] = useState(false);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [showTopLoader, setShowTopLoader] = useState(false);
+
+  // Refs for debouncing, request cancellation, and bounds tracking
+  const mapMoveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const previousBoundsRef = useRef<{
+    sw: { lat: number; lng: number };
+    ne: { lat: number; lng: number };
+  } | null>(null);
 
   const t = useTranslations();
   const { isAuthenticated } = useAuth();
@@ -267,7 +282,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           ne: { lat: bounds.getNorth(), lng: bounds.getEast() },
         });
 
-        // Places are loaded via the dedicated effect with debounce
+        // Trigger the debounced handler to load places based on new bounds
+        handleMapMove();
       }
     });
 
@@ -278,8 +294,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       }
     });
 
-    // Load places data
-    loadPlaces();
+    // Load places data for initial view (without bounds)
+    loadPlaces(false);
 
     // Notify that map is loaded
     if (onLoad) {
@@ -288,6 +304,16 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
 
     // Cleanup
     return () => {
+      // Clear any pending timeouts
+      if (mapMoveTimeoutRef.current) {
+        clearTimeout(mapMoveTimeoutRef.current);
+      }
+
+      // Cancel any ongoing requests
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
       map.current?.remove();
     };
     // We intentionally limit dependencies to avoid unnecessary re-initializations
@@ -378,127 +404,256 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     ],
   );
 
-  // Load places from backend
-  const loadPlaces = useCallback(async () => {
-    if (isFetchingPlaces) return;
+  // Load places from backend with AbortController for request cancellation
+  const loadPlaces = useCallback(
+    async (useBounds = false) => {
+      // Cancel any in-flight request
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
 
-    setIsLoading(true);
-    setIsFetchingPlaces(true);
+      // Create new abort controller for this request
+      const abortController = new AbortController();
+      abortControllerRef.current = abortController;
 
-    try {
-      // Get current map bounds to fetch places within visible area
-      const mapBounds = getCurrentBounds();
+      // Only show top loader for map-driven requests (not initial load)
+      if (useBounds) {
+        setShowTopLoader(true);
+      } else {
+        setIsLoading(true);
+      }
 
-      // Call the backend API to fetch places
-      const response = await gets({
-        set: {
+      setIsFetchingPlaces(true);
+
+      try {
+        // Prepare the base request parameters
+        let setParams: any = {
           page: 1,
           limit: 50,
           status: "active",
-        },
-        get: {
-          data: {
-            _id: 1,
-            name: 1,
-            description: 1,
-            center: 1,
-            address: 1,
-            contact: 1,
-            hoursOfOperation: 1,
-            category: {
-              _id: 1,
-              name: 1,
-              color: 1,
-              icon: 1,
-            },
-            tags: {
-              _id: 1,
-              name: 1,
-              color: 1,
-              icon: 1,
-            },
-            thumbnail: {
-              _id: 1,
-              name: 1,
-            },
-            gallery: {
-              _id: 1,
-              name: 1,
-              mimType: 1,
-              size: 1,
-            },
-            virtual_tours: {
-              _id: 1,
-              name: 1,
-              description: 1,
-              panorama: {
+        };
+
+        // If we're using bounds for the request, add geospatial filters
+        if (useBounds && map.current) {
+          const bounds = map.current.getBounds();
+          const center = map.current.getCenter();
+          const zoom = map.current.getZoom();
+
+          // Calculate approximate distance from zoom level (meters)
+          // This is a rough estimation: distance decreases as zoom increases
+          const approxDistance =
+            (40075000 * Math.cos((center.lat * Math.PI) / 180)) /
+            Math.pow(2, zoom + 8);
+
+          // Use the bounds to create a polygon for the area filter
+          const sw = bounds.getSouthWest();
+          const ne = bounds.getNorthEast();
+
+          // Create a polygon from the bounds
+          const polygon = {
+            type: "Polygon" as const,
+            coordinates: [
+              [
+                [sw.lng, sw.lat],
+                [ne.lng, sw.lat],
+                [ne.lng, ne.lat],
+                [sw.lng, ne.lat],
+                [sw.lng, sw.lat], // Close the polygon
+              ],
+            ] as any[][],
+          };
+
+          // Add the area filter to the request
+          setParams = {
+            ...setParams,
+            area: polygon,
+            // Alternative: use near + maxDistance if area doesn't work
+            // near: {
+            //   type: "Point" as const,
+            //   coordinates: [center.lng, center.lat]
+            // },
+            // maxDistance: approxDistance
+          };
+        }
+
+        // Call the backend API to fetch places
+        const response = await gets(
+          {
+            set: setParams,
+            get: {
+              data: {
                 _id: 1,
                 name: 1,
+                description: 1,
+                center: 1,
+                address: 1,
+                contact: 1,
+                hoursOfOperation: 1,
+                category: {
+                  _id: 1,
+                  name: 1,
+                  color: 1,
+                  icon: 1,
+                },
+                tags: {
+                  _id: 1,
+                  name: 1,
+                  color: 1,
+                  icon: 1,
+                },
+                thumbnail: {
+                  _id: 1,
+                  name: 1,
+                },
+                gallery: {
+                  _id: 1,
+                  name: 1,
+                  mimType: 1,
+                  size: 1,
+                },
+                virtual_tours: {
+                  _id: 1,
+                  name: 1,
+                  description: 1,
+                  panorama: {
+                    _id: 1,
+                    name: 1,
+                  },
+                  hotspots: 1,
+                  status: 1,
+                },
+                updatedAt: 1,
+                createdAt: 1,
               },
-              hotspots: 1,
-              status: 1,
+              metadata: {
+                total: 1,
+                page: 1,
+                limit: 1,
+                pageCount: 1,
+              },
             },
-            updatedAt: 1,
-            createdAt: 1,
           },
-          metadata: {
-            total: 1,
-            page: 1,
-            limit: 1,
-            pageCount: 1,
-          },
-        },
-      });
+          { signal: abortController.signal },
+        );
 
-      if (response.success) {
-        // Extract place data from response
-        const placesData = Array.isArray(response.body)
-          ? response.body
-          : response.body?.data || [];
+        if (abortController.signal.aborted) {
+          // Request was cancelled, don't update state
+          return;
+        }
 
-        if (placesData.length > 0) {
-          setPlaces(placesData);
-          setFilteredPlaces(placesData);
-          addMarkers(placesData);
+        if (response.success) {
+          // Extract place data from response
+          const placesData = Array.isArray(response.body)
+            ? response.body
+            : response.body?.data || [];
 
-          // If first load, zoom to fit all places
-          if (isFirstLoad) {
-            fitMapToPlaces(placesData);
-            setIsFirstLoad(false);
+          if (placesData.length > 0) {
+            setPlaces(placesData);
+            setFilteredPlaces(placesData);
+            addMarkers(placesData);
+
+            // If first load, zoom to fit all places
+            if (isFirstLoad && !useBounds) {
+              fitMapToPlaces(placesData);
+              setIsFirstLoad(false);
+            }
+          } else {
+            // Don't clear places if it's a bounds update and we already have places
+            if (!useBounds || places.length === 0) {
+              setPlaces([]);
+              setFilteredPlaces([]);
+              if (!useBounds) {
+                toast(t("map.noPlacesFound") || "No places found");
+              }
+            }
           }
         } else {
-          setPlaces([]);
-          setFilteredPlaces([]);
-          toast(t("map.noPlacesFound") || "No places found");
+          // Don't clear places if it's a bounds update and we already have places
+          if (!useBounds || places.length === 0) {
+            setPlaces([]);
+            setFilteredPlaces([]);
+            if (!useBounds) {
+              toast.error(
+                t("errors.failedToFetchPlaces") || "Failed to fetch places",
+              );
+            }
+          }
         }
-      } else {
-        setPlaces([]);
-        setFilteredPlaces([]);
-        toast.error(
-          t("errors.failedToFetchPlaces") || "Failed to fetch places",
-        );
+      } catch (error: any) {
+        if (error.name === "AbortError") {
+          // Request was cancelled, don't show error
+          console.log("Request cancelled");
+        } else {
+          console.error("Error loading places:", error);
+          if (!useBounds) {
+            toast.error(t("map.errorLoadingPlaces") || "Error loading places");
+            setPlaces([]);
+            setFilteredPlaces([]);
+          }
+        }
+      } finally {
+        if (!abortController.signal.aborted) {
+          if (useBounds) {
+            setShowTopLoader(false);
+          } else {
+            setIsLoading(false);
+          }
+          setIsFetchingPlaces(false);
+        }
       }
-    } catch (error) {
-      console.error("Error loading places:", error);
-      toast.error(t("map.errorLoadingPlaces") || "Error loading places");
-      setPlaces([]);
-      setFilteredPlaces([]);
-    } finally {
-      setIsLoading(false);
-      setIsFetchingPlaces(false);
+    },
+    [
+      t,
+      isFirstLoad,
+      setFilteredPlaces,
+      setIsFirstLoad,
+      setIsFetchingPlaces,
+      setPlaces,
+      addMarkers,
+      places.length, // Add places.length to the dependency array for the conditional logic
+    ],
+  );
+
+  // Debounced handler for map movement events with bounds comparison
+  const handleMapMove = useCallback(() => {
+    if (!map.current) return;
+
+    // Get current bounds
+    const currentBounds = map.current.getBounds();
+    const currentBoundsObj = {
+      sw: { lat: currentBounds.getSouth(), lng: currentBounds.getWest() },
+      ne: { lat: currentBounds.getNorth(), lng: currentBounds.getEast() },
+    };
+
+    // Check if bounds have changed significantly (threshold: 0.001 degrees ~ 111 meters)
+    if (previousBoundsRef.current) {
+      const latDiff =
+        Math.abs(currentBoundsObj.sw.lat - previousBoundsRef.current.sw.lat) +
+        Math.abs(currentBoundsObj.ne.lat - previousBoundsRef.current.ne.lat);
+      const lngDiff =
+        Math.abs(currentBoundsObj.sw.lng - previousBoundsRef.current.sw.lng) +
+        Math.abs(currentBoundsObj.ne.lng - previousBoundsRef.current.ne.lng);
+
+      // If bounds haven't changed significantly, don't fetch again
+      if (latDiff < 0.002 && lngDiff < 0.002) {
+        return;
+      }
     }
-  }, [
-    getCurrentBounds,
-    t,
-    isFirstLoad,
-    setFilteredPlaces,
-    setIsFirstLoad,
-    setIsFetchingPlaces,
-    setIsLoading,
-    setPlaces,
-    addMarkers,
-    isFetchingPlaces,
-  ]);
+
+    // Update previous bounds
+    previousBoundsRef.current = currentBoundsObj;
+
+    // Clear any existing timeout
+    if (mapMoveTimeoutRef.current) {
+      clearTimeout(mapMoveTimeoutRef.current);
+    }
+
+    // Set a new timeout to wait for 200ms after the last movement
+    mapMoveTimeoutRef.current = setTimeout(() => {
+      // Fetch places using the current map bounds
+      loadPlaces(true); // Use bounds for this request
+    }, 200);
+  }, [loadPlaces]);
 
   // The addMarkers function has been moved up before loadPlaces
 
@@ -793,150 +948,193 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
   };
 
   return (
-    <div className="relative w-full h-full">
-      {/* Loading overlay */}
-      <AnimatePresence>
-        {isLoading && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm"
-          >
-            <div className="text-center">
-              <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-              <p className="text-gray-600">{t("Common.loading")}</p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Map container */}
-      <div ref={mapContainer} className="w-full h-full" />
-
-      {/* Map controls */}
-      <MapControls
-        onZoomIn={() => map.current?.zoomIn()}
-        onZoomOut={() => map.current?.zoomOut()}
-        onResetView={() => {
-          map.current?.flyTo({
-            center: [51.389, 35.6892],
-            zoom: 6,
-            essential: true,
-          });
-        }}
-        onToggleRouting={() => setShowRoutePanel(!showRoutePanel)}
-        onLocateUser={() => {
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-              (position) => {
-                map.current?.flyTo({
-                  center: [position.coords.longitude, position.coords.latitude],
-                  zoom: 14,
-                  essential: true,
-                });
-              },
-              (error) => {
-                console.error("Error getting location:", error);
-              },
-            );
+    <>
+      <style jsx global>{`
+        @keyframes progress {
+          0% {
+            transform: translateX(-100%);
           }
-        }}
-      />
-
-      {/* Layer switcher */}
-      <MapLayerSwitcher
-        layers={MAP_LAYERS}
-        currentLayer={currentLayer}
-        onLayerChange={handleLayerChange}
-      />
-
-      {/* Place sidebar */}
-      <AnimatePresence>
-        {showSidebar && selectedPlace && (
-          <PlaceSidebar
-            place={selectedPlace}
-            onClose={() => {
-              setShowSidebar(false);
-              setSelectedPlace(null);
-            }}
-            onNavigate={(coords: [number, number]) => {
-              setRouteEnd(coords);
-              setShowRoutePanel(true);
-            }}
-            isAuthenticated={isAuthenticated}
-          />
+          50% {
+            transform: translateX(0%);
+          }
+          100% {
+            transform: translateX(100%);
+          }
+        }
+        .animate-progress {
+          animation: progress 1.5s infinite ease-in-out;
+        }
+      `}</style>
+      <div className="relative w-full h-full">
+        {/* Top progress bar loader - only for map-driven requests */}
+        {showTopLoader && (
+          <div className="absolute top-0 left-0 right-0 h-1 z-50 overflow-hidden bg-gray-200">
+            <div
+              className="animate-progress bg-blue-500 h-full w-full transition-all duration-200 ease-out"
+              style={{ width: "100%" }}
+            ></div>
+          </div>
         )}
-      </AnimatePresence>
 
-      {/* Route panel */}
-      <AnimatePresence>
-        {showRoutePanel && (
-          <RoutePanel
-            start={routeStart}
-            end={routeEnd}
-            onClose={() => setShowRoutePanel(false)}
-            onCalculateRoute={calculateRoute}
-            onSetStart={setRouteStart}
-            onSetEnd={setRouteEnd}
-          />
-        )}
-      </AnimatePresence>
+        {/* Map container */}
+        <div ref={mapContainer} className="w-full h-full" />
 
-      {/* Stats overlay */}
-      <div className="absolute bottom-20 left-4 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg p-3 text-sm">
-        <div className="flex items-center gap-2 text-gray-600">
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-            />
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-          </svg>
-          <span>
-            {filteredPlaces.length} {t("Location.locationsFound")}
-          </span>
-        </div>
-      </div>
-
-      {/* Place Details Modal */}
-      {selectedPlace && showPlaceDetails && (
-        <PlaceDetailsModal
-          place={selectedPlace as PlaceData}
-          onClose={() => setShowPlaceDetails(false)}
-          onLaunchVirtualTour={handleLaunchVirtualTour}
+        {/* Map controls */}
+        <MapControls
+          onZoomIn={() => map.current?.zoomIn()}
+          onZoomOut={() => map.current?.zoomOut()}
+          onResetView={() => {
+            map.current?.flyTo({
+              center: [51.389, 35.6892],
+              zoom: 6,
+              essential: true,
+            });
+          }}
+          onToggleRouting={() => setShowRoutePanel(!showRoutePanel)}
+          onLocateUser={() => {
+            if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(
+                (position) => {
+                  map.current?.flyTo({
+                    center: [
+                      position.coords.longitude,
+                      position.coords.latitude,
+                    ],
+                    zoom: 14,
+                    essential: true,
+                  });
+                },
+                (error) => {
+                  console.error("Error getting location:", error);
+                },
+              );
+            }
+          }}
         />
-      )}
 
-      {selectedVirtualTour &&
-        selectedVirtualTour.panorama &&
-        selectedVirtualTour.panorama.name && (
-          <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex flex-col">
-            {/* Tour Header */}
-            <div className="bg-gray-800 text-white p-2 flex justify-between items-center">
-              <h2 className="text-lg font-medium">
-                {selectedPlace?.name || "Virtual Tour"}
-              </h2>
-              <button
-                onClick={handleCloseTour}
-                className="p-1 rounded-full hover:bg-gray-700"
-                aria-label="Close tour"
-              >
+        {/* Layer switcher */}
+        <MapLayerSwitcher
+          layers={MAP_LAYERS}
+          currentLayer={currentLayer}
+          onLayerChange={handleLayerChange}
+        />
+
+        {/* Place sidebar */}
+        <AnimatePresence>
+          {showSidebar && selectedPlace && (
+            <PlaceSidebar
+              place={selectedPlace}
+              onClose={() => {
+                setShowSidebar(false);
+                setSelectedPlace(null);
+              }}
+              onNavigate={(coords: [number, number]) => {
+                setRouteEnd(coords);
+                setShowRoutePanel(true);
+              }}
+              isAuthenticated={isAuthenticated}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* Route panel */}
+        <AnimatePresence>
+          {showRoutePanel && (
+            <RoutePanel
+              start={routeStart}
+              end={routeEnd}
+              onClose={() => setShowRoutePanel(false)}
+              onCalculateRoute={calculateRoute}
+              onSetStart={setRouteStart}
+              onSetEnd={setRouteEnd}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* Stats overlay */}
+        <div className="absolute bottom-20 left-4 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg p-3 text-sm">
+          <div className="flex items-center gap-2 text-gray-600">
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+            <span>
+              {filteredPlaces.length} {t("Location.locationsFound")}
+            </span>
+          </div>
+        </div>
+
+        {/* Place Details Modal */}
+        {selectedPlace && showPlaceDetails && (
+          <PlaceDetailsModal
+            place={selectedPlace as PlaceData}
+            onClose={() => setShowPlaceDetails(false)}
+            onLaunchVirtualTour={handleLaunchVirtualTour}
+          />
+        )}
+
+        {selectedVirtualTour &&
+          selectedVirtualTour.panorama &&
+          selectedVirtualTour.panorama.name && (
+            <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex flex-col">
+              {/* Tour Header */}
+              <div className="bg-gray-800 text-white p-2 flex justify-between items-center">
+                <h2 className="text-lg font-medium">
+                  {selectedPlace?.name || "Virtual Tour"}
+                </h2>
+                <button
+                  onClick={handleCloseTour}
+                  className="p-1 rounded-full hover:bg-gray-700"
+                  aria-label="Close tour"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+              {/* Tour Viewer */}
+              <div className="flex-1">
+                <MyVertualTour
+                  imageUrl={`${getLesanBaseUrl()}/uploads/images/${selectedVirtualTour.panorama.name}`}
+                />
+              </div>
+            </div>
+          )}
+
+        {/* Tour Error Message */}
+        {tourError && (
+          <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center">
+            <div className="bg-white p-6 rounded-lg max-w-md text-center">
+              <div className="text-red-500 mb-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
+                  className="h-12 w-12 mx-auto"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -945,54 +1143,25 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                Virtual Tour Error
+              </h3>
+              <p className="text-gray-600 mb-4">{tourError}</p>
+              <button
+                onClick={handleCloseTour}
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              >
+                Close
               </button>
-            </div>
-            {/* Tour Viewer */}
-            <div className="flex-1">
-              <MyVertualTour
-                imageUrl={`${getLesanBaseUrl()}/uploads/images/${selectedVirtualTour.panorama.name}`}
-              />
             </div>
           </div>
         )}
-
-      {/* Tour Error Message */}
-      {tourError && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg max-w-md text-center">
-            <div className="text-red-500 mb-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-12 w-12 mx-auto"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Virtual Tour Error
-            </h3>
-            <p className="text-gray-600 mb-4">{tourError}</p>
-            <button
-              onClick={handleCloseTour}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+      </div>
+    </>
   );
 };
 
