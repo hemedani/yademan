@@ -22,7 +22,7 @@ const MapControls: React.FC<MapControlsProps> = ({
   const t = useTranslations();
 
   const buttonClass =
-    "w-10 h-10 bg-white hover:bg-gray-50 rounded-lg shadow-md border border-gray-200 flex items-center justify-center transition-all duration-200 hover:shadow-lg active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2";
+    "w-10 h-10 bg-[#121212] hover:bg-[#1e1e1e] rounded-lg shadow-md border border-[#333] flex items-center justify-center transition-all duration-200 hover:shadow-lg active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#FF007A] focus:ring-offset-2 focus:ring-offset-[#000]";
 
   return (
     <motion.div
@@ -38,7 +38,7 @@ const MapControls: React.FC<MapControlsProps> = ({
         title="بزرگنمایی"
       >
         <svg
-          className="w-5 h-5 text-gray-700"
+          className="w-5 h-5 text-white"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -60,7 +60,7 @@ const MapControls: React.FC<MapControlsProps> = ({
         title="کوچک‌نمایی"
       >
         <svg
-          className="w-5 h-5 text-gray-700"
+          className="w-5 h-5 text-white"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -74,7 +74,7 @@ const MapControls: React.FC<MapControlsProps> = ({
         </svg>
       </button>
 
-      <div className="w-10 h-px bg-gray-300 my-1" />
+      <div className="w-10 h-px bg-[#333] my-1" />
 
       {/* Reset View */}
       <button
@@ -84,7 +84,7 @@ const MapControls: React.FC<MapControlsProps> = ({
         title="نمای پیش‌فرض"
       >
         <svg
-          className="w-5 h-5 text-gray-700"
+          className="w-5 h-5 text-white"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -106,7 +106,7 @@ const MapControls: React.FC<MapControlsProps> = ({
         title="موقعیت من"
       >
         <svg
-          className="w-5 h-5 text-gray-700"
+          className="w-5 h-5 text-white"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -126,17 +126,17 @@ const MapControls: React.FC<MapControlsProps> = ({
         </svg>
       </button>
 
-      <div className="w-10 h-px bg-gray-300 my-1" />
+      <div className="w-10 h-px bg-[#333] my-1" />
 
       {/* Toggle Routing */}
       <button
         onClick={onToggleRouting}
-        className={`${buttonClass} bg-blue-50 hover:bg-blue-100 border-blue-200`}
+        className={`${buttonClass} bg-[#FF007A]/20 hover:bg-[#FF007A]/30 border-[#FF007A]`}
         aria-label="Toggle routing"
         title="مسیریابی"
       >
         <svg
-          className="w-5 h-5 text-blue-600"
+          className="w-5 h-5 text-[#FF007A]"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -157,7 +157,7 @@ const MapControls: React.FC<MapControlsProps> = ({
         title="اندازه‌گیری فاصله"
       >
         <svg
-          className="w-5 h-5 text-gray-700"
+          className="w-5 h-5 text-white"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"

@@ -28,6 +28,22 @@ const MapLayerSwitcher: React.FC<MapLayerSwitcherProps> = ({
 
   const getLayerIcon = (layerId: string) => {
     switch (layerId) {
+      case "osm-dark":
+        return (
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+            />
+          </svg>
+        );
       case "osm-standard":
         return (
           <svg
@@ -122,7 +138,9 @@ const MapLayerSwitcher: React.FC<MapLayerSwitcherProps> = ({
     switch (layerId) {
       case "osm-standard":
         return (
-          <div className={`${previewClasses} bg-gradient-to-br from-gray-100 to-gray-200`}>
+          <div
+            className={`${previewClasses} bg-gradient-to-br from-gray-100 to-gray-200`}
+          >
             <div className="w-full h-full flex items-center justify-center">
               <div className="space-y-1">
                 <div className="w-8 h-0.5 bg-gray-400" />
@@ -134,29 +152,33 @@ const MapLayerSwitcher: React.FC<MapLayerSwitcherProps> = ({
         );
       case "osm-vector":
         return (
-          <div className={`${previewClasses} bg-gradient-to-br from-blue-50 to-blue-100`}>
+          <div
+            className={`${previewClasses} bg-gradient-to-br from-blue-50 to-blue-100`}
+          >
             <div className="w-full h-full flex items-center justify-center">
               <div className="grid grid-cols-2 gap-0.5">
-                <div className="w-3 h-3 bg-blue-300 rounded-sm" />
-                <div className="w-3 h-3 bg-blue-400 rounded-sm" />
-                <div className="w-3 h-3 bg-blue-400 rounded-sm" />
-                <div className="w-3 h-3 bg-blue-300 rounded-sm" />
+                <div className="w-3 h-3 bg-[#FF007A] rounded-sm" />
+                <div className="w-3 h-3 bg-[#00FF85] rounded-sm" />
+                <div className="w-3 h-3 bg-[#A020F0] rounded-sm" />
+                <div className="w-3 h-3 bg-[#BFFF00] rounded-sm" />
               </div>
             </div>
           </div>
         );
       case "satellite":
         return (
-          <div className={`${previewClasses} bg-gradient-to-br from-green-900 to-green-700`}>
+          <div
+            className={`${previewClasses} bg-gradient-to-br from-gray-900 to-black`}
+          >
             <div className="w-full h-full flex items-center justify-center">
               <div className="space-y-1">
                 <div className="flex gap-1">
-                  <div className="w-2 h-2 bg-green-500 rounded-full" />
-                  <div className="w-2 h-2 bg-green-600 rounded-full" />
+                  <div className="w-2 h-2 bg-[#00FF85] rounded-full" />
+                  <div className="w-2 h-2 bg-[#BFFF00] rounded-full" />
                 </div>
                 <div className="flex gap-1">
-                  <div className="w-2 h-2 bg-green-600 rounded-full" />
-                  <div className="w-2 h-2 bg-green-500 rounded-full" />
+                  <div className="w-2 h-2 bg-[#A020F0] rounded-full" />
+                  <div className="w-2 h-2 bg-[#FF007A] rounded-full" />
                 </div>
               </div>
             </div>
@@ -164,17 +186,42 @@ const MapLayerSwitcher: React.FC<MapLayerSwitcherProps> = ({
         );
       case "terrain":
         return (
-          <div className={`${previewClasses} bg-gradient-to-br from-amber-100 to-amber-200`}>
+          <div
+            className={`${previewClasses} bg-gradient-to-br from-amber-900 to-amber-700`}
+          >
             <div className="w-full h-full flex items-center justify-center">
-              <svg className="w-6 h-6 text-amber-600" fill="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="w-6 h-6 text-amber-300"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path d="M14 6l-4.22 5.63 1.25 1.67L14 9.33 19 16h-8.46l-4.01-5.37L1 18h22L14 6z" />
               </svg>
             </div>
           </div>
         );
+      case "osm-dark":
+        return (
+          <div
+            className={`${previewClasses} bg-gradient-to-br from-gray-900 to-black`}
+          >
+            <div className="w-full h-full flex items-center justify-center">
+              <div className="grid grid-cols-3 gap-0.5">
+                <div className="w-1 h-1 bg-[#FF007A] rounded-sm" />
+                <div className="w-1 h-1 bg-[#00FF85] rounded-sm" />
+                <div className="w-1 h-1 bg-[#A020F0] rounded-sm" />
+                <div className="w-1 h-1 bg-[#BFFF00] rounded-sm" />
+                <div className="w-1 h-1 bg-[#FF007A] rounded-sm" />
+                <div className="w-1 h-1 bg-[#00FF85] rounded-sm" />
+              </div>
+            </div>
+          </div>
+        );
       default:
         return (
-          <div className={`${previewClasses} bg-gradient-to-br from-gray-200 to-gray-300`}>
+          <div
+            className={`${previewClasses} bg-gradient-to-br from-gray-200 to-gray-300`}
+          >
             <div className="w-full h-full" />
           </div>
         );
@@ -188,7 +235,7 @@ const MapLayerSwitcher: React.FC<MapLayerSwitcherProps> = ({
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="w-12 h-12 bg-white rounded-lg shadow-md border border-gray-200 flex items-center justify-center hover:shadow-lg transition-shadow"
+        className="w-12 h-12 bg-[#121212] rounded-lg shadow-md border border-[#333] flex items-center justify-center hover:shadow-lg transition-shadow hover:border-[#FF007A] hover:shadow-[0_0_10px_rgba(255,0,122,0.5)]"
         aria-label="تغییر نوع نقشه"
         title="تغییر نوع نقشه"
       >
@@ -214,7 +261,7 @@ const MapLayerSwitcher: React.FC<MapLayerSwitcherProps> = ({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: -10 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="absolute top-14 right-0 bg-white rounded-xl shadow-2xl border border-gray-200 p-3 min-w-[180px] z-40"
+              className="absolute top-14 right-0 bg-[#121212] rounded-xl shadow-2xl border border-[#333] p-3 min-w-[180px] z-40"
             >
               <div className="space-y-2">
                 {layers.map((layer) => (
@@ -226,12 +273,12 @@ const MapLayerSwitcher: React.FC<MapLayerSwitcherProps> = ({
                     }}
                     className={`w-full flex items-center gap-3 p-2 rounded-lg transition-all ${
                       currentLayer.id === layer.id
-                        ? "bg-blue-50 border border-blue-200"
-                        : "hover:bg-gray-50 border border-transparent"
+                        ? "bg-[#1e1e1e] border border-[#FF007A]"
+                        : "hover:bg-[#1e1e1e] border border-transparent"
                     }`}
                   >
                     {/* Layer Preview */}
-                    <div className="w-10 h-10 rounded overflow-hidden flex-shrink-0 border border-gray-200">
+                    <div className="w-10 h-10 rounded overflow-hidden flex-shrink-0 border border-[#333]">
                       {getLayerPreview(layer.id)}
                     </div>
 
@@ -241,8 +288,8 @@ const MapLayerSwitcher: React.FC<MapLayerSwitcherProps> = ({
                         <span
                           className={`text-sm font-medium ${
                             currentLayer.id === layer.id
-                              ? "text-blue-700"
-                              : "text-gray-700"
+                              ? "text-[#FF007A]"
+                              : "text-white"
                           }`}
                         >
                           {layer.name}
@@ -251,21 +298,29 @@ const MapLayerSwitcher: React.FC<MapLayerSwitcherProps> = ({
                           <motion.div
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
-                            className="w-2 h-2 bg-blue-600 rounded-full"
+                            className="w-2 h-2 bg-[#FF007A] rounded-full"
                           />
                         )}
                       </div>
                       {layer.id === "satellite" && (
-                        <span className="text-xs text-gray-500">ماهواره‌ای</span>
+                        <span className="text-xs text-[#a0a0a0]">
+                          ماهواره‌ای
+                        </span>
                       )}
                       {layer.id === "terrain" && (
-                        <span className="text-xs text-gray-500">توپوگرافی</span>
+                        <span className="text-xs text-[#a0a0a0]">
+                          توپوگرافی
+                        </span>
                       )}
-                      {layer.id === "osm-vector" && (
-                        <span className="text-xs text-gray-500">برداری</span>
+                      {layer.id === "osm-dark-vector" && (
+                        <span className="text-xs text-[#a0a0a0]">
+                          برداری تیره
+                        </span>
                       )}
-                      {layer.id === "osm-standard" && (
-                        <span className="text-xs text-gray-500">استاندارد</span>
+                      {layer.id === "osm-dark" && (
+                        <span className="text-xs text-[#a0a0a0]">
+                          پایه تیره
+                        </span>
                       )}
                     </div>
                   </button>
@@ -273,11 +328,11 @@ const MapLayerSwitcher: React.FC<MapLayerSwitcherProps> = ({
               </div>
 
               {/* Additional Options */}
-              <div className="mt-3 pt-3 border-t border-gray-200">
-                <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer hover:text-gray-900">
+              <div className="mt-3 pt-3 border-t border-[#333]">
+                <label className="flex items-center gap-2 text-sm text-[#a0a0a0] cursor-pointer hover:text-white">
                   <input
                     type="checkbox"
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="rounded border-[#333] text-[#FF007A] focus:ring-[#FF007A] bg-[#1e1e1e]"
                     defaultChecked
                   />
                   <span>نمایش ترافیک</span>

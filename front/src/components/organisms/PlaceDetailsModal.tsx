@@ -72,8 +72,8 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
 
         <motion.div
           className={`
-            relative max-h-[90vh] w-full max-w-3xl overflow-hidden rounded-lg bg-white shadow-xl
-            flex flex-col
+            relative max-h-[90vh] w-full max-w-3xl overflow-hidden rounded-lg bg-[#121212] shadow-xl
+            flex flex-col border border-[#333]
             ${isFullScreen ? "fixed inset-0 max-w-none max-h-none rounded-none" : ""}
           `}
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -98,7 +98,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
               {/* Back button */}
               <button
                 onClick={onClose}
-                className="p-2 rounded-full bg-black/20 hover:bg-black/40 transition-colors text-white"
+                className="p-2 rounded-full bg-[#1e1e1e] hover:bg-[#333] transition-colors text-white"
                 aria-label={t("Common.close")}
               >
                 <svg
@@ -122,9 +122,9 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                 {hasVirtualTours && place.virtual_tours && (
                   <button
                     onClick={() =>
-                      onLaunchVirtualTour?.(place.virtual_tours![0]._id)
+                      onLaunchVirtualTour?.(place.virtual_tours![0]._id!)
                     }
-                    className="px-3 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-sm font-medium flex items-center gap-2 transition-colors"
+                    className="px-3 py-2 bg-[#FF007A] hover:bg-[#ff339c] text-white rounded-md text-sm font-medium flex items-center gap-2 transition-colors"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -197,7 +197,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                   <span
                     className="text-xs font-semibold uppercase tracking-wider px-2 py-1 rounded"
                     style={{
-                      backgroundColor: place.category.color || "#4f46e5",
+                      backgroundColor: place.category.color || "#FF007A",
                       color: "#fff",
                     }}
                   >
@@ -205,25 +205,25 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                   </span>
                 )}
               </div>
-              <h2 className="text-2xl font-bold text-gray-900">{place.name}</h2>
+              <h2 className="text-2xl font-bold text-white">{place.name}</h2>
             </div>
 
             {/* Description */}
-            <div className="prose prose-sm max-w-none mb-6 text-gray-700">
+            <div className="prose prose-sm max-w-none mb-6 text-[#a0a0a0]">
               <p>{place.description}</p>
             </div>
 
             {/* Tags */}
             {place.tags && place.tags.length > 0 && (
               <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-900 mb-2">
+                <h3 className="text-sm font-medium text-white mb-2">
                   {t("place.tags")}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {place.tags.map((tag) => (
                     <span
                       key={tag._id}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#1e1e1e] text-white border border-[#333]"
                     >
                       {tag.name}
                     </span>
@@ -239,20 +239,20 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                 {/* Address */}
                 {place?.address && (
                   <div className="mb-4">
-                    <h3 className="text-sm font-medium text-gray-900 mb-1">
+                    <h3 className="text-sm font-medium text-white mb-1">
                       {t("place.address")}
                     </h3>
-                    <p className="text-sm text-gray-500">{place.address}</p>
+                    <p className="text-sm text-[#a0a0a0]">{place.address}</p>
                   </div>
                 )}
 
                 {/* Hours of Operation */}
                 {place?.hoursOfOperation && (
                   <div className="mb-4">
-                    <h3 className="text-sm font-medium text-gray-900 mb-1">
+                    <h3 className="text-sm font-medium text-white mb-1">
                       {t("place.hours")}
                     </h3>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-[#a0a0a0]">
                       {place.hoursOfOperation}
                     </p>
                   </div>
@@ -268,15 +268,15 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                       !!place.contact?.[key as keyof typeof place.contact],
                   ) && (
                     <div className="mb-4">
-                      <h3 className="text-sm font-medium text-gray-900 mb-1">
+                      <h3 className="text-sm font-medium text-white mb-1">
                         {t("place.contact")}
                       </h3>
                       <div className="space-y-1">
                         {place.contact.phone && (
-                          <p className="text-sm text-gray-500 flex items-center gap-2">
+                          <p className="text-sm text-[#a0a0a0] flex items-center gap-2">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              className="h-4 w-4"
+                              className="h-4 w-4 text-white"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
@@ -293,10 +293,10 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                         )}
 
                         {place.contact.email && (
-                          <p className="text-sm text-gray-500 flex items-center gap-2">
+                          <p className="text-sm text-[#a0a0a0] flex items-center gap-2">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              className="h-4 w-4"
+                              className="h-4 w-4 text-white"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
@@ -313,10 +313,10 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                         )}
 
                         {place.contact.website && (
-                          <p className="text-sm text-gray-500 flex items-center gap-2">
+                          <p className="text-sm text-[#a0a0a0] flex items-center gap-2">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              className="h-4 w-4"
+                              className="h-4 w-4 text-white"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
@@ -332,7 +332,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                               href={place.contact.website}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-indigo-600 hover:text-indigo-800 transition-colors"
+                              className="text-[#FF007A] hover:text-[#ff339c] transition-colors"
                             >
                               {place.contact.website.replace(
                                 /^https?:\/\//,
@@ -350,7 +350,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
             {/* Gallery */}
             {hasGallery && place?.gallery && (
               <div className="mt-6">
-                <h3 className="text-sm font-medium text-gray-900 mb-3">
+                <h3 className="text-sm font-medium text-white mb-3">
                   {t("place.gallery")}
                 </h3>
 
@@ -367,7 +367,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                   {place?.gallery && place.gallery.length > 1 && (
                     <>
                       <button
-                        className="absolute left-2 top-1/2 -translate-y-1/2 p-1 rounded-full bg-black/30 text-white hover:bg-black/50 transition-colors"
+                        className="absolute left-2 top-1/2 -translate-y-1/2 p-1 rounded-full bg-[#1e1e1e] text-white hover:bg-[#333] transition-colors"
                         onClick={(e) => {
                           e.stopPropagation();
                           setActiveImageIndex((prev) =>
@@ -391,7 +391,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                       </button>
 
                       <button
-                        className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full bg-black/30 text-white hover:bg-black/50 transition-colors"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full bg-[#1e1e1e] text-white hover:bg-[#333] transition-colors"
                         onClick={(e) => {
                           e.stopPropagation();
                           setActiveImageIndex((prev) =>
@@ -415,7 +415,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                       </button>
 
                       {/* Image counter */}
-                      <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded-md">
+                      <div className="absolute bottom-2 right-2 bg-[#1e1e1e] text-white text-xs px-2 py-1 rounded-md border border-[#333]">
                         {activeImageIndex + 1} / {place.gallery?.length || 0}
                       </div>
                     </>
@@ -429,8 +429,8 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                       <button
                         key={image._id}
                         className={`
-                          aspect-square rounded-md overflow-hidden relative
-                          ${activeImageIndex === index ? "ring-2 ring-indigo-500" : "hover:opacity-90"}
+                          aspect-square rounded-md overflow-hidden relative border border-[#333]
+                          ${activeImageIndex === index ? "ring-2 ring-[#FF007A]" : "hover:opacity-90"}
                         `}
                         onClick={() => setActiveImageIndex(index)}
                       >
@@ -449,8 +449,8 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
           </div>
 
           {/* Footer with call-to-action buttons */}
-          <div className="border-t border-gray-200 p-4 flex justify-between items-center">
-            <div className="text-sm text-gray-500">
+          <div className="border-t border-[#333] p-4 flex justify-between items-center">
+            <div className="text-sm text-[#a0a0a0]">
               <span>{t("place.lastUpdated")}: </span>
               <time
                 dateTime={
@@ -475,9 +475,9 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                 place.virtual_tours[0]?._id && (
                   <button
                     onClick={() =>
-                      onLaunchVirtualTour?.(place.virtual_tours![0]._id)
+                      onLaunchVirtualTour?.(place.virtual_tours![0]._id!)
                     }
-                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-sm font-medium flex items-center gap-2 transition-colors"
+                    className="px-4 py-2 bg-[#FF007A] hover:bg-[#ff339c] text-white rounded-md text-sm font-medium flex items-center gap-2 transition-colors"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -503,11 +503,11 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                     href={`https://www.google.com/maps/dir/?api=1&destination=${place.center.coordinates[1]},${place.center.coordinates[0]}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-md text-sm font-medium flex items-center gap-2 transition-colors"
+                    className="px-4 py-2 bg-[#1e1e1e] border border-[#333] hover:bg-[#333] text-white rounded-md text-sm font-medium flex items-center gap-2 transition-colors"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
+                      className="h-5 w-5 text-white"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"

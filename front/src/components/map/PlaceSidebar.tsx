@@ -44,7 +44,9 @@ const PlaceSidebar: React.FC<PlaceSidebarProps> = ({
   const t = useTranslations();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isFavorited, setIsFavorited] = useState(false);
-  const [activeTab, setActiveTab] = useState<"info" | "photos" | "reviews">("info");
+  const [activeTab, setActiveTab] = useState<"info" | "photos" | "reviews">(
+    "info",
+  );
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -79,10 +81,10 @@ const PlaceSidebar: React.FC<PlaceSidebarProps> = ({
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 400, opacity: 0 }}
       transition={{ type: "spring", damping: 25, stiffness: 200 }}
-      className="absolute right-0 top-0 bottom-0 w-full sm:w-96 bg-white shadow-2xl z-50 overflow-hidden flex flex-col"
+      className="absolute right-0 top-0 bottom-0 w-full sm:w-96 bg-[#121212] shadow-2xl z-50 overflow-hidden flex flex-col border-l border-[#333]"
     >
       {/* Header with Image Gallery */}
-      <div className="relative h-64 bg-gray-100 flex-shrink-0">
+      <div className="relative h-64 bg-[#1e1e1e] flex-shrink-0">
         {place.images && place.images.length > 0 ? (
           <>
             <Image
@@ -132,7 +134,7 @@ const PlaceSidebar: React.FC<PlaceSidebarProps> = ({
 
         {/* Category Badge */}
         {place.category && (
-          <div className="absolute top-2 left-2 bg-black/50 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-medium">
+          <div className="absolute top-2 left-2 bg-[#1e1e1e]/80 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-medium border border-[#333]">
             {place.category}
           </div>
         )}
@@ -140,11 +142,11 @@ const PlaceSidebar: React.FC<PlaceSidebarProps> = ({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-2 right-2 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg"
+          className="absolute top-2 right-2 w-8 h-8 bg-[#1e1e1e] backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-[#333] transition-colors shadow-lg border border-[#333]"
           aria-label={t("Common.close")}
         >
           <svg
-            className="w-5 h-5 text-gray-700"
+            className="w-5 h-5 text-white"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -162,10 +164,10 @@ const PlaceSidebar: React.FC<PlaceSidebarProps> = ({
       {/* Content */}
       <div className="flex-1 overflow-y-auto">
         {/* Title and Actions */}
-        <div className="p-4 border-b">
+        <div className="p-4 border-b border-[#333]">
           <div className="flex items-start justify-between mb-2">
             <div className="flex-1">
-              <h2 className="text-xl font-bold text-gray-900 mb-1">
+              <h2 className="text-xl font-bold text-white mb-1">
                 {place.name}
               </h2>
               {place.rating && (
@@ -177,7 +179,7 @@ const PlaceSidebar: React.FC<PlaceSidebarProps> = ({
                         className={`w-4 h-4 ${
                           i < Math.floor(place.rating!)
                             ? "text-yellow-400"
-                            : "text-gray-300"
+                            : "text-[#a0a0a0]"
                         }`}
                         fill="currentColor"
                         viewBox="0 0 24 24"
@@ -186,7 +188,7 @@ const PlaceSidebar: React.FC<PlaceSidebarProps> = ({
                       </svg>
                     ))}
                   </div>
-                  <span className="text-sm text-gray-600">{place.rating}</span>
+                  <span className="text-sm text-[#a0a0a0]">{place.rating}</span>
                 </div>
               )}
             </div>
@@ -196,10 +198,10 @@ const PlaceSidebar: React.FC<PlaceSidebarProps> = ({
           <div className="flex gap-2">
             <button
               onClick={() => onNavigate(place.center.coordinates)}
-              className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm flex items-center justify-center gap-2"
+              className="flex-1 bg-[#FF007A] text-white py-2 px-4 rounded-lg hover:bg-[#ff339c] transition-colors font-medium text-sm flex items-center justify-center gap-2"
             >
               <svg
-                className="w-4 h-4"
+                className="w-4 h-4 text-white"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -217,8 +219,8 @@ const PlaceSidebar: React.FC<PlaceSidebarProps> = ({
               onClick={handleFavorite}
               className={`p-2 border rounded-lg transition-colors ${
                 isFavorited
-                  ? "bg-red-50 border-red-200 text-red-600"
-                  : "border-gray-300 text-gray-600 hover:bg-gray-50"
+                  ? "bg-[#FF007A]/20 border-[#FF007A] text-[#FF007A]"
+                  : "border-[#333] text-[#a0a0a0] hover:bg-[#1e1e1e]"
               }`}
               aria-label={t("Location.addToFavorites")}
             >
@@ -238,11 +240,11 @@ const PlaceSidebar: React.FC<PlaceSidebarProps> = ({
             </button>
             <button
               onClick={handleShare}
-              className="p-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors"
+              className="p-2 border border-[#333] rounded-lg text-[#a0a0a0] hover:bg-[#1e1e1e] transition-colors"
               aria-label={t("Location.share")}
             >
               <svg
-                className="w-5 h-5"
+                className="w-5 h-5 text-white"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -259,15 +261,15 @@ const PlaceSidebar: React.FC<PlaceSidebarProps> = ({
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b">
+        <div className="flex border-b border-[#333]">
           {["info", "photos", "reviews"].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab as typeof activeTab)}
               className={`flex-1 py-3 text-sm font-medium transition-colors ${
                 activeTab === tab
-                  ? "text-blue-600 border-b-2 border-blue-600"
-                  : "text-gray-600 hover:text-gray-900"
+                  ? "text-[#FF007A] border-b-2 border-[#FF007A]"
+                  : "text-[#a0a0a0] hover:text-white"
               }`}
             >
               {t(`Location.${tab}`)}
@@ -281,10 +283,10 @@ const PlaceSidebar: React.FC<PlaceSidebarProps> = ({
             <div className="space-y-4">
               {/* Description */}
               <div>
-                <h3 className="font-semibold text-gray-900 mb-2">
+                <h3 className="font-semibold text-white mb-2">
                   {t("Location.description")}
                 </h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
+                <p className="text-[#a0a0a0] text-sm leading-relaxed">
                   {place.description}
                 </p>
               </div>
@@ -292,14 +294,14 @@ const PlaceSidebar: React.FC<PlaceSidebarProps> = ({
               {/* Tags */}
               {place.tags && place.tags.length > 0 && (
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">
+                  <h3 className="font-semibold text-white mb-2">
                     {t("Location.tags")}
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {place.tags.map((tag, index) => (
                       <span
                         key={index}
-                        className="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
+                        className="px-3 py-1 bg-[#1e1e1e] text-white text-xs rounded-full border border-[#333]"
                       >
                         {tag}
                       </span>
@@ -311,27 +313,27 @@ const PlaceSidebar: React.FC<PlaceSidebarProps> = ({
               {/* Address */}
               {place.address && (
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">
+                  <h3 className="font-semibold text-white mb-2">
                     {t("Location.address")}
                   </h3>
-                  <p className="text-gray-600 text-sm">{place.address}</p>
+                  <p className="text-[#a0a0a0] text-sm">{place.address}</p>
                 </div>
               )}
 
               {/* Contact */}
               {place.contact && (
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">
+                  <h3 className="font-semibold text-white mb-2">
                     {t("Location.contact")}
                   </h3>
                   <div className="space-y-2">
                     {place.contact.phone && (
                       <a
                         href={`tel:${place.contact.phone}`}
-                        className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700"
+                        className="flex items-center gap-2 text-sm text-[#FF007A] hover:text-[#ff339c]"
                       >
                         <svg
-                          className="w-4 h-4"
+                          className="w-4 h-4 text-white"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -351,10 +353,10 @@ const PlaceSidebar: React.FC<PlaceSidebarProps> = ({
                         href={place.contact.website}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700"
+                        className="flex items-center gap-2 text-sm text-[#FF007A] hover:text-[#ff339c]"
                       >
                         <svg
-                          className="w-4 h-4"
+                          className="w-4 h-4 text-white"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -376,10 +378,12 @@ const PlaceSidebar: React.FC<PlaceSidebarProps> = ({
               {/* Hours of Operation */}
               {place.hoursOfOperation && (
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">
+                  <h3 className="font-semibold text-white mb-2">
                     {t("Location.hours")}
                   </h3>
-                  <p className="text-gray-600 text-sm">{place.hoursOfOperation}</p>
+                  <p className="text-[#a0a0a0] text-sm">
+                    {place.hoursOfOperation}
+                  </p>
                 </div>
               )}
             </div>
@@ -391,7 +395,7 @@ const PlaceSidebar: React.FC<PlaceSidebarProps> = ({
                 place.images.map((image, index) => (
                   <div
                     key={index}
-                    className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                    className="relative aspect-square bg-[#1e1e1e] rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity border border-[#333]"
                     onClick={() => setActiveImageIndex(index)}
                   >
                     <Image
@@ -400,13 +404,14 @@ const PlaceSidebar: React.FC<PlaceSidebarProps> = ({
                       fill
                       className="object-cover"
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = "/placeholder-image.jpg";
+                        (e.target as HTMLImageElement).src =
+                          "/placeholder-image.jpg";
                       }}
                     />
                   </div>
                 ))
               ) : (
-                <div className="col-span-2 text-center py-8 text-gray-500">
+                <div className="col-span-2 text-center py-8 text-[#a0a0a0]">
                   {t("Location.noImages")}
                 </div>
               )}
@@ -415,10 +420,10 @@ const PlaceSidebar: React.FC<PlaceSidebarProps> = ({
 
           {activeTab === "reviews" && (
             <div className="space-y-4">
-              <button className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
+              <button className="w-full py-2 px-4 bg-[#FF007A] text-white rounded-lg hover:bg-[#ff339c] transition-colors font-medium">
                 {t("Location.addReview")}
               </button>
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-[#a0a0a0]">
                 {t("Location.noReviews")}
               </div>
             </div>

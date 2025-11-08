@@ -44,17 +44,17 @@ const MAPTILER_KEY = "PWAcntNh2dhVx9XsqifY";
 
 const MAP_LAYERS: MapLayer[] = [
   {
-    id: "osm-standard",
-    name: "OpenStreetMap",
-    url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    id: "osm-dark",
+    name: "Dark",
+    url: "https://cartodb-basemaps-c.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png",
     attribution:
-      '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
     maxZoom: 19,
   },
   {
-    id: "osm-vector",
-    name: "Vector Tiles",
-    url: `https://api.maptiler.com/maps/streets-v2/style.json?key=${MAPTILER_KEY}`,
+    id: "osm-dark-vector",
+    name: "Dark Vector",
+    url: `https://api.maptiler.com/maps/streets-v2-dark/style.json?key=${MAPTILER_KEY}`,
     attribution:
       '© <a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
     maxZoom: 22,
@@ -70,7 +70,7 @@ const MAP_LAYERS: MapLayer[] = [
   {
     id: "terrain",
     name: "Terrain",
-    url: `https://api.maptiler.com/maps/outdoor-v2/style.json?key=${MAPTILER_KEY}`,
+    url: `https://api.maptiler.com/maps/outdoor-v2-dark/style.json?key=${MAPTILER_KEY}`,
     attribution:
       '© <a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
     maxZoom: 22,
@@ -139,27 +139,30 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     // Initialize the map
     map.current = new maplibregl.Map({
       container: mapContainer.current,
-      style: {
-        version: 8,
-        sources: {
-          "osm-raster": {
-            type: "raster",
-            tiles: [currentLayer.url],
-            tileSize: 256,
-            attribution: currentLayer.attribution,
-            maxzoom: currentLayer.maxZoom,
-          },
-        },
-        layers: [
+      style: currentLayer.url.endsWith(".json")
+        ? currentLayer.url // Use the JSON style URL for vector layers
+        : // For raster layers, create a proper style object
           {
-            id: "osm-raster",
-            type: "raster",
-            source: "osm-raster",
-            minzoom: 0,
-            maxzoom: currentLayer.maxZoom,
+            version: 8,
+            sources: {
+              "osm-raster": {
+                type: "raster",
+                tiles: [currentLayer.url],
+                tileSize: 256,
+                attribution: currentLayer.attribution,
+                maxzoom: currentLayer.maxZoom,
+              },
+            },
+            layers: [
+              {
+                id: "osm-raster",
+                type: "raster",
+                source: "osm-raster",
+                minzoom: 0,
+                maxzoom: currentLayer.maxZoom,
+              },
+            ],
           },
-        ],
-      },
       center: center ? [center.lng, center.lat] : [51.389, 35.6892], // Default to Tehran
       zoom: zoom || 6,
       maxBounds: IRAN_BOUNDS,
@@ -662,33 +665,39 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
   useEffect(() => {
     if (!map.current) return;
 
-    // Re-render markers to update selected state
-    filteredPlaces.forEach((place) => {
-      const markerElement = markerElementsRef.current.get(place._id!);
-      if (markerElement) {
-        // Reuse existing root instead of creating a new one
-        const root = markerRootsRef.current.get(place._id!);
-        if (root) {
-          root.render(
-            <PlaceMarker
-              place={place}
-              isSelected={selectedPlace?._id === place._id}
-              onClick={(clickedPlace) => {
-                setSelectedPlace(clickedPlace);
-                setShowPlaceDetails(true);
+    // Wait a bit to ensure map is loaded, then re-render markers to update selected state
+    const timer = setTimeout(() => {
+      if (!map.current) return;
 
-                // Fly to location
-                map.current?.flyTo({
-                  center: clickedPlace.center.coordinates as [number, number],
-                  zoom: 14,
-                  essential: true,
-                });
-              }}
-            />,
-          );
+      filteredPlaces.forEach((place) => {
+        const markerElement = markerElementsRef.current.get(place._id!);
+        if (markerElement) {
+          // Reuse existing root instead of creating a new one
+          const root = markerRootsRef.current.get(place._id!);
+          if (root) {
+            root.render(
+              <PlaceMarker
+                place={place}
+                isSelected={selectedPlace?._id === place._id}
+                onClick={(clickedPlace) => {
+                  setSelectedPlace(clickedPlace);
+                  setShowPlaceDetails(true);
+
+                  // Fly to location
+                  map.current?.flyTo({
+                    center: clickedPlace.center.coordinates as [number, number],
+                    zoom: 14,
+                    essential: true,
+                  });
+                }}
+              />,
+            );
+          }
         }
-      }
-    });
+      });
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [selectedPlace?._id, filteredPlaces, map]);
 
   // Filter places based on search and filters
@@ -758,11 +767,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       // Vector tile style
       map.current.setStyle(layer.url);
     } else {
-      // Raster tiles
+      // Raster tiles - create a proper style object
       map.current.setStyle({
         version: 8,
         sources: {
-          "new-source": {
+          "osm-raster": {
             type: "raster",
             tiles: [layer.url],
             tileSize: 256,
@@ -772,9 +781,9 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         },
         layers: [
           {
-            id: "new-layer",
+            id: "osm-raster",
             type: "raster",
-            source: "new-source",
+            source: "osm-raster",
             minzoom: 0,
             maxzoom: layer.maxZoom,
           },
@@ -783,7 +792,10 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     }
 
     // Re-add markers after style change
-    setTimeout(() => addMarkers(filteredPlaces), 500);
+    // Wait for the style to load before adding markers
+    map.current.once("styledata", () => {
+      addMarkers(filteredPlaces);
+    });
   };
 
   // Handle route calculation
@@ -863,9 +875,9 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       <div className="relative w-full h-full">
         {/* Top progress bar loader - only for map-driven requests */}
         {showTopLoader && (
-          <div className="absolute top-0 left-0 right-0 h-1 z-50 overflow-hidden bg-gray-200">
+          <div className="absolute top-0 left-0 right-0 h-1 z-50 overflow-hidden bg-[#333]">
             <div
-              className="animate-progress bg-blue-500 h-full w-full transition-all duration-200 ease-out"
+              className="animate-progress bg-[#FF007A] h-full w-full transition-all duration-200 ease-out"
               style={{ width: "100%" }}
             ></div>
           </div>
@@ -973,8 +985,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         </AnimatePresence>
 
         {/* Stats overlay */}
-        <div className="absolute bottom-20 left-4 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg p-3 text-sm">
-          <div className="flex items-center gap-2 text-gray-600">
+        <div className="absolute bottom-20 left-4 bg-[#121212]/90 backdrop-blur-sm rounded-lg shadow-lg p-3 text-sm border border-[#333]">
+          <div className="flex items-center gap-2 text-[#a0a0a0]">
             <svg
               className="w-4 h-4"
               fill="none"
@@ -994,7 +1006,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
                 d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
               />
             </svg>
-            <span>
+            <span className="text-white">
               {filteredPlaces.length} {t("Location.locationsFound")}
             </span>
           </div>
@@ -1017,13 +1029,13 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           return tourWithPanorama && tourWithPanorama.panorama?.name ? (
             <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex flex-col">
               {/* Tour Header */}
-              <div className="bg-gray-800 text-white p-2 flex justify-between items-center">
+              <div className="bg-[#121212] text-white p-2 flex justify-between items-center border-b border-[#333]">
                 <h2 className="text-lg font-medium">
                   {selectedPlace?.name || "Virtual Tour"}
                 </h2>
                 <button
                   onClick={handleCloseTour}
-                  className="p-1 rounded-full hover:bg-gray-700"
+                  className="p-1 rounded-full hover:bg-[#1e1e1e] text-white"
                   aria-label="Close tour"
                 >
                   <svg
@@ -1055,8 +1067,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         {/* Tour Error Message */}
         {tourError && (
           <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center">
-            <div className="bg-white p-6 rounded-lg max-w-md text-center">
-              <div className="text-red-500 mb-4">
+            <div className="bg-[#121212] p-6 rounded-lg max-w-md text-center border border-[#333]">
+              <div className="text-[#FF007A] mb-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-12 w-12 mx-auto"
@@ -1072,13 +1084,13 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <h3 className="text-lg font-medium text-white mb-2">
                 Virtual Tour Error
               </h3>
-              <p className="text-gray-600 mb-4">{tourError}</p>
+              <p className="text-[#a0a0a0] mb-4">{tourError}</p>
               <button
                 onClick={handleCloseTour}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                className="bg-[#FF007A] text-white px-4 py-2 rounded hover:bg-[#ff339c]"
               >
                 Close
               </button>
