@@ -13,29 +13,13 @@ import { useMapStore } from "@/stores/mapStore";
 import toast from "react-hot-toast";
 import PlaceDetailsModal from "@/components/organisms/PlaceDetailsModal";
 import { PlaceData } from "@/components/atoms/PlaceMarker";
+import {
+  placeSchema,
+  virtual_tourSchema,
+} from "@/types/declarations/selectInp";
 import MyVertualTour from "@/components/organisms/MyVertualTour";
 import { getLesanBaseUrl } from "@/services/api";
 import { useParams } from "next/navigation";
-
-// Extended PlaceData with virtual tours for HomePage
-interface ExtendedPlaceData extends PlaceData {
-  virtual_tours?: {
-    _id: string;
-    name: string;
-    description?: string;
-    panorama: {
-      _id?: string;
-      name: string;
-    };
-    hotspots?: {
-      pitch: number;
-      yaw: number;
-      description?: string;
-      target?: string;
-    }[];
-    status: "draft" | "active" | "archived";
-  }[];
-}
 
 // Dynamic imports for heavy components
 const SearchPanel = dynamic(() => import("@/components/search/SearchPanel"), {
@@ -52,11 +36,10 @@ export default function HomePage() {
   const [showSearch, setShowSearch] = useState(false);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
-  const [selectedPlace, setSelectedPlace] = useState<ExtendedPlaceData | null>(
-    null,
-  );
+  const [selectedPlace, setSelectedPlace] = useState<placeSchema | null>(null);
   const [showPlaceDetails, setShowPlaceDetails] = useState(false);
-  const [selectedVirtualTour, setSelectedVirtualTour] = useState<any>(null);
+  const [selectedVirtualTour, setSelectedVirtualTour] =
+    useState<virtual_tourSchema | null>(null);
   const [isTourLoading, setIsTourLoading] = useState(false);
   const [tourError, setTourError] = useState<string | null>(null);
   const { isFilterOpen, toggleFilter, closeFilter } = useFilterPanel();
@@ -113,19 +96,23 @@ export default function HomePage() {
       (tour) => tour._id === tourId,
     );
 
-    if (tour && tour.panorama && tour.panorama.name) {
-      console.log("Loading virtual tour:", tour.panorama.name);
+    // Check if the tour has the required panorama data
+    // Note: The panorama might not be included in the place's virtual_tours data
+    // and may need to be fetched separately in a real implementation
+    if (tour) {
+      // In a proper implementation, we'd need to fetch full tour data including panorama
+      // For now, we'll proceed if we have the tour data
+      console.log("Loading virtual tour:", tour.name);
 
-      // Check if the panorama URL is valid
-      const panoramaUrl = `${getLesanBaseUrl()}/uploads/images/${tour.panorama.name}`;
-
-      // Set the tour and close the place details
-      setSelectedVirtualTour(tour);
+      // Create complete tour object with potentially missing panorama
+      // For now, we'll set tour as is with the understanding that panorama might be missing
+      // and will be handled in the UI
+      setSelectedVirtualTour(tour as virtual_tourSchema);
       setShowPlaceDetails(false);
       setIsTourLoading(false);
     } else {
-      console.error("Virtual tour is missing panorama image:", tour);
-      setTourError("This virtual tour is missing its panorama image");
+      console.error("Virtual tour is missing or invalid:", tour);
+      setTourError("This virtual tour is not available");
       setIsTourLoading(false);
     }
   };
@@ -253,55 +240,106 @@ export default function HomePage() {
         {/* Welcome Animation for First Visit */}
         <AnimatePresence>
           {!isMapLoaded && (
-            <motion.div
-              initial={{ opacity: 1 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.5 }}
-              className="absolute inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-blue-600 via-purple-600 to-pink-500"
-            >
-              <div className="text-center text-white p-8">
-                <motion.div
-                  initial={{ scale: 0, rotate: -180 }}
-                  animate={{ scale: 1, rotate: 0 }}
-                  transition={{ type: "spring", duration: 1 }}
-                  className="mb-8"
-                >
-                  <svg
-                    className="w-32 h-32 mx-auto text-white drop-shadow-2xl"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
+            <div className="absolute inset-0 z-50 overflow-hidden">
+              {/* Video Background */}
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                className="welcome-video absolute inset-0 w-full h-full object-cover"
+                style={{
+                  zIndex: -2,
+                }}
+                poster="/images/iran-heritage-poster.jpg" // Placeholder for faster initial loading
+              >
+                <source src="/videos/iran-heritage-01.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+
+              {/* Overlay with blur and subtle pattern */}
+              <div
+                className="absolute inset-0 bg-gradient-to-br from-black/70 via-[#121212]/80 to-black/90 z-[-1]"
+                style={{ backdropFilter: "blur(1px)" }}
+              />
+
+              <motion.div
+                initial={{ opacity: 1 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.5 }}
+                className="absolute inset-0 flex items-center justify-center"
+              >
+                <div className="text-center text-white p-8 relative z-10 max-w-3xl mx-auto">
+                  <motion.div
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ type: "spring", duration: 1 }}
+                    className="mb-8"
                   >
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                  </svg>
-                </motion.div>
-                <motion.h1
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                  className="text-4xl md:text-6xl font-bold mb-4"
-                >
-                  یادمان
-                </motion.h1>
-                <motion.p
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.5 }}
-                  className="text-lg md:text-xl mb-8 opacity-90"
-                >
-                  {t("tagline")}
-                </motion.p>
-                <motion.button
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.7 }}
-                  onClick={() => setIsMapLoaded(true)}
-                  className="px-8 py-4 bg-white text-purple-600 rounded-full font-semibold text-lg shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300"
-                >
-                  شروع کاوش
-                </motion.button>
-              </div>
-            </motion.div>
+                    <div className="relative inline-block">
+                      <svg
+                        className="w-32 h-32 mx-auto drop-shadow-[0_0_8px_rgba(255,0,122,0.7)]"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.5"
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.5"
+                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                      </svg>
+                      <div className="absolute -inset-4 rounded-full border border-[#FF007A]/30 animate-pulse" />
+                    </div>
+                  </motion.div>
+                  <motion.h1
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                    className="text-4xl md:text-6xl font-bold mb-4 relative"
+                    style={{
+                      textShadow: "0 0 10px #FF007A, 0 0 20px #FF007A",
+                      color: "white",
+                      fontFamily: "vazir-matn",
+                    }}
+                  >
+                    یادمان
+                    <div className="absolute -bottom-2 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#FF007A] to-transparent"></div>
+                  </motion.h1>
+                  <motion.p
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                    className="text-lg md:text-xl mb-8 opacity-90 mt-4"
+                    style={{
+                      textShadow: "0 0 8px rgba(0, 0, 0, 0.5)",
+                    }}
+                  >
+                    {t("tagline")}
+                  </motion.p>
+                  <motion.button
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.7 }}
+                    onClick={() => setIsMapLoaded(true)}
+                    className="px-8 py-4 bg-[#121212]/80 backdrop-blur-md text-white rounded-xl font-semibold text-lg shadow-[0_0_15px_5px_rgba(255,0,122,0.3)] hover:shadow-[0_0_20px_8px_rgba(255,0,122,0.5)] transform hover:scale-105 transition-all duration-300 border border-[#FF007A]/50 relative overflow-hidden group"
+                  >
+                    <span className="relative z-10">شروع کاوش</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#FF007A]/10 to-[#A020F0]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </motion.button>
+                </div>
+              </motion.div>
+            </div>
           )}
         </AnimatePresence>
 
@@ -312,101 +350,6 @@ export default function HomePage() {
           transition={{ duration: 0.5 }}
           className="relative h-full w-full"
         >
-          {/* Welcome Banner for Authenticated Users */}
-          <AnimatePresence>
-            {isAuthenticated &&
-              showWelcome &&
-              displayName &&
-              !loading &&
-              isMapLoaded && (
-                <motion.div
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ type: "spring", damping: 25 }}
-                  className="absolute top-4 left-4 right-4 z-30 pointer-events-none"
-                >
-                  <div className="pointer-events-auto mx-auto max-w-md">
-                    <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/50 p-5">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4 rtl:space-x-reverse">
-                          <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ type: "spring", delay: 0.2 }}
-                            className="relative"
-                          >
-                            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                              {displayName
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")
-                                .toUpperCase()}
-                            </div>
-                            <div className="absolute -bottom-1 -right-1 rtl:-left-1 rtl:right-auto w-5 h-5 bg-green-500 rounded-full border-2 border-white animate-pulse" />
-                          </motion.div>
-                          <div>
-                            <motion.p
-                              initial={{ x: -20, opacity: 0 }}
-                              animate={{ x: 0, opacity: 1 }}
-                              transition={{ delay: 0.3 }}
-                              className="text-base font-bold text-gray-900"
-                            >
-                              {t("welcome")}, {displayName.split(" ")[0]}! ✨
-                            </motion.p>
-                            <motion.p
-                              initial={{ x: -20, opacity: 0 }}
-                              animate={{ x: 0, opacity: 1 }}
-                              transition={{ delay: 0.4 }}
-                              className="text-sm text-gray-600"
-                            >
-                              {t("exploreLocations")}
-                            </motion.p>
-                          </div>
-                        </div>
-                        <motion.button
-                          whileHover={{ scale: 1.1, rotate: 90 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={() => setShowWelcome(false)}
-                          className="p-2 text-gray-400 hover:text-gray-600 rounded-xl hover:bg-gray-100 transition-all"
-                          aria-label="Dismiss welcome message"
-                        >
-                          <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M6 18L18 6M6 6l12 12"
-                            />
-                          </svg>
-                        </motion.button>
-                      </div>
-
-                      {/* Quick Actions */}
-                      <motion.div
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.5 }}
-                        className="flex gap-2 mt-4"
-                      >
-                        <button className="flex-1 py-2 px-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl text-sm font-medium hover:shadow-lg transition-all">
-                          📍 مکان‌های نزدیک
-                        </button>
-                        <button className="flex-1 py-2 px-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl text-sm font-medium hover:shadow-lg transition-all">
-                          ⭐ علاقه‌مندی‌ها
-                        </button>
-                      </motion.div>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-          </AnimatePresence>
-
           {/* Map View - InteractiveMap handles fetching and displaying places */}
           {isMapLoaded && <MapView className="h-full" />}
 
@@ -420,44 +363,49 @@ export default function HomePage() {
           )}
 
           {/***  Virtual Tour Viewer   **/}
-          {selectedVirtualTour &&
-            selectedVirtualTour.panorama &&
-            selectedVirtualTour.panorama.name && (
-              <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex flex-col">
-                {/* Tour Header */}
-                <div className="bg-gray-800 text-white p-2 flex justify-between items-center">
-                  <h2 className="text-lg font-medium">
-                    {selectedPlace?.name || "Virtual Tour"}
-                  </h2>
-                  <button
-                    onClick={handleCloseTour}
-                    className="p-1 rounded-full hover:bg-gray-700"
-                    aria-label="Close tour"
+          {selectedVirtualTour && (
+            <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex flex-col">
+              {/* Tour Header */}
+              <div className="bg-gray-800 text-white p-2 flex justify-between items-center">
+                <h2 className="text-lg font-medium">
+                  {selectedPlace?.name || "Virtual Tour"}
+                </h2>
+                <button
+                  onClick={handleCloseTour}
+                  className="p-1 rounded-full hover:bg-gray-700"
+                  aria-label="Close tour"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  </button>
-                </div>
-                {/* Tour Viewer */}
-                <div className="flex-1">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+              {/* Tour Viewer */}
+              <div className="flex-1">
+                {selectedVirtualTour.panorama &&
+                selectedVirtualTour.panorama.name ? (
                   <MyVertualTour
                     imageUrl={`${getLesanBaseUrl()}/uploads/images/${selectedVirtualTour.panorama.name}`}
                   />
-                </div>
+                ) : (
+                  <div className="flex items-center justify-center h-full text-white">
+                    <p>Virtual tour panorama not available</p>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
+          )}
 
           {/* Tour Error Message */}
           {tourError && (
