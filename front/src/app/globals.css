@@ -716,3 +716,10 @@ body {
     background-color: #000000 !important;
     color: #ffffff !important;
 }
+
+/* Pause video background on mobile devices to save performance and battery */
+@media (max-width: 768px) {
+    .welcome-video {
+        display: none;
+    }
+}
