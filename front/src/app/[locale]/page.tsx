@@ -568,9 +568,9 @@ export default function HomePage() {
                     damping: 30,
                     bounce: 0.2,
                   }}
-                  className="fixed top-20 left-1/2 transform -translate-x-1/2 w-[95%] max-w-xl max-h-[85vh] bg-white shadow-2xl rounded-2xl z-50 overflow-hidden flex flex-col"
+                  className="fixed top-20 left-1/2 transform -translate-x-1/2 w-[95%] max-w-xl max-h-[85vh] bg-[#121212] shadow-2xl rounded-2xl z-50 overflow-hidden flex flex-col border border-[#333]"
                 >
-                  <div className="sticky top-0 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-4 flex items-center justify-between rounded-t-2xl">
+                  <div className="sticky top-0 bg-gradient-to-r from-[#FF007A] to-[#A020F0] text-white px-6 py-4 flex items-center justify-between rounded-t-2xl">
                     <h2 className="text-xl font-bold flex items-center gap-2">
                       <svg
                         className="w-6 h-6"
@@ -609,13 +609,13 @@ export default function HomePage() {
                       </svg>
                     </motion.button>
                   </div>
-                  <div className="p-5 overflow-y-auto">
+                  <div className="p-5 overflow-y-auto bg-[#121212] text-white">
                     <FilterPanel />
                   </div>
-                  <div className="sticky bottom-0 bg-gradient-to-b from-transparent to-white pt-6 pb-4 px-6">
+                  <div className="sticky bottom-0 bg-gradient-to-b from-transparent to-[#121212] pt-6 pb-4 px-6 border-t border-[#333]">
                     <button
                       onClick={closeFilter}
-                      className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-lg font-medium transition-all hover:shadow-lg active:scale-98 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                      className="w-full bg-gradient-to-r from-[#FF007A] to-[#A020F0] text-white py-3 rounded-lg font-medium transition-all hover:shadow-lg active:scale-98 focus:outline-none focus:ring-2 focus:ring-[#FF007A] focus:ring-offset-2"
                     >
                       {t("applyFilters")}
                     </button>
