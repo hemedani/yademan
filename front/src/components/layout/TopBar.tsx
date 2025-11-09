@@ -172,7 +172,7 @@ export default function TopBar({
     <div ref={topBarRef} className="fixed top-4 right-4 z-50" dir="rtl">
       {/* Main TopBar Container */}
       <motion.div
-        className="flex items-center bg-white/90 backdrop-blur-md rounded-full shadow-lg border border-gray-200 p-1"
+        className="flex items-center bg-[#121212]/90 backdrop-blur-md rounded-full shadow-lg border border-[#333] p-1"
         initial={{ y: -10, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.3 }}
@@ -182,7 +182,7 @@ export default function TopBar({
           {/* Filter Button */}
           <motion.button
             onClick={handleFilterClick}
-            className="p-3 text-gray-600 hover:text-blue-600 hover:bg-gray-100 rounded-full transition-all duration-300 touch-manipulation focus:outline-none focus:ring-2 focus:ring-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500 active:scale-95"
+            className="p-3 text-white hover:text-[#FF007A] hover:bg-[#1e1e1e] rounded-full transition-all duration-300 touch-manipulation focus:outline-none focus:ring-2 focus:ring-[#FF007A] focus-visible:ring-2 focus-visible:ring-[#FF007A] active:scale-95"
             title={t("Navigation.filterTooltip")}
             aria-label={t("Navigation.filterButtonAriaLabel")}
             type="button"
@@ -199,9 +199,9 @@ export default function TopBar({
               setShowUserPanel(false);
               setShowEventsPanel(false);
             }}
-            className={`p-3 text-gray-600 hover:text-blue-600 hover:bg-gray-100 rounded-full transition-all duration-300 touch-manipulation focus:outline-none focus:ring-2 focus:ring-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500 active:scale-95 ${
+            className={`p-3 text-white hover:text-[#FF007A] hover:bg-[#1e1e1e] rounded-full transition-all duration-300 touch-manipulation focus:outline-none focus:ring-2 focus:ring-[#FF007A] focus-visible:ring-2 focus-visible:ring-[#FF007A] active:scale-95 ${
               showSearchPanel
-                ? "bg-gray-100 text-blue-600 shadow-inner transform scale-105"
+                ? "bg-[#1e1e1e] text-[#FF007A] shadow-inner transform scale-105 border border-[#FF007A]"
                 : ""
             }`}
             title={t("Navigation.searchTooltip")}
@@ -218,9 +218,9 @@ export default function TopBar({
               setShowSearchPanel(false);
               setShowUserPanel(false);
             }}
-            className={`p-3 text-gray-600 hover:text-blue-600 hover:bg-gray-100 rounded-full transition-all duration-300 touch-manipulation focus:outline-none focus:ring-2 focus:ring-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500 active:scale-95 ${
+            className={`p-3 text-white hover:text-[#FF007A] hover:bg-[#1e1e1e] rounded-full transition-all duration-300 touch-manipulation focus:outline-none focus:ring-2 focus:ring-[#FF007A] focus-visible:ring-2 focus-visible:ring-[#FF007A] active:scale-95 ${
               showEventsPanel
-                ? "bg-gray-100 text-blue-600 shadow-inner transform scale-105"
+                ? "bg-[#1e1e1e] text-[#FF007A] shadow-inner transform scale-105 border border-[#FF007A]"
                 : ""
             }`}
             title={t("Navigation.eventsTooltip")}
@@ -238,16 +238,16 @@ export default function TopBar({
                 setShowSearchPanel(false);
                 setShowEventsPanel(false);
               }}
-              className={`p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-100 rounded-full transition-all duration-300 touch-manipulation focus:outline-none focus:ring-2 focus:ring-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500 active:scale-95 ${
+              className={`p-2 text-white hover:text-[#FF007A] hover:bg-[#1e1e1e] rounded-full transition-all duration-300 touch-manipulation focus:outline-none focus:ring-2 focus:ring-[#FF007A] focus-visible:ring-2 focus-visible:ring-[#FF007A] active:scale-95 ${
                 showUserPanel
-                  ? "bg-gray-100 shadow-inner transform scale-105"
+                  ? "bg-[#1e1e1e] shadow-inner transform scale-105 border border-[#FF007A]"
                   : ""
               }`}
               title={displayName || t("Navigation.userTooltip")}
               aria-label={t("Navigation.userButtonAriaLabel")}
               type="button"
             >
-              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm shadow-md">
+              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#FF007A] to-[#A020F0] flex items-center justify-center text-white font-semibold text-sm shadow-md">
                 {initials}
               </div>
             </button>
@@ -255,7 +255,7 @@ export default function TopBar({
             <ILink
               href="/login"
               locale={locale}
-              className="p-3 text-gray-600 hover:text-blue-600 hover:bg-gray-100 rounded-full transition-all duration-200 touch-manipulation focus:outline-none focus:ring-2 focus:ring-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500 active:scale-95"
+              className="p-3 text-white hover:text-[#FF007A] hover:bg-[#1e1e1e] rounded-full transition-all duration-200 touch-manipulation focus:outline-none focus:ring-2 focus:ring-[#FF007A] focus-visible:ring-2 focus-visible:ring-[#FF007A] active:scale-95"
               title={t("Navigation.loginTooltip")}
               aria-label={t("Navigation.loginButtonAriaLabel")}
             >
@@ -267,11 +267,14 @@ export default function TopBar({
           {isAdmin && (
             <Link
               href="/admin"
-              className="p-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full shadow-md hover:shadow-lg transition-all duration-200 touch-manipulation focus:outline-none focus:ring-2 focus:ring-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500 active:scale-95"
+              className="p-3 bg-gradient-to-r from-[#FF007A] to-[#A020F0] text-white rounded-full shadow-md hover:shadow-lg transition-all duration-200 touch-manipulation focus:outline-none focus:ring-2 focus:ring-[#FF007A] focus-visible:ring-2 focus-visible:ring-[#FF007A] active:scale-95"
               title={t("Navigation.adminPanelTooltip")}
               aria-label={t("Navigation.adminPanelAriaLabel")}
             >
-              <Cog6ToothIcon className="h-5 w-5" aria-hidden="true" />
+              <Cog6ToothIcon
+                className="h-5 w-5 text-white"
+                aria-hidden="true"
+              />
             </Link>
           )}
         </div>
@@ -292,12 +295,12 @@ export default function TopBar({
               damping: 30,
               mass: 0.8,
             }}
-            className="absolute top-16 right-0 mt-2 w-80 bg-white rounded-2xl shadow-lg p-4 border border-gray-200 z-50"
+            className="absolute top-16 right-0 mt-2 w-80 bg-[#121212] rounded-2xl shadow-lg p-4 border border-[#333] z-50"
           >
             <form onSubmit={handleSearchSubmit} className="relative">
               <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                 <MagnifyingGlassIcon
-                  className="h-5 w-5 text-gray-400"
+                  className="h-5 w-5 text-[#a0a0a0]"
                   aria-hidden="true"
                 />
               </div>
@@ -305,7 +308,7 @@ export default function TopBar({
                 type="text"
                 value={localSearchValue}
                 onChange={(e) => handleSearchChange(e.target.value)}
-                className="block w-full pr-10 py-3 border border-gray-300 rounded-lg text-sm placeholder-gray-500 transition-all duration-200 touch-manipulation min-h-[48px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400"
+                className="block w-full pr-10 py-3 bg-[#1e1e1e] border border-[#333] rounded-lg text-sm placeholder-[#a0a0a0] text-white transition-all duration-200 touch-manipulation min-h-[48px] focus:outline-none focus:ring-2 focus:ring-[#FF007A] focus:border-[#FF007A] hover:border-[#FF007A]"
                 placeholder={t("HomePage.searchPlaceholder")}
                 aria-label={t("Navigation.searchAriaLabel")}
                 autoFocus
@@ -316,7 +319,7 @@ export default function TopBar({
                 title={t("Navigation.searchSubmitTooltip")}
               >
                 <svg
-                  className="h-5 w-5 text-blue-500 hover:text-blue-600"
+                  className="h-5 w-5 text-[#FF007A] hover:text-[#ff339c]"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -328,7 +331,7 @@ export default function TopBar({
                 </svg>
               </button>
             </form>
-            <div className="mt-3 text-xs text-gray-500">
+            <div className="mt-3 text-xs text-[#a0a0a0]">
               {t("HomePage.searchTip")}
             </div>
           </motion.div>
@@ -347,23 +350,23 @@ export default function TopBar({
               damping: 30,
               mass: 0.8,
             }}
-            className="absolute top-16 right-0 mt-2 w-72 bg-white rounded-2xl shadow-lg border border-gray-200 z-50"
+            className="absolute top-16 right-0 mt-2 w-72 bg-[#121212] rounded-2xl shadow-lg border border-[#333] z-50"
           >
             <motion.div
-              className="p-4 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-purple-50 rounded-t-2xl"
+              className="p-4 border-b border-[#333] bg-gradient-to-r from-[#FF007A]/10 to-[#A020F0]/10 rounded-t-2xl"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.2 }}
             >
               <div className="flex items-center space-x-3 space-x-reverse">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-lg shadow-lg">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#FF007A] to-[#A020F0] flex items-center justify-center text-white font-semibold text-lg shadow-lg">
                   {initials || "U"}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-base font-semibold text-gray-900 truncate">
+                  <h3 className="text-base font-semibold text-white truncate">
                     {displayName}
                   </h3>
-                  <p className="text-xs text-gray-500 truncate">
+                  <p className="text-xs text-[#a0a0a0] truncate">
                     {user?.email}
                   </p>
                 </div>
@@ -379,10 +382,10 @@ export default function TopBar({
               <ILink
                 href="/profile"
                 locale={locale}
-                className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150"
+                className="flex items-center px-4 py-3 text-sm text-[#a0a0a0] hover:bg-[#1e1e1e] hover:text-white transition-colors duration-150"
                 onClick={() => setShowUserPanel(false)}
               >
-                <UserIcon className="w-5 h-5 ml-3" />
+                <UserIcon className="w-5 h-5 ml-3 text-[#FF007A]" />
                 {t("Navigation.profile")}
               </ILink>
 
@@ -393,26 +396,26 @@ export default function TopBar({
                   <ILink
                     href="/settings"
                     locale={locale}
-                    className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-colors duration-150"
+                    className="flex items-center px-4 py-3 text-sm text-[#a0a0a0] hover:bg-[#1e1e1e] hover:text-white transition-colors duration-150"
                     onClick={() => setShowUserPanel(false)}
                   >
-                    <Cog6ToothIcon className="w-5 h-5 ml-3" />
+                    <Cog6ToothIcon className="w-5 h-5 ml-3 text-[#FF007A] hover:text-white" />
                     {t("Navigation.settings")}
                   </ILink>
                 )}
 
-              <div className="border-t border-gray-100 my-1"></div>
+              <div className="border-t border-[#333] my-1"></div>
 
               <button
                 onClick={handleLogout}
                 disabled={isLoggingOut}
-                className="w-full flex items-center px-4 py-3 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex items-center px-4 py-3 text-sm text-[#FF007A] hover:bg-[#1e1e1e]/50 hover:text-[#ff339c] transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <ArrowRightOnRectangleIcon className="w-5 h-5 ml-3" />
                 {isLoggingOut ? (
                   <>
                     <svg
-                      className="animate-spin w-4 h-4 ml-2"
+                      className="animate-spin w-4 h-4 ml-2 text-[#FF007A]"
                       viewBox="0 0 24 24"
                     >
                       <circle
@@ -425,7 +428,7 @@ export default function TopBar({
                         fill="none"
                       />
                       <path
-                        className="opacity-75"
+                        className="opacity-75 text-[#FF007A]"
                         fill="currentColor"
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       />
@@ -453,21 +456,21 @@ export default function TopBar({
               damping: 30,
               mass: 0.8,
             }}
-            className="absolute top-16 right-0 mt-2 w-80 bg-white rounded-2xl shadow-lg border border-gray-200 z-50"
+            className="absolute top-16 right-0 mt-2 w-80 bg-[#121212] rounded-2xl shadow-lg border border-[#333] z-50"
           >
             <motion.div
-              className="flex items-center justify-between p-4 border-b border-gray-100"
+              className="flex items-center justify-between p-4 border-b border-[#333]"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.2 }}
             >
-              <h3 className="text-base font-semibold text-gray-900">
+              <h3 className="text-base font-semibold text-white">
                 {t("Events.upcomingEvents")}
               </h3>
               <ILink
                 href="/events"
                 locale={locale}
-                className="text-sm text-blue-500 hover:text-blue-600"
+                className="text-sm text-[#FF007A] hover:text-[#ff339c]"
                 onClick={() => setShowEventsPanel(false)}
               >
                 {t("Events.viewAll")}
@@ -479,14 +482,14 @@ export default function TopBar({
                 upcomingEvents.map((event) => (
                   <div
                     key={event.id}
-                    className="px-4 py-3 hover:bg-gray-50 transition-colors"
+                    className="px-4 py-3 hover:bg-[#1e1e1e] transition-colors"
                   >
-                    <h4 className="text-sm font-medium text-gray-900">
+                    <h4 className="text-sm font-medium text-white">
                       {event.title}
                     </h4>
-                    <div className="mt-1 flex items-center space-x-2 space-x-reverse text-xs text-gray-500">
+                    <div className="mt-1 flex items-center space-x-2 space-x-reverse text-xs text-[#a0a0a0]">
                       <svg
-                        className="w-4 h-4 text-gray-400"
+                        className="w-4 h-4 text-[#a0a0a0]"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -500,9 +503,9 @@ export default function TopBar({
                       </svg>
                       <span>{formatDate(event.date)}</span>
                     </div>
-                    <div className="mt-1 flex items-center space-x-2 space-x-reverse text-xs text-gray-500">
+                    <div className="mt-1 flex items-center space-x-2 space-x-reverse text-xs text-[#a0a0a0]">
                       <svg
-                        className="w-4 h-4 text-gray-400"
+                        className="w-4 h-4 text-[#a0a0a0]"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -525,9 +528,9 @@ export default function TopBar({
                   </div>
                 ))
               ) : (
-                <div className="px-4 py-6 text-center text-gray-500">
+                <div className="px-4 py-6 text-center text-[#a0a0a0]">
                   <svg
-                    className="mx-auto h-12 w-12 text-gray-400"
+                    className="mx-auto h-12 w-12 text-[#a0a0a0]"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -544,11 +547,11 @@ export default function TopBar({
               )}
             </div>
 
-            <div className="p-4 border-t border-gray-100 text-center">
+            <div className="p-4 border-t border-[#333] text-center">
               <ILink
                 href="/events/create"
                 locale={locale}
-                className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-[#FF007A] rounded-lg hover:bg-[#ff339c] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF007A]"
                 onClick={() => setShowEventsPanel(false)}
               >
                 {t("Events.createEvent")}
