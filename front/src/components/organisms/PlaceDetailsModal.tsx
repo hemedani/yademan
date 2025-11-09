@@ -72,8 +72,8 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
 
         <motion.div
           className={`
-            relative max-h-[90vh] w-full max-w-3xl overflow-hidden rounded-lg bg-[#121212] shadow-xl
-            flex flex-col border border-[#333]
+            relative max-h-[90vh] w-full max-w-3xl overflow-hidden rounded-2xl bg-[#0a0a00]/60 backdrop-blur-3xl shadow-2xl
+            flex flex-col border border-[#333] shadow-[0_0_60px_rgba(255,0,122,0.2)]
             ${isFullScreen ? "fixed inset-0 max-w-none max-h-none rounded-none" : ""}
           `}
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -94,16 +94,18 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
             )}
 
             {/* Overlay with actions */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent p-4 flex justify-between items-start">
+            <div className="absolute inset-0 bg-gradient-to-t from-[#121212] to-transparent p-4 flex justify-between items-start group">
               {/* Back button */}
-              <button
+              <motion.button
                 onClick={onClose}
-                className="p-2 rounded-full bg-[#1e1e1e] hover:bg-[#333] transition-colors text-white"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="p-2 rounded-full bg-[#1e1e1e]/80 backdrop-blur-sm border border-[#333] hover:bg-[#2a2a2a] transition-colors text-white shadow-lg"
                 aria-label={t("Common.close")}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6"
+                  className="h-6 w-6 text-[#FF007A]"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -115,16 +117,18 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-              </button>
+              </motion.button>
 
               {/* Actions */}
               <div className="flex gap-2">
                 {hasVirtualTours && place.virtual_tours && (
-                  <button
+                  <motion.button
                     onClick={() =>
                       onLaunchVirtualTour?.(place.virtual_tours![0]._id!)
                     }
-                    className="px-3 py-2 bg-[#FF007A] hover:bg-[#ff339c] text-white rounded-md text-sm font-medium flex items-center gap-2 transition-colors"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="px-3 py-2 bg-gradient-to-r from-[#FF007A] to-[#A020F0] text-white rounded-md text-sm font-medium flex items-center gap-2 transition-all hover:shadow-lg hover:shadow-[#FF007A]/30"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -140,13 +144,15 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                       />
                     </svg>
                     {t("place.virtualTour")}
-                  </button>
+                  </motion.button>
                 )}
 
                 {hasGallery && (
-                  <button
+                  <motion.button
                     onClick={() => setIsFullScreen(!isFullScreen)}
-                    className="p-2 rounded-full bg-black/20 hover:bg-black/40 transition-colors text-white"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="p-2 rounded-full bg-[#1e1e1e]/80 backdrop-blur-sm border border-[#333] hover:bg-[#2a2a2a] transition-colors text-white shadow-lg"
                     aria-label={
                       isFullScreen ? t("Common.close") : t("Common.moreInfo")
                     }
@@ -154,7 +160,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                     {isFullScreen ? (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
+                        className="h-6 w-6 text-[#FF007A]"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -169,7 +175,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                     ) : (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
+                        className="h-6 w-6 text-[#A020F0]"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -182,60 +188,94 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                         />
                       </svg>
                     )}
-                  </button>
+                  </motion.button>
                 )}
               </div>
             </div>
           </div>
 
           {/* Content */}
-          <div className="flex-grow overflow-y-auto p-4 sm:p-6">
+          <div className="flex-grow overflow-y-auto p-6">
             {/* Title and category */}
-            <div className="mb-6">
-              <div className="flex items-center gap-2 mb-1">
+            <motion.div
+              className="mb-6 p-6 bg-gradient-to-br from-[#1e1e1e]/50 to-[#2a2a2a]/50 backdrop-blur-sm rounded-2xl border border-[#333] shadow-xl"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+            >
+              <div className="flex items-center gap-3 mb-3">
                 {place.category && (
                   <span
-                    className="text-xs font-semibold uppercase tracking-wider px-2 py-1 rounded"
+                    className="text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full flex items-center gap-1"
                     style={{
                       backgroundColor: place.category.color || "#FF007A",
                       color: "#fff",
                     }}
                   >
+                    {place.category.icon && (
+                      <i className={`fa fa-${place.category.icon} text-xs`}></i>
+                    )}
                     {place.category.name}
                   </span>
                 )}
               </div>
               <h2 className="text-2xl font-bold text-white">{place.name}</h2>
-            </div>
+            </motion.div>
 
             {/* Description */}
-            <div className="prose prose-sm max-w-none mb-6 text-[#a0a0a0]">
-              <p>{place.description}</p>
-            </div>
+            <motion.div
+              className="mb-6 p-6 bg-gradient-to-br from-[#1e1e1e]/50 to-[#2a2a2a]/50 backdrop-blur-sm rounded-2xl border border-[#333] shadow-xl"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <p className="text-[#a0a0a0] leading-relaxed whitespace-pre-line">
+                {place.description}
+              </p>
+            </motion.div>
 
             {/* Tags */}
             {place.tags && place.tags.length > 0 && (
-              <div className="mb-6">
-                <h3 className="text-sm font-medium text-white mb-2">
+              <motion.div
+                className="mb-6 p-6 bg-gradient-to-br from-[#1e1e1e]/50 to-[#2a2a2a]/50 backdrop-blur-sm rounded-2xl border border-[#333] shadow-xl"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                <h3 className="text-sm font-medium text-white mb-3">
                   {t("place.tags")}
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {place.tags.map((tag) => (
-                    <span
+                  {place.tags.map((tag, index) => (
+                    <motion.span
                       key={tag._id}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#1e1e1e] text-white border border-[#333]"
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.4 + index * 0.05 }}
+                      className="px-3 py-1.5 bg-[#1e1e1e] text-[#a0a0a0] rounded-full text-sm border border-[#333] hover:bg-[#2a2a2a] hover:text-white transition-colors flex items-center gap-1"
+                      style={{
+                        backgroundColor: tag.color || "",
+                      }}
                     >
+                      {tag.icon && (
+                        <i className={`fa fa-${tag.icon} text-xs`}></i>
+                      )}
                       {tag.name}
-                    </span>
+                    </motion.span>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             )}
 
             {/* Contact Info & Details */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Left column */}
-              <div>
+              <motion.div
+                className="p-4 bg-gradient-to-br from-[#1e1e1e]/50 to-[#2a2a2a]/50 backdrop-blur-sm rounded-2xl border border-[#333] shadow-xl"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
                 {/* Address */}
                 {place?.address && (
                   <div className="mb-4">
@@ -257,10 +297,15 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                     </p>
                   </div>
                 )}
-              </div>
+              </motion.div>
 
               {/* Right column */}
-              <div>
+              <motion.div
+                className="p-4 bg-gradient-to-br from-[#1e1e1e]/50 to-[#2a2a2a]/50 backdrop-blur-sm rounded-2xl border border-[#333] shadow-xl"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+              >
                 {/* Contact */}
                 {place?.contact &&
                   Object.keys(place.contact).some(
@@ -344,30 +389,37 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                       </div>
                     </div>
                   )}
-              </div>
+              </motion.div>
             </div>
 
             {/* Gallery */}
             {hasGallery && place?.gallery && (
-              <div className="mt-6">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-6 p-4 bg-gradient-to-br from-[#1e1e1e]/50 to-[#2a2a2a]/50 backdrop-blur-sm rounded-2xl border border-[#333] shadow-xl"
+                transition={{ delay: 0.2 }}
+              >
                 <h3 className="text-sm font-medium text-white mb-3">
                   {t("place.gallery")}
                 </h3>
 
                 {/* Current Image */}
-                <div className="relative aspect-video mb-3 overflow-hidden rounded-lg">
+                <div className="relative aspect-video mb-3 overflow-hidden rounded-lg group">
                   <Image
                     src={`${getLesanBaseUrl()}/uploads/images/${place.gallery[activeImageIndex]?.name || ""}`}
                     alt={`${place?.name || "Place"} - ${activeImageIndex + 1}`}
                     fill
-                    className="object-cover"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
 
                   {/* Navigation arrows */}
                   {place?.gallery && place.gallery.length > 1 && (
                     <>
-                      <button
-                        className="absolute left-2 top-1/2 -translate-y-1/2 p-1 rounded-full bg-[#1e1e1e] text-white hover:bg-[#333] transition-colors"
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-[#1e1e1e]/80 backdrop-blur-sm border border-[#333] text-white hover:bg-[#2a2a2a] transition-colors shadow-lg"
                         onClick={(e) => {
                           e.stopPropagation();
                           setActiveImageIndex((prev) =>
@@ -378,7 +430,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
+                          className="h-5 w-5 text-[#FF007A]"
                           viewBox="0 0 20 20"
                           fill="currentColor"
                         >
@@ -388,10 +440,12 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                             clipRule="evenodd"
                           />
                         </svg>
-                      </button>
+                      </motion.button>
 
-                      <button
-                        className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-full bg-[#1e1e1e] text-white hover:bg-[#333] transition-colors"
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-[#1e1e1e]/80 backdrop-blur-sm border border-[#333] text-white hover:bg-[#2a2a2a] transition-colors shadow-lg"
                         onClick={(e) => {
                           e.stopPropagation();
                           setActiveImageIndex((prev) =>
@@ -402,7 +456,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
+                          className="h-5 w-5 text-[#FF007A]"
                           viewBox="0 0 20 20"
                           fill="currentColor"
                         >
@@ -412,10 +466,10 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                             clipRule="evenodd"
                           />
                         </svg>
-                      </button>
+                      </motion.button>
 
                       {/* Image counter */}
-                      <div className="absolute bottom-2 right-2 bg-[#1e1e1e] text-white text-xs px-2 py-1 rounded-md border border-[#333]">
+                      <div className="absolute bottom-2 right-2 bg-[#1e1e1e]/80 backdrop-blur-sm text-white text-xs px-2.5 py-1 rounded-full border border-[#333] shadow-lg">
                         {activeImageIndex + 1} / {place.gallery?.length || 0}
                       </div>
                     </>
@@ -424,13 +478,27 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
 
                 {/* Thumbnails */}
                 {place?.gallery && place.gallery.length > 1 && (
-                  <div className="grid grid-cols-5 sm:grid-cols-6 gap-2">
+                  <motion.div
+                    className="grid grid-cols-5 sm:grid-cols-6 gap-2"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                  >
                     {place.gallery.map((image, index) => (
-                      <button
+                      <motion.button
                         key={image._id}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.4 + index * 0.05 }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                         className={`
-                          aspect-square rounded-md overflow-hidden relative border border-[#333]
-                          ${activeImageIndex === index ? "ring-2 ring-[#FF007A]" : "hover:opacity-90"}
+                          aspect-square rounded-lg overflow-hidden relative border-2 transition-all duration-200
+                          ${
+                            activeImageIndex === index
+                              ? "border-[#FF007A] ring-2 ring-[#FF007A]/30 shadow-lg"
+                              : "border-[#333] hover:border-[#FF007A]/50"
+                          }
                         `}
                         onClick={() => setActiveImageIndex(index)}
                       >
@@ -440,16 +508,16 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                           fill
                           className="object-cover"
                         />
-                      </button>
+                      </motion.button>
                     ))}
-                  </div>
+                  </motion.div>
                 )}
-              </div>
+              </motion.div>
             )}
           </div>
 
           {/* Footer with call-to-action buttons */}
-          <div className="border-t border-[#333] p-4 flex justify-between items-center">
+          <div className="border-t border-[#333] p-6 flex justify-between items-center bg-gradient-to-b from-[#1a1a1a]/70 to-[#0a0a00]/70 backdrop-blur-sm">
             <div className="text-sm text-[#a0a0a0]">
               <span>{t("place.lastUpdated")}: </span>
               <time
@@ -473,11 +541,13 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
               {hasVirtualTours &&
                 place?.virtual_tours &&
                 place.virtual_tours[0]?._id && (
-                  <button
+                  <motion.button
                     onClick={() =>
                       onLaunchVirtualTour?.(place.virtual_tours![0]._id!)
                     }
-                    className="px-4 py-2 bg-[#FF007A] hover:bg-[#ff339c] text-white rounded-md text-sm font-medium flex items-center gap-2 transition-colors"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="px-4 py-2 bg-gradient-to-r from-[#FF007A] to-[#A020F0] text-white rounded-md text-sm font-medium flex items-center gap-2 transition-all hover:shadow-lg hover:shadow-[#FF007A]/30"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -493,17 +563,19 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                       />
                     </svg>
                     {t("place.virtualTour")}
-                  </button>
+                  </motion.button>
                 )}
 
               {/* Directions button */}
               {place?.center?.coordinates &&
                 place.center.coordinates.length >= 2 && (
-                  <a
+                  <motion.a
                     href={`https://www.google.com/maps/dir/?api=1&destination=${place.center.coordinates[1]},${place.center.coordinates[0]}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 bg-[#1e1e1e] border border-[#333] hover:bg-[#333] text-white rounded-md text-sm font-medium flex items-center gap-2 transition-colors"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="px-4 py-2 bg-[#1e1e1e] border border-[#333] hover:bg-[#2a2a2a] text-white rounded-md text-sm font-medium flex items-center gap-2 transition-all hover:shadow-lg"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -520,7 +592,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                       />
                     </svg>
                     {t("place.directions")}
-                  </a>
+                  </motion.a>
                 )}
             </div>
           </div>
