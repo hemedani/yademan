@@ -11,7 +11,7 @@ const MapSkeleton = ({ className, height = "100%" }: MapSkeletonProps) => {
   return (
     <div
       className={cn(
-        "relative bg-gray-100 animate-pulse w-full overflow-hidden",
+        "relative bg-[#0a0a00] animate-pulse w-full overflow-hidden",
         className,
       )}
       style={{ height }}
@@ -50,14 +50,14 @@ const MapSkeleton = ({ className, height = "100%" }: MapSkeletonProps) => {
 
       {/* Loading indicator - Mobile responsive */}
       <div className="absolute inset-0 flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-6 w-full max-w-sm mx-auto">
+        <div className="bg-[#121212] border border-[#333] rounded-lg sm:rounded-xl shadow-lg p-4 sm:p-6 w-full max-w-sm mx-auto">
           <div className="flex items-center space-x-3 space-x-reverse">
-            <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-blue-600 flex-shrink-0" />
-            <div className="text-gray-600 min-w-0 flex-1">
-              <div className="font-medium text-sm sm:text-base">
+            <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-[#FF007A] flex-shrink-0" />
+            <div className="text-[#a0a0a0] min-w-0 flex-1">
+              <div className="font-medium text-sm sm:text-base text-white">
                 در حال بارگذاری نقشه
               </div>
-              <div className="text-xs sm:text-sm text-gray-500">
+              <div className="text-xs sm:text-sm text-[#a0a0a0]">
                 راه‌اندازی MapLibre GL JS...
               </div>
             </div>
@@ -65,9 +65,9 @@ const MapSkeleton = ({ className, height = "100%" }: MapSkeletonProps) => {
 
           {/* Progress bar simulation */}
           <div className="mt-3 sm:mt-4">
-            <div className="bg-gray-200 rounded-full h-2 sm:h-3">
+            <div className="bg-[#1e1e1e] rounded-full h-2 sm:h-3">
               <div
-                className="bg-blue-600 h-2 sm:h-3 rounded-full animate-pulse transition-all duration-300"
+                className="bg-[#FF007A] h-2 sm:h-3 rounded-full animate-pulse transition-all duration-300"
                 style={{ width: "60%" }}
               />
             </div>

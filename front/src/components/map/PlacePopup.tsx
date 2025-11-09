@@ -32,10 +32,10 @@ const PlacePopup: React.FC<PlacePopupProps> = ({
   const t = useTranslations();
 
   return (
-    <div className="min-w-[250px] max-w-[300px] p-3">
+    <div className="min-w-[250px] max-w-[300px] p-3 bg-[#121212] rounded-lg border border-[#333] shadow-xl">
       {/* Header with image */}
       {place.images && place.images.length > 0 && (
-        <div className="relative h-32 -mx-3 -mt-3 mb-3">
+        <div className="relative h-32 -mx-3 -mt-3 mb-3 rounded-t-lg overflow-hidden">
           <img
             src={place.images[0]}
             alt={place.name}
@@ -45,7 +45,7 @@ const PlacePopup: React.FC<PlacePopupProps> = ({
             }}
           />
           {place.category && (
-            <span className="absolute top-2 left-2 bg-black/50 backdrop-blur-sm text-white px-2 py-0.5 rounded text-xs">
+            <span className="absolute top-2 left-2 bg-[#FF007A]/80 backdrop-blur-sm text-white px-2 py-0.5 rounded-full text-xs font-medium">
               {place.category}
             </span>
           )}
@@ -53,9 +53,7 @@ const PlacePopup: React.FC<PlacePopupProps> = ({
       )}
 
       {/* Title */}
-      <h3 className="font-semibold text-gray-900 text-base mb-1">
-        {place.name}
-      </h3>
+      <h3 className="font-semibold text-white text-base mb-1">{place.name}</h3>
 
       {/* Rating */}
       {place.rating && (
@@ -66,8 +64,8 @@ const PlacePopup: React.FC<PlacePopupProps> = ({
                 key={i}
                 className={`w-3 h-3 ${
                   i < Math.floor(place.rating!)
-                    ? "text-yellow-400"
-                    : "text-gray-300"
+                    ? "text-[#FFD700]"
+                    : "text-[#555]"
                 }`}
                 fill="currentColor"
                 viewBox="0 0 24 24"
@@ -76,20 +74,20 @@ const PlacePopup: React.FC<PlacePopupProps> = ({
               </svg>
             ))}
           </div>
-          <span className="text-xs text-gray-600">{place.rating}</span>
+          <span className="text-xs text-[#a0a0a0]">{place.rating}</span>
         </div>
       )}
 
       {/* Description */}
-      <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+      <p className="text-sm text-[#a0a0a0] mb-2 line-clamp-2">
         {place.description}
       </p>
 
       {/* Address */}
       {place.address && (
-        <div className="flex items-start gap-1 mb-3 text-xs text-gray-500">
+        <div className="flex items-start gap-1 mb-3 text-xs text-[#a0a0a0]">
           <svg
-            className="w-3 h-3 mt-0.5 flex-shrink-0"
+            className="w-3 h-3 mt-0.5 flex-shrink-0 text-[#a0a0a0]"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -117,13 +115,13 @@ const PlacePopup: React.FC<PlacePopupProps> = ({
           {place.tags.slice(0, 3).map((tag, index) => (
             <span
               key={index}
-              className="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full"
+              className="px-2 py-0.5 bg-[#1e1e1e] text-[#a0a0a0] text-xs rounded-full border border-[#333]"
             >
               {tag}
             </span>
           ))}
           {place.tags.length > 3 && (
-            <span className="px-2 py-0.5 text-gray-500 text-xs">
+            <span className="px-2 py-0.5 text-[#a0a0a0] text-xs">
               +{place.tags.length - 3}
             </span>
           )}
@@ -131,11 +129,11 @@ const PlacePopup: React.FC<PlacePopupProps> = ({
       )}
 
       {/* Action buttons */}
-      <div className="flex gap-2 pt-2 border-t border-gray-100">
+      <div className="flex gap-2 pt-2 border-t border-[#333]">
         {onMoreInfo && (
           <button
             onClick={onMoreInfo}
-            className="flex-1 py-1.5 px-3 bg-blue-600 text-white text-xs font-medium rounded hover:bg-blue-700 transition-colors"
+            className="flex-1 py-1.5 px-3 bg-gradient-to-r from-[#FF007A] to-[#A020F0] text-white text-xs font-medium rounded hover:from-[#ff339c] hover:to-[#b53af5] transition-all"
           >
             {t("Common.moreInfo")}
           </button>
@@ -143,7 +141,7 @@ const PlacePopup: React.FC<PlacePopupProps> = ({
         {onNavigate && (
           <button
             onClick={onNavigate}
-            className="flex-1 py-1.5 px-3 border border-gray-300 text-gray-700 text-xs font-medium rounded hover:bg-gray-50 transition-colors"
+            className="flex-1 py-1.5 px-3 bg-[#1e1e1e] border border-[#333] text-white text-xs font-medium rounded hover:bg-[#2a2a2a] transition-colors"
           >
             {t("Location.navigate")}
           </button>

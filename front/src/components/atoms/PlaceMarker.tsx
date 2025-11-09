@@ -93,10 +93,10 @@ const PlaceMarker: React.FC<PlaceMarkerProps> = ({
           animate={{ opacity: 1, y: 0 }}
           className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max max-w-[200px] z-20"
         >
-          <div className="bg-white rounded-md shadow-lg p-2 text-sm font-medium text-gray-900">
+          <div className="bg-[#121212]/90 backdrop-blur-sm rounded-md shadow-xl p-2 text-sm font-medium text-white border border-[#333]">
             {place.name}
           </div>
-          <div className="w-2 h-2 bg-white transform rotate-45 absolute -bottom-1 left-1/2 -translate-x-1/2"></div>
+          <div className="w-2 h-2 bg-[#121212]/90 border-r border-b border-[#333] transform rotate-45 absolute -bottom-1 left-1/2 -translate-x-1/2"></div>
         </motion.div>
       )}
     </motion.div>
