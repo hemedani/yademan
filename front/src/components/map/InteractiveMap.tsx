@@ -20,7 +20,6 @@ import { gets } from "@/app/actions/place/gets";
 import PlaceMarker, { PlaceData } from "@/components/atoms/PlaceMarker";
 import PlaceDetailsModal from "@/components/organisms/PlaceDetailsModal";
 import { toast } from "react-hot-toast";
-import PlacePopup from "@/components/map/PlacePopup";
 import PlaceSidebar from "@/components/map/PlaceSidebar";
 import RoutePanel from "@/components/map/RoutePanel";
 import MapLayerSwitcher from "@/components/map/MapLayerSwitcher";
@@ -154,6 +153,13 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
               },
             },
             layers: [
+              {
+                id: "background",
+                type: "background",
+                paint: {
+                  "background-color": "#0a0a00",
+                },
+              },
               {
                 id: "osm-raster",
                 type: "raster",
@@ -764,7 +770,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
 
     // Update map style
     if (layer.url.endsWith(".json")) {
-      // Vector tile style
+      // Vector tile style - we need to load the style and ensure background
       map.current.setStyle(layer.url);
     } else {
       // Raster tiles - create a proper style object
@@ -780,6 +786,13 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           },
         },
         layers: [
+          {
+            id: "background",
+            type: "background",
+            paint: {
+              "background-color": "#0a0a00",
+            },
+          },
           {
             id: "osm-raster",
             type: "raster",
@@ -884,7 +897,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         )}
 
         {/* Map container */}
-        <div ref={mapContainer} className="w-full h-full" />
+        <div ref={mapContainer} className="w-full h-full bg-[#0a0a00]" />
 
         {/* Map controls */}
         <MapControls
