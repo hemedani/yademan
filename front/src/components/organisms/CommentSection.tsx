@@ -8,18 +8,57 @@ import toast from "react-hot-toast";
 import NeonButton from "../atoms/NeonButton";
 import CommentForm from "../molecules/CommentForm";
 import CommentList from "./CommentList";
-import { commentSchema } from "@/types/declarations/selectInp";
+import { commentSchema, userSchema } from "@/types/declarations/selectInp";
 import {
   addComment as createComment,
   getComments,
 } from "@/app/actions/comment";
 
+// Define a minimal comment type that picks only the fields CommentSection needs from commentSchema
+// Using Pick to extract specific fields and creating subtypes for nested objects
+// Note: Extending with optional place property for flexibility when passed from parent components
+export type MinimalComment = {
+  _id: commentSchema["_id"];
+  text: commentSchema["text"];
+  rating: commentSchema["rating"];
+  status: commentSchema["status"];
+  is_anonymous: commentSchema["is_anonymous"];
+  createdAt: commentSchema["createdAt"];
+  updatedAt: commentSchema["updatedAt"];
+  user: Pick<
+    userSchema,
+    | "_id"
+    | "first_name"
+    | "last_name"
+    | "email"
+    | "level"
+    | "is_verified"
+    | "avatar"
+  >;
+} & {
+  place?: Pick<
+    commentSchema["place"],
+    | "_id"
+    | "name"
+    | "description"
+    | "slug"
+    | "center"
+    | "area"
+    | "address"
+    | "contact"
+    | "hoursOfOperation"
+    | "meta"
+    | "status"
+    | "createdAt"
+    | "updatedAt"
+  >;
+}; // Allow optional place property when passed from parent components like PlaceDetailsModal
+
 interface CommentSectionProps {
   placeId: string;
-  placeComments?: commentSchema[]; // Comments embedded in the place
+  placeComments?: MinimalComment[]; // Comments to be displayed (may include place info if passed from parent)
   userAvatar?: string | null;
   userName?: string;
-  initialComments?: commentSchema[];
 }
 
 const CommentSection: React.FC<CommentSectionProps> = ({
@@ -27,7 +66,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({
   placeComments = [],
   userAvatar,
   userName,
-  initialComments = [],
 }) => {
   const t = useTranslations();
   const { isAuthenticated, user } = useAuth();
@@ -37,11 +75,11 @@ const CommentSection: React.FC<CommentSectionProps> = ({
     ? placeComments
     : [];
 
-  const [comments, setComments] = useState<commentSchema[]>(
+  const [comments, setComments] = useState<MinimalComment[]>(
     normalizedPlaceComments,
   ); // Start with embedded comments
   const [loading, setLoading] = useState(false); // Not loading initially since using embedded comments
-  const [sortOption, setSortOption] = useState<"recent" | "popular">("recent");
+  // No sorting functionality for now - will be implemented in future backend changes
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
 
@@ -86,7 +124,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
           },
         });
 
-        // Add the new comments to the existing ones
+        // Add the new comments to the existing ones, ensuring they match MinimalComment type
         setComments((prev) => [...prev, ...(result.data || [])]);
       } catch (error) {
         console.error("Failed to fetch more comments:", error);
@@ -112,7 +150,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({
         is_anonymous: false, // Set according to user preference
       });
       // Optimistically update the UI by adding the new comment at the beginning
-      setComments((prev) => [result.data, ...prev]);
+      // Type assertion to match MinimalComment type
+      setComments((prev) => [result.data as MinimalComment, ...prev]);
       toast.success(t("Comments.commentAdded"));
     } catch (error) {
       console.error("Failed to add comment:", error);
@@ -160,15 +199,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({
     setPage((prev) => prev + 1);
   };
 
-  const sortedComments = [...comments].sort((a, b) => {
-    if (sortOption === "recent") {
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-    } else {
-      // Note: The schema doesn't have a direct likes count, so we're using a mock value
-      return (b.likesCount || 0) - (a.likesCount || 0);
-    }
-  });
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -179,22 +209,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({
         <h3 className="text-xl font-bold text-[#FF007A]">
           {t("Comments.title", { count: comments.length })}
         </h3>
-        <div className="flex gap-2">
-          <NeonButton
-            variant={sortOption === "recent" ? "primary" : "ghost"}
-            size="sm"
-            onClick={() => setSortOption("recent")}
-          >
-            {t("Comments.recent")}
-          </NeonButton>
-          <NeonButton
-            variant={sortOption === "popular" ? "primary" : "ghost"}
-            size="sm"
-            onClick={() => setSortOption("popular")}
-          >
-            {t("Comments.popular")}
-          </NeonButton>
-        </div>
       </div>
 
       <CommentForm
@@ -206,7 +220,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
 
       <div className="mt-6">
         <CommentList
-          comments={sortedComments}
+          comments={comments}
           currentUserAvatar={userAvatar}
           currentUserName={userName}
           onLike={handleLike}
