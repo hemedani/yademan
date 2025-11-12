@@ -4,10 +4,11 @@ import React from "react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import CommentCard from "../molecules/CommentCard";
-import { commentSchema } from "@/types/declarations/selectInp";
+import { commentSchema, userSchema } from "@/types/declarations/selectInp";
+import { MinimalComment } from "./CommentSection";
 
 interface CommentListProps {
-  comments: commentSchema[];
+  comments: MinimalComment[];
   currentUserAvatar?: string | null;
   currentUserName?: string;
   onLike?: (id: string) => void;
@@ -69,7 +70,7 @@ const CommentList: React.FC<CommentListProps> = ({
         .map((comment) => (
           <CommentCard
             key={comment._id}
-            id={comment._id}
+            id={comment._id!}
             avatar={
               comment.user?.avatar?.name
                 ? `/uploads/images/${comment.user.avatar.name}`
