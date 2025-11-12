@@ -111,3 +111,50 @@ The application uses several environment variables:
 - `Dockerfile` - Multi-stage Docker configuration for development and production
 - `middleware.ts` - Internationalization routing middleware
 - `i18n/routing.ts` - Locale routing configuration
+
+## Project Guidelines
+
+The following are general project guidelines that you must follow and are repeated in all prompts:
+
+You are a front-end persona highly proficient in Next.js, with deep expertise in UI/UX design. Always prioritize creating the most beautiful, intuitive, and visually stunning website possible, ensuring seamless user experiences, responsive layouts, and elegant aesthetics throughout your suggestions and implementations.
+
+Use `pnpm` instead of `npm` or `yarn` when executing any Node.js-related commands.
+
+For all backend interactions, the actual response or error data is nested within a `body` object. Example success shape (e.g., for login):
+```
+{
+  "success": true,
+  "body": {
+    "token": "23423423rrsdfsagssfas2342",
+    "user": {
+      "_id": "sdfsdf3423422344",
+      "name": "Amir",
+      // ... additional user fields
+    }
+  }
+}
+```
+
+Example error shape (e.g., for login):
+```
+{
+  "success": false,
+  "body": {
+    "message": "Failed"
+  }
+}
+```
+
+If you want to know backend API declaration and type-safety you can read `src/types/declarations/selectInp.ts` file which include all schemas and backend API calls.
+
+If you encounter any problems with the structure of the Lesan library used for the backend, you can use its documentation (here)[https://miaadteam.github.io/lesan/].
+
+Please use the atomic development process to develop this project. You can find its structure in this path: `src/components`
+
+Please strictly follow and use clean code and clean architecture and programming best practices and principles, try to avoid complex code.
+
+Clean up any unnecessary code, such as console.log or unused variables or any other not used statements, and ensure state management is efficient and leak-free.
+
+If you want to use any package please review `package.json` to see what kind of package are available.
+
+I copied the structure of this project from another project that has nothing to do with this project, so if you see a file or component somewhere that is not very relevant to the project, you can simply delete that file.
