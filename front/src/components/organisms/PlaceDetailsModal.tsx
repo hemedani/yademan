@@ -4,14 +4,14 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { PlaceData } from "@/components/atoms/PlaceMarker";
 import { getLesanBaseUrl } from "@/services/api";
-import CommentSection from "../organisms/CommentSection";
+import CommentSection, { MinimalComment } from "../organisms/CommentSection";
 import { get as getPlace } from "@/app/actions/place";
+import { placeSchema } from "@/types/declarations/selectInp";
 
 interface PlaceDetailsModalProps {
   placeId: string;
-  place?: PlaceData; // Optional - if provided, use it as initial data
+  place?: placeSchema; // Optional - if provided, use it as initial data
   onClose: () => void;
   onLaunchVirtualTour?: (tourId: string) => void;
 }
@@ -23,7 +23,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
   onLaunchVirtualTour,
 }) => {
   const t = useTranslations();
-  const [place, setPlace] = useState<PlaceData | null>(null);
+  const [place, setPlace] = useState<placeSchema | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [loading, setLoading] = useState(true); // Always show loading initially when fetching
@@ -146,7 +146,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
             comments: Array.isArray(placeData.comments)
               ? placeData.comments
               : [],
-          };
+          } as placeSchema;
           setPlace(normalizedPlaceData);
         } else {
           throw new Error(result.body);
@@ -682,10 +682,10 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
               className="mt-6 p-6 bg-gradient-to-br from-[#1e1e1e]/50 to-[#2a2a2a]/50 backdrop-blur-sm rounded-2xl border border-[#333] shadow-xl"
             >
               <CommentSection
-                placeId={place._id}
+                placeId={place._id!}
                 placeComments={
                   place.comments && Array.isArray(place.comments)
-                    ? place.comments
+                    ? (place.comments as unknown as MinimalComment[])
                     : []
                 }
               />
@@ -719,7 +719,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                 place?.virtual_tours[0]?._id && (
                   <motion.button
                     onClick={() =>
-                      onLaunchVirtualTour?.(place.virtual_tours[0]._id)
+                      onLaunchVirtualTour?.(place.virtual_tours[0]._id!)
                     }
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
