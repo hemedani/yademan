@@ -175,5 +175,27 @@
     "viewAll": "View All",
     "createEvent": "Create Event",
     "upcomingEvents": "Upcoming Events"
+  },
+  "Comments": {
+    "title": "Comments ({count})",
+    "recent": "Recent",
+    "popular": "Popular",
+    "placeholder": "Share your thoughts about this place...",
+    "writeComment": "Write a comment...",
+    "postComment": "Post Comment",
+    "reply": "Reply",
+    "replyPlaceholder": "Reply to {userName}...",
+    "loadMore": "Load More Comments",
+    "noComments": "No comments yet. Be the first to share your thoughts!",
+    "anonymous": "Anonymous",
+    "loginRequired": "You need to be logged in to comment",
+    "addCommentError": "Failed to add comment",
+    "likeCommentError": "Failed to like comment",
+    "replyCommentError": "Failed to reply to comment",
+    "ratingLabel": "Rating",
+    "ratingRequired": "Please provide a rating",
+    "likeSuccess": "Comment liked successfully!",
+    "replyNotSupported": "Replying to comments is not currently supported.",
+    "commentAdded": "Comment added successfully!"
   }
 }

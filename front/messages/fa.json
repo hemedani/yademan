@@ -183,5 +183,27 @@
     "viewAll": "مشاهده همه",
     "createEvent": "ایجاد رویداد",
     "upcomingEvents": "رویدادهای آینده"
+  },
+  "Comments": {
+    "title": "نظرات ({count})",
+    "recent": "جدیدترین",
+    "popular": "محبوب",
+    "placeholder": "درباره این مکان نظر دهید...",
+    "writeComment": "نظر بدهید...",
+    "postComment": "ارسال نظر",
+    "reply": "پاسخ",
+    "replyPlaceholder": "پاسخ به {userName}...",
+    "loadMore": "بارگذاری نظرات بیشتر",
+    "noComments": "هنوز نظری ثبت نشده است. اولین نفری باشید که نظر می دهد!",
+    "anonymous": "ناشناس",
+    "loginRequired": "برای نظر دادن باید وارد شوید",
+    "addCommentError": "ارسال نظر با خطا مواجه شد",
+    "likeCommentError": "لایک نظر با خطا مواجه شد",
+    "replyCommentError": "پاسخ به نظر با خطا مواجه شد",
+    "ratingLabel": "امتیاز",
+    "ratingRequired": "لطفاً امتیازی ارائه دهید",
+    "likeSuccess": "نظر با موفقیت لایک شد!",
+    "replyNotSupported": "پاسخ به نظرات در حال حاضر پشتیبانی نمی شود.",
+    "commentAdded": "نظر با موفقیت ارسال شد!"
   }
 }
