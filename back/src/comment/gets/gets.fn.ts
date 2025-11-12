@@ -1,4 +1,4 @@
-import type { ActFn } from "@deps";
+import { type ActFn, ObjectId } from "@deps";
 import { comment } from "../../../mod.ts";
 
 export const getsFn: ActFn = async (body) => {
@@ -46,7 +46,7 @@ export const getsFn: ActFn = async (body) => {
 
 	// --- Place filter ---
 	if (place) {
-		matchConditions["place.name"] = { $regex: new RegExp(place, "i") };
+		matchConditions["place._id"] = new ObjectId(place as string);
 	}
 
 	// --- User filter ---
@@ -64,10 +64,26 @@ export const getsFn: ActFn = async (body) => {
 	pipeline.push({ $skip: (page - 1) * limit });
 	pipeline.push({ $limit: limit });
 
-	return await comment
+	const foundedComments = await comment
 		.aggregation({
 			pipeline,
 			projection: get,
 		})
 		.toArray();
+
+	/*
+	 * 	@LOG @DEBUG @INFO
+	 * 	This log written by ::==> {{ `` }}
+	 *
+	 * 	Please remove your log after debugging
+	 */
+	console.log(" ============= ");
+	console.group("pipeline ------ ");
+	console.log();
+	console.info({ pipeline, foundedComments }, " ------ ");
+	console.log();
+	console.groupEnd();
+	console.log(" ============= ");
+
+	return foundedComments;
 };

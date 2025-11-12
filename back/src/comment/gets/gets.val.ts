@@ -1,4 +1,11 @@
-import { boolean, number, object, optional, string } from "@deps";
+import {
+	boolean,
+	number,
+	object,
+	objectIdValidation,
+	optional,
+	string,
+} from "@deps";
 import { selectStruct } from "../../../mod.ts";
 
 export const getsValidator = () => {
@@ -15,7 +22,7 @@ export const getsValidator = () => {
 			is_anonymous: optional(boolean()),
 
 			// --- Related entity filters ---
-			place: optional(string()),
+			place: optional(objectIdValidation),
 			user: optional(string()),
 		}),
 		get: selectStruct("comment", 2),
