@@ -17,7 +17,7 @@ import { useMapStore } from "@/stores/mapStore";
 import { useAuth } from "@/context/AuthContext";
 import MapControls from "./MapControls";
 import { gets } from "@/app/actions/place/gets";
-import PlaceMarker, { PlaceData } from "@/components/atoms/PlaceMarker";
+import PlaceMarker from "@/components/atoms/PlaceMarker";
 import PlaceDetailsModal from "@/components/organisms/PlaceDetailsModal";
 import { toast } from "react-hot-toast";
 import PlaceSidebar from "@/components/map/PlaceSidebar";
@@ -408,18 +408,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
             data: {
               _id: 1,
               name: 1,
-              description: 1,
               center: 1,
-              address: 1,
-              contact: 1,
-              hoursOfOperation: 1,
               category: {
-                _id: 1,
-                name: 1,
-                color: 1,
-                icon: 1,
-              },
-              tags: {
                 _id: 1,
                 name: 1,
                 color: 1,
@@ -429,25 +419,6 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
                 _id: 1,
                 name: 1,
               },
-              gallery: {
-                _id: 1,
-                name: 1,
-                mimType: 1,
-                size: 1,
-              },
-              virtual_tours: {
-                _id: 1,
-                name: 1,
-                description: 1,
-                panorama: {
-                  _id: 1,
-                  name: 1,
-                },
-                hotspots: 1,
-                status: 1,
-              },
-              updatedAt: 1,
-              createdAt: 1,
             },
             metadata: {
               total: 1,
@@ -1028,7 +999,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         {/* Place Details Modal */}
         {selectedPlace && showPlaceDetails && (
           <PlaceDetailsModal
-            place={selectedPlace}
+            placeId={selectedPlace._id!}
             onClose={() => setShowPlaceDetails(false)}
             onLaunchVirtualTour={handleLaunchVirtualTour}
           />
