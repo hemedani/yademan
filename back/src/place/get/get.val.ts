@@ -6,6 +6,6 @@ export const getValidator = () => {
 		set: object({
 			_id: string(),
 		}),
-		get: selectStruct("place", 2),
+		get: selectStruct("place", 3),
 	});
 };

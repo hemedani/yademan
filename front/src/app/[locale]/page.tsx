@@ -124,24 +124,6 @@ export default function HomePage() {
     setIsTourLoading(false);
   };
 
-  const handleCloseTourDemo = () => {
-    setShowTourDemo(false);
-  };
-
-  // Demo tour launch
-  const handleLaunchTourDemo = () => {
-    setShowTourDemo(true);
-    setTourDemoDismissed(true);
-    toast.success(t("Virtual Tour Started"), {
-      position: "bottom-center",
-    });
-  };
-
-  // Dismiss tour promo
-  const handleDismissTourPromo = () => {
-    setTourDemoDismissed(true);
-  };
-
   const handleInstallClick = async () => {
     const prompt = window.deferredPrompt;
     if (!prompt) return;
@@ -356,7 +338,7 @@ export default function HomePage() {
           {/* Place Details Modal */}
           {selectedPlace && showPlaceDetails && (
             <PlaceDetailsModal
-              place={selectedPlace}
+              placeId={selectedPlace._id!}
               onClose={() => setShowPlaceDetails(false)}
               onLaunchVirtualTour={handleLaunchVirtualTour}
             />

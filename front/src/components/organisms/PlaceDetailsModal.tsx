@@ -6,25 +6,168 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { PlaceData } from "@/components/atoms/PlaceMarker";
 import { getLesanBaseUrl } from "@/services/api";
+import CommentSection from "../organisms/CommentSection";
+import { get as getPlace } from "@/app/actions/place";
 
 interface PlaceDetailsModalProps {
-  place: PlaceData | null;
+  placeId: string;
+  place?: PlaceData; // Optional - if provided, use it as initial data
   onClose: () => void;
   onLaunchVirtualTour?: (tourId: string) => void;
 }
 
 const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
-  place,
+  placeId,
+  place: initialPlace,
   onClose,
   onLaunchVirtualTour,
 }) => {
   const t = useTranslations();
+  const [place, setPlace] = useState<PlaceData | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [loading, setLoading] = useState(true); // Always show loading initially when fetching
+
+  // Fetch place details when modal opens
+  useEffect(() => {
+    const fetchPlaceDetails = async () => {
+      setLoading(true);
+      try {
+        // Fetch the place with all details including comments
+        const result = await getPlace({
+          set: {
+            _id: placeId,
+          },
+          get: {
+            _id: 1,
+            name: 1,
+            description: 1,
+            slug: 1,
+            center: 1,
+            area: 1,
+            address: 1,
+            contact: 1,
+            hoursOfOperation: 1,
+            meta: 1,
+            status: 1,
+            createdAt: 1,
+            updatedAt: 1,
+            registrar: {
+              _id: 1,
+              first_name: 1,
+              last_name: 1,
+              email: 1,
+              level: 1,
+            },
+            province: {
+              _id: 1,
+              name: 1,
+              english_name: 1,
+            },
+            city: {
+              _id: 1,
+              name: 1,
+              english_name: 1,
+            },
+            city_zone: {
+              _id: 1,
+              name: 1,
+            },
+            category: {
+              _id: 1,
+              name: 1,
+              description: 1,
+              color: 1,
+              icon: 1,
+            },
+            tags: {
+              _id: 1,
+              name: 1,
+              description: 1,
+              color: 1,
+              icon: 1,
+            },
+            thumbnail: {
+              _id: 1,
+              name: 1,
+              mimType: 1,
+              size: 1,
+              alt_text: 1,
+            },
+            gallery: {
+              _id: 1,
+              name: 1,
+              mimType: 1,
+              size: 1,
+              alt_text: 1,
+            },
+            comments: {
+              _id: 1,
+              text: 1,
+              rating: 1,
+              status: 1,
+              is_anonymous: 1,
+              createdAt: 1,
+              updatedAt: 1,
+              user: {
+                _id: 1,
+                first_name: 1,
+                last_name: 1,
+                email: 1,
+                level: 1,
+                is_verified: 1,
+                avatar: {
+                  _id: 1,
+                  name: 1,
+                  mimType: 1,
+                  size: 1,
+                  alt_text: 1,
+                  createdAt: 1,
+                  updatedAt: 1,
+                },
+              },
+            },
+            virtual_tours: {
+              _id: 1,
+              name: 1,
+              description: 1,
+              status: 1,
+              createdAt: 1,
+              updatedAt: 1,
+            },
+          },
+        });
+
+        if (result.success) {
+          // Ensure comments is always an array, even if the API returns different structure
+          const placeData = result.body[0];
+          const normalizedPlaceData = {
+            ...placeData,
+            comments: Array.isArray(placeData.comments)
+              ? placeData.comments
+              : [],
+          };
+          setPlace(normalizedPlaceData);
+        } else {
+          throw new Error(result.body);
+        }
+      } catch (error) {
+        console.error("Error fetching place details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // We always fetch full details to ensure we have comments and other required data
+    // Even if initialPlace is provided, it might be minimal data from the map
+    fetchPlaceDetails();
+  }, [placeId]);
 
   // Reset image index when place changes
   useEffect(() => {
-    setActiveImageIndex(0);
+    if (place?._id) {
+      setActiveImageIndex(0);
+    }
   }, [place?._id]);
 
   // Close modal on escape key
@@ -43,21 +186,33 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
     return () => window.removeEventListener("keydown", handleEscapeKey);
   }, [onClose, isFullScreen]);
 
-  // If no place, don't render
-  if (!place) return null;
-
   // Check if the place has virtual tours
   const hasVirtualTours =
-    place?.virtual_tours && place.virtual_tours.length > 0;
+    place?.virtual_tours && place?.virtual_tours.length > 0;
 
   // Check if the place has gallery images
-  const hasGallery = place?.gallery ? place.gallery.length > 0 : false;
+  const hasGallery = place?.gallery && place?.gallery.length > 0;
 
   // Determine what image to show in the header
   const headerImage =
     place?.thumbnail?.name ||
-    (hasGallery && place.gallery?.[0]?.name) ||
+    (hasGallery && place?.gallery?.[0]?.name) ||
     "/images/placeholder-image.jpg";
+
+  // If no place and loading, show loading indicator
+  if (!place && loading) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">
+        <div className="fixed inset-0 bg-black/50" />
+        <div className="relative max-w-md rounded-2xl bg-[#0a0a00]/60 backdrop-blur-3xl shadow-2xl flex flex-col border border-[#333] shadow-[0_0_60px_rgba(255,0,122,0.2)] p-8 text-center">
+          <p className="text-white">{t("Common.loading")}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // If no place after loading, don't render
+  if (!place) return null;
 
   return (
     <AnimatePresence mode="wait">
@@ -121,31 +276,33 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
 
               {/* Actions */}
               <div className="flex gap-2">
-                {hasVirtualTours && place.virtual_tours && (
-                  <motion.button
-                    onClick={() =>
-                      onLaunchVirtualTour?.(place.virtual_tours![0]._id!)
-                    }
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="px-3 py-2 bg-gradient-to-r from-[#FF007A] to-[#A020F0] text-white rounded-md text-sm font-medium flex items-center gap-2 transition-all hover:shadow-lg hover:shadow-[#FF007A]/30"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
+                {hasVirtualTours &&
+                  place.virtual_tours &&
+                  place.virtual_tours[0]?._id && (
+                    <motion.button
+                      onClick={() =>
+                        onLaunchVirtualTour?.(place.virtual_tours![0]._id!)
+                      }
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="px-3 py-2 bg-gradient-to-r from-[#FF007A] to-[#A020F0] text-white rounded-md text-sm font-medium flex items-center gap-2 transition-all hover:shadow-lg hover:shadow-[#FF007A]/30"
                     >
-                      <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                      <path
-                        fillRule="evenodd"
-                        d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    {t("place.virtualTour")}
-                  </motion.button>
-                )}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                        <path
+                          fillRule="evenodd"
+                          d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      {t("place.virtualTour")}
+                    </motion.button>
+                  )}
 
                 {hasGallery && (
                   <motion.button
@@ -406,15 +563,17 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
 
                 {/* Current Image */}
                 <div className="relative aspect-video mb-3 overflow-hidden rounded-lg group">
-                  <Image
-                    src={`${getLesanBaseUrl()}/uploads/images/${place.gallery[activeImageIndex]?.name || ""}`}
-                    alt={`${place?.name || "Place"} - ${activeImageIndex + 1}`}
-                    fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
+                  {place.gallery && place.gallery[activeImageIndex] && (
+                    <Image
+                      src={`${getLesanBaseUrl()}/uploads/images/${place.gallery[activeImageIndex].name}`}
+                      alt={`${place.name} - ${activeImageIndex + 1}`}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  )}
 
-                  {/* Navigation arrows */}
-                  {place?.gallery && place.gallery.length > 1 && (
+                  {/* Navigation arrows - only show if there are multiple images */}
+                  {place.gallery && place.gallery.length > 1 && (
                     <>
                       <motion.button
                         whileHover={{ scale: 1.1 }}
@@ -470,14 +629,14 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
 
                       {/* Image counter */}
                       <div className="absolute bottom-2 right-2 bg-[#1e1e1e]/80 backdrop-blur-sm text-white text-xs px-2.5 py-1 rounded-full border border-[#333] shadow-lg">
-                        {activeImageIndex + 1} / {place.gallery?.length || 0}
+                        {activeImageIndex + 1} / {place.gallery.length}
                       </div>
                     </>
                   )}
                 </div>
 
                 {/* Thumbnails */}
-                {place?.gallery && place.gallery.length > 1 && (
+                {place.gallery && place.gallery.length > 1 && (
                   <motion.div
                     className="grid grid-cols-5 sm:grid-cols-6 gap-2"
                     initial={{ opacity: 0, y: 10 }}
@@ -514,6 +673,23 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                 )}
               </motion.div>
             )}
+
+            {/* Comment Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+              className="mt-6 p-6 bg-gradient-to-br from-[#1e1e1e]/50 to-[#2a2a2a]/50 backdrop-blur-sm rounded-2xl border border-[#333] shadow-xl"
+            >
+              <CommentSection
+                placeId={place._id}
+                placeComments={
+                  place.comments && Array.isArray(place.comments)
+                    ? place.comments
+                    : []
+                }
+              />
+            </motion.div>
           </div>
 
           {/* Footer with call-to-action buttons */}
@@ -540,10 +716,10 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
             <div className="flex gap-2">
               {hasVirtualTours &&
                 place?.virtual_tours &&
-                place.virtual_tours[0]?._id && (
+                place?.virtual_tours[0]?._id && (
                   <motion.button
                     onClick={() =>
-                      onLaunchVirtualTour?.(place.virtual_tours![0]._id!)
+                      onLaunchVirtualTour?.(place.virtual_tours[0]._id)
                     }
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
