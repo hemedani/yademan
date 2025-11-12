@@ -5,12 +5,10 @@ import { motion } from "framer-motion";
 import { MapCenter } from "@/stores/mapStore";
 import { placeSchema } from "@/types/declarations/selectInp";
 
-export type PlaceData = placeSchema;
-
 interface PlaceMarkerProps {
-  place: PlaceData;
+  place: placeSchema;
   isSelected?: boolean;
-  onClick?: (place: PlaceData) => void;
+  onClick?: (place: placeSchema) => void;
 }
 
 const getMarkerColor = (category?: { color?: string }) => {
