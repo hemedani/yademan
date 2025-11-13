@@ -4,6 +4,7 @@ import {
 	cities,
 	city_zones,
 	comments,
+	events,
 	files,
 	places,
 	provinces,
@@ -30,6 +31,7 @@ export const comment = comments();
 export const tag = tags();
 export const category = categories();
 export const virtual_tour = virtualTours();
+export const event = events();
 
 export const { setAct, setService, getAtcsWithServices } = coreApp.acts;
 

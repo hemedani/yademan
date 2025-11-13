@@ -11,3 +11,4 @@ export * from "./tag.ts";
 export * from "./category.ts";
 export * from "./virtualTour.ts";
 export * from "./comment.ts";
+export * from "./event.ts";
