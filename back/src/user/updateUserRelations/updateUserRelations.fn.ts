@@ -1,45 +1,31 @@
 import { type ActFn, ObjectId, type TInsertRelations } from "@deps";
-import type { userRelations } from "@lib";
+import type { user_relations } from "@model";
 import { user } from "../../../mod.ts";
 
 export const updateUserRelationsFn: ActFn = async (body) => {
-  const {
-    set: { _id, avatar, nationalCard },
-    get,
-  } = body.details;
+	const {
+		set: { _id, avatar, national_card },
+		get,
+	} = body.details;
 
-  const relations: TInsertRelations<typeof userRelations> = {};
+	const relations: TInsertRelations<typeof user_relations> = {};
 
-  avatar &&
-    (relations.avatar = {
-      _ids: new ObjectId(avatar),
-      relatedRelations: {},
-    });
+	avatar &&
+		(relations.avatar = {
+			_ids: new ObjectId(avatar as string),
+			relatedRelations: {},
+		});
 
-  nationalCard &&
-    (relations.nationalCard = {
-      _ids: new ObjectId(nationalCard),
-      relatedRelations: {},
-    });
+	national_card &&
+		(relations.national_card = {
+			_ids: new ObjectId(national_card as string),
+			relatedRelations: {},
+		});
 
-  /*
-   * 	@LOG @DEBUG @INFO
-   * 	This log written by ::==> {{ `` }}
-   *
-   * 	Please remove your log after debugging
-   */
-  console.log(" ============= ");
-  console.group("relations ------ ");
-  console.log();
-  console.info({ relations }, " ------ ");
-  console.log();
-  console.groupEnd();
-  console.log(" ============= ");
-
-  return await user.addRelation({
-    filters: { _id: new ObjectId(_id) },
-    relations,
-    projection: get,
-    replace: true,
-  });
+	return await user.addRelation({
+		filters: { _id: new ObjectId(_id) },
+		relations,
+		projection: get,
+		replace: true,
+	});
 };
