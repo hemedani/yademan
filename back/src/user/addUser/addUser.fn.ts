@@ -5,7 +5,7 @@ import type { user_relations } from "@model";
 export const addUserFn: ActFn = async (body) => {
 	const { set, get } = body.details;
 
-	const { nationalCard, avatar, ...rest } = set;
+	const { nationalCard, avatar, provinceId, cityId, ...rest } = set;
 
 	const relations: TInsertRelations<typeof user_relations> = {};
 
@@ -17,6 +17,22 @@ export const addUserFn: ActFn = async (body) => {
 	avatar &&
 		(relations.avatar = {
 			_ids: new ObjectId(avatar as string),
+		});
+
+	provinceId &&
+		(relations.province = {
+			_ids: [new ObjectId(provinceId as string)],
+			relatedRelations: {
+				users: true,
+			},
+		});
+
+	cityId &&
+		(relations.city = {
+			_ids: [new ObjectId(cityId as string)],
+			relatedRelations: {
+				users: true,
+			},
 		});
 
 	const addedUser = await user.insertOne({
