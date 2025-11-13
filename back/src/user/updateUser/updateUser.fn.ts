@@ -16,7 +16,6 @@ export const updateUserFn: ActFn = async (body) => {
 			gender,
 			birth_date,
 			summary,
-
 			address,
 		},
 		get,
