@@ -2,191 +2,6 @@
 /* eslint-disable */
 
   
-    export type userInp = {
-      avatar?: number | fileInp
-national_card?: number | fileInp
-      uploadedAssets?: number | fileInp
-registered_places?: number | placeInp
-comments?: number | commentInp
-registered_events?: number | eventInp
-organized_events?: number | eventInp
-attended_events?: number | eventInp
-    }
-
-
-    export type userSchema = {
-_id?: string;
-first_name: string;
-last_name: string;
-father_name?: string;
-gender: ("Male" | "Female" );
-birth_date?: Date;
-summary?: string;
-address?: string;
-level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
-email: string;
-is_verified: boolean;
-createdAt: Date;
-updatedAt: Date;
-avatar?: {
-_id?: string;
-name: string;
-mimType: string;
-size: number;
-alt_text?: string;
-createdAt: Date;
-updatedAt: Date;
-};
-national_card?: {
-_id?: string;
-name: string;
-mimType: string;
-size: number;
-alt_text?: string;
-createdAt: Date;
-updatedAt: Date;
-};
-uploadedAssets: {
-_id?: string;
-name: string;
-mimType: string;
-size: number;
-}[];
-registered_places: {
-_id?: string;
-name: string;
-description: string;
-slug?: string;
-center: {
-type: "Point";
-coordinates: any[];
-};
-area: {
-type: "MultiPolygon";
-coordinates: any[];
-};
-address?: string;
-contact?: {
-phone?: string;
-email?: string;
-website?: string;
-social?: string[];
-};
-hoursOfOperation?: string;
-meta?: Record<string, any>;
-status: ("draft" | "active" | "archived" );
-createdAt: Date;
-updatedAt: Date;
-}[];
-comments: {
-_id?: string;
-text: string;
-rating?: number;
-status: ("pending" | "approved" | "rejected" );
-is_anonymous: boolean;
-createdAt: Date;
-updatedAt: Date;
-}[];
-registered_events: {
-_id?: string;
-name: string;
-description?: string;
-startTime: Date;
-endTime: Date;
-color?: string;
-icon?: string;
-capacity?: string;
-status: ("draft" | "published" | "archived" | "cancelled" );
-isPublic?: boolean;
-ticketPrice?: string;
-registrationRequired?: boolean;
-maxAttendees?: string;
-eventUrl?: string;
-registrationUrl?: string;
-meta?: {
-key?: string;
-};
-createdAt: Date;
-updatedAt: Date;
-}[];
-organized_events: {
-_id?: string;
-name: string;
-description?: string;
-startTime: Date;
-endTime: Date;
-color?: string;
-icon?: string;
-capacity?: string;
-status: ("draft" | "published" | "archived" | "cancelled" );
-isPublic?: boolean;
-ticketPrice?: string;
-registrationRequired?: boolean;
-maxAttendees?: string;
-eventUrl?: string;
-registrationUrl?: string;
-meta?: {
-key?: string;
-};
-createdAt: Date;
-updatedAt: Date;
-}[];
-attended_events: {
-_id?: string;
-name: string;
-description?: string;
-startTime: Date;
-endTime: Date;
-color?: string;
-icon?: string;
-capacity?: string;
-status: ("draft" | "published" | "archived" | "cancelled" );
-isPublic?: boolean;
-ticketPrice?: string;
-registrationRequired?: boolean;
-maxAttendees?: string;
-eventUrl?: string;
-registrationUrl?: string;
-meta?: {
-key?: string;
-};
-createdAt: Date;
-updatedAt: Date;
-}[];
-};
-;
-
-
-    export type fileInp = {
-      uploader?: number | userInp
-      
-    }
-
-
-    export type fileSchema = {
-_id?: string;
-name: string;
-mimType: string;
-size: number;
-alt_text?: string;
-createdAt: Date;
-updatedAt: Date;
-uploader: {
-_id?: string;
-first_name: string;
-last_name: string;
-father_name?: string;
-gender: ("Male" | "Female" );
-birth_date?: Date;
-address?: string;
-level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
-email: string;
-is_verified: boolean;
-};
-};
-;
-
-
     export type provinceInp = {
       registrar?: number | userInp
       cities?: number | cityInp
@@ -376,6 +191,223 @@ status: ("draft" | "active" | "archived" );
 createdAt: Date;
 updatedAt: Date;
 }[];
+};
+;
+
+
+    export type userInp = {
+      avatar?: number | fileInp
+national_card?: number | fileInp
+province?: number | provinceInp
+city?: number | cityInp
+      uploadedAssets?: number | fileInp
+registered_places?: number | placeInp
+comments?: number | commentInp
+registered_events?: number | eventInp
+organized_events?: number | eventInp
+attended_events?: number | eventInp
+    }
+
+
+    export type userSchema = {
+_id?: string;
+first_name: string;
+last_name: string;
+father_name?: string;
+gender: ("Male" | "Female" );
+birth_date?: Date;
+summary?: string;
+address?: string;
+level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
+email: string;
+is_verified: boolean;
+createdAt: Date;
+updatedAt: Date;
+avatar?: {
+_id?: string;
+name: string;
+mimType: string;
+size: number;
+alt_text?: string;
+createdAt: Date;
+updatedAt: Date;
+};
+national_card?: {
+_id?: string;
+name: string;
+mimType: string;
+size: number;
+alt_text?: string;
+createdAt: Date;
+updatedAt: Date;
+};
+province?: {
+_id?: string;
+name: string;
+english_name: string;
+area: {
+type: "MultiPolygon";
+coordinates: any[];
+};
+center: {
+type: "Point";
+coordinates: any[];
+};
+createdAt: Date;
+updatedAt: Date;
+};
+city?: {
+_id?: string;
+name: string;
+english_name: string;
+area: {
+type: "MultiPolygon";
+coordinates: any[];
+};
+center: {
+type: "Point";
+coordinates: any[];
+};
+createdAt: Date;
+updatedAt: Date;
+};
+uploadedAssets: {
+_id?: string;
+name: string;
+mimType: string;
+size: number;
+}[];
+registered_places: {
+_id?: string;
+name: string;
+description: string;
+slug?: string;
+center: {
+type: "Point";
+coordinates: any[];
+};
+area: {
+type: "MultiPolygon";
+coordinates: any[];
+};
+address?: string;
+contact?: {
+phone?: string;
+email?: string;
+website?: string;
+social?: string[];
+};
+hoursOfOperation?: string;
+meta?: Record<string, any>;
+status: ("draft" | "active" | "archived" );
+createdAt: Date;
+updatedAt: Date;
+}[];
+comments: {
+_id?: string;
+text: string;
+rating?: number;
+status: ("pending" | "approved" | "rejected" );
+is_anonymous: boolean;
+createdAt: Date;
+updatedAt: Date;
+}[];
+registered_events: {
+_id?: string;
+name: string;
+description?: string;
+startTime: Date;
+endTime: Date;
+color?: string;
+icon?: string;
+capacity?: string;
+status: ("draft" | "published" | "archived" | "cancelled" );
+isPublic?: boolean;
+ticketPrice?: string;
+registrationRequired?: boolean;
+maxAttendees?: string;
+eventUrl?: string;
+registrationUrl?: string;
+meta?: {
+key?: string;
+};
+createdAt: Date;
+updatedAt: Date;
+}[];
+organized_events: {
+_id?: string;
+name: string;
+description?: string;
+startTime: Date;
+endTime: Date;
+color?: string;
+icon?: string;
+capacity?: string;
+status: ("draft" | "published" | "archived" | "cancelled" );
+isPublic?: boolean;
+ticketPrice?: string;
+registrationRequired?: boolean;
+maxAttendees?: string;
+eventUrl?: string;
+registrationUrl?: string;
+meta?: {
+key?: string;
+};
+createdAt: Date;
+updatedAt: Date;
+}[];
+attended_events: {
+_id?: string;
+name: string;
+description?: string;
+startTime: Date;
+endTime: Date;
+color?: string;
+icon?: string;
+capacity?: string;
+status: ("draft" | "published" | "archived" | "cancelled" );
+isPublic?: boolean;
+ticketPrice?: string;
+registrationRequired?: boolean;
+maxAttendees?: string;
+eventUrl?: string;
+registrationUrl?: string;
+meta?: {
+key?: string;
+};
+createdAt: Date;
+updatedAt: Date;
+}[];
+};
+;
+
+
+    export type fileInp = {
+      uploader?: number | userInp
+      
+    }
+
+
+    export type fileSchema = {
+_id?: string;
+name: string;
+mimType: string;
+size: number;
+alt_text?: string;
+createdAt: Date;
+updatedAt: Date;
+uploader: {
+_id?: string;
+first_name: string;
+last_name: string;
+father_name?: string;
+gender: ("Male" | "Female" );
+birth_date?: Date;
+address?: string;
+level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
+email: string;
+is_verified: boolean;
+};
 };
 ;
 
@@ -1204,6 +1236,24 @@ alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -1577,6 +1627,24 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 size?: (0 | 1 );
 alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2103,6 +2171,24 @@ alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -2428,6 +2514,24 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 size?: (0 | 1 );
 alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -2783,6 +2887,24 @@ alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -3104,6 +3226,24 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 size?: (0 | 1 );
 alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3487,6 +3627,24 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 size?: (0 | 1 );
 alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -3869,6 +4027,8 @@ level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
 is_verified: boolean;
 nationalCard?: string;
 avatar?: string;
+provinceId?: string;
+cityId?: string;
 };
 get: {
 _id?: (0 | 1 );
@@ -3899,6 +4059,24 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 size?: (0 | 1 );
 alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -4053,6 +4231,119 @@ address?: (0 | 1 );
 level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
+};
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+cities?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+capital?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city_zones?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
 };
 };
 uploadedAssets?: {
@@ -4627,6 +4918,119 @@ email?: (0 | 1 );
 is_verified?: (0 | 1 );
 };
 };
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+cities?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+capital?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city_zones?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -5178,6 +5582,24 @@ alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -5319,6 +5741,24 @@ alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -5453,6 +5893,24 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 size?: (0 | 1 );
 alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -5593,6 +6051,24 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 size?: (0 | 1 );
 alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -5750,6 +6226,119 @@ address?: (0 | 1 );
 level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
+};
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+cities?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+capital?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city_zones?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
 };
 };
 uploadedAssets?: {
@@ -6321,6 +6910,24 @@ alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -6420,6 +7027,8 @@ set: {
 _id: string;
 avatar?: string;
 national_card?: string;
+province?: string;
+city?: string;
 };
 get: {
 _id?: (0 | 1 );
@@ -6450,6 +7059,24 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 size?: (0 | 1 );
 alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -6963,6 +7590,119 @@ email?: (0 | 1 );
 is_verified?: (0 | 1 );
 };
 };
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+cities?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+capital?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+father_name?: (0 | 1 );
+gender?: (0 | 1 );
+birth_date?: (0 | 1 );
+summary?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city_zones?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+};
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -7512,6 +8252,24 @@ alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -7886,6 +8644,24 @@ alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -8251,6 +9027,24 @@ alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -8569,6 +9363,24 @@ alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -8698,6 +9510,24 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 size?: (0 | 1 );
 alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -8937,6 +9767,24 @@ alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -9063,6 +9911,24 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 size?: (0 | 1 );
 alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -9195,6 +10061,24 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 size?: (0 | 1 );
 alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -9611,6 +10495,24 @@ alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -9751,6 +10653,24 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 size?: (0 | 1 );
 alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -10007,6 +10927,24 @@ alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -10127,6 +11065,24 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 size?: (0 | 1 );
 alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -10384,6 +11340,24 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 size?: (0 | 1 );
 alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -11134,6 +12108,24 @@ alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -11407,6 +12399,24 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 size?: (0 | 1 );
 alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -11821,6 +12831,24 @@ alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -12066,6 +13094,24 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 size?: (0 | 1 );
 alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -12411,6 +13457,24 @@ alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -12549,6 +13613,24 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 size?: (0 | 1 );
 alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
@@ -13000,6 +14082,24 @@ alt_text?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
 uploadedAssets?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -13290,6 +14390,24 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 size?: (0 | 1 );
 alt_text?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
