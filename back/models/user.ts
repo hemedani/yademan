@@ -10,6 +10,7 @@ import {
 	pattern,
 	refine,
 	type RelationDataType,
+	type RelationSortOrderType,
 	string,
 	union,
 } from "@deps";
@@ -83,6 +84,36 @@ export const user_relations = {
 		type: "single" as RelationDataType,
 		optional: true,
 		relatedRelations: {},
+	},
+	province: {
+		schemaName: "province",
+		type: "single" as RelationDataType,
+		optional: true,
+		relatedRelations: {
+			users: {
+				type: "multiple" as RelationDataType,
+				limit: 500,
+				sort: {
+					field: "_id",
+					order: "desc" as RelationSortOrderType,
+				},
+			},
+		},
+	},
+	city: {
+		schemaName: "city",
+		type: "single" as RelationDataType,
+		optional: true,
+		relatedRelations: {
+			users: {
+				type: "multiple" as RelationDataType,
+				limit: 500,
+				sort: {
+					field: "_id",
+					order: "desc" as RelationSortOrderType,
+				},
+			},
+		},
 	},
 };
 
