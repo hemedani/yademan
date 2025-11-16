@@ -6,6 +6,6 @@ export const getValidator = () => {
 		set: object({
 			_id: objectIdValidation,
 		}),
-		get: selectStruct("event", 1),
+		get: selectStruct("event", 2),
 	});
 };
