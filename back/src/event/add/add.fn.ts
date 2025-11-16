@@ -11,7 +11,6 @@ export const addFn: ActFn = async (body) => {
 	const {
 		placeIds,
 		organizer,
-		attendees,
 		tags,
 		thumbnail,
 		gallery,
@@ -38,12 +37,6 @@ export const addFn: ActFn = async (body) => {
 		(relations.organizer = {
 			_ids: new ObjectId(organizer as string),
 			relatedRelations: { organized_events: true },
-		});
-
-	attendees && attendees.length > 0 &&
-		(relations.attendees = {
-			_ids: attendees.map((id: string) => new ObjectId(id)),
-			relatedRelations: { attended_events: true },
 		});
 
 	tags && tags.length > 0 &&

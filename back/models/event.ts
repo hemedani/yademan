@@ -1,9 +1,9 @@
 import { coreApp } from "../mod.ts";
 import {
 	boolean,
+	coerce,
 	date,
 	enums,
-	object,
 	optional,
 	type RelationDataType,
 	type RelationSortOrderType,
@@ -21,8 +21,8 @@ export const event_status_enum = enums([
 export const event_pure = {
 	name: string(),
 	description: optional(string()),
-	startTime: date(),
-	endTime: date(),
+	startTime: coerce(date(), string(), (value) => new Date(value)),
+	endTime: coerce(date(), string(), (value) => new Date(value)),
 	color: optional(string()), // E.g., "#FF5733" for calendar coloring
 	icon: optional(string()), // E.g., "event-icon.svg" or an icon name like "calendar"
 	capacity: optional(string()), // For events with limited capacity
@@ -33,10 +33,6 @@ export const event_pure = {
 	maxAttendees: optional(string()), // Maximum number of attendees
 	eventUrl: optional(string()), // External event URL
 	registrationUrl: optional(string()), // Registration URL
-	meta: optional(object({
-		// For custom data that might come up
-		key: optional(string()),
-	})),
 	...createUpdateAt,
 };
 
@@ -77,21 +73,6 @@ export const event_relations = {
 		optional: true,
 		relatedRelations: {
 			organized_events: {
-				type: "multiple" as RelationDataType,
-				limit: 50,
-				sort: {
-					field: "_id",
-					order: "desc" as RelationSortOrderType,
-				},
-			},
-		},
-	},
-	attendees: {
-		schemaName: "user",
-		type: "multiple" as RelationDataType,
-		optional: true,
-		relatedRelations: {
-			attended_events: {
 				type: "multiple" as RelationDataType,
 				limit: 50,
 				sort: {
