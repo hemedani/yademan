@@ -2,122 +2,6 @@
 /* eslint-disable */
 
 
-export type userInp = {
-  avatar?: number | fileInp
-  national_card?: number | fileInp
-  uploadedAssets?: number | fileInp
-  registered_places?: number | placeInp
-  comments?: number | commentInp
-}
-
-
-export type userSchema = {
-  _id?: string;
-  first_name: string;
-  last_name: string;
-  father_name?: string;
-  gender: ("Male" | "Female");
-  birth_date?: Date;
-  summary?: string;
-  address?: string;
-  level: ("Ghost" | "Manager" | "Editor" | "Ordinary");
-  email: string;
-  is_verified: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  avatar?: {
-    _id?: string;
-    name: string;
-    mimType: string;
-    size: number;
-    alt_text?: string;
-    createdAt: Date;
-    updatedAt: Date;
-  };
-  national_card?: {
-    _id?: string;
-    name: string;
-    mimType: string;
-    size: number;
-    alt_text?: string;
-    createdAt: Date;
-    updatedAt: Date;
-  };
-  uploadedAssets: {
-    _id?: string;
-    name: string;
-    mimType: string;
-    size: number;
-  }[];
-  registered_places: {
-    _id?: string;
-    name: string;
-    description: string;
-    slug?: string;
-    center: {
-      type: "Point";
-      coordinates: any[];
-    };
-    area: {
-      type: "MultiPolygon";
-      coordinates: any[];
-    };
-    address?: string;
-    contact?: {
-      phone?: string;
-      email?: string;
-      website?: string;
-      social?: string[];
-    };
-    hoursOfOperation?: string;
-    meta?: Record<string, any>;
-    status: ("draft" | "active" | "archived");
-    createdAt: Date;
-    updatedAt: Date;
-  }[];
-  comments: {
-    _id?: string;
-    text: string;
-    rating?: number;
-    status: ("pending" | "approved" | "rejected");
-    is_anonymous: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-  }[];
-};
-;
-
-
-export type fileInp = {
-  uploader?: number | userInp
-
-}
-
-
-export type fileSchema = {
-  _id?: string;
-  name: string;
-  mimType: string;
-  size: number;
-  alt_text?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  uploader: {
-    _id?: string;
-    first_name: string;
-    last_name: string;
-    father_name?: string;
-    gender: ("Male" | "Female");
-    birth_date?: Date;
-    address?: string;
-    level: ("Ghost" | "Manager" | "Editor" | "Ordinary");
-    email: string;
-    is_verified: boolean;
-  };
-};
-;
-
-
 export type provinceInp = {
   registrar?: number | userInp
   cities?: number | cityInp
@@ -311,6 +195,194 @@ export type citySchema = {
 ;
 
 
+export type userInp = {
+  avatar?: number | fileInp
+  national_card?: number | fileInp
+  province?: number | provinceInp
+  city?: number | cityInp
+  uploadedAssets?: number | fileInp
+  registered_places?: number | placeInp
+  comments?: number | commentInp
+  registered_events?: number | eventInp
+  organized_events?: number | eventInp
+}
+
+
+export type userSchema = {
+  _id?: string;
+  first_name: string;
+  last_name: string;
+  father_name?: string;
+  gender: ("Male" | "Female");
+  birth_date?: Date;
+  summary?: string;
+  address?: string;
+  level: ("Ghost" | "Manager" | "Editor" | "Ordinary");
+  email: string;
+  is_verified: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  avatar?: {
+    _id?: string;
+    name: string;
+    mimType: string;
+    size: number;
+    alt_text?: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+  national_card?: {
+    _id?: string;
+    name: string;
+    mimType: string;
+    size: number;
+    alt_text?: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+  province?: {
+    _id?: string;
+    name: string;
+    english_name: string;
+    area: {
+      type: "MultiPolygon";
+      coordinates: any[];
+    };
+    center: {
+      type: "Point";
+      coordinates: any[];
+    };
+    createdAt: Date;
+    updatedAt: Date;
+  };
+  city?: {
+    _id?: string;
+    name: string;
+    english_name: string;
+    area: {
+      type: "MultiPolygon";
+      coordinates: any[];
+    };
+    center: {
+      type: "Point";
+      coordinates: any[];
+    };
+    createdAt: Date;
+    updatedAt: Date;
+  };
+  uploadedAssets: {
+    _id?: string;
+    name: string;
+    mimType: string;
+    size: number;
+  }[];
+  registered_places: {
+    _id?: string;
+    name: string;
+    description: string;
+    slug?: string;
+    center: {
+      type: "Point";
+      coordinates: any[];
+    };
+    area: {
+      type: "MultiPolygon";
+      coordinates: any[];
+    };
+    address?: string;
+    contact?: {
+      phone?: string;
+      email?: string;
+      website?: string;
+      social?: string[];
+    };
+    hoursOfOperation?: string;
+    meta?: Record<string, any>;
+    status: ("draft" | "active" | "archived");
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
+  comments: {
+    _id?: string;
+    text: string;
+    rating?: number;
+    status: ("pending" | "approved" | "rejected");
+    is_anonymous: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
+  registered_events: {
+    _id?: string;
+    name: string;
+    description?: string;
+    startTime: Date;
+    endTime: Date;
+    color?: string;
+    icon?: string;
+    capacity?: string;
+    status: ("draft" | "published" | "archived" | "cancelled");
+    isPublic?: boolean;
+    ticketPrice?: string;
+    registrationRequired?: boolean;
+    maxAttendees?: string;
+    eventUrl?: string;
+    registrationUrl?: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
+  organized_events: {
+    _id?: string;
+    name: string;
+    description?: string;
+    startTime: Date;
+    endTime: Date;
+    color?: string;
+    icon?: string;
+    capacity?: string;
+    status: ("draft" | "published" | "archived" | "cancelled");
+    isPublic?: boolean;
+    ticketPrice?: string;
+    registrationRequired?: boolean;
+    maxAttendees?: string;
+    eventUrl?: string;
+    registrationUrl?: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
+};
+;
+
+
+export type fileInp = {
+  uploader?: number | userInp
+
+}
+
+
+export type fileSchema = {
+  _id?: string;
+  name: string;
+  mimType: string;
+  size: number;
+  alt_text?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  uploader: {
+    _id?: string;
+    first_name: string;
+    last_name: string;
+    father_name?: string;
+    gender: ("Male" | "Female");
+    birth_date?: Date;
+    address?: string;
+    level: ("Ghost" | "Manager" | "Editor" | "Ordinary");
+    email: string;
+    is_verified: boolean;
+  };
+};
+;
+
+
 export type city_zoneInp = {
   registrar?: number | userInp
   city?: number | cityInp
@@ -426,7 +498,7 @@ export type categorySchema = {
 
 export type tagInp = {
   registrar?: number | userInp
-
+  events?: number | eventInp
 }
 
 
@@ -453,6 +525,25 @@ export type tagSchema = {
     createdAt: Date;
     updatedAt: Date;
   };
+  events: {
+    _id?: string;
+    name: string;
+    description?: string;
+    startTime: Date;
+    endTime: Date;
+    color?: string;
+    icon?: string;
+    capacity?: string;
+    status: ("draft" | "published" | "archived" | "cancelled");
+    isPublic?: boolean;
+    ticketPrice?: string;
+    registrationRequired?: boolean;
+    maxAttendees?: string;
+    eventUrl?: string;
+    registrationUrl?: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
 };
 ;
 
@@ -468,6 +559,7 @@ export type placeInp = {
   gallery?: number | fileInp
   comments?: number | commentInp
   virtual_tours?: number | virtual_tourInp
+  events?: number | eventInp
 }
 
 
@@ -614,6 +706,25 @@ export type placeSchema = {
     createdAt: Date;
     updatedAt: Date;
   }[];
+  events: {
+    _id?: string;
+    name: string;
+    description?: string;
+    startTime: Date;
+    endTime: Date;
+    color?: string;
+    icon?: string;
+    capacity?: string;
+    status: ("draft" | "published" | "archived" | "cancelled");
+    isPublic?: boolean;
+    ticketPrice?: string;
+    registrationRequired?: boolean;
+    maxAttendees?: string;
+    eventUrl?: string;
+    registrationUrl?: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
 };
 ;
 
@@ -749,6 +860,122 @@ export type virtual_tourSchema = {
     createdAt: Date;
     updatedAt: Date;
   };
+};
+;
+
+
+export type eventInp = {
+  registrar?: number | userInp
+  places?: number | placeInp
+  organizer?: number | userInp
+  tags?: number | tagInp
+  thumbnail?: number | fileInp
+  gallery?: number | fileInp
+
+}
+
+
+export type eventSchema = {
+  _id?: string;
+  name: string;
+  description?: string;
+  startTime: Date;
+  endTime: Date;
+  color?: string;
+  icon?: string;
+  capacity?: string;
+  status: ("draft" | "published" | "archived" | "cancelled");
+  isPublic?: boolean;
+  ticketPrice?: string;
+  registrationRequired?: boolean;
+  maxAttendees?: string;
+  eventUrl?: string;
+  registrationUrl?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  registrar?: {
+    _id?: string;
+    first_name: string;
+    last_name: string;
+    father_name?: string;
+    gender: ("Male" | "Female");
+    birth_date?: Date;
+    summary?: string;
+    address?: string;
+    level: ("Ghost" | "Manager" | "Editor" | "Ordinary");
+    email: string;
+    is_verified: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+  places?: {
+    _id?: string;
+    name: string;
+    description: string;
+    slug?: string;
+    center: {
+      type: "Point";
+      coordinates: any[];
+    };
+    area: {
+      type: "MultiPolygon";
+      coordinates: any[];
+    };
+    address?: string;
+    contact?: {
+      phone?: string;
+      email?: string;
+      website?: string;
+      social?: string[];
+    };
+    hoursOfOperation?: string;
+    meta?: Record<string, any>;
+    status: ("draft" | "active" | "archived");
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
+  organizer?: {
+    _id?: string;
+    first_name: string;
+    last_name: string;
+    father_name?: string;
+    gender: ("Male" | "Female");
+    birth_date?: Date;
+    summary?: string;
+    address?: string;
+    level: ("Ghost" | "Manager" | "Editor" | "Ordinary");
+    email: string;
+    is_verified: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+  tags?: {
+    _id?: string;
+    name: string;
+    description: string;
+    color?: string;
+    icon?: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
+  thumbnail?: {
+    _id?: string;
+    name: string;
+    mimType: string;
+    size: number;
+    alt_text?: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+  gallery?: {
+    _id?: string;
+    name: string;
+    mimType: string;
+    size: number;
+    alt_text?: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
 };
 ;
 
@@ -955,6 +1182,24 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            province?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
             uploadedAssets?: {
               _id?: (0 | 1);
               name?: (0 | 1);
@@ -982,6 +1227,44 @@ export type ReqType = {
               rating?: (0 | 1);
               status?: (0 | 1);
               is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            registered_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organized_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -1196,6 +1479,25 @@ export type ReqType = {
               description?: (0 | 1);
               hotspots?: (0 | 1);
               status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -1251,6 +1553,24 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            province?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
             uploadedAssets?: {
               _id?: (0 | 1);
               name?: (0 | 1);
@@ -1278,6 +1598,44 @@ export type ReqType = {
               rating?: (0 | 1);
               status?: (0 | 1);
               is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            registered_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organized_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -1492,6 +1850,25 @@ export type ReqType = {
               description?: (0 | 1);
               hotspots?: (0 | 1);
               status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -1694,6 +2071,24 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            province?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
             uploadedAssets?: {
               _id?: (0 | 1);
               name?: (0 | 1);
@@ -1721,6 +2116,44 @@ export type ReqType = {
               rating?: (0 | 1);
               status?: (0 | 1);
               is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            registered_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organized_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -1887,6 +2320,25 @@ export type ReqType = {
               description?: (0 | 1);
               hotspots?: (0 | 1);
               status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -1942,6 +2394,24 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            province?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
             uploadedAssets?: {
               _id?: (0 | 1);
               name?: (0 | 1);
@@ -1969,6 +2439,44 @@ export type ReqType = {
               rating?: (0 | 1);
               status?: (0 | 1);
               is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            registered_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organized_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -2135,6 +2643,25 @@ export type ReqType = {
               description?: (0 | 1);
               hotspots?: (0 | 1);
               status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -2214,6 +2741,24 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            province?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
             uploadedAssets?: {
               _id?: (0 | 1);
               name?: (0 | 1);
@@ -2241,6 +2786,44 @@ export type ReqType = {
               rating?: (0 | 1);
               status?: (0 | 1);
               is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            registered_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organized_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -2478,6 +3061,24 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            province?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
             uploadedAssets?: {
               _id?: (0 | 1);
               name?: (0 | 1);
@@ -2505,6 +3106,44 @@ export type ReqType = {
               rating?: (0 | 1);
               status?: (0 | 1);
               is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            registered_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organized_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -2727,6 +3366,25 @@ export type ReqType = {
               description?: (0 | 1);
               hotspots?: (0 | 1);
               status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -2781,6 +3439,24 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            province?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
             uploadedAssets?: {
               _id?: (0 | 1);
               name?: (0 | 1);
@@ -2808,6 +3484,44 @@ export type ReqType = {
               rating?: (0 | 1);
               status?: (0 | 1);
               is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            registered_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organized_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -3033,6 +3747,25 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
           };
         };
       };
@@ -3080,6 +3813,8 @@ export type ReqType = {
           is_verified: boolean;
           nationalCard?: string;
           avatar?: string;
+          provinceId?: string;
+          cityId?: string;
         };
         get: {
           _id?: (0 | 1);
@@ -3113,6 +3848,24 @@ export type ReqType = {
             createdAt?: (0 | 1);
             updatedAt?: (0 | 1);
           };
+          province?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            english_name?: (0 | 1);
+            area?: (0 | 1);
+            center?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          city?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            english_name?: (0 | 1);
+            area?: (0 | 1);
+            center?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
           uploadedAssets?: {
             _id?: (0 | 1);
             name?: (0 | 1);
@@ -3140,6 +3893,44 @@ export type ReqType = {
             rating?: (0 | 1);
             status?: (0 | 1);
             is_anonymous?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          registered_events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          organized_events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
             createdAt?: (0 | 1);
             updatedAt?: (0 | 1);
           };
@@ -3206,6 +3997,119 @@ export type ReqType = {
               is_verified?: (0 | 1);
             };
           };
+          province?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            english_name?: (0 | 1);
+            area?: (0 | 1);
+            center?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+            registrar?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            cities?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            capital?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            places?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              slug?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              address?: (0 | 1);
+              contact?: (0 | 1);
+              hoursOfOperation?: (0 | 1);
+              meta?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+          };
+          city?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            english_name?: (0 | 1);
+            area?: (0 | 1);
+            center?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+            registrar?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            province?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city_zones?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            places?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              slug?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              address?: (0 | 1);
+              contact?: (0 | 1);
+              hoursOfOperation?: (0 | 1);
+              meta?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+          };
           uploadedAssets?: {
             _id?: (0 | 1);
             name?: (0 | 1);
@@ -3333,6 +4237,25 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
           };
           comments?: {
             _id?: (0 | 1);
@@ -3369,6 +4292,188 @@ export type ReqType = {
               hoursOfOperation?: (0 | 1);
               meta?: (0 | 1);
               status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+          };
+          registered_events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+            registrar?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            places?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              slug?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              address?: (0 | 1);
+              contact?: (0 | 1);
+              hoursOfOperation?: (0 | 1);
+              meta?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organizer?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            tags?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            thumbnail?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            gallery?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+          };
+          organized_events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+            registrar?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            places?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              slug?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              address?: (0 | 1);
+              contact?: (0 | 1);
+              hoursOfOperation?: (0 | 1);
+              meta?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organizer?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            tags?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            thumbnail?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            gallery?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -3437,6 +4542,119 @@ export type ReqType = {
               is_verified?: (0 | 1);
             };
           };
+          province?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            english_name?: (0 | 1);
+            area?: (0 | 1);
+            center?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+            registrar?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            cities?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            capital?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            places?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              slug?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              address?: (0 | 1);
+              contact?: (0 | 1);
+              hoursOfOperation?: (0 | 1);
+              meta?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+          };
+          city?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            english_name?: (0 | 1);
+            area?: (0 | 1);
+            center?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+            registrar?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            province?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city_zones?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            places?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              slug?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              address?: (0 | 1);
+              contact?: (0 | 1);
+              hoursOfOperation?: (0 | 1);
+              meta?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+          };
           uploadedAssets?: {
             _id?: (0 | 1);
             name?: (0 | 1);
@@ -3564,6 +4782,25 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
           };
           comments?: {
             _id?: (0 | 1);
@@ -3600,6 +4837,188 @@ export type ReqType = {
               hoursOfOperation?: (0 | 1);
               meta?: (0 | 1);
               status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+          };
+          registered_events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+            registrar?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            places?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              slug?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              address?: (0 | 1);
+              contact?: (0 | 1);
+              hoursOfOperation?: (0 | 1);
+              meta?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organizer?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            tags?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            thumbnail?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            gallery?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+          };
+          organized_events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+            registrar?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            places?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              slug?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              address?: (0 | 1);
+              contact?: (0 | 1);
+              hoursOfOperation?: (0 | 1);
+              meta?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organizer?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            tags?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            thumbnail?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            gallery?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -3647,6 +5066,24 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            province?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
             uploadedAssets?: {
               _id?: (0 | 1);
               name?: (0 | 1);
@@ -3674,6 +5111,44 @@ export type ReqType = {
               rating?: (0 | 1);
               status?: (0 | 1);
               is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            registered_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organized_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -3728,6 +5203,24 @@ export type ReqType = {
             createdAt?: (0 | 1);
             updatedAt?: (0 | 1);
           };
+          province?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            english_name?: (0 | 1);
+            area?: (0 | 1);
+            center?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          city?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            english_name?: (0 | 1);
+            area?: (0 | 1);
+            center?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
           uploadedAssets?: {
             _id?: (0 | 1);
             name?: (0 | 1);
@@ -3755,6 +5248,44 @@ export type ReqType = {
             rating?: (0 | 1);
             status?: (0 | 1);
             is_anonymous?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          registered_events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          organized_events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
             createdAt?: (0 | 1);
             updatedAt?: (0 | 1);
           };
@@ -3805,6 +5336,24 @@ export type ReqType = {
             createdAt?: (0 | 1);
             updatedAt?: (0 | 1);
           };
+          province?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            english_name?: (0 | 1);
+            area?: (0 | 1);
+            center?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          city?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            english_name?: (0 | 1);
+            area?: (0 | 1);
+            center?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
           uploadedAssets?: {
             _id?: (0 | 1);
             name?: (0 | 1);
@@ -3832,6 +5381,44 @@ export type ReqType = {
             rating?: (0 | 1);
             status?: (0 | 1);
             is_anonymous?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          registered_events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          organized_events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
             createdAt?: (0 | 1);
             updatedAt?: (0 | 1);
           };
@@ -3885,6 +5472,24 @@ export type ReqType = {
             createdAt?: (0 | 1);
             updatedAt?: (0 | 1);
           };
+          province?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            english_name?: (0 | 1);
+            area?: (0 | 1);
+            center?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          city?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            english_name?: (0 | 1);
+            area?: (0 | 1);
+            center?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
           uploadedAssets?: {
             _id?: (0 | 1);
             name?: (0 | 1);
@@ -3912,6 +5517,44 @@ export type ReqType = {
             rating?: (0 | 1);
             status?: (0 | 1);
             is_anonymous?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          registered_events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          organized_events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
             createdAt?: (0 | 1);
             updatedAt?: (0 | 1);
           };
@@ -3981,6 +5624,119 @@ export type ReqType = {
               is_verified?: (0 | 1);
             };
           };
+          province?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            english_name?: (0 | 1);
+            area?: (0 | 1);
+            center?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+            registrar?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            cities?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            capital?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            places?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              slug?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              address?: (0 | 1);
+              contact?: (0 | 1);
+              hoursOfOperation?: (0 | 1);
+              meta?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+          };
+          city?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            english_name?: (0 | 1);
+            area?: (0 | 1);
+            center?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+            registrar?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            province?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city_zones?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            places?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              slug?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              address?: (0 | 1);
+              contact?: (0 | 1);
+              hoursOfOperation?: (0 | 1);
+              meta?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+          };
           uploadedAssets?: {
             _id?: (0 | 1);
             name?: (0 | 1);
@@ -4108,6 +5864,25 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
           };
           comments?: {
             _id?: (0 | 1);
@@ -4144,6 +5919,188 @@ export type ReqType = {
               hoursOfOperation?: (0 | 1);
               meta?: (0 | 1);
               status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+          };
+          registered_events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+            registrar?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            places?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              slug?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              address?: (0 | 1);
+              contact?: (0 | 1);
+              hoursOfOperation?: (0 | 1);
+              meta?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organizer?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            tags?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            thumbnail?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            gallery?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+          };
+          organized_events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+            registrar?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            places?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              slug?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              address?: (0 | 1);
+              contact?: (0 | 1);
+              hoursOfOperation?: (0 | 1);
+              meta?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organizer?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            tags?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            thumbnail?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            gallery?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -4209,6 +6166,24 @@ export type ReqType = {
             createdAt?: (0 | 1);
             updatedAt?: (0 | 1);
           };
+          province?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            english_name?: (0 | 1);
+            area?: (0 | 1);
+            center?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          city?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            english_name?: (0 | 1);
+            area?: (0 | 1);
+            center?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
           uploadedAssets?: {
             _id?: (0 | 1);
             name?: (0 | 1);
@@ -4239,6 +6214,44 @@ export type ReqType = {
             createdAt?: (0 | 1);
             updatedAt?: (0 | 1);
           };
+          registered_events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          organized_events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
         };
       };
 
@@ -4247,7 +6260,9 @@ export type ReqType = {
         set: {
           _id: string;
           avatar?: string;
-          nationalCard?: string;
+          national_card?: string;
+          province?: string;
+          city?: string;
         };
         get: {
           _id?: (0 | 1);
@@ -4281,6 +6296,24 @@ export type ReqType = {
             createdAt?: (0 | 1);
             updatedAt?: (0 | 1);
           };
+          province?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            english_name?: (0 | 1);
+            area?: (0 | 1);
+            center?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          city?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            english_name?: (0 | 1);
+            area?: (0 | 1);
+            center?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
           uploadedAssets?: {
             _id?: (0 | 1);
             name?: (0 | 1);
@@ -4308,6 +6341,44 @@ export type ReqType = {
             rating?: (0 | 1);
             status?: (0 | 1);
             is_anonymous?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          registered_events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          organized_events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
             createdAt?: (0 | 1);
             updatedAt?: (0 | 1);
           };
@@ -4479,6 +6550,25 @@ export type ReqType = {
             createdAt?: (0 | 1);
             updatedAt?: (0 | 1);
           };
+          events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
         };
       };
 
@@ -4613,6 +6703,25 @@ export type ReqType = {
             createdAt?: (0 | 1);
             updatedAt?: (0 | 1);
           };
+          events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
         };
       };
 
@@ -4689,6 +6798,119 @@ export type ReqType = {
                 level?: (0 | 1);
                 email?: (0 | 1);
                 is_verified?: (0 | 1);
+              };
+            };
+            province?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+              registrar?: {
+                _id?: (0 | 1);
+                first_name?: (0 | 1);
+                last_name?: (0 | 1);
+                father_name?: (0 | 1);
+                gender?: (0 | 1);
+                birth_date?: (0 | 1);
+                summary?: (0 | 1);
+                address?: (0 | 1);
+                level?: (0 | 1);
+                email?: (0 | 1);
+                is_verified?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              cities?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              capital?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              places?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                slug?: (0 | 1);
+                center?: (0 | 1);
+                area?: (0 | 1);
+                address?: (0 | 1);
+                contact?: (0 | 1);
+                hoursOfOperation?: (0 | 1);
+                meta?: (0 | 1);
+                status?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+            };
+            city?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+              registrar?: {
+                _id?: (0 | 1);
+                first_name?: (0 | 1);
+                last_name?: (0 | 1);
+                father_name?: (0 | 1);
+                gender?: (0 | 1);
+                birth_date?: (0 | 1);
+                summary?: (0 | 1);
+                address?: (0 | 1);
+                level?: (0 | 1);
+                email?: (0 | 1);
+                is_verified?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              province?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              city_zones?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                center?: (0 | 1);
+                area?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              places?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                slug?: (0 | 1);
+                center?: (0 | 1);
+                area?: (0 | 1);
+                address?: (0 | 1);
+                contact?: (0 | 1);
+                hoursOfOperation?: (0 | 1);
+                meta?: (0 | 1);
+                status?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
               };
             };
             uploadedAssets?: {
@@ -4818,6 +7040,25 @@ export type ReqType = {
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
+              events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
             };
             comments?: {
               _id?: (0 | 1);
@@ -4854,6 +7095,188 @@ export type ReqType = {
                 hoursOfOperation?: (0 | 1);
                 meta?: (0 | 1);
                 status?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+            };
+            registered_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+              registrar?: {
+                _id?: (0 | 1);
+                first_name?: (0 | 1);
+                last_name?: (0 | 1);
+                father_name?: (0 | 1);
+                gender?: (0 | 1);
+                birth_date?: (0 | 1);
+                summary?: (0 | 1);
+                address?: (0 | 1);
+                level?: (0 | 1);
+                email?: (0 | 1);
+                is_verified?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              places?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                slug?: (0 | 1);
+                center?: (0 | 1);
+                area?: (0 | 1);
+                address?: (0 | 1);
+                contact?: (0 | 1);
+                hoursOfOperation?: (0 | 1);
+                meta?: (0 | 1);
+                status?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              organizer?: {
+                _id?: (0 | 1);
+                first_name?: (0 | 1);
+                last_name?: (0 | 1);
+                father_name?: (0 | 1);
+                gender?: (0 | 1);
+                birth_date?: (0 | 1);
+                summary?: (0 | 1);
+                address?: (0 | 1);
+                level?: (0 | 1);
+                email?: (0 | 1);
+                is_verified?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              tags?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              thumbnail?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                mimType?: (0 | 1);
+                size?: (0 | 1);
+                alt_text?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              gallery?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                mimType?: (0 | 1);
+                size?: (0 | 1);
+                alt_text?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+            };
+            organized_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+              registrar?: {
+                _id?: (0 | 1);
+                first_name?: (0 | 1);
+                last_name?: (0 | 1);
+                father_name?: (0 | 1);
+                gender?: (0 | 1);
+                birth_date?: (0 | 1);
+                summary?: (0 | 1);
+                address?: (0 | 1);
+                level?: (0 | 1);
+                email?: (0 | 1);
+                is_verified?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              places?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                slug?: (0 | 1);
+                center?: (0 | 1);
+                area?: (0 | 1);
+                address?: (0 | 1);
+                contact?: (0 | 1);
+                hoursOfOperation?: (0 | 1);
+                meta?: (0 | 1);
+                status?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              organizer?: {
+                _id?: (0 | 1);
+                first_name?: (0 | 1);
+                last_name?: (0 | 1);
+                father_name?: (0 | 1);
+                gender?: (0 | 1);
+                birth_date?: (0 | 1);
+                summary?: (0 | 1);
+                address?: (0 | 1);
+                level?: (0 | 1);
+                email?: (0 | 1);
+                is_verified?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              tags?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              thumbnail?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                mimType?: (0 | 1);
+                size?: (0 | 1);
+                alt_text?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              gallery?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                mimType?: (0 | 1);
+                size?: (0 | 1);
+                alt_text?: (0 | 1);
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
@@ -4899,6 +7322,24 @@ export type ReqType = {
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
+              province?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              city?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
               uploadedAssets?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
@@ -4926,6 +7367,44 @@ export type ReqType = {
                 rating?: (0 | 1);
                 status?: (0 | 1);
                 is_anonymous?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              registered_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              organized_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
@@ -5151,6 +7630,25 @@ export type ReqType = {
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
+              events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
             };
           };
           city?: {
@@ -5193,6 +7691,24 @@ export type ReqType = {
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
+              province?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              city?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
               uploadedAssets?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
@@ -5220,6 +7736,44 @@ export type ReqType = {
                 rating?: (0 | 1);
                 status?: (0 | 1);
                 is_anonymous?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              registered_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              organized_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
@@ -5437,6 +7991,25 @@ export type ReqType = {
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
+              events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
             };
           };
           city_zone?: {
@@ -5478,6 +8051,24 @@ export type ReqType = {
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
+              province?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              city?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
               uploadedAssets?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
@@ -5505,6 +8096,44 @@ export type ReqType = {
                 rating?: (0 | 1);
                 status?: (0 | 1);
                 is_anonymous?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              registered_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              organized_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
@@ -5674,6 +8303,25 @@ export type ReqType = {
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
+              events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
             };
           };
           category?: {
@@ -5716,6 +8364,24 @@ export type ReqType = {
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
+              province?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              city?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
               uploadedAssets?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
@@ -5743,6 +8409,44 @@ export type ReqType = {
                 rating?: (0 | 1);
                 status?: (0 | 1);
                 is_anonymous?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              registered_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              organized_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
@@ -5788,6 +8492,24 @@ export type ReqType = {
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
+              province?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              city?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
               uploadedAssets?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
@@ -5815,6 +8537,135 @@ export type ReqType = {
                 rating?: (0 | 1);
                 status?: (0 | 1);
                 is_anonymous?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              registered_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              organized_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+            };
+            events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+              registrar?: {
+                _id?: (0 | 1);
+                first_name?: (0 | 1);
+                last_name?: (0 | 1);
+                father_name?: (0 | 1);
+                gender?: (0 | 1);
+                birth_date?: (0 | 1);
+                summary?: (0 | 1);
+                address?: (0 | 1);
+                level?: (0 | 1);
+                email?: (0 | 1);
+                is_verified?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              places?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                slug?: (0 | 1);
+                center?: (0 | 1);
+                area?: (0 | 1);
+                address?: (0 | 1);
+                contact?: (0 | 1);
+                hoursOfOperation?: (0 | 1);
+                meta?: (0 | 1);
+                status?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              organizer?: {
+                _id?: (0 | 1);
+                first_name?: (0 | 1);
+                last_name?: (0 | 1);
+                father_name?: (0 | 1);
+                gender?: (0 | 1);
+                birth_date?: (0 | 1);
+                summary?: (0 | 1);
+                address?: (0 | 1);
+                level?: (0 | 1);
+                email?: (0 | 1);
+                is_verified?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              tags?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              thumbnail?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                mimType?: (0 | 1);
+                size?: (0 | 1);
+                alt_text?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              gallery?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                mimType?: (0 | 1);
+                size?: (0 | 1);
+                alt_text?: (0 | 1);
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
@@ -5857,6 +8708,24 @@ export type ReqType = {
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
+              province?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              city?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
               uploadedAssets?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
@@ -5884,6 +8753,44 @@ export type ReqType = {
                 rating?: (0 | 1);
                 status?: (0 | 1);
                 is_anonymous?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              registered_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              organized_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
@@ -5926,6 +8833,24 @@ export type ReqType = {
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
+              province?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              city?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
               uploadedAssets?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
@@ -5953,6 +8878,44 @@ export type ReqType = {
                 rating?: (0 | 1);
                 status?: (0 | 1);
                 is_anonymous?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              registered_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              organized_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
@@ -5998,6 +8961,24 @@ export type ReqType = {
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
+              province?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              city?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
               uploadedAssets?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
@@ -6025,6 +9006,44 @@ export type ReqType = {
                 rating?: (0 | 1);
                 status?: (0 | 1);
                 is_anonymous?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              registered_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              organized_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
@@ -6135,6 +9154,25 @@ export type ReqType = {
                 description?: (0 | 1);
                 hotspots?: (0 | 1);
                 status?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
@@ -6257,6 +9295,25 @@ export type ReqType = {
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
+              events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
             };
             panorama?: {
               _id?: (0 | 1);
@@ -6311,6 +9368,24 @@ export type ReqType = {
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
+              province?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              city?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
               uploadedAssets?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
@@ -6340,6 +9415,515 @@ export type ReqType = {
                 is_anonymous?: (0 | 1);
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
+              };
+              registered_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              organized_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+            };
+          };
+          events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+            registrar?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+              avatar?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                mimType?: (0 | 1);
+                size?: (0 | 1);
+                alt_text?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              national_card?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                mimType?: (0 | 1);
+                size?: (0 | 1);
+                alt_text?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              province?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              city?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              uploadedAssets?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                mimType?: (0 | 1);
+                size?: (0 | 1);
+              };
+              registered_places?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                slug?: (0 | 1);
+                center?: (0 | 1);
+                area?: (0 | 1);
+                address?: (0 | 1);
+                contact?: (0 | 1);
+                hoursOfOperation?: (0 | 1);
+                meta?: (0 | 1);
+                status?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              comments?: {
+                _id?: (0 | 1);
+                text?: (0 | 1);
+                rating?: (0 | 1);
+                status?: (0 | 1);
+                is_anonymous?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              registered_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              organized_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+            };
+            places?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              slug?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              address?: (0 | 1);
+              contact?: (0 | 1);
+              hoursOfOperation?: (0 | 1);
+              meta?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+              registrar?: {
+                _id?: (0 | 1);
+                first_name?: (0 | 1);
+                last_name?: (0 | 1);
+                father_name?: (0 | 1);
+                gender?: (0 | 1);
+                birth_date?: (0 | 1);
+                summary?: (0 | 1);
+                address?: (0 | 1);
+                level?: (0 | 1);
+                email?: (0 | 1);
+                is_verified?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              province?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              city?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              city_zone?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                center?: (0 | 1);
+                area?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              category?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              tags?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              thumbnail?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                mimType?: (0 | 1);
+                size?: (0 | 1);
+                alt_text?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              gallery?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                mimType?: (0 | 1);
+                size?: (0 | 1);
+                alt_text?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              comments?: {
+                _id?: (0 | 1);
+                text?: (0 | 1);
+                rating?: (0 | 1);
+                status?: (0 | 1);
+                is_anonymous?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              virtual_tours?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                hotspots?: (0 | 1);
+                status?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+            };
+            organizer?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+              avatar?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                mimType?: (0 | 1);
+                size?: (0 | 1);
+                alt_text?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              national_card?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                mimType?: (0 | 1);
+                size?: (0 | 1);
+                alt_text?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              province?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              city?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              uploadedAssets?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                mimType?: (0 | 1);
+                size?: (0 | 1);
+              };
+              registered_places?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                slug?: (0 | 1);
+                center?: (0 | 1);
+                area?: (0 | 1);
+                address?: (0 | 1);
+                contact?: (0 | 1);
+                hoursOfOperation?: (0 | 1);
+                meta?: (0 | 1);
+                status?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              comments?: {
+                _id?: (0 | 1);
+                text?: (0 | 1);
+                rating?: (0 | 1);
+                status?: (0 | 1);
+                is_anonymous?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              registered_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              organized_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+            };
+            tags?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+              registrar?: {
+                _id?: (0 | 1);
+                first_name?: (0 | 1);
+                last_name?: (0 | 1);
+                father_name?: (0 | 1);
+                gender?: (0 | 1);
+                birth_date?: (0 | 1);
+                summary?: (0 | 1);
+                address?: (0 | 1);
+                level?: (0 | 1);
+                email?: (0 | 1);
+                is_verified?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+            };
+            thumbnail?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+              uploader?: {
+                _id?: (0 | 1);
+                first_name?: (0 | 1);
+                last_name?: (0 | 1);
+                father_name?: (0 | 1);
+                gender?: (0 | 1);
+                birth_date?: (0 | 1);
+                address?: (0 | 1);
+                level?: (0 | 1);
+                email?: (0 | 1);
+                is_verified?: (0 | 1);
+              };
+            };
+            gallery?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+              uploader?: {
+                _id?: (0 | 1);
+                first_name?: (0 | 1);
+                last_name?: (0 | 1);
+                father_name?: (0 | 1);
+                gender?: (0 | 1);
+                birth_date?: (0 | 1);
+                address?: (0 | 1);
+                level?: (0 | 1);
+                email?: (0 | 1);
+                is_verified?: (0 | 1);
               };
             };
           };
@@ -6422,6 +10006,24 @@ export type ReqType = {
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
+              province?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              city?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                english_name?: (0 | 1);
+                area?: (0 | 1);
+                center?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
               uploadedAssets?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
@@ -6449,6 +10051,44 @@ export type ReqType = {
                 rating?: (0 | 1);
                 status?: (0 | 1);
                 is_anonymous?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              registered_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              organized_events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
@@ -6660,6 +10300,25 @@ export type ReqType = {
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
+              events?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                startTime?: (0 | 1);
+                endTime?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                capacity?: (0 | 1);
+                status?: (0 | 1);
+                isPublic?: (0 | 1);
+                ticketPrice?: (0 | 1);
+                registrationRequired?: (0 | 1);
+                maxAttendees?: (0 | 1);
+                eventUrl?: (0 | 1);
+                registrationUrl?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
             };
             thumbnail?: {
               _id?: (0 | 1);
@@ -6786,6 +10445,97 @@ export type ReqType = {
                 level?: (0 | 1);
                 email?: (0 | 1);
                 is_verified?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+            };
+            events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+              registrar?: {
+                _id?: (0 | 1);
+                first_name?: (0 | 1);
+                last_name?: (0 | 1);
+                father_name?: (0 | 1);
+                gender?: (0 | 1);
+                birth_date?: (0 | 1);
+                summary?: (0 | 1);
+                address?: (0 | 1);
+                level?: (0 | 1);
+                email?: (0 | 1);
+                is_verified?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              places?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                slug?: (0 | 1);
+                center?: (0 | 1);
+                area?: (0 | 1);
+                address?: (0 | 1);
+                contact?: (0 | 1);
+                hoursOfOperation?: (0 | 1);
+                meta?: (0 | 1);
+                status?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              organizer?: {
+                _id?: (0 | 1);
+                first_name?: (0 | 1);
+                last_name?: (0 | 1);
+                father_name?: (0 | 1);
+                gender?: (0 | 1);
+                birth_date?: (0 | 1);
+                summary?: (0 | 1);
+                address?: (0 | 1);
+                level?: (0 | 1);
+                email?: (0 | 1);
+                is_verified?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              tags?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                description?: (0 | 1);
+                color?: (0 | 1);
+                icon?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              thumbnail?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                mimType?: (0 | 1);
+                size?: (0 | 1);
+                alt_text?: (0 | 1);
+                createdAt?: (0 | 1);
+                updatedAt?: (0 | 1);
+              };
+              gallery?: {
+                _id?: (0 | 1);
+                name?: (0 | 1);
+                mimType?: (0 | 1);
+                size?: (0 | 1);
+                alt_text?: (0 | 1);
                 createdAt?: (0 | 1);
                 updatedAt?: (0 | 1);
               };
@@ -6982,6 +10732,24 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            province?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
             uploadedAssets?: {
               _id?: (0 | 1);
               name?: (0 | 1);
@@ -7009,6 +10777,44 @@ export type ReqType = {
               rating?: (0 | 1);
               status?: (0 | 1);
               is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            registered_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organized_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -7119,6 +10925,25 @@ export type ReqType = {
               description?: (0 | 1);
               hotspots?: (0 | 1);
               status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -7178,6 +11003,24 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            province?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
             uploadedAssets?: {
               _id?: (0 | 1);
               name?: (0 | 1);
@@ -7205,6 +11048,44 @@ export type ReqType = {
               rating?: (0 | 1);
               status?: (0 | 1);
               is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            registered_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organized_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -7315,6 +11196,25 @@ export type ReqType = {
               description?: (0 | 1);
               hotspots?: (0 | 1);
               status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -7388,6 +11288,25 @@ export type ReqType = {
             createdAt?: (0 | 1);
             updatedAt?: (0 | 1);
           };
+          events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
         };
       };
 
@@ -7418,6 +11337,25 @@ export type ReqType = {
             level?: (0 | 1);
             email?: (0 | 1);
             is_verified?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
             createdAt?: (0 | 1);
             updatedAt?: (0 | 1);
           };
@@ -7469,6 +11407,24 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            province?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
             uploadedAssets?: {
               _id?: (0 | 1);
               name?: (0 | 1);
@@ -7496,6 +11452,135 @@ export type ReqType = {
               rating?: (0 | 1);
               status?: (0 | 1);
               is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            registered_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organized_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+          };
+          events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+            registrar?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            places?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              slug?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              address?: (0 | 1);
+              contact?: (0 | 1);
+              hoursOfOperation?: (0 | 1);
+              meta?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organizer?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            tags?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            thumbnail?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            gallery?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -7550,6 +11635,24 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            province?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
             uploadedAssets?: {
               _id?: (0 | 1);
               name?: (0 | 1);
@@ -7577,6 +11680,135 @@ export type ReqType = {
               rating?: (0 | 1);
               status?: (0 | 1);
               is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            registered_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organized_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+          };
+          events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+            registrationUrl?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+            registrar?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            places?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              slug?: (0 | 1);
+              center?: (0 | 1);
+              area?: (0 | 1);
+              address?: (0 | 1);
+              contact?: (0 | 1);
+              hoursOfOperation?: (0 | 1);
+              meta?: (0 | 1);
+              status?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organizer?: {
+              _id?: (0 | 1);
+              first_name?: (0 | 1);
+              last_name?: (0 | 1);
+              father_name?: (0 | 1);
+              gender?: (0 | 1);
+              birth_date?: (0 | 1);
+              summary?: (0 | 1);
+              address?: (0 | 1);
+              level?: (0 | 1);
+              email?: (0 | 1);
+              is_verified?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            tags?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            thumbnail?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            gallery?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              mimType?: (0 | 1);
+              size?: (0 | 1);
+              alt_text?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -7725,6 +11957,24 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            province?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
             uploadedAssets?: {
               _id?: (0 | 1);
               name?: (0 | 1);
@@ -7752,6 +12002,44 @@ export type ReqType = {
               rating?: (0 | 1);
               status?: (0 | 1);
               is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            registered_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organized_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -7806,6 +12094,24 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            province?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
             uploadedAssets?: {
               _id?: (0 | 1);
               name?: (0 | 1);
@@ -7833,6 +12139,44 @@ export type ReqType = {
               rating?: (0 | 1);
               status?: (0 | 1);
               is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            registered_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organized_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -8120,6 +12464,25 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
           };
           panorama?: {
             _id?: (0 | 1);
@@ -8174,6 +12537,24 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            province?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
             uploadedAssets?: {
               _id?: (0 | 1);
               name?: (0 | 1);
@@ -8201,6 +12582,44 @@ export type ReqType = {
               rating?: (0 | 1);
               status?: (0 | 1);
               is_anonymous?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            registered_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organized_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
@@ -8333,6 +12752,25 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
           };
           panorama?: {
             _id?: (0 | 1);
@@ -8387,6 +12825,24 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            province?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            city?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              english_name?: (0 | 1);
+              area?: (0 | 1);
+              center?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
             uploadedAssets?: {
               _id?: (0 | 1);
               name?: (0 | 1);
@@ -8417,6 +12873,44 @@ export type ReqType = {
               createdAt?: (0 | 1);
               updatedAt?: (0 | 1);
             };
+            registered_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
+            organized_events?: {
+              _id?: (0 | 1);
+              name?: (0 | 1);
+              description?: (0 | 1);
+              startTime?: (0 | 1);
+              endTime?: (0 | 1);
+              color?: (0 | 1);
+              icon?: (0 | 1);
+              capacity?: (0 | 1);
+              status?: (0 | 1);
+              isPublic?: (0 | 1);
+              ticketPrice?: (0 | 1);
+              registrationRequired?: (0 | 1);
+              maxAttendees?: (0 | 1);
+              eventUrl?: (0 | 1);
+              registrationUrl?: (0 | 1);
+              createdAt?: (0 | 1);
+              updatedAt?: (0 | 1);
+            };
           };
         };
       };
@@ -8440,6 +12934,668 @@ export type ReqType = {
         };
         get: {
           qty?: (0 | 1);
+        };
+      };
+
+
+    }
+
+
+    event: {
+
+
+      add: {
+        set: {
+          name: string;
+          description?: string;
+          startTime: Date;
+          endTime: Date;
+          color?: string;
+          icon?: string;
+          capacity?: string;
+          status: ("draft" | "published" | "archived" | "cancelled");
+          isPublic?: boolean;
+          ticketPrice?: string;
+          registrationRequired?: boolean;
+          maxAttendees?: string;
+          eventUrl?: string;
+          registrationUrl?: string;
+          createdAt: Date;
+          updatedAt: Date;
+          placeIds?: string[];
+          organizer?: string;
+          tags?: string[];
+          thumbnail?: string;
+          gallery?: string[];
+        };
+        get: {
+          _id?: (0 | 1);
+          name?: (0 | 1);
+          description?: (0 | 1);
+          startTime?: (0 | 1);
+          endTime?: (0 | 1);
+          color?: (0 | 1);
+          icon?: (0 | 1);
+          capacity?: (0 | 1);
+          status?: (0 | 1);
+          isPublic?: (0 | 1);
+          ticketPrice?: (0 | 1);
+          registrationRequired?: (0 | 1);
+          maxAttendees?: (0 | 1);
+          eventUrl?: (0 | 1);
+          registrationUrl?: (0 | 1);
+          createdAt?: (0 | 1);
+          updatedAt?: (0 | 1);
+          registrar?: {
+            _id?: (0 | 1);
+            first_name?: (0 | 1);
+            last_name?: (0 | 1);
+            father_name?: (0 | 1);
+            gender?: (0 | 1);
+            birth_date?: (0 | 1);
+            summary?: (0 | 1);
+            address?: (0 | 1);
+            level?: (0 | 1);
+            email?: (0 | 1);
+            is_verified?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          places?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            slug?: (0 | 1);
+            center?: (0 | 1);
+            area?: (0 | 1);
+            address?: (0 | 1);
+            contact?: (0 | 1);
+            hoursOfOperation?: (0 | 1);
+            meta?: (0 | 1);
+            status?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          organizer?: {
+            _id?: (0 | 1);
+            first_name?: (0 | 1);
+            last_name?: (0 | 1);
+            father_name?: (0 | 1);
+            gender?: (0 | 1);
+            birth_date?: (0 | 1);
+            summary?: (0 | 1);
+            address?: (0 | 1);
+            level?: (0 | 1);
+            email?: (0 | 1);
+            is_verified?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          tags?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          thumbnail?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            mimType?: (0 | 1);
+            size?: (0 | 1);
+            alt_text?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          gallery?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            mimType?: (0 | 1);
+            size?: (0 | 1);
+            alt_text?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+        };
+      };
+
+
+      update: {
+        set: {
+          name: string;
+          description?: string;
+          startTime: Date;
+          endTime: Date;
+          color?: string;
+          icon?: string;
+          capacity?: string;
+          status: ("draft" | "published" | "archived" | "cancelled");
+          isPublic?: boolean;
+          ticketPrice?: string;
+          registrationRequired?: boolean;
+          maxAttendees?: string;
+          eventUrl?: string;
+          registrationUrl?: string;
+          createdAt: Date;
+          updatedAt: Date;
+          _id: string;
+        };
+        get: {
+          _id?: (0 | 1);
+          name?: (0 | 1);
+          description?: (0 | 1);
+          startTime?: (0 | 1);
+          endTime?: (0 | 1);
+          color?: (0 | 1);
+          icon?: (0 | 1);
+          capacity?: (0 | 1);
+          status?: (0 | 1);
+          isPublic?: (0 | 1);
+          ticketPrice?: (0 | 1);
+          registrationRequired?: (0 | 1);
+          maxAttendees?: (0 | 1);
+          eventUrl?: (0 | 1);
+          registrationUrl?: (0 | 1);
+          createdAt?: (0 | 1);
+          updatedAt?: (0 | 1);
+          registrar?: {
+            _id?: (0 | 1);
+            first_name?: (0 | 1);
+            last_name?: (0 | 1);
+            father_name?: (0 | 1);
+            gender?: (0 | 1);
+            birth_date?: (0 | 1);
+            summary?: (0 | 1);
+            address?: (0 | 1);
+            level?: (0 | 1);
+            email?: (0 | 1);
+            is_verified?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          places?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            slug?: (0 | 1);
+            center?: (0 | 1);
+            area?: (0 | 1);
+            address?: (0 | 1);
+            contact?: (0 | 1);
+            hoursOfOperation?: (0 | 1);
+            meta?: (0 | 1);
+            status?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          organizer?: {
+            _id?: (0 | 1);
+            first_name?: (0 | 1);
+            last_name?: (0 | 1);
+            father_name?: (0 | 1);
+            gender?: (0 | 1);
+            birth_date?: (0 | 1);
+            summary?: (0 | 1);
+            address?: (0 | 1);
+            level?: (0 | 1);
+            email?: (0 | 1);
+            is_verified?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          tags?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          thumbnail?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            mimType?: (0 | 1);
+            size?: (0 | 1);
+            alt_text?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          gallery?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            mimType?: (0 | 1);
+            size?: (0 | 1);
+            alt_text?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+        };
+      };
+
+
+      updateRelations: {
+        set: {
+          _id: string;
+          placeIds?: string[];
+          organizer?: string;
+          attendees?: string[];
+          tags?: string[];
+          thumbnail?: string;
+          gallery?: string[];
+          replace?: boolean;
+        };
+        get: {
+          _id?: (0 | 1);
+          name?: (0 | 1);
+          description?: (0 | 1);
+          startTime?: (0 | 1);
+          endTime?: (0 | 1);
+          color?: (0 | 1);
+          icon?: (0 | 1);
+          capacity?: (0 | 1);
+          status?: (0 | 1);
+          isPublic?: (0 | 1);
+          ticketPrice?: (0 | 1);
+          registrationRequired?: (0 | 1);
+          maxAttendees?: (0 | 1);
+          eventUrl?: (0 | 1);
+          registrationUrl?: (0 | 1);
+          createdAt?: (0 | 1);
+          updatedAt?: (0 | 1);
+          registrar?: {
+            _id?: (0 | 1);
+            first_name?: (0 | 1);
+            last_name?: (0 | 1);
+            father_name?: (0 | 1);
+            gender?: (0 | 1);
+            birth_date?: (0 | 1);
+            summary?: (0 | 1);
+            address?: (0 | 1);
+            level?: (0 | 1);
+            email?: (0 | 1);
+            is_verified?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          places?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            slug?: (0 | 1);
+            center?: (0 | 1);
+            area?: (0 | 1);
+            address?: (0 | 1);
+            contact?: (0 | 1);
+            hoursOfOperation?: (0 | 1);
+            meta?: (0 | 1);
+            status?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          organizer?: {
+            _id?: (0 | 1);
+            first_name?: (0 | 1);
+            last_name?: (0 | 1);
+            father_name?: (0 | 1);
+            gender?: (0 | 1);
+            birth_date?: (0 | 1);
+            summary?: (0 | 1);
+            address?: (0 | 1);
+            level?: (0 | 1);
+            email?: (0 | 1);
+            is_verified?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          tags?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          thumbnail?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            mimType?: (0 | 1);
+            size?: (0 | 1);
+            alt_text?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          gallery?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            mimType?: (0 | 1);
+            size?: (0 | 1);
+            alt_text?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+        };
+      };
+
+
+      get: {
+        set: {
+          _id: string;
+        };
+        get: {
+          _id?: (0 | 1);
+          name?: (0 | 1);
+          description?: (0 | 1);
+          startTime?: (0 | 1);
+          endTime?: (0 | 1);
+          color?: (0 | 1);
+          icon?: (0 | 1);
+          capacity?: (0 | 1);
+          status?: (0 | 1);
+          isPublic?: (0 | 1);
+          ticketPrice?: (0 | 1);
+          registrationRequired?: (0 | 1);
+          maxAttendees?: (0 | 1);
+          eventUrl?: (0 | 1);
+          registrationUrl?: (0 | 1);
+          createdAt?: (0 | 1);
+          updatedAt?: (0 | 1);
+          registrar?: {
+            _id?: (0 | 1);
+            first_name?: (0 | 1);
+            last_name?: (0 | 1);
+            father_name?: (0 | 1);
+            gender?: (0 | 1);
+            birth_date?: (0 | 1);
+            summary?: (0 | 1);
+            address?: (0 | 1);
+            level?: (0 | 1);
+            email?: (0 | 1);
+            is_verified?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          places?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            slug?: (0 | 1);
+            center?: (0 | 1);
+            area?: (0 | 1);
+            address?: (0 | 1);
+            contact?: (0 | 1);
+            hoursOfOperation?: (0 | 1);
+            meta?: (0 | 1);
+            status?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          organizer?: {
+            _id?: (0 | 1);
+            first_name?: (0 | 1);
+            last_name?: (0 | 1);
+            father_name?: (0 | 1);
+            gender?: (0 | 1);
+            birth_date?: (0 | 1);
+            summary?: (0 | 1);
+            address?: (0 | 1);
+            level?: (0 | 1);
+            email?: (0 | 1);
+            is_verified?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          tags?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          thumbnail?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            mimType?: (0 | 1);
+            size?: (0 | 1);
+            alt_text?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          gallery?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            mimType?: (0 | 1);
+            size?: (0 | 1);
+            alt_text?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+        };
+      };
+
+
+      gets: {
+        set: {
+          page?: number;
+          limit?: number;
+          skip?: number;
+          ids?: string[];
+          name?: string;
+          status?: string;
+          placeIds?: string[];
+          startTimeAfter?: string;
+          startTimeBefore?: string;
+          endTimeAfter?: string;
+          endTimeBefore?: string;
+          isPublic?: boolean;
+        };
+        get: {
+          _id?: (0 | 1);
+          name?: (0 | 1);
+          description?: (0 | 1);
+          startTime?: (0 | 1);
+          endTime?: (0 | 1);
+          color?: (0 | 1);
+          icon?: (0 | 1);
+          capacity?: (0 | 1);
+          status?: (0 | 1);
+          isPublic?: (0 | 1);
+          ticketPrice?: (0 | 1);
+          registrationRequired?: (0 | 1);
+          maxAttendees?: (0 | 1);
+          eventUrl?: (0 | 1);
+          registrationUrl?: (0 | 1);
+          createdAt?: (0 | 1);
+          updatedAt?: (0 | 1);
+          registrar?: {
+            _id?: (0 | 1);
+            first_name?: (0 | 1);
+            last_name?: (0 | 1);
+            father_name?: (0 | 1);
+            gender?: (0 | 1);
+            birth_date?: (0 | 1);
+            summary?: (0 | 1);
+            address?: (0 | 1);
+            level?: (0 | 1);
+            email?: (0 | 1);
+            is_verified?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          places?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            slug?: (0 | 1);
+            center?: (0 | 1);
+            area?: (0 | 1);
+            address?: (0 | 1);
+            contact?: (0 | 1);
+            hoursOfOperation?: (0 | 1);
+            meta?: (0 | 1);
+            status?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          organizer?: {
+            _id?: (0 | 1);
+            first_name?: (0 | 1);
+            last_name?: (0 | 1);
+            father_name?: (0 | 1);
+            gender?: (0 | 1);
+            birth_date?: (0 | 1);
+            summary?: (0 | 1);
+            address?: (0 | 1);
+            level?: (0 | 1);
+            email?: (0 | 1);
+            is_verified?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          tags?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          thumbnail?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            mimType?: (0 | 1);
+            size?: (0 | 1);
+            alt_text?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          gallery?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            mimType?: (0 | 1);
+            size?: (0 | 1);
+            alt_text?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+        };
+      };
+
+
+      remove: {
+        set: {
+          _id: string;
+        };
+        get: {
+          _id?: (0 | 1);
+          name?: (0 | 1);
+          description?: (0 | 1);
+          startTime?: (0 | 1);
+          endTime?: (0 | 1);
+          color?: (0 | 1);
+          icon?: (0 | 1);
+          capacity?: (0 | 1);
+          status?: (0 | 1);
+          isPublic?: (0 | 1);
+          ticketPrice?: (0 | 1);
+          registrationRequired?: (0 | 1);
+          maxAttendees?: (0 | 1);
+          eventUrl?: (0 | 1);
+          registrationUrl?: (0 | 1);
+          createdAt?: (0 | 1);
+          updatedAt?: (0 | 1);
+          registrar?: {
+            _id?: (0 | 1);
+            first_name?: (0 | 1);
+            last_name?: (0 | 1);
+            father_name?: (0 | 1);
+            gender?: (0 | 1);
+            birth_date?: (0 | 1);
+            summary?: (0 | 1);
+            address?: (0 | 1);
+            level?: (0 | 1);
+            email?: (0 | 1);
+            is_verified?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          places?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            slug?: (0 | 1);
+            center?: (0 | 1);
+            area?: (0 | 1);
+            address?: (0 | 1);
+            contact?: (0 | 1);
+            hoursOfOperation?: (0 | 1);
+            meta?: (0 | 1);
+            status?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          organizer?: {
+            _id?: (0 | 1);
+            first_name?: (0 | 1);
+            last_name?: (0 | 1);
+            father_name?: (0 | 1);
+            gender?: (0 | 1);
+            birth_date?: (0 | 1);
+            summary?: (0 | 1);
+            address?: (0 | 1);
+            level?: (0 | 1);
+            email?: (0 | 1);
+            is_verified?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          tags?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          thumbnail?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            mimType?: (0 | 1);
+            size?: (0 | 1);
+            alt_text?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          gallery?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            mimType?: (0 | 1);
+            size?: (0 | 1);
+            alt_text?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+        };
+      };
+
+
+      count: {
+        set: {
+          name?: string;
+          status?: string;
+          placeIds?: string[];
+          startTimeAfter?: string;
+          startTimeBefore?: string;
+          endTimeAfter?: string;
+          endTimeBefore?: string;
+          isPublic?: boolean;
         };
       };
 
