@@ -178,3 +178,68 @@ Clean up any unnecessary code, such as console.log or unused variables or any ot
 If you want to use any package please review `package.json` to see what kind of package are available.
 
 I copied the structure of this project from another project that has nothing to do with this project, so if you see a file or component somewhere that is not very relevant to the project, you can simply delete that file.
+
+## Important Backend Integration Notes
+
+1. **Backend Authentication Header Format**:
+   - The backend expects the JWT token in a header field called `token`
+   - The token should be sent without the `Bearer` prefix
+   - Example: `token: "actual-jwt-token-value"` rather than `authorization: "Bearer actual-jwt-token-value"`
+
+2. **API Call Structure for Lesan Framework**:
+   - When making API calls to the backend via the `AppApi` service, make sure to include the authentication token properly
+   - The API response for `gets` (plural) operations typically includes both `data` and `metadata` fields
+   - Pagination responses include: `data` array with the actual records and `metadata` with pagination info like `pageCount`, `total`, etc.
+   - For operations that don't require pagination, the response may be directly the requested data
+
+3. **Authentication Token Handling**:
+   - Tokens are stored in cookies under the key "token"
+   - When using the `AppApi` service, pass the token using the second parameter: `AppApi(undefined, token)`
+   - The `AppApi` service now handles proper token formatting for backend compatibility
+
+4. **Type Safety Considerations**:
+   - When making API calls, the `get` parameter in the request only specifies the fields to return, not the response structure
+   - Response structure is determined by the backend and may include additional fields like `metadata` for pagination
+
+5. **Using Declared Types for Consistency**:
+   - Always use the type definitions from the declarations file (e.g. `src/types/declarations/selectInp.ts`) rather than creating custom interfaces
+   - Import and use the exact backend schema types (e.g. `eventSchema`, `placeSchema`, `userSchema`) to ensure consistency with the backend
+   - This prevents synchronization issues and ensures type safety between frontend and backend
+   - Example: Use `import { eventSchema } from "@/types/declarations/selectInp";` and then `type Event = eventSchema;`
+
+6. **User Access Levels**:
+   - The application has different user levels with increasing permissions: Normal, Editor, Manager, and Ghost
+   - The Ghost user level is the highest access level with permissions to perform all administrative tasks
+   - When implementing access controls, ensure Ghost users have access to all features by including `userLevel === "Ghost"` in permission checks
+   - Example: `(userLevel === "Manager" || userLevel === "Editor" || userLevel === "Ghost")` when allowing access to admin features
+
+7. **Date and Time Picker Component**:
+   - The application uses a custom `DateInput` component based on `react-multi-date-picker` for all date picking needs
+   - The `DateInput` component is located in `/src/components/atoms/DateInput.tsx` and follows atomic design principles
+   - It supports both Persian and English locales with proper calendar systems
+   - The component is fully integrated with react-hook-form using Controller
+   - It supports multiple modes: single date, range selection, and multiple date selection
+   - When implementing new forms that require date input, use the existing `DateInput` component rather than creating new date pickers
+   - Example usage: `<DateInput name="birth_date" control={control} label="تاریخ تولد" locale="fa" format="YYYY/MM/DD" />`
+   - If you need to import locale-specific date functions, use `gregorian_fa` and `gregorian_en` from `react-date-object/locales`
+
+8. **API Operation Standards**:
+   - Pay attention to the correct API operation names: use `getUsers` specifically when fetching user data, not `gets`
+   - For fetching collections like places and tags, use `gets` operation
+   - Note that `getUsers` and similar operations return only the data array without metadata, while `gets` operations return both data and metadata
+   - When making API calls, only request the metadata fields when actually needed to improve performance
+   - Follow the project standard of using the proper act types based on the specific resource and operation needed
+
+9. **Project Standard Components**:
+   - Use `DateInput` component for all date and time inputs
+   - Use `MyInput` component for all standard input fields
+   - Use `SelectBox` component for dropdown selections
+   - Use `UploadImage` component for image upload functionality
+   - Use `MyAsyncMultiSelect` component for async multiselect fields
+   - For color selection, use the standardized color picker with both preset options and custom color picker as implemented in CreateUpdateModal
+   - For icon selection, use the standardized icon picker with both preset options and custom text input as implemented in CreateUpdateModal
+   - When building forms, follow the structure seen in `FormCreateUser.tsx` for consistency
+   - All forms should utilize react-hook-form for state management and validation
+
+10. **Development Workflow**:
+    - When I give a new prompt during development, I usually run the project myself. You don't need to run the project again to find errors. In fact, I usually check the project myself after the changes you make and if there are any errors, I will give you the new prompt again.
