@@ -1,4 +1,5 @@
 import { lesanApi } from "@/types/declarations/selectInp";
+import Cookies from "js-cookie";
 
 // Get environment variables at module level
 const envLesanUrl = process.env.LESAN_URL as string;
@@ -58,15 +59,27 @@ export const getLesanBaseUrl = (): string => {
 // Export the main function for external use
 export { getLesanUrl };
 
-export const AppApi = (lesanUrl?: string) => {
+export const AppApi = (lesanUrl?: string, token?: string) => {
   try {
     const url = lesanUrl ? lesanUrl : getLesanUrl();
 
+    // Get token from cookies if not provided
+    const authToken =
+      token || (typeof window !== "undefined" ? Cookies.get("token") : null);
+
+    // Set up base headers with possible authentication
+    const baseHeaders: Record<string, string> = {
+      connection: "keep-alive",
+    };
+
+    // Include token if available - backend expects it in "token" field without "Bearer" prefix
+    if (authToken) {
+      baseHeaders["token"] = `${authToken}`;
+    }
+
     return lesanApi({
       URL: url,
-      baseHeaders: {
-        connection: "keep-alive",
-      },
+      baseHeaders,
     });
   } catch {
     // Fallback to default URL on error
