@@ -8,10 +8,10 @@ import DateObject from "react-date-object";
 import gregorian_en from "react-date-object/locales/gregorian_en";
 import gregorian_fa from "react-date-object/locales/gregorian_fa";
 
-interface DateInputProps<T extends FieldValues = FieldValues> {
-  name: FieldPath<T>;
+interface DateInputProps {
+  name: string;
   label: string;
-  control: Control<T>;
+  control: Control<any>; // Using any to make it flexible with forms
   className?: string;
   errMsg?: string;
   placeholder?: string;
@@ -27,7 +27,7 @@ type DateValue = Date | string | null;
 type DateRangeValue = { start: DateValue; end: DateValue } | null;
 type DateMultipleValue = DateValue[];
 
-const DateInput = <T extends FieldValues = FieldValues>({
+const DateInput = ({
   className,
   errMsg,
   name,
@@ -40,7 +40,7 @@ const DateInput = <T extends FieldValues = FieldValues>({
   range = false,
   multiple = false,
   locale = "en",
-}: DateInputProps<T>) => {
+}: DateInputProps) => {
   // Determine the format based on type if not provided
   const defaultFormat = {
     date: "YYYY/MM/DD",
