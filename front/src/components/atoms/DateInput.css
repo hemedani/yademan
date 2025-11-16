@@ -1,0 +1,41 @@
+/* Custom styles for react-multi-date-picker */
+.rmdp-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.rmdp-input {
+  width: 100% !important;
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-size: 1rem !important;
+}
+
+.rmdp-calendar {
+  z-index: 50 !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  border-radius: 0.5rem !important;
+}
+
+.rmdp-day {
+  border-radius: 0.25rem !important;
+}
+
+.rmdp-day:not(.rmdp-disabled):hover {
+  background-color: #3b82f6 !important;
+  color: white !important;
+}
+
+.rmdp-range {
+  background-color: #dbeafe !important;
+  border-radius: 0.25rem !important;
+}
+
+.rmdp-range-start, .rmdp-range-end {
+  background-color: #3b82f6 !important;
+  color: white !important;
+  border-radius: 0.25rem !important;
+}
