@@ -240,6 +240,7 @@ I copied the structure of this project from another project that has nothing to 
    - For icon selection, use the standardized icon picker with both preset options and custom text input as implemented in CreateUpdateModal
    - When building forms, follow the structure seen in `FormCreateUser.tsx` for consistency
    - All forms should utilize react-hook-form for state management and validation
+   - Use Zod for form validation schemas to ensure type safety and proper validation
 
 10. **Development Workflow**:
     - When I give a new prompt during development, I usually run the project myself. You don't need to run the project again to find errors. In fact, I usually check the project myself after the changes you make and if there are any errors, I will give you the new prompt again.
