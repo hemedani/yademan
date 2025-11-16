@@ -1,12 +1,12 @@
 "use client";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ToastNotify, translateGender, } from "@/utils/helper";
+import { ToastNotify, translateGender } from "@/utils/helper";
 import { useRouter } from "next/navigation";
 import { ReqType, userSchema } from "@/types/declarations/selectInp";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import MyInput from "@/components/atoms/MyInput";
-import { DatePicker } from "zaman";
+import DateInput from "@/components/atoms/DateInput";
 import SelectBox from "@/components/atoms/Select";
 import { updateUserPure } from "@/app/actions/user/updateUser";
 
@@ -32,6 +32,7 @@ export const EditUserPures = ({
     handleSubmit,
     setValue,
     register,
+    control,
     formState: { errors, isValid, isSubmitting },
   } = useForm<UpdateUserPureSet>({
     resolver: zodResolver(UpdateUserPureSchema),
@@ -92,20 +93,15 @@ export const EditUserPures = ({
           errMsg={errors.summary?.message}
         />
 
-        <div className={`w-1/2 p-4 flex flex-col gap-1`}>
-          <label htmlFor="birth_date">تاریخ تولد</label>
-          <DatePicker
-            className={`text-gray-600 border rounded-md p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-700 bg-gray-100 ${errors.birth_date?.message ? "border-red-500" : "border-gray-300"
-              }`}
-            defaultValue={rest.birth_date}
-            onChange={(e) => setValue("birth_date", e.value)}
-          />
-          {errors.birth_date?.message && (
-            <span className="text-red-500 text-xs">
-              {errors.birth_date?.message}
-            </span>
-          )}
-        </div>
+        <DateInput
+          label="تاریخ تولد"
+          name="birth_date"
+          control={control}
+          errMsg={errors.birth_date?.message}
+          className="w-1/2 p-2"
+          format="YYYY/MM/DD"
+          locale="fa"
+        />
 
         <SelectBox
           label="جنسیت"

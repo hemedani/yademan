@@ -8,7 +8,7 @@ import { UploadImage } from "@/components/molecules/UploadFile";
 import { ToastNotify } from "@/utils/helper";
 import MyInput from "../atoms/MyInput";
 import { createUser } from "@/app/actions/user/createUser";
-import MyDateInput from "../atoms/MyDateInput";
+import DateInput from "../atoms/DateInput";
 import { ReqType } from "@/types/declarations/selectInp";
 
 export const UserCreateSchema = z.object({
@@ -163,13 +163,15 @@ export const FormCreateUser = ({ token }: { token?: string }) => {
             type="textarea"
           />
 
-          <MyDateInput
+          <DateInput
             label="تاریخ تولد"
             name="birth_date"
             control={control}
             errMsg={errors.birth_date?.message}
-            className="w-1/2 p-4"
+            className="w-1/2 p-2"
             placeholder="انتخاب تاریخ تولد"
+            format="YYYY/MM/DD"
+            locale="fa"
           />
 
           <SelectBox

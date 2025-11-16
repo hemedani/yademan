@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 
 export const getUsers = async ({ set, get }: ReqType["main"]["user"]["getUsers"]) => {
   const token = (await cookies()).get("token");
-  const getUsers = await AppApi().send(
+  return await AppApi().send(
     {
       service: "main",
       model: "user",
@@ -17,6 +17,4 @@ export const getUsers = async ({ set, get }: ReqType["main"]["user"]["getUsers"]
     },
     { token: token?.value }
   );
-
-  if (getUsers.success) return getUsers.body;
 };
