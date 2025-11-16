@@ -3,12 +3,14 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { AppApi } from "@/services/api";
+import Cookies from "js-cookie";
 
 interface Comment {
   _id: string;
   text: string;
   rating?: number;
   status: "pending" | "approved" | "rejected";
+  is_anonymous: boolean;
   createdAt: string;
   updatedAt: string;
   user: {
@@ -20,7 +22,6 @@ interface Comment {
   place: {
     _id: string;
     name: string;
-    slug?: string;
   };
 }
 
@@ -127,7 +128,13 @@ const CommentsManagement: React.FC = () => {
       setLoading(true);
       setError(null);
 
-      const api = AppApi();
+      // Get token from cookies
+      const token =
+        typeof window !== "undefined"
+          ? Cookies.get("token") || undefined
+          : undefined;
+      const api = AppApi(undefined, token);
+
       const response = await api.send({
         service: "main",
         model: "comment",
@@ -136,16 +143,19 @@ const CommentsManagement: React.FC = () => {
           set: {
             page: currentPage,
             limit: itemsPerPage,
-            search: filters.search,
-            status: filters.status,
-            sortBy: filters.sortBy,
-            sortOrder: filters.sortOrder,
+            text: filters.search || undefined,
+            status: filters.status || undefined,
+            rating: undefined, // We're not filtering by rating in the UI
+            is_anonymous: undefined, // We're not filtering by anonymous status in the UI
+            place: undefined, // We're not filtering by place in the UI
+            user: undefined, // We're not filtering by user in the UI
           },
           get: {
             _id: 1,
             text: 1,
             rating: 1,
             status: 1,
+            is_anonymous: 1,
             createdAt: 1,
             updatedAt: 1,
             user: {
@@ -157,15 +167,22 @@ const CommentsManagement: React.FC = () => {
             place: {
               _id: 1,
               name: 1,
-              slug: 1,
             },
           },
         },
       });
 
-      if (response.success) {
-        setComments(response.body || []);
-        setTotalPages(Math.ceil((response.total || 0) / itemsPerPage));
+      if (response.success && response.body) {
+        // The response for gets operation in Lesan may have different structure depending on implementation
+        // If it has data and metadata (paginated), use that; otherwise use the body directly
+        if ("data" in response.body && "metadata" in response.body) {
+          setComments(response.body.data || []);
+          setTotalPages(response.body.metadata?.pageCount || 1);
+        } else {
+          // If response has direct structure (non-paginated), use it directly
+          setComments(response.body || []);
+          setTotalPages(1); // Only one page if no pagination
+        }
       } else {
         setError("خطا در بارگذاری نظرات");
       }
@@ -181,7 +198,12 @@ const CommentsManagement: React.FC = () => {
   const handleStatusChange = async (commentId: string, newStatus: string) => {
     try {
       setActionLoading(commentId);
-      const api = AppApi();
+      // Get token from cookies
+      const token =
+        typeof window !== "undefined"
+          ? Cookies.get("token") || undefined
+          : undefined;
+      const api = AppApi(undefined, token);
 
       const response = await api.send({
         service: "main",
@@ -192,17 +214,35 @@ const CommentsManagement: React.FC = () => {
             _id: commentId,
             status: newStatus as "pending" | "approved" | "rejected",
           },
-          get: {},
+          get: {
+            _id: 1,
+            text: 1,
+            rating: 1,
+            status: 1,
+            is_anonymous: 1,
+            createdAt: 1,
+            updatedAt: 1,
+            user: {
+              _id: 1,
+              first_name: 1,
+              last_name: 1,
+              email: 1,
+            },
+            place: {
+              _id: 1,
+              name: 1,
+            },
+          },
         },
       });
 
-      if (response.success) {
+      if (response.success && response.body) {
         setComments((prev) =>
           prev.map((comment) =>
             comment._id === commentId
               ? {
-                  ...comment,
-                  status: newStatus as "pending" | "approved" | "rejected",
+                  ...response.body,
+                  is_anonymous: comment.is_anonymous, // Preserve is_anonymous from the original since it might not be in the update response
                 }
               : comment,
           ),
@@ -224,7 +264,12 @@ const CommentsManagement: React.FC = () => {
 
     try {
       setActionLoading(commentId);
-      const api = AppApi();
+      // Get token from cookies
+      const token =
+        typeof window !== "undefined"
+          ? Cookies.get("token") || undefined
+          : undefined;
+      const api = AppApi(undefined, token);
 
       const response = await api.send({
         service: "main",
@@ -232,11 +277,13 @@ const CommentsManagement: React.FC = () => {
         act: "remove",
         details: {
           set: { _id: commentId },
-          get: {},
+          get: {
+            success: 1,
+          },
         },
       });
 
-      if (response.success) {
+      if (response.success && response.body?.success) {
         setComments((prev) =>
           prev.filter((comment) => comment._id !== commentId),
         );
