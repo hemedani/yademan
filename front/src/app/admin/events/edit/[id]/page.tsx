@@ -7,49 +7,77 @@ import { AppApi } from "@/services/api";
 import Cookies from "js-cookie";
 import Link from "next/link";
 import { eventSchema } from "@/types/declarations/selectInp";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import MyInput from "@/components/atoms/MyInput";
+import DateInput from "@/components/atoms/DateInput";
+import ColorPicker from "@/components/atoms/ColorPicker";
+import IconPicker from "@/components/atoms/IconPicker";
 
 type Event = eventSchema;
+
+// Define the form schema using Zod
+const EventFormSchema = z.object({
+  _id: z.string(),
+  name: z.string().min(1, "نام رویداد الزامی است"),
+  description: z.string().optional(),
+  startTime: z.string().min(1, "زمان شروع الزامی است"),
+  endTime: z.string().min(1, "زمان پایان الزامی است"),
+  color: z.string().optional(),
+  icon: z.string().optional(),
+  capacity: z.string().optional(),
+  status: z.enum(["draft", "published", "archived", "cancelled"]),
+  isPublic: z.boolean().optional(),
+  ticketPrice: z.string().optional(),
+  registrationRequired: z.boolean().optional(),
+  maxAttendees: z.string().optional(),
+  eventUrl: z.string().optional(),
+  registrationUrl: z.string().optional(),
+});
+
+type EventFormValues = z.infer<typeof EventFormSchema>;
 
 const EditEventPage: React.FC = () => {
   const router = useRouter();
   const params = useParams();
   const { user } = useAuth();
 
-  const [formData, setFormData] = useState<
-    Omit<
-      eventSchema,
-      | "registrar"
-      | "places"
-      | "organizer"
-      | "attendees"
-      | "tags"
-      | "thumbnail"
-      | "gallery"
-    >
-  >({
-    _id: "",
-    name: "",
-    description: "",
-    startTime: "",
-    endTime: "",
-    color: "#8884d8",
-    icon: "",
-    capacity: "",
-    status: "draft",
-    isPublic: false,
-    ticketPrice: "",
-    registrationRequired: false,
-    maxAttendees: "",
-    eventUrl: "",
-    registrationUrl: "",
-    meta: {
-      key: "",
+  // Initialize react-hook-form with validation schema
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors, isValid, isSubmitting },
+    watch,
+    setValue,
+    reset,
+  } = useForm<EventFormValues>({
+    resolver: zodResolver(EventFormSchema),
+    defaultValues: {
+      _id: "",
+      name: "",
+      description: "",
+      startTime: "",
+      endTime: "",
+      color: "#8884d8",
+      icon: "",
+      capacity: "",
+      status: "draft",
+      isPublic: false,
+      ticketPrice: "",
+      registrationRequired: false,
+      maxAttendees: "",
+      eventUrl: "",
+      registrationUrl: "",
     },
+    mode: "onChange",
   });
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [loadingData, setLoadingData] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Fetch event data
   useEffect(() => {
@@ -86,14 +114,14 @@ const EditEventPage: React.FC = () => {
               maxAttendees: 1,
               eventUrl: 1,
               registrationUrl: 1,
-              meta: 1,
             },
           },
         });
 
         if (response.success && response.body) {
           const event = response.body;
-          setFormData({
+          // Reset the form with fetched data
+          reset({
             _id: event._id,
             name: event.name,
             description: event.description || "",
@@ -109,9 +137,6 @@ const EditEventPage: React.FC = () => {
             maxAttendees: event.maxAttendees || "",
             eventUrl: event.eventUrl || "",
             registrationUrl: event.registrationUrl || "",
-            meta: {
-              key: event.meta?.key || "",
-            },
           });
         } else {
           setError("رویداد مورد نظر یافت نشد");
@@ -125,40 +150,9 @@ const EditEventPage: React.FC = () => {
     };
 
     fetchEvent();
-  }, [params.id]);
+  }, [params.id, reset]);
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
-  ) => {
-    const { name, value, type } = e.target;
-
-    if (type === "checkbox") {
-      const target = e.target as HTMLInputElement;
-      setFormData((prev) => ({
-        ...prev,
-        [name]: target.checked,
-      }));
-    } else if (name.startsWith("meta.")) {
-      const metaKey = name.split(".")[1];
-      setFormData((prev) => ({
-        ...prev,
-        meta: {
-          ...prev.meta,
-          [metaKey]: value,
-        },
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit: SubmitHandler<EventFormValues> = async (data) => {
     setLoading(true);
     setError(null);
 
@@ -176,9 +170,9 @@ const EditEventPage: React.FC = () => {
         act: "update",
         details: {
           set: {
-            ...formData,
-            startTime: new Date(formData.startTime).toISOString(),
-            endTime: new Date(formData.endTime).toISOString(),
+            ...data,
+            startTime: new Date(data.startTime).toISOString(),
+            endTime: new Date(data.endTime).toISOString(),
           },
           get: {
             _id: 1,
@@ -273,220 +267,230 @@ const EditEventPage: React.FC = () => {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              نام رویداد *
-            </label>
-            <input
-              type="text"
+            <MyInput
+              label="نام رویداد *"
+              register={register}
               name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-              placeholder="نام رویداد را وارد کنید"
+              errMsg={errors.name?.message}
+              className=""
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              وضعیت
-            </label>
-            <select
+            <Controller
               name="status"
-              value={formData.status}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-            >
-              <option value="draft">پیش نویس</option>
-              <option value="published">منتشر شده</option>
-              <option value="archived">بایگانی شده</option>
-              <option value="cancelled">لغو شده</option>
-            </select>
+              control={control}
+              render={({ field }) => (
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-medium text-slate-700 text-right">
+                    وضعیت
+                  </label>
+                  <select
+                    {...field}
+                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  >
+                    <option value="draft">پیش نویس</option>
+                    <option value="published">منتشر شده</option>
+                    <option value="archived">بایگانی شده</option>
+                    <option value="cancelled">لغو شده</option>
+                  </select>
+                  {errors.status && (
+                    <span className="text-red-500 text-xs text-right mt-1">
+                      {errors.status.message}
+                    </span>
+                  )}
+                </div>
+              )}
+            />
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
-            توضیحات
-          </label>
-          <textarea
+        <div className="w-full">
+          <MyInput
+            label="توضیحات"
+            register={register}
             name="description"
-            value={formData.description}
-            onChange={handleChange}
-            rows={4}
-            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-            placeholder="توضیحات رویداد را وارد کنید"
+            errMsg={errors.description?.message}
+            className=""
+            type="textarea"
           />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              زمان شروع *
-            </label>
-            <input
-              type="text"
+            <DateInput
+              label="زمان شروع *"
               name="startTime"
-              value={formData.startTime}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-              placeholder="YYYY-MM-DDTHH:mm:ss.sssZ"
+              control={control}
+              errMsg={errors.startTime?.message}
+              className=""
+              type="datetime"
+              format="YYYY/MM/DD HH:mm"
+              locale="fa"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              زمان پایان *
-            </label>
-            <input
-              type="text"
+            <DateInput
+              label="زمان پایان *"
               name="endTime"
-              value={formData.endTime}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-              placeholder="YYYY-MM-DDTHH:mm:ss.sssZ"
+              control={control}
+              errMsg={errors.endTime?.message}
+              className=""
+              type="datetime"
+              format="YYYY/MM/DD HH:mm"
+              locale="fa"
             />
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              ظرفیت
-            </label>
-            <input
-              type="text"
+            <MyInput
+              label="ظرفیت"
+              register={register}
               name="capacity"
-              value={formData.capacity}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-              placeholder="تعداد ظرفیت رویداد"
+              errMsg={errors.capacity?.message}
+              className=""
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              حداکثر شرکت کنندگان
-            </label>
-            <input
-              type="text"
+            <MyInput
+              label="حداکثر شرکت کنندگان"
+              register={register}
               name="maxAttendees"
-              value={formData.maxAttendees}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-              placeholder="حداکثر تعداد شرکت کنندگان"
+              errMsg={errors.maxAttendees?.message}
+              className=""
             />
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              رنگ نمایش
-            </label>
-            <div className="flex items-center space-x-3">
-              <input
-                type="color"
-                name="color"
-                value={formData.color}
-                onChange={handleChange}
-                className="w-12 h-10 border border-slate-300 rounded-lg"
-              />
-              <span>{formData.color}</span>
-            </div>
+            <ColorPicker
+              name="color"
+              control={control}
+              label="رنگ نمایش"
+              defaultValue="#8884d8"
+              errMsg={errors.color?.message}
+            />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              آیکون
-            </label>
-            <input
-              type="text"
+            <IconPicker
               name="icon"
-              value={formData.icon}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-              placeholder="آدرس آیکون"
+              control={control}
+              label="آیکون"
+              defaultValue="📍"
+              errMsg={errors.icon?.message}
             />
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="flex items-center">
-            <input
-              type="checkbox"
+          <div>
+            <Controller
               name="isPublic"
-              checked={formData.isPublic}
-              onChange={handleChange}
-              className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+              control={control}
+              render={({ field }) => (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="isPublic"
+                    checked={field.value}
+                    onChange={(e) => field.onChange(e.target.checked)}
+                    className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor="isPublic"
+                    className="text-sm font-medium text-slate-700 text-right"
+                  >
+                    عمومی
+                  </label>
+                </div>
+              )}
             />
-            <label className="ml-2 block text-sm text-slate-700">عمومی</label>
+            {errors.isPublic && (
+              <span className="text-red-500 text-xs text-right mt-1">
+                {errors.isPublic.message}
+              </span>
+            )}
           </div>
 
-          <div className="flex items-center">
-            <input
-              type="checkbox"
+          <div>
+            <Controller
               name="registrationRequired"
-              checked={formData.registrationRequired}
-              onChange={handleChange}
-              className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+              control={control}
+              render={({ field }) => (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="registrationRequired"
+                    checked={field.value}
+                    onChange={(e) => field.onChange(e.target.checked)}
+                    className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor="registrationRequired"
+                    className="text-sm font-medium text-slate-700 text-right"
+                  >
+                    نیاز به ثبت نام
+                  </label>
+                </div>
+              )}
             />
-            <label className="ml-2 block text-sm text-slate-700">
-              نیاز به ثبت نام
-            </label>
+            {errors.registrationRequired && (
+              <span className="text-red-500 text-xs text-right mt-1">
+                {errors.registrationRequired.message}
+              </span>
+            )}
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              قیمت بلیت
-            </label>
-            <input
-              type="text"
+            <MyInput
+              label="قیمت بلیت"
+              register={register}
               name="ticketPrice"
-              value={formData.ticketPrice}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-              placeholder="قیمت بلیت (به ریال)"
+              errMsg={errors.ticketPrice?.message}
+              className=""
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
-              لینک رویداد
-            </label>
-            <input
-              type="url"
+            <MyInput
+              label="لینک رویداد"
+              register={register}
               name="eventUrl"
-              value={formData.eventUrl}
-              onChange={handleChange}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-              placeholder="لینک اطلاعات بیشتر"
+              type="url"
+              errMsg={errors.eventUrl?.message}
+              className=""
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-2">
-            لینک ثبت نام
-          </label>
-          <input
-            type="url"
+          <MyInput
+            label="لینک ثبت نام"
+            register={register}
             name="registrationUrl"
-            value={formData.registrationUrl}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-            placeholder="لینک ثبت نام در رویداد"
+            type="url"
+            errMsg={errors.registrationUrl?.message}
+            className=""
           />
         </div>
 
         <div className="flex justify-end space-x-4 pt-6">
+          {!isValid && Object.keys(errors).length > 0 && (
+            <div className="text-sm text-red-600 mr-4 self-center text-right">
+              لطفاً فیلدهای اجباری را تکمیل کنید
+            </div>
+          )}
           <Link
             href="/admin/events"
             className="px-6 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
@@ -495,7 +499,7 @@ const EditEventPage: React.FC = () => {
           </Link>
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || !isValid}
             className="px-6 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 disabled:opacity-50"
           >
             {loading ? "در حال به‌روزرسانی..." : "به‌روزرسانی رویداد"}

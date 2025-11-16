@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
-import { AppApi } from "@/services/api";
+import { AppApi, getLesanBaseUrl } from "@/services/api";
 import Cookies from "js-cookie";
 import Link from "next/link";
 import { eventSchema } from "@/types/declarations/selectInp";
@@ -14,6 +14,7 @@ import MyInput from "@/components/atoms/MyInput";
 import MyAsyncMultiSelect from "@/components/atoms/MyAsyncMultiSelect";
 import ColorPicker from "@/components/atoms/ColorPicker";
 import IconPicker from "@/components/atoms/IconPicker";
+import AsyncSelectBox from "@/components/atoms/AsyncSelectBox";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -22,10 +23,6 @@ import { UploadImage } from "@/components/molecules/UploadFile";
 import { getUsers as getUsersAction } from "@/app/actions/user/getUsers";
 import { gets as getTagsAction } from "@/app/actions/tag/gets";
 import { gets as getPlacesAction } from "@/app/actions/place/gets";
-import dynamic from "next/dynamic";
-import { ReactSelectOption } from "@/types/option";
-
-const AsyncSelect = dynamic(() => import("react-select/async"), { ssr: false });
 
 // Define the form schema using Zod
 const EventFormSchema = z.object({
@@ -36,12 +33,10 @@ const EventFormSchema = z.object({
   color: z.string().min(1, "رنگ الزامی است"),
   icon: z.string().optional(),
   capacity: z.string().optional(),
-  status: z
-    .enum(["draft", "published", "archived", "cancelled"])
-    .default("draft"),
-  isPublic: z.boolean().default(false),
+  status: z.enum(["draft", "published", "archived", "cancelled"]),
+  isPublic: z.boolean().optional(),
   ticketPrice: z.string().optional(),
-  registrationRequired: z.boolean().default(false),
+  registrationRequired: z.boolean().optional(),
   maxAttendees: z.string().optional(),
   eventUrl: z.string().optional(),
   registrationUrl: z.string().optional(),
@@ -88,8 +83,14 @@ const CreateEventPage: React.FC = () => {
       maxAttendees: "",
       eventUrl: "",
       registrationUrl: "",
+      organizer: "",
+      tags: [],
+      placeIds: [],
       thumbnail: "",
       gallery: [],
+      meta: {
+        key: "",
+      },
     },
     mode: "onChange",
   });
@@ -193,6 +194,9 @@ const CreateEventPage: React.FC = () => {
       // Prepare the event data
       const eventData = {
         ...formData,
+        status: formData.status || "draft", // Ensure default status
+        isPublic: formData.isPublic ?? false, // Ensure default isPublic
+        registrationRequired: formData.registrationRequired ?? false, // Ensure default registrationRequired
         startTime: formData.startTime
           ? new Date(formData.startTime).toISOString()
           : undefined,
@@ -511,53 +515,16 @@ const CreateEventPage: React.FC = () => {
 
           {/* Organizer Selection */}
           <div className="w-1/2 p-4">
-            <Controller
+            <AsyncSelectBox
               name="organizer"
               control={control}
-              render={({ field: { onChange, value } }) => (
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-slate-700 text-right">
-                    سازمان‌دهنده
-                  </label>
-                  <AsyncSelect
-                    cacheOptions
-                    defaultOptions
-                    value={value ? { value: value, label: "Loading..." } : null}
-                    loadOptions={loadUsersOptions}
-                    onChange={(newValue: ReactSelectOption | null) => {
-                      onChange(newValue ? newValue.value : null);
-                    }}
-                    placeholder="سازمان‌دهنده را انتخاب کنید"
-                    noOptionsMessage={() => "سازمان‌دهنده‌ای یافت نشد"}
-                    loadingMessage={() => "در حال بارگذاری..."}
-                    isClearable
-                    isRtl={true}
-                    styles={{
-                      control: (provided: any, state: any) => ({
-                        ...provided,
-                        minHeight: "48px",
-                        borderRadius: "12px",
-                        borderColor: errors.organizer ? "#ef4444" : "#cbd5e1",
-                        direction: "rtl",
-                      }),
-                      option: (provided: any) => ({
-                        ...provided,
-                        direction: "rtl",
-                        textAlign: "right",
-                      }),
-                      singleValue: (provided: any) => ({
-                        ...provided,
-                        direction: "rtl",
-                      }),
-                    }}
-                  />
-                  {errors.organizer && (
-                    <span className="text-red-500 text-xs text-right">
-                      {errors.organizer.message}
-                    </span>
-                  )}
-                </div>
-              )}
+              label="سازمان‌دهنده"
+              setValue={setValue}
+              loadOptions={loadUsersOptions}
+              defaultOptions
+              placeholder="سازمان‌دهنده را انتخاب کنید"
+              className=""
+              errMsg={errors.organizer?.message}
             />
           </div>
 
@@ -637,15 +604,6 @@ const CreateEventPage: React.FC = () => {
                   <p className="w-full text-sm text-gray-500 text-right">
                     {galleryImages.length} تصویر آپلود شده
                   </p>
-                  {galleryImages.map((img, idx) => (
-                    <div key={idx} className="relative">
-                      <img
-                        src={img}
-                        alt={`Gallery ${idx}`}
-                        className="w-16 h-16 object-cover rounded border"
-                      />
-                    </div>
-                  ))}
                 </div>
               )}
             </div>
