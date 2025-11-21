@@ -203,6 +203,11 @@
     animation: spin 0.9s linear infinite;
 }
 
+/* Ensure all buttons have pointer cursor */
+button {
+    cursor: pointer;
+}
+
 @keyframes spin {
     to {
         transform: rotate(360deg);
