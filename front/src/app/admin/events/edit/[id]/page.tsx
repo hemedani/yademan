@@ -201,14 +201,14 @@ const EditEventPage: React.FC = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="relative">
-            <div className="w-16 h-16 border-4 border-purple-200 rounded-full animate-spin"></div>
-            <div className="absolute inset-0 w-16 h-16 border-4 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-16 h-16 border-4 border-pink-500/30 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 w-16 h-16 border-4 border-pink-600 border-t-transparent rounded-full animate-spin"></div>
           </div>
           <div className="space-y-2">
-            <h2 className="text-xl font-bold text-slate-800">
+            <h2 className="text-xl font-bold text-white">
               در حال بارگذاری اطلاعات رویداد
             </h2>
-            <p className="text-slate-600">لطفاً منتظر بمانید...</p>
+            <p className="text-gray-400">لطفاً منتظر بمانید...</p>
           </div>
         </div>
       </div>
@@ -216,19 +216,19 @@ const EditEventPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8">
+    <div className="max-w-4xl mx-auto bg-gray-800 rounded-2xl shadow-lg p-8 border border-gray-700">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
           ویرایش رویداد
         </h1>
-        <p className="text-slate-600 mt-2">
+        <p className="text-gray-400 mt-2">
           اطلاعات رویداد شهرداری را ویرایش کنید
         </p>
       </div>
 
       <Link
         href="/admin/events"
-        className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-6"
+        className="inline-flex items-center text-pink-400 hover:text-pink-300 mb-6"
       >
         <svg
           className="w-4 h-4 ml-1"
@@ -247,7 +247,7 @@ const EditEventPage: React.FC = () => {
       </Link>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+        <div className="bg-red-900/30 border border-red-700 rounded-lg p-4 mb-6">
           <div className="flex items-center space-x-2">
             <svg
               className="w-5 h-5 text-red-500"
@@ -262,7 +262,7 @@ const EditEventPage: React.FC = () => {
                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span className="text-red-700">{error}</span>
+            <span className="text-red-400">{error}</span>
           </div>
         </div>
       )}
@@ -290,7 +290,7 @@ const EditEventPage: React.FC = () => {
                   </label>
                   <select
                     {...field}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    className="w-full px-4 py-2 border border-gray-600 bg-gray-700 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 text-white"
                   >
                     <option value="draft">پیش نویس</option>
                     <option value="published">منتشر شده</option>
@@ -403,11 +403,11 @@ const EditEventPage: React.FC = () => {
                     id="isPublic"
                     checked={field.value}
                     onChange={(e) => field.onChange(e.target.checked)}
-                    className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-pink-500 focus:ring-pink-500 bg-gray-700 border-gray-600 rounded"
                   />
                   <label
                     htmlFor="isPublic"
-                    className="text-sm font-medium text-slate-700 text-right"
+                    className="text-sm font-medium text-gray-300 text-right"
                   >
                     عمومی
                   </label>
@@ -432,11 +432,11 @@ const EditEventPage: React.FC = () => {
                     id="registrationRequired"
                     checked={field.value}
                     onChange={(e) => field.onChange(e.target.checked)}
-                    className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                    className="h-4 w-4 text-pink-500 focus:ring-pink-500 bg-gray-700 border-gray-600 rounded"
                   />
                   <label
                     htmlFor="registrationRequired"
-                    className="text-sm font-medium text-slate-700 text-right"
+                    className="text-sm font-medium text-gray-300 text-right"
                   >
                     نیاز به ثبت نام
                   </label>
@@ -487,20 +487,20 @@ const EditEventPage: React.FC = () => {
 
         <div className="flex justify-end space-x-4 pt-6">
           {!isValid && Object.keys(errors).length > 0 && (
-            <div className="text-sm text-red-600 mr-4 self-center text-right">
+            <div className="text-sm text-red-400 mr-4 self-center text-right">
               لطفاً فیلدهای اجباری را تکمیل کنید
             </div>
           )}
           <Link
             href="/admin/events"
-            className="px-6 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
+            className="px-6 py-2 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white transition-colors"
           >
             لغو
           </Link>
           <button
             type="submit"
             disabled={loading || !isValid}
-            className="px-6 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 disabled:opacity-50"
+            className="px-6 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-lg hover:from-pink-700 hover:to-purple-700 transition-all duration-300 disabled:opacity-50 shadow-lg shadow-pink-500/30"
           >
             {loading ? "در حال به‌روزرسانی..." : "به‌روزرسانی رویداد"}
           </button>

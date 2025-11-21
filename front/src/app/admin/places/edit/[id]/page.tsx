@@ -14,12 +14,12 @@ export default function EditPlace({ params }: PageProps) {
     <div className="relative min-h-full">
       <div className="mb-8">
         <div className="flex items-start">
-          <div className="bg-blue-500 w-1 h-8 ml-3 rounded-full"></div>
+          <div className="bg-pink-500 w-1 h-8 ml-3 rounded-full"></div>
           <div>
-            <h1 className="text-2xl md:text-3xl text-gray-800 font-bold">
+            <h1 className="text-2xl md:text-3xl text-white font-bold">
               ویرایش {translateModelNameToPersian("place")}
             </h1>
-            <p className="text-gray-500 mt-2 text-sm">
+            <p className="text-gray-400 mt-2 text-sm">
               اطلاعات مکان را ویرایش کنید
             </p>
           </div>

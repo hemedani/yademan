@@ -67,8 +67,8 @@ export default async function EditVirtualTourPage({
 
   if (!tourData) {
     return (
-      <div className="p-8">
-        <div className="bg-red-100 p-4 rounded-md text-red-800">
+      <div className="p-8 text-white">
+        <div className="bg-red-900/30 p-4 rounded-md text-red-400 border border-red-700">
           تور مجازی مورد نظر یافت نشد!
         </div>
       </div>
@@ -76,18 +76,20 @@ export default async function EditVirtualTourPage({
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4 text-white">
       <div className="flex items-start mb-6">
-        <div className="bg-blue-500 w-1 h-8 ml-3 rounded-full"></div>
+        <div className="bg-pink-600 w-1 h-8 ml-3 rounded-full"></div>
         <div>
-          <h1 className="text-2xl md:text-3xl text-gray-800 font-bold">
+          <h1 className="text-2xl md:text-3xl text-white font-bold">
             ویرایش {translateModelNameToPersian("virtual_tour")}
           </h1>
-          <p className="text-gray-500 mt-2 text-sm">{tourData.name}</p>
+          <p className="text-gray-400 mt-2 text-sm">{tourData.name}</p>
         </div>
       </div>
 
-      <Suspense fallback={<div className="p-8">در حال بارگذاری...</div>}>
+      <Suspense
+        fallback={<div className="p-8 text-white">در حال بارگذاری...</div>}
+      >
         <FormEditVirtualTour
           token={token?.value}
           places={places}
