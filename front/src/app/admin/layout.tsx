@@ -7,6 +7,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { Toaster } from "react-hot-toast";
 import AdminSidebar from "@/components/organisms/AdminSidebar";
+import "@/app/dark-theme.css";
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -66,29 +67,29 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
   if (loading || !mounted) {
     return (
       <div
-        className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center"
+        className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-slate-900 flex items-center justify-center"
         dir="rtl"
         style={{ fontFamily: "IRANSans, Tahoma, Arial, sans-serif" }}
       >
         <div className="text-center space-y-6">
           <div className="relative">
-            <div className="w-20 h-20 border-4 border-blue-200 rounded-full animate-spin"></div>
-            <div className="absolute inset-0 w-20 h-20 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-20 h-20 border-4 border-pink-500/30 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 w-20 h-20 border-4 border-pink-600 border-t-transparent rounded-full animate-spin"></div>
           </div>
           <div className="space-y-2">
-            <h2 className="text-2xl font-bold text-slate-800">
+            <h2 className="text-2xl font-bold text-white">
               در حال بارگذاری پنل مدیریت
             </h2>
-            <p className="text-slate-600">لطفاً منتظر بمانید...</p>
+            <p className="text-gray-300">لطفاً منتظر بمانید...</p>
           </div>
-          <div className="flex items-center justify-center space-x-reverse space-x-2 text-sm text-slate-500">
-            <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
+          <div className="flex items-center justify-center space-x-3 text-sm text-gray-400">
+            <div className="w-2 h-2 bg-pink-600 rounded-full animate-bounce"></div>
             <div
-              className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"
+              className="w-2 h-2 bg-pink-600 rounded-full animate-bounce"
               style={{ animationDelay: "0.1s" }}
             ></div>
             <div
-              className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"
+              className="w-2 h-2 bg-pink-600 rounded-full animate-bounce"
               style={{ animationDelay: "0.2s" }}
             ></div>
           </div>
@@ -103,16 +104,16 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
   ) {
     return (
       <div
-        className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-100 flex items-center justify-center"
+        className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-slate-900 flex items-center justify-center"
         dir="rtl"
         style={{ fontFamily: "IRANSans, Tahoma, Arial, sans-serif" }}
       >
-        <div className="max-w-md mx-auto text-center space-y-8 p-8">
+        <div className="max-w-md mx-auto text-center space-y-8 p-8 bg-gray-900/50 backdrop-blur-xl border border-gray-700 rounded-2xl shadow-2xl">
           <div className="relative">
-            <div className="w-24 h-24 bg-red-100 rounded-full flex items-center justify-center mx-auto">
-              <div className="w-12 h-12 bg-red-200 rounded-full flex items-center justify-center">
+            <div className="w-24 h-24 bg-gray-800 rounded-full flex items-center justify-center mx-auto">
+              <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center">
                 <svg
-                  className="w-6 h-6 text-red-600"
+                  className="w-6 h-6 text-pink-500"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -126,7 +127,7 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
                 </svg>
               </div>
             </div>
-            <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">
+            <div className="absolute -top-2 -right-2 w-6 h-6 bg-pink-500 rounded-full flex items-center justify-center">
               <svg
                 className="w-4 h-4 text-white"
                 fill="currentColor"
@@ -142,15 +143,13 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
           </div>
 
           <div className="space-y-4">
-            <h1 className="text-3xl font-bold text-slate-800">
-              دسترسی محدود شده
-            </h1>
-            <p className="text-lg text-slate-600 leading-relaxed">
+            <h1 className="text-3xl font-bold text-white">دسترسی محدود شده</h1>
+            <p className="text-lg text-gray-300 leading-relaxed">
               شما مجوز دسترسی به این بخش را ندارید. لطفاً با حساب کاربری مدیر یا
               ویراستار وارد شوید.
             </p>
-            <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">
-              <div className="flex items-center space-x-reverse space-x-2">
+            <div className="bg-gray-800 border border-gray-700 rounded-xl p-4 text-sm text-pink-400">
+              <div className="flex items-center space-x-3">
                 <svg
                   className="w-4 h-4 flex-shrink-0"
                   fill="currentColor"
@@ -170,13 +169,13 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
           <div className="space-y-3">
             <button
               onClick={() => router.push("/login")}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+              className="w-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
             >
               ورود به حساب کاربری
             </button>
             <button
               onClick={() => router.push("/")}
-              className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-3 px-6 rounded-xl transition-all duration-300"
+              className="w-full bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-xl transition-all duration-300 border border-gray-700"
             >
               بازگشت به صفحه اصلی
             </button>
@@ -188,7 +187,7 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50"
+      className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-slate-900"
       dir="rtl"
       style={{ fontFamily: "IRANSans, Tahoma, Arial, sans-serif" }}
     >
@@ -197,44 +196,44 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
       {/* Main Content */}
       <div className="mr-80 transition-all duration-300 ease-in-out">
         {/* Top Header Bar */}
-        <header className="bg-white/80 backdrop-blur-xl border-b border-slate-200/60 sticky top-0 z-40 shadow-sm">
+        <header className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-700/60 stic/ky top-0 z-40 shadow-sm">
           <div className="px-8 py-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-reverse space-x-6">
+              <div className="flex items-center space-x-8">
                 <div>
-                  <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
                     پنل مدیریت نقشه ایران
                   </h1>
-                  <p className="text-sm text-slate-500 mt-1">
+                  <p className="text-sm text-gray-400 mt-1">
                     سامانه مدیریت مکان‌های فرهنگی و تاریخی
                   </p>
                 </div>
 
-                <div className="hidden lg:flex items-center space-x-reverse space-x-4 bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-2 rounded-xl">
-                  <div className="flex items-center space-x-reverse space-x-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    <span className="text-sm font-medium text-slate-700">
+                <div className="hidden lg:flex items-center space-x-6 bg-gray-800/50 px-4 py-2 rounded-xl border border-gray-700">
+                  <div className="flex items-center space-x-3">
+                    <span className="text-sm font-medium text-gray-300">
                       آنلاین
                     </span>
+                    <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                   </div>
-                  <div className="w-px h-4 bg-slate-300"></div>
-                  <div className="text-sm text-slate-600">
+                  <div className="w-px h-4 bg-gray-600"></div>
+                  <div className="text-sm text-gray-400">
                     {formatPersianTime(currentTime)}
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center space-x-reverse space-x-4">
+              <div className="flex items-center space-x-6">
                 {/* Quick Search */}
                 <div className="relative hidden md:block">
                   <input
                     type="text"
                     placeholder="جستجو در سیستم..."
-                    className="w-64 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    className="w-64 bg-gray-800 border border-gray-700 rounded-xl px-4 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200 text-white"
                   />
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                     <svg
-                      className="w-4 h-4 text-slate-400"
+                      className="w-4 h-4 text-gray-400"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -250,7 +249,7 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
                 </div>
 
                 {/* Notifications */}
-                <button className="relative p-3 bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-800 rounded-xl transition-all duration-200 group">
+                <button className="relative p-3 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-xl transition-all duration-200 group border border-gray-700">
                   <svg
                     className="w-5 h-5"
                     fill="none"
@@ -264,7 +263,7 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
                       d="M15 17h5l-5 5v-5zM4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                     />
                   </svg>
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold">
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-pink-600 text-white text-xs rounded-full flex items-center justify-center font-bold">
                     ۳
                   </span>
                 </button>
@@ -272,7 +271,7 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
                 {/* Settings */}
                 <button
                   onClick={() => router.push("/admin/settings")}
-                  className="p-3 bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-800 rounded-xl transition-all duration-200"
+                  className="p-3 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-xl transition-all duration-200 border border-gray-700"
                 >
                   <svg
                     className="w-5 h-5"
@@ -304,7 +303,7 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
                       document.exitFullscreen();
                     }
                   }}
-                  className="p-3 bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-800 rounded-xl transition-all duration-200"
+                  className="p-3 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-xl transition-all duration-200 border border-gray-700"
                 >
                   <svg
                     className="w-5 h-5"
@@ -331,20 +330,20 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-slate-200/60 bg-white/50 backdrop-blur-sm">
+        <footer className="border-t border-gray-700/60 bg-gray-900/50 backdrop-blur-sm">
           <div className="px-8 py-6">
-            <div className="flex items-center justify-between text-sm text-slate-500">
-              <div className="flex items-center space-x-reverse space-x-4">
+            <div className="flex items-center justify-between text-sm text-gray-400">
+              <div className="flex items-center space-x-6">
                 <span>© ۱۴۰۳ پنل مدیریت نقشه ایران</span>
                 <span>•</span>
                 <span>{formatPersianDate(currentTime)}</span>
               </div>
-              <div className="flex items-center space-x-reverse space-x-4">
+              <div className="flex items-center space-x-6">
                 <span>نسخه ۱.۰.۰</span>
                 <span>•</span>
-                <span className="flex items-center space-x-reverse space-x-1">
+                <span className="flex items-center space-x-2">
                   <span>ساخته شده با</span>
-                  <span className="text-red-500">❤️</span>
+                  <span className="text-pink-500">❤️</span>
                   <span>برای ایران</span>
                 </span>
               </div>
@@ -355,10 +354,10 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
 
       {/* Floating Quick Actions */}
       <div className="fixed bottom-8 left-8 z-50">
-        <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-2 space-y-2">
+        <div className="bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-700 p-2 space-y-2">
           <button
-            onClick={() => router.push("/admin/places/add")}
-            className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            onClick={() => router.push("/admin/places/create")}
+            className="w-12 h-12 bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-pink-500/20 transform hover:-translate-y-1"
             title="افزودن مکان جدید"
           >
             <svg
@@ -377,8 +376,8 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
           </button>
 
           <button
-            onClick={() => router.push("/admin/comments/pending")}
-            className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            onClick={() => router.push("/admin/comments")}
+            className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-green-500/20 transform hover:-translate-y-1"
             title="نظرات درانتظار"
           >
             <svg
@@ -398,7 +397,7 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
 
           <button
             onClick={() => router.push("/")}
-            className="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-blue-500/20 transform hover:-translate-y-1"
             title="مشاهده سایت اصلی"
           >
             <svg
@@ -420,9 +419,9 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
 
       {/* Background Decorative Elements */}
       <div className="fixed inset-0 pointer-events-none z-0 opacity-30">
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-blue-200 to-purple-200 rounded-full mix-blend-multiply filter blur-3xl animate-pulse"></div>
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-gradient-to-r from-pink-900/30 to-purple-900/30 rounded-full mix-blend-multiply filter blur-3xl animate-pulse"></div>
         <div
-          className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-pink-200 to-yellow-200 rounded-full mix-blend-multiply filter blur-3xl animate-pulse"
+          className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-900/30 to-cyan-900/30 rounded-full mix-blend-multiply filter blur-3xl animate-pulse"
           style={{ animationDelay: "2s" }}
         ></div>
       </div>
