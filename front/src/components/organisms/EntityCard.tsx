@@ -17,15 +17,17 @@ const EntityCard: React.FC<SimpleCardProps> = ({
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div 
-      className={`border w-full max-w-sm bg-white rounded-lg p-4 flex justify-between items-center
+    <div
+      className={`border w-full max-w-sm bg-gray-800 rounded-lg p-4 flex justify-between items-center
         transition-all duration-300 ease-in-out
-        ${isHovered ? 'shadow-lg transform -translate-y-1 border-blue-300' : 'shadow-md hover:shadow-lg'}
+        ${isHovered ? "shadow-lg transform -translate-y-1 border-pink-500" : "shadow-md hover:shadow-lg border-gray-700"}
       `}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <h3 className={`text-lg font-semibold truncate transition-colors duration-300 ${isHovered ? 'text-blue-600' : 'text-gray-800'}`}>
+      <h3
+        className={`text-lg font-semibold truncate transition-colors duration-300 ${isHovered ? "text-pink-400" : "text-white"}`}
+      >
         {title}
       </h3>
       <div className="flex gap-3">
@@ -33,7 +35,7 @@ const EntityCard: React.FC<SimpleCardProps> = ({
           <button
             onClick={onSeedZones}
             className={`p-2 text-white rounded-full transition-all duration-300 ease-in-out transform
-              ${isHovered ? 'bg-blue-600 scale-110' : 'bg-blue-500 hover:bg-blue-600 hover:scale-105'}
+              ${isHovered ? "bg-blue-600 scale-110" : "bg-blue-500 hover:bg-blue-600 hover:scale-105"}
               shadow hover:shadow-md`}
             title="اضافه کردن مناطق شهر"
           >
@@ -44,7 +46,7 @@ const EntityCard: React.FC<SimpleCardProps> = ({
           <button
             onClick={onEdit}
             className={`p-2 text-white rounded-full transition-all duration-300 ease-in-out transform
-              ${isHovered ? 'bg-yellow-500 scale-110' : 'bg-yellow-400 hover:bg-yellow-500 hover:scale-105'}
+              ${isHovered ? "bg-pink-600 scale-110" : "bg-pink-500 hover:bg-pink-600 hover:scale-105"}
               shadow hover:shadow-md`}
             title="ویرایش"
           >
@@ -55,7 +57,7 @@ const EntityCard: React.FC<SimpleCardProps> = ({
           <button
             onClick={onDelete}
             className={`p-2 text-white rounded-full transition-all duration-300 ease-in-out transform
-              ${isHovered ? 'bg-red-600 scale-110' : 'bg-red-500 hover:bg-red-600 hover:scale-105'}
+              ${isHovered ? "bg-red-600 scale-110" : "bg-red-500 hover:bg-red-600 hover:scale-105"}
               shadow hover:shadow-md`}
             title="حذف"
           >

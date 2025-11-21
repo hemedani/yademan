@@ -51,7 +51,10 @@ export const EditUserPures = ({
     }
   };
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-6 bg-gray-800 p-6 border border-gray-700 rounded-lg"
+    >
       <div className="flex flex-wrap w-full">
         <input
           {...register("_id")}
@@ -123,7 +126,7 @@ export const EditUserPures = ({
         <button
           type="submit"
           disabled={isSubmitting || !isValid}
-          className="p-4 px-8 bg-blue-600 text-white text-center font-semibold rounded-lg hover:bg-blue-700 disabled:bg-blue-300"
+          className="p-4 px-8 bg-gradient-to-r from-pink-600 to-purple-600 text-white text-center font-semibold rounded-lg hover:from-pink-700 hover:to-purple-700 disabled:opacity-50 transition-all duration-300 shadow-lg shadow-pink-500/30"
         >
           ارسال
         </button>

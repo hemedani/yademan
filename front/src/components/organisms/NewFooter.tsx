@@ -18,7 +18,7 @@ export const Footer = () => {
               شده است. ما تلاش می‌کنیم با بهره‌گیری از داده‌های واقعی، بهبود
               ایمنی جاده‌ای و کاهش تلفات را با کمک تحلیل‌های هوشمند محقق کنیم.
             </p>
-            <div className="flex justify-end space-x-3 space-x-reverse mt-4">
+            <div className="flex justify-end space-x-3  mt-4">
               {/* شبکه‌های اجتماعی با بهتر touch targets */}
               <a
                 href="#"

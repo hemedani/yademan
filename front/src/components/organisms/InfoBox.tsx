@@ -69,7 +69,7 @@ export const StatCard: React.FC<StatCardProps> = ({
           {/* Trend Indicator */}
           {trend && (
             <div
-              className={`flex items-center space-x-reverse space-x-1 px-2 py-1 rounded-full text-xs font-medium ${
+              className={`flex items-center  space-x-1 px-2 py-1 rounded-full text-xs font-medium ${
                 trend.isPositive
                   ? "bg-green-100 text-green-800"
                   : "bg-red-100 text-red-800"
@@ -210,7 +210,7 @@ export const EnhancedStatCard: React.FC<EnhancedStatCardProps> = ({
           {/* Trend */}
           {trend && (
             <div
-              className={`flex items-center space-x-reverse space-x-2 px-3 py-2 rounded-full text-sm font-semibold shadow-sm ${
+              className={`flex items-center  space-x-2 px-3 py-2 rounded-full text-sm font-semibold shadow-sm ${
                 trend.isPositive
                   ? "bg-green-100 text-green-800 border border-green-200"
                   : "bg-red-100 text-red-800 border border-red-200"
@@ -252,7 +252,7 @@ export const EnhancedStatCard: React.FC<EnhancedStatCardProps> = ({
 
         {/* Actions */}
         {actions && actions.length > 0 && (
-          <div className="flex items-center space-x-reverse space-x-3 pt-4 border-t border-slate-100">
+          <div className="flex items-center  space-x-3 pt-4 border-t border-slate-100">
             {actions.map((action, index) => (
               <button
                 key={index}
@@ -260,7 +260,7 @@ export const EnhancedStatCard: React.FC<EnhancedStatCardProps> = ({
                   e.stopPropagation();
                   action.onClick();
                 }}
-                className="flex items-center space-x-reverse space-x-2 px-4 py-2 text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors duration-200"
+                className="flex items-center  space-x-2 px-4 py-2 text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors duration-200"
               >
                 {action.icon}
                 <span>{action.label}</span>
@@ -302,7 +302,7 @@ export const CompactStatCard: React.FC<StatCardProps> = ({
       onClick={onClick}
       style={{ fontFamily: "IRANSans, Tahoma, Arial, sans-serif" }}
     >
-      <div className="flex items-center space-x-reverse space-x-4">
+      <div className="flex items-center  space-x-4">
         <div
           className={`p-3 rounded-lg ${bgColor} text-white shadow-md flex-shrink-0`}
         >
@@ -324,7 +324,7 @@ export const CompactStatCard: React.FC<StatCardProps> = ({
         </div>
 
         <div className="flex-1 min-w-0">
-          <div className="flex items-baseline space-x-reverse space-x-2">
+          <div className="flex items-baseline  space-x-2">
             <div className="text-2xl font-bold text-slate-800">
               {formatPersianNumber(value)}
             </div>

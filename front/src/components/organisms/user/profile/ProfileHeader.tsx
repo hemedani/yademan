@@ -17,7 +17,7 @@ const ProfileHeader = ({
   relationEditLink,
 }: ProfileHeaderProps) => {
   return (
-    <div className="relative bg-gradient-to-r from-indigo-600 via-blue-500 to-indigo-600 p-8">
+    <div className="relative bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 p-8">
       {/* Decorative Pattern */}
       <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-10"></div>
 

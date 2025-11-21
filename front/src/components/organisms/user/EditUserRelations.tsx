@@ -47,10 +47,13 @@ export const EditUserRelations = ({
     }
   };
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-6 bg-gray-800 p-6 border border-gray-700 rounded-lg"
+    >
       <div className="flex flex-wrap w-full">
         <div className="w-1/2 p-4">
-          <span>عکس پروفایل کاربری</span>
+          <span className="text-gray-300">عکس پروفایل کاربری</span>
           <UploadImage
             inputName="avatar"
             setUploadedImage={(uploaded: string) =>
@@ -62,7 +65,7 @@ export const EditUserRelations = ({
           />
         </div>
         <div className="w-1/2 p-4">
-          <span>عکس کارت ملی</span>
+          <span className="text-gray-300">عکس کارت ملی</span>
           <UploadImage
             inputName="nationalCard"
             setUploadedImage={(uploaded: string) =>
@@ -77,7 +80,7 @@ export const EditUserRelations = ({
       <div className="w-full flex gap-4 justify-end">
         <button
           type="submit"
-          className="p-4 px-8 bg-blue-600 text-white text-center font-semibold rounded-lg hover:bg-blue-700 disabled:bg-blue-300"
+          className="p-4 px-8 bg-gradient-to-r from-pink-600 to-purple-600 text-white text-center font-semibold rounded-lg hover:from-pink-700 hover:to-purple-700 disabled:opacity-50 transition-all duration-300 shadow-lg shadow-pink-500/30"
         >
           ارسال
         </button>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { IconLogo, } from "../atoms/Icons";
+import { IconLogo } from "../atoms/Icons";
 import { useAuth } from "@/context/AuthContext";
 
 export const Navbar = () => {
@@ -96,10 +96,11 @@ export const Navbar = () => {
   return (
     <header
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300
-      ${isScrolled
+      ${
+        isScrolled
           ? "bg-white bg-opacity-90 backdrop-blur-sm shadow-lg py-2"
           : "bg-gradient-to-b from-white to-transparent py-4"
-        }
+      }
       border-b border-gray-100`}
     >
       <div className="mx-auto max-w-7xl flex items-center justify-between px-6 relative">
@@ -111,10 +112,7 @@ export const Navbar = () => {
         </div>
 
         {/* Desktop Navigation - elegant hover effects and RTL support */}
-        <nav
-          className="hidden md:flex items-center space-x-8 space-x-reverse"
-          dir="rtl"
-        >
+        <nav className="hidden md:flex items-center space-x-8 " dir="rtl">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -274,16 +272,19 @@ export const Navbar = () => {
           >
             <div className="relative w-6 h-6">
               <span
-                className={`absolute left-0 top-0.5 block w-6 h-0.5 bg-current transform transition-all duration-300 ${isMobileMenuOpen ? "rotate-45 translate-y-2" : ""
-                  }`}
+                className={`absolute left-0 top-0.5 block w-6 h-0.5 bg-current transform transition-all duration-300 ${
+                  isMobileMenuOpen ? "rotate-45 translate-y-2" : ""
+                }`}
               ></span>
               <span
-                className={`absolute left-0 top-2.5 block w-6 h-0.5 bg-current transition-opacity duration-300 ${isMobileMenuOpen ? "opacity-0" : "opacity-100"
-                  }`}
+                className={`absolute left-0 top-2.5 block w-6 h-0.5 bg-current transition-opacity duration-300 ${
+                  isMobileMenuOpen ? "opacity-0" : "opacity-100"
+                }`}
               ></span>
               <span
-                className={`absolute left-0 top-4.5 block w-6 h-0.5 bg-current transform transition-all duration-300 ${isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""
-                  }`}
+                className={`absolute left-0 top-4.5 block w-6 h-0.5 bg-current transform transition-all duration-300 ${
+                  isMobileMenuOpen ? "-rotate-45 -translate-y-2" : ""
+                }`}
               ></span>
             </div>
           </button>
@@ -292,10 +293,11 @@ export const Navbar = () => {
 
       {/* Mobile Menu with smooth animation */}
       <div
-        className={`md:hidden absolute left-0 w-full bg-white shadow-xl transition-all duration-500 ease-in-out transform ${isMobileMenuOpen
-          ? "opacity-100 translate-y-0 max-h-[80vh] overflow-y-auto"
-          : "opacity-0 -translate-y-10 max-h-0 overflow-hidden"
-          }`}
+        className={`md:hidden absolute left-0 w-full bg-white shadow-xl transition-all duration-500 ease-in-out transform ${
+          isMobileMenuOpen
+            ? "opacity-100 translate-y-0 max-h-[80vh] overflow-y-auto"
+            : "opacity-0 -translate-y-10 max-h-0 overflow-hidden"
+        }`}
       >
         <nav className="flex flex-col items-center py-6 space-y-1" dir="rtl">
           {navLinks.map((link) => (
