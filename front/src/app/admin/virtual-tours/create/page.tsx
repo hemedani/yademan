@@ -37,14 +37,14 @@ export default async function CreateVirtualTourPage() {
     : [];
 
   return (
-    <div className="p-4">
+    <div className="p-4 text-white">
       <div className="flex items-start mb-6">
-        <div className="bg-blue-500 w-1 h-8 ml-3 rounded-full"></div>
+        <div className="bg-pink-600 w-1 h-8 ml-3 rounded-full"></div>
         <div>
-          <h1 className="text-2xl md:text-3xl text-gray-800 font-bold">
+          <h1 className="text-2xl md:text-3xl text-white font-bold">
             ایجاد {translateModelNameToPersian("virtual_tour")} جدید
           </h1>
-          <p className="text-gray-500 mt-2 text-sm">
+          <p className="text-gray-400 mt-2 text-sm">
             فرم زیر را برای ایجاد تور مجازی جدید تکمیل کنید
           </p>
         </div>
