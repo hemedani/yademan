@@ -9,7 +9,11 @@ interface PaginationProps {
   limit?: number; // تعداد آیتم در هر صفحه
 }
 
-const Pagination: FC<PaginationProps> = ({ initialPage, countPage, limit = 20 }) => {
+const Pagination: FC<PaginationProps> = ({
+  initialPage,
+  countPage,
+  limit = 20,
+}) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const totalPages = Math.ceil(countPage / limit);
@@ -59,20 +63,21 @@ const Pagination: FC<PaginationProps> = ({ initialPage, countPage, limit = 20 })
 
   return (
     <nav aria-label="صفحه‌بندی" className="w-full flex justify-center my-8">
-      <div className="flex items-center justify-center gap-2 px-4 py-2 bg-white rounded-xl shadow-md">
+      <div className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-800/80 backdrop-blur-xl rounded-xl border border-gray-700 shadow-lg">
         {/* Previous button */}
         <button
           onClick={() => handlePageChange(initialPage - 1)}
           disabled={initialPage === 1}
           aria-label="صفحه قبلی"
-          className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-colors duration-200 ${initialPage === 1
-            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-            }`}
+          className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-colors duration-200 ${
+            initialPage === 1
+              ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+              : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+          }`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
+            className="h-4 w-4 text-gray-300"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -90,7 +95,10 @@ const Pagination: FC<PaginationProps> = ({ initialPage, countPage, limit = 20 })
         {/* Page numbers */}
         <div className="flex items-center gap-1 mx-2">
           {getPageNumbers().map((pageNumber, index) => {
-            if (pageNumber === "ellipsis-start" || pageNumber === "ellipsis-end") {
+            if (
+              pageNumber === "ellipsis-start" ||
+              pageNumber === "ellipsis-end"
+            ) {
               return (
                 <span
                   key={`${pageNumber}-${index}`}
@@ -108,10 +116,11 @@ const Pagination: FC<PaginationProps> = ({ initialPage, countPage, limit = 20 })
                 onClick={() => handlePageChange(pageNumber as number)}
                 aria-label={`صفحه ${pageNumber}`}
                 aria-current={pageNumber === initialPage ? "page" : undefined}
-                className={`w-9 h-9 flex items-center justify-center rounded-lg transition-colors duration-200 ${pageNumber === initialPage
-                  ? "bg-blue-600 text-white font-bold"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
+                className={`w-9 h-9 flex items-center justify-center rounded-lg transition-colors duration-200 ${
+                  pageNumber === initialPage
+                    ? "bg-pink-600 text-white font-bold"
+                    : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                }`}
               >
                 {pageNumber}
               </button>
@@ -124,15 +133,16 @@ const Pagination: FC<PaginationProps> = ({ initialPage, countPage, limit = 20 })
           onClick={() => handlePageChange(initialPage + 1)}
           disabled={initialPage === totalPages}
           aria-label="صفحه بعدی"
-          className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-colors duration-200 ${initialPage === totalPages
-            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-            }`}
+          className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-colors duration-200 ${
+            initialPage === totalPages
+              ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+              : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+          }`}
         >
           <span>بعدی</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
+            className="h-4 w-4 text-gray-300"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

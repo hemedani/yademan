@@ -74,7 +74,7 @@ const FilterPanel: React.FC = () => {
       <div className="flex items-center justify-between p-3 sm:p-4 bg-[#1e1e1e] border-b border-[#333]">
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="flex items-center space-x-2 space-x-reverse lg:cursor-default"
+          className="flex items-center space-x-2  lg:cursor-default"
           aria-label={isExpanded ? "بستن فیلترها" : "باز کردن فیلترها"}
         >
           <h3 className="text-base sm:text-lg font-semibold text-white">
@@ -136,10 +136,8 @@ const FilterPanel: React.FC = () => {
           <label className="block text-sm sm:text-base font-medium text-white mb-2">
             حداقل امتیاز
           </label>
-          <div className="flex items-center space-x-1 space-x-reverse">
-            <div className="flex space-x-1 space-x-reverse">
-              {renderStars(filters.rating)}
-            </div>
+          <div className="flex items-center space-x-1 ">
+            <div className="flex space-x-1 ">{renderStars(filters.rating)}</div>
             <span className="mr-2 text-xs sm:text-sm text-[#a0a0a0]">
               {filters.rating > 0
                 ? `${filters.rating} ستاره و بالاتر`
