@@ -177,8 +177,6 @@ Clean up any unnecessary code, such as console.log or unused variables or any ot
 
 If you want to use any package please review `package.json` to see what kind of package are available.
 
-I copied the structure of this project from another project that has nothing to do with this project, so if you see a file or component somewhere that is not very relevant to the project, you can simply delete that file.
-
 ## Important Backend Integration Notes
 
 1. **Backend Authentication Header Format**:
