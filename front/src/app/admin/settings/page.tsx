@@ -137,31 +137,28 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div
-        className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 flex items-center justify-center"
+        className="min-h-screen bg-gray-900 flex items-center justify-center"
         dir="rtl"
       >
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-slate-600">در حال بارگذاری تنظیمات...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-pink-500 mx-auto mb-4"></div>
+          <p className="text-gray-400">در حال بارگذاری تنظیمات...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div
-      className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-6"
-      dir="rtl"
-    >
+    <div className="min-h-screen bg-gray-900 p-6 text-white" dir="rtl">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
                 تنظیمات سیستم
               </h1>
-              <p className="text-slate-600 mt-2">
+              <p className="text-gray-400 mt-2">
                 مدیریت تنظیمات و پیکربندی سایت
               </p>
             </div>
@@ -169,16 +166,16 @@ export default function SettingsPage() {
         </div>
 
         {/* Tabs */}
-        <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 overflow-hidden">
-          <div className="flex border-b border-slate-200">
+        <div className="bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-xl border border-gray-700/50 overflow-hidden">
+          <div className="flex border-b border-gray-700">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex-1 px-6 py-4 text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-2 ${
                   activeTab === tab.id
-                    ? "bg-blue-50 text-blue-600 border-b-2 border-blue-600"
-                    : "text-slate-600 hover:text-slate-800 hover:bg-slate-50"
+                    ? "bg-gray-700 text-pink-400 border-b-2 border-pink-500"
+                    : "text-gray-400 hover:text-white hover:bg-gray-700"
                 }`}
               >
                 <span className="text-lg">{tab.icon}</span>
@@ -192,13 +189,13 @@ export default function SettingsPage() {
             {activeTab === "site" && (
               <div className="space-y-8">
                 <div>
-                  <h2 className="text-xl font-bold text-slate-800 mb-6">
+                  <h2 className="text-xl font-bold text-white mb-6">
                     تنظیمات عمومی سایت
                   </h2>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
                         نام سایت
                       </label>
                       <input
@@ -210,12 +207,12 @@ export default function SettingsPage() {
                             siteName: e.target.value,
                           }))
                         }
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-600 bg-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors duration-200 text-white"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
                         ایمیل تماس
                       </label>
                       <input
@@ -227,12 +224,12 @@ export default function SettingsPage() {
                             contactEmail: e.target.value,
                           }))
                         }
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-600 bg-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors duration-200 text-white"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
                         تلفن تماس
                       </label>
                       <input
@@ -244,12 +241,12 @@ export default function SettingsPage() {
                             contactPhone: e.target.value,
                           }))
                         }
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-600 bg-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors duration-200 text-white"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
                         آدرس
                       </label>
                       <input
@@ -261,13 +258,13 @@ export default function SettingsPage() {
                             address: e.target.value,
                           }))
                         }
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-600 bg-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors duration-200 text-white"
                       />
                     </div>
                   </div>
 
                   <div className="mt-6">
-                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
                       توضیحات سایت
                     </label>
                     <textarea
@@ -279,18 +276,18 @@ export default function SettingsPage() {
                         }))
                       }
                       rows={3}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-600 bg-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors duration-200 text-white"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-bold text-slate-800 mb-4">
+                  <h3 className="text-lg font-bold text-white mb-4">
                     شبکه‌های اجتماعی
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
                         اینستاگرام
                       </label>
                       <input
@@ -305,13 +302,13 @@ export default function SettingsPage() {
                             },
                           }))
                         }
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-600 bg-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors duration-200 text-white"
                         placeholder="@username"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
                         تلگرام
                       </label>
                       <input
@@ -326,13 +323,13 @@ export default function SettingsPage() {
                             },
                           }))
                         }
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-600 bg-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors duration-200 text-white"
                         placeholder="@username"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
                         توییتر
                       </label>
                       <input
@@ -347,7 +344,7 @@ export default function SettingsPage() {
                             },
                           }))
                         }
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-600 bg-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors duration-200 text-white"
                         placeholder="@username"
                       />
                     </div>
@@ -355,7 +352,7 @@ export default function SettingsPage() {
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-bold text-slate-800 mb-4">
+                  <h3 className="text-lg font-bold text-white mb-4">
                     تنظیمات عملکرد
                   </h3>
                   <div className="space-y-4">
@@ -369,13 +366,13 @@ export default function SettingsPage() {
                             maintenanceMode: e.target.checked,
                           }))
                         }
-                        className="ml-3"
+                        className="ml-3 h-5 w-5 text-pink-500 focus:ring-pink-500 border-gray-600 rounded bg-gray-700"
                       />
                       <div>
-                        <span className="text-sm font-medium text-slate-700">
+                        <span className="text-sm font-medium text-gray-300">
                           حالت تعمیرات
                         </span>
-                        <p className="text-xs text-slate-500">
+                        <p className="text-xs text-gray-400">
                           سایت برای کاربران عادی غیرقابل دسترس خواهد بود
                         </p>
                       </div>
@@ -391,13 +388,13 @@ export default function SettingsPage() {
                             allowUserRegistration: e.target.checked,
                           }))
                         }
-                        className="ml-3"
+                        className="ml-3 h-5 w-5 text-pink-500 focus:ring-pink-500 border-gray-600 rounded bg-gray-700"
                       />
                       <div>
-                        <span className="text-sm font-medium text-slate-700">
+                        <span className="text-sm font-medium text-gray-300">
                           امکان ثبت‌نام کاربران
                         </span>
-                        <p className="text-xs text-slate-500">
+                        <p className="text-xs text-gray-400">
                           کاربران جدید می‌توانند ثبت‌نام کنند
                         </p>
                       </div>
@@ -409,7 +406,7 @@ export default function SettingsPage() {
                   <button
                     onClick={() => handleSaveSettings("site")}
                     disabled={saveLoading}
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50"
+                    className="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 shadow-lg shadow-pink-500/30 disabled:opacity-50"
                   >
                     {saveLoading ? "در حال ذخیره..." : "ذخیره تنظیمات"}
                   </button>
@@ -421,13 +418,13 @@ export default function SettingsPage() {
             {activeTab === "security" && (
               <div className="space-y-8">
                 <div>
-                  <h2 className="text-xl font-bold text-slate-800 mb-6">
+                  <h2 className="text-xl font-bold text-white mb-6">
                     تنظیمات امنیتی
                   </h2>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
                         حداقل طول رمز عبور
                       </label>
                       <input
@@ -441,9 +438,9 @@ export default function SettingsPage() {
                         }
                         min="6"
                         max="20"
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-600 bg-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors duration-200 text-white"
                       />
-                      <p className="text-xs text-slate-500 mt-1">
+                      <p className="text-xs text-gray-400 mt-1">
                         فعلی:{" "}
                         {formatPersianNumber(
                           securitySettings.passwordMinLength,
@@ -453,7 +450,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
                         زمان انقضای نشست (دقیقه)
                       </label>
                       <input
@@ -467,9 +464,9 @@ export default function SettingsPage() {
                         }
                         min="15"
                         max="1440"
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-600 bg-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors duration-200 text-white"
                       />
-                      <p className="text-xs text-slate-500 mt-1">
+                      <p className="text-xs text-gray-400 mt-1">
                         فعلی:{" "}
                         {formatPersianNumber(securitySettings.sessionTimeout)}{" "}
                         دقیقه
@@ -477,7 +474,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
                         حداکثر تلاش ورود ناموفق
                       </label>
                       <input
@@ -491,12 +488,12 @@ export default function SettingsPage() {
                         }
                         min="3"
                         max="10"
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-600 bg-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors duration-200 text-white"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
                         مدت قفل حساب (دقیقه)
                       </label>
                       <input
@@ -510,14 +507,14 @@ export default function SettingsPage() {
                         }
                         min="5"
                         max="60"
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-600 bg-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors duration-200 text-white"
                       />
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-bold text-slate-800 mb-4">
+                  <h3 className="text-lg font-bold text-white mb-4">
                     تنظیمات احراز هویت
                   </h3>
                   <div className="space-y-4">
@@ -531,13 +528,13 @@ export default function SettingsPage() {
                             enableTwoFactor: e.target.checked,
                           }))
                         }
-                        className="ml-3"
+                        className="ml-3 h-5 w-5 text-pink-500 focus:ring-pink-500 border-gray-600 rounded bg-gray-700"
                       />
                       <div>
-                        <span className="text-sm font-medium text-slate-700">
+                        <span className="text-sm font-medium text-gray-300">
                           احراز هویت دو مرحله‌ای
                         </span>
-                        <p className="text-xs text-slate-500">
+                        <p className="text-xs text-gray-400">
                           نیاز به تأیید اضافی برای ورود
                         </p>
                       </div>
@@ -553,13 +550,13 @@ export default function SettingsPage() {
                             requireEmailVerification: e.target.checked,
                           }))
                         }
-                        className="ml-3"
+                        className="ml-3 h-5 w-5 text-pink-500 focus:ring-pink-500 border-gray-600 rounded bg-gray-700"
                       />
                       <div>
-                        <span className="text-sm font-medium text-slate-700">
+                        <span className="text-sm font-medium text-gray-300">
                           تأیید ایمیل الزامی
                         </span>
-                        <p className="text-xs text-slate-500">
+                        <p className="text-xs text-gray-400">
                           کاربران باید ایمیل خود را تأیید کنند
                         </p>
                       </div>
@@ -571,7 +568,7 @@ export default function SettingsPage() {
                   <button
                     onClick={() => handleSaveSettings("security")}
                     disabled={saveLoading}
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50"
+                    className="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 shadow-lg shadow-pink-500/30 disabled:opacity-50"
                   >
                     {saveLoading ? "در حال ذخیره..." : "ذخیره تنظیمات"}
                   </button>
@@ -583,13 +580,13 @@ export default function SettingsPage() {
             {activeTab === "content" && (
               <div className="space-y-8">
                 <div>
-                  <h2 className="text-xl font-bold text-slate-800 mb-6">
+                  <h2 className="text-xl font-bold text-white mb-6">
                     تنظیمات محتوا
                   </h2>
 
                   <div className="space-y-6">
                     <div>
-                      <h3 className="text-lg font-bold text-slate-800 mb-4">
+                      <h3 className="text-lg font-bold text-white mb-4">
                         تأیید خودکار
                       </h3>
                       <div className="space-y-4">
@@ -603,13 +600,13 @@ export default function SettingsPage() {
                                 autoApproveComments: e.target.checked,
                               }))
                             }
-                            className="ml-3"
+                            className="ml-3 h-5 w-5 text-pink-500 focus:ring-pink-500 border-gray-600 rounded bg-gray-700"
                           />
                           <div>
-                            <span className="text-sm font-medium text-slate-700">
+                            <span className="text-sm font-medium text-gray-300">
                               تأیید خودکار نظرات
                             </span>
-                            <p className="text-xs text-slate-500">
+                            <p className="text-xs text-gray-400">
                               نظرات بدون نیاز به بررسی منتشر شوند
                             </p>
                           </div>
@@ -625,13 +622,13 @@ export default function SettingsPage() {
                                 autoApprovePlaces: e.target.checked,
                               }))
                             }
-                            className="ml-3"
+                            className="ml-3 h-5 w-5 text-pink-500 focus:ring-pink-500 border-gray-600 rounded bg-gray-700"
                           />
                           <div>
-                            <span className="text-sm font-medium text-slate-700">
+                            <span className="text-sm font-medium text-gray-300">
                               تأیید خودکار مکان‌ها
                             </span>
-                            <p className="text-xs text-slate-500">
+                            <p className="text-xs text-gray-400">
                               مکان‌های جدید بدون بررسی منتشر شوند
                             </p>
                           </div>
@@ -647,13 +644,13 @@ export default function SettingsPage() {
                                 enableReviews: e.target.checked,
                               }))
                             }
-                            className="ml-3"
+                            className="ml-3 h-5 w-5 text-pink-500 focus:ring-pink-500 border-gray-600 rounded bg-gray-700"
                           />
                           <div>
-                            <span className="text-sm font-medium text-slate-700">
+                            <span className="text-sm font-medium text-gray-300">
                               فعال‌سازی بررسی‌ها
                             </span>
-                            <p className="text-xs text-slate-500">
+                            <p className="text-xs text-gray-400">
                               کاربران می‌توانند امتیاز و نظر ثبت کنند
                             </p>
                           </div>
@@ -662,12 +659,12 @@ export default function SettingsPage() {
                     </div>
 
                     <div>
-                      <h3 className="text-lg font-bold text-slate-800 mb-4">
+                      <h3 className="text-lg font-bold text-white mb-4">
                         تنظیمات تصاویر
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                          <label className="block text-sm font-medium text-slate-700 mb-2">
+                          <label className="block text-sm font-medium text-gray-300 mb-2">
                             حداکثر حجم تصویر (مگابایت)
                           </label>
                           <input
@@ -681,12 +678,12 @@ export default function SettingsPage() {
                             }
                             min="1"
                             max="50"
-                            className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                            className="w-full px-4 py-3 rounded-xl border border-gray-600 bg-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors duration-200 text-white"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-sm font-medium text-slate-700 mb-2">
+                          <label className="block text-sm font-medium text-gray-300 mb-2">
                             فرمت‌های مجاز
                           </label>
                           <div className="flex flex-wrap gap-2 mt-2">
@@ -694,7 +691,7 @@ export default function SettingsPage() {
                               (type, index) => (
                                 <span
                                   key={index}
-                                  className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+                                  className="px-3 py-1 bg-gray-700 text-pink-400 rounded-full text-sm"
                                 >
                                   {type.toUpperCase()}
                                 </span>
@@ -706,7 +703,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div>
-                      <h3 className="text-lg font-bold text-slate-800 mb-4">
+                      <h3 className="text-lg font-bold text-white mb-4">
                         کلمات نامناسب
                       </h3>
                       <div className="flex flex-wrap gap-2 mb-3">
@@ -714,7 +711,7 @@ export default function SettingsPage() {
                           (keyword, index) => (
                             <span
                               key={index}
-                              className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm flex items-center gap-1"
+                              className="px-3 py-1 bg-red-900/30 text-red-400 rounded-full text-sm flex items-center gap-1 border border-red-700"
                             >
                               {keyword}
                               <button
@@ -727,7 +724,7 @@ export default function SettingsPage() {
                                       ),
                                   }))
                                 }
-                                className="text-red-600 hover:text-red-800"
+                                className="text-red-400 hover:text-red-300"
                               >
                                 ×
                               </button>
@@ -753,9 +750,9 @@ export default function SettingsPage() {
                             (e.target as HTMLInputElement).value = "";
                           }
                         }}
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-600 bg-gray-700 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors duration-200 text-white"
                       />
-                      <p className="text-xs text-slate-500 mt-1">
+                      <p className="text-xs text-gray-400 mt-1">
                         Enter را فشار دهید تا اضافه شود
                       </p>
                     </div>
@@ -766,7 +763,7 @@ export default function SettingsPage() {
                   <button
                     onClick={() => handleSaveSettings("content")}
                     disabled={saveLoading}
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:opacity-50"
+                    className="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-xl transition-all duration-300 shadow-lg shadow-pink-500/30 disabled:opacity-50"
                   >
                     {saveLoading ? "در حال ذخیره..." : "ذخیره تنظیمات"}
                   </button>
@@ -778,19 +775,19 @@ export default function SettingsPage() {
             {activeTab === "backup" && (
               <div className="space-y-8">
                 <div>
-                  <h2 className="text-xl font-bold text-slate-800 mb-6">
+                  <h2 className="text-xl font-bold text-white mb-6">
                     پشتیبان‌گیری و بازیابی
                   </h2>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="bg-blue-50 rounded-xl p-6">
-                      <h3 className="text-lg font-bold text-slate-800 mb-4">
+                    <div className="bg-gray-800 rounded-xl p-6">
+                      <h3 className="text-lg font-bold text-white mb-4">
                         ایجاد پشتیبان
                       </h3>
-                      <p className="text-slate-600 text-sm mb-4">
+                      <p className="text-gray-400 text-sm mb-4">
                         پشتیبان کاملی از پایگاه داده و فایل‌های سایت ایجاد کنید
                       </p>
-                      <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-xl transition-colors duration-200 flex items-center justify-center gap-2">
+                      <button className="w-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white py-3 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-pink-500/30">
                         <svg
                           className="w-5 h-5"
                           fill="none"
@@ -808,14 +805,14 @@ export default function SettingsPage() {
                       </button>
                     </div>
 
-                    <div className="bg-green-50 rounded-xl p-6">
-                      <h3 className="text-lg font-bold text-slate-800 mb-4">
+                    <div className="bg-gray-800 rounded-xl p-6">
+                      <h3 className="text-lg font-bold text-white mb-4">
                         بازیابی از پشتیبان
                       </h3>
-                      <p className="text-slate-600 text-sm mb-4">
+                      <p className="text-gray-400 text-sm mb-4">
                         سایت را از یک فایل پشتیبان بازیابی کنید
                       </p>
-                      <button className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-xl transition-colors duration-200 flex items-center justify-center gap-2">
+                      <button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white py-3 px-6 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-green-500/30">
                         <svg
                           className="w-5 h-5"
                           fill="none"
@@ -834,44 +831,44 @@ export default function SettingsPage() {
                     </div>
                   </div>
 
-                  <div className="mt-8 bg-amber-50 rounded-xl p-6">
-                    <h3 className="text-lg font-bold text-slate-800 mb-4">
+                  <div className="mt-8 bg-gray-800 rounded-xl p-6">
+                    <h3 className="text-lg font-bold text-white mb-4">
                       پشتیبان‌های اخیر
                     </h3>
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between p-3 bg-white rounded-lg">
+                      <div className="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
                         <div>
-                          <p className="font-medium text-slate-800">
+                          <p className="font-medium text-white">
                             پشتیبان کامل - ۱۴۰۳/۰۱/۲۰
                           </p>
-                          <p className="text-xs text-slate-500">
+                          <p className="text-xs text-gray-400">
                             حجم: ۲۵ مگابایت
                           </p>
                         </div>
                         <div className="flex gap-2">
-                          <button className="px-3 py-1 bg-blue-100 text-blue-600 rounded-lg text-sm hover:bg-blue-200 transition-colors duration-200">
+                          <button className="px-3 py-1 bg-gray-600 text-white rounded-lg text-sm hover:bg-gray-500 transition-colors duration-200">
                             دانلود
                           </button>
-                          <button className="px-3 py-1 bg-red-100 text-red-600 rounded-lg text-sm hover:bg-red-200 transition-colors duration-200">
+                          <button className="px-3 py-1 bg-red-900/30 text-red-400 rounded-lg text-sm hover:bg-red-800/50 transition-colors duration-200">
                             حذف
                           </button>
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between p-3 bg-white rounded-lg">
+                      <div className="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
                         <div>
-                          <p className="font-medium text-slate-800">
+                          <p className="font-medium text-white">
                             پشتیبان کامل - ۱۴۰۳/۰۱/۱۵
                           </p>
-                          <p className="text-xs text-slate-500">
+                          <p className="text-xs text-gray-400">
                             حجم: ۲۲ مگابایت
                           </p>
                         </div>
                         <div className="flex gap-2">
-                          <button className="px-3 py-1 bg-blue-100 text-blue-600 rounded-lg text-sm hover:bg-blue-200 transition-colors duration-200">
+                          <button className="px-3 py-1 bg-gray-600 text-white rounded-lg text-sm hover:bg-gray-500 transition-colors duration-200">
                             دانلود
                           </button>
-                          <button className="px-3 py-1 bg-red-100 text-red-600 rounded-lg text-sm hover:bg-red-200 transition-colors duration-200">
+                          <button className="px-3 py-1 bg-red-900/30 text-red-400 rounded-lg text-sm hover:bg-red-800/50 transition-colors duration-200">
                             حذف
                           </button>
                         </div>
@@ -879,10 +876,10 @@ export default function SettingsPage() {
                     </div>
                   </div>
 
-                  <div className="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-xl">
+                  <div className="mt-8 p-4 bg-yellow-900/30 border border-yellow-700 rounded-xl">
                     <div className="flex items-start gap-3">
                       <svg
-                        className="w-5 h-5 text-yellow-600 mt-0.5"
+                        className="w-5 h-5 text-yellow-500 mt-0.5"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -895,10 +892,10 @@ export default function SettingsPage() {
                         />
                       </svg>
                       <div>
-                        <h4 className="font-medium text-yellow-800 mb-1">
+                        <h4 className="font-medium text-yellow-400 mb-1">
                           هشدار مهم
                         </h4>
-                        <p className="text-sm text-yellow-700">
+                        <p className="text-sm text-yellow-300">
                           قبل از بازیابی از پشتیبان، حتماً پشتیبان جدیدی از
                           وضعیت فعلی تهیه کنید. فرآیند بازیابی غیرقابل بازگشت
                           است.

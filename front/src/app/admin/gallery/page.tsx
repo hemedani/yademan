@@ -209,38 +209,32 @@ export default function GalleryPage() {
 
   if (loading) {
     return (
-      <div
-        className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 flex items-center justify-center"
-        dir="rtl"
-      >
+      <div className="min-h-screen flex items-center justify-center" dir="rtl">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-slate-600">در حال بارگذاری...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-pink-500 mx-auto mb-4"></div>
+          <p className="text-gray-400">در حال بارگذاری...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div
-      className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-6"
-      dir="rtl"
-    >
+    <div className="min-h-screen p-6 text-white" dir="rtl">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
                 گالری تصاویر
               </h1>
-              <p className="text-slate-600 mt-2">
+              <p className="text-gray-400 mt-2">
                 {formatPersianNumber(images.length)} تصویر در گالری
               </p>
             </div>
             <button
               onClick={() => setUploadModalOpen(true)}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 flex items-center space-x-reverse space-x-2"
+              className="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg shadow-pink-500/30 flex items-center  space-x-2"
             >
               <svg
                 className="w-5 h-5"
@@ -260,7 +254,7 @@ export default function GalleryPage() {
           </div>
 
           {/* Controls */}
-          <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20">
+          <div className="bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-gray-700">
             <div className="flex flex-col lg:flex-row gap-4">
               <div className="flex-1">
                 <div className="relative">
@@ -269,10 +263,10 @@ export default function GalleryPage() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="جستجو در تصاویر..."
-                    className="w-full pr-12 pl-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
+                    className="w-full pr-12 pl-4 py-3 rounded-xl border border-gray-600 bg-gray-700/50 focus:outline-none focus:ring-2 focus:ring-pink-500 transition-colors duration-200 text-white"
                   />
                   <svg
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -289,13 +283,13 @@ export default function GalleryPage() {
 
               <div className="flex items-center gap-3">
                 {/* View Mode Toggle */}
-                <div className="flex bg-slate-100 rounded-lg p-1">
+                <div className="flex bg-gray-700 rounded-lg p-1">
                   <button
                     onClick={() => setViewMode("grid")}
                     className={`p-2 rounded-md transition-colors duration-200 ${
                       viewMode === "grid"
-                        ? "bg-white shadow-sm text-blue-600"
-                        : "text-slate-600"
+                        ? "bg-gray-600 text-pink-500"
+                        : "text-gray-300"
                     }`}
                   >
                     <svg
@@ -310,8 +304,8 @@ export default function GalleryPage() {
                     onClick={() => setViewMode("list")}
                     className={`p-2 rounded-md transition-colors duration-200 ${
                       viewMode === "list"
-                        ? "bg-white shadow-sm text-blue-600"
-                        : "text-slate-600"
+                        ? "bg-gray-600 text-pink-500"
+                        : "text-gray-300"
                     }`}
                   >
                     <svg
@@ -331,13 +325,13 @@ export default function GalleryPage() {
                 {/* Selection Actions */}
                 {selectedImages.length > 0 && (
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-slate-600">
+                    <span className="text-sm text-gray-300">
                       {formatPersianNumber(selectedImages.length)} انتخاب شده
                     </span>
                     <button
                       onClick={() => handleDelete(selectedImages)}
                       disabled={actionLoading}
-                      className="px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm transition-colors duration-200 disabled:opacity-50"
+                      className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm transition-colors duration-200 disabled:opacity-50"
                     >
                       حذف
                     </button>
@@ -346,7 +340,7 @@ export default function GalleryPage() {
 
                 <button
                   onClick={handleSelectAll}
-                  className="px-3 py-2 bg-slate-500 hover:bg-slate-600 text-white rounded-lg text-sm transition-colors duration-200"
+                  className="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm transition-colors duration-200"
                 >
                   {selectedImages.length === filteredImages.length
                     ? "لغو انتخاب"
@@ -589,11 +583,11 @@ export default function GalleryPage() {
         {/* Pagination */}
         {totalPages > 1 && (
           <div className="mt-8 flex justify-center">
-            <div className="flex items-center space-x-2 space-x-reverse">
+            <div className="flex items-center space-x-2 ">
               <button
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
-                className="px-3 py-2 text-sm font-medium text-slate-500 hover:text-slate-700 disabled:opacity-50"
+                className="px-3 py-2 text-sm font-medium text-gray-400 hover:text-white disabled:opacity-50"
               >
                 قبلی
               </button>
@@ -604,8 +598,8 @@ export default function GalleryPage() {
                   onClick={() => setCurrentPage(i + 1)}
                   className={`px-3 py-2 text-sm font-medium rounded-lg ${
                     currentPage === i + 1
-                      ? "bg-blue-500 text-white"
-                      : "text-slate-700 hover:bg-slate-100"
+                      ? "bg-pink-600 text-white"
+                      : "text-gray-300 hover:bg-gray-700"
                   }`}
                 >
                   {formatPersianNumber(i + 1)}
@@ -617,7 +611,7 @@ export default function GalleryPage() {
                   setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                 }
                 disabled={currentPage === totalPages}
-                className="px-3 py-2 text-sm font-medium text-slate-500 hover:text-slate-700 disabled:opacity-50"
+                className="px-3 py-2 text-sm font-medium text-gray-400 hover:text-white disabled:opacity-50"
               >
                 بعدی
               </button>
@@ -628,16 +622,16 @@ export default function GalleryPage() {
 
       {/* Upload Modal */}
       {uploadModalOpen && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-gray-800 rounded-2xl max-w-2xl w-full border border-gray-700">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-slate-800">
+                <h2 className="text-2xl font-bold text-white">
                   آپلود تصویر جدید
                 </h2>
                 <button
                   onClick={() => setUploadModalOpen(false)}
-                  className="p-2 hover:bg-slate-100 rounded-lg transition-colors duration-200"
+                  className="p-2 hover:bg-gray-700 rounded-lg transition-colors duration-200 text-gray-300"
                 >
                   <svg
                     className="w-6 h-6"
@@ -657,10 +651,10 @@ export default function GalleryPage() {
 
               <div className="text-center py-12">
                 <div className="text-6xl mb-4">📤</div>
-                <h3 className="text-xl font-bold text-slate-600 mb-2">
+                <h3 className="text-xl font-bold text-white mb-2">
                   قابلیت آپلود به زودی
                 </h3>
-                <p className="text-slate-500">
+                <p className="text-gray-400">
                   این قسمت در آپدیت بعدی اضافه خواهد شد
                 </p>
               </div>
@@ -668,7 +662,7 @@ export default function GalleryPage() {
               <div className="flex justify-end">
                 <button
                   onClick={() => setUploadModalOpen(false)}
-                  className="px-6 py-3 bg-slate-500 hover:bg-slate-600 text-white rounded-xl transition-colors duration-200"
+                  className="px-6 py-3 bg-gradient-to-r from-gray-700 to-gray-800 text-white rounded-xl hover:from-gray-600 hover:to-gray-700 transition-all duration-300 border border-gray-600"
                 >
                   بستن
                 </button>

@@ -59,15 +59,15 @@ const EventsManagement: React.FC = () => {
   const getStatusColor = useCallback((status: string) => {
     switch (status) {
       case "published":
-        return "bg-green-100 text-green-800 border-green-200";
+        return "bg-green-900/30 text-green-400 border-green-800";
       case "draft":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+        return "bg-yellow-900/30 text-yellow-400 border-yellow-800";
       case "archived":
-        return "bg-gray-100 text-gray-800 border-gray-200";
+        return "bg-gray-700 text-gray-400 border-gray-600";
       case "cancelled":
-        return "bg-red-100 text-red-800 border-red-200";
+        return "bg-red-900/30 text-red-400 border-red-800";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
+        return "bg-gray-700 text-gray-400 border-gray-600";
     }
   }, []);
 
@@ -293,14 +293,14 @@ const EventsManagement: React.FC = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="relative">
-            <div className="w-16 h-16 border-4 border-blue-200 rounded-full animate-spin"></div>
-            <div className="absolute inset-0 w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-16 h-16 border-4 border-pink-500/30 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 w-16 h-16 border-4 border-pink-600 border-t-transparent rounded-full animate-spin"></div>
           </div>
           <div className="space-y-2">
-            <h2 className="text-xl font-bold text-slate-800">
+            <h2 className="text-xl font-bold text-white">
               در حال بارگذاری رویدادها
             </h2>
-            <p className="text-slate-600">لطفاً منتظر بمانید...</p>
+            <p className="text-gray-400">لطفاً منتظر بمانید...</p>
           </div>
         </div>
       </div>
@@ -308,18 +308,18 @@ const EventsManagement: React.FC = () => {
   }
 
   return (
-    <div className="space-y-8 animate-fadeIn">
+    <div className="space-y-8 animate-fadeIn text-white">
       {/* Page Header */}
-      <div className="bg-white rounded-2xl shadow-lg p-8">
+      <div className="bg-gray-800 rounded-2xl shadow-lg p-8 border border-gray-700">
         <div className="flex items-center justify-between">
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
               مدیریت رویدادهای شهرداری
             </h1>
-            <p className="text-slate-600 text-lg">
+            <p className="text-gray-400 text-lg">
               بررسی و مدیریت رویدادهای شهری
             </p>
-            <div className="flex items-center space-x-reverse space-x-4 text-sm text-slate-500">
+            <div className="flex items-center  space-x-4 text-sm text-gray-500">
               <span>مجموع {formatPersianNumber(events.length)} رویداد</span>
               <span>•</span>
               <span>
@@ -335,7 +335,7 @@ const EventsManagement: React.FC = () => {
             userLevel === "Ghost") && (
             <Link
               href="/admin/events/create"
-              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              className="px-6 py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl hover:from-pink-700 hover:to-purple-700 transition-all duration-300 font-medium shadow-lg shadow-pink-500/30"
             >
               افزودن رویداد جدید
             </Link>
@@ -344,50 +344,66 @@ const EventsManagement: React.FC = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl shadow-lg p-6">
+      <div className="bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-700">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               جستجو
             </label>
             <input
               type="text"
               value={filters.search}
               onChange={(e) => handleFilterChange("search", e.target.value)}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+              className="w-full px-4 py-2 border border-gray-600 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 text-white"
               placeholder="جستجو در رویدادها..."
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               وضعیت
             </label>
             <select
               value={filters.status}
               onChange={(e) => handleFilterChange("status", e.target.value)}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+              className="w-full px-4 py-2 border border-gray-600 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 text-white"
             >
-              <option value="">همه</option>
-              <option value="draft">پیش نویس</option>
-              <option value="published">منتشر شده</option>
-              <option value="archived">بایگانی شده</option>
-              <option value="cancelled">لغو شده</option>
+              <option value="" className="bg-gray-700">
+                همه
+              </option>
+              <option value="draft" className="bg-gray-700">
+                پیش نویس
+              </option>
+              <option value="published" className="bg-gray-700">
+                منتشر شده
+              </option>
+              <option value="archived" className="bg-gray-700">
+                بایگانی شده
+              </option>
+              <option value="cancelled" className="bg-gray-700">
+                لغو شده
+              </option>
             </select>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               عمومی
             </label>
             <select
               value={filters.isPublic}
               onChange={(e) => handleFilterChange("isPublic", e.target.value)}
-              className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+              className="w-full px-4 py-2 border border-gray-600 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 text-white"
             >
-              <option value="">همه</option>
-              <option value="true">بله</option>
-              <option value="false">خیر</option>
+              <option value="" className="bg-gray-700">
+                همه
+              </option>
+              <option value="true" className="bg-gray-700">
+                بله
+              </option>
+              <option value="false" className="bg-gray-700">
+                خیر
+              </option>
             </select>
           </div>
         </div>
@@ -395,8 +411,8 @@ const EventsManagement: React.FC = () => {
 
       {/* Error Display */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-2xl p-4">
-          <div className="flex items-center space-x-reverse space-x-2">
+        <div className="bg-red-900/30 border border-red-700 rounded-2xl p-4">
+          <div className="flex items-center  space-x-2">
             <svg
               className="w-5 h-5 text-red-500"
               fill="none"
@@ -410,7 +426,7 @@ const EventsManagement: React.FC = () => {
                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <span className="text-red-700">{error}</span>
+            <span className="text-red-400">{error}</span>
           </div>
         </div>
       )}
@@ -418,10 +434,10 @@ const EventsManagement: React.FC = () => {
       {/* Events List */}
       <div className="space-y-6">
         {events.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
-            <div className="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="bg-gray-800 rounded-2xl shadow-lg p-12 text-center border border-gray-700">
+            <div className="w-24 h-24 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg
-                className="w-12 h-12 text-slate-400"
+                className="w-12 h-12 text-gray-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -434,10 +450,10 @@ const EventsManagement: React.FC = () => {
                 />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-slate-800 mb-2">
+            <h3 className="text-xl font-semibold text-white mb-2">
               رویدادی یافت نشد
             </h3>
-            <p className="text-slate-600">
+            <p className="text-gray-400">
               هیچ رویدادی با فیلترهای انتخابی شما یافت نشد.
             </p>
           </div>
@@ -445,28 +461,28 @@ const EventsManagement: React.FC = () => {
           events.map((event) => (
             <div
               key={event._id}
-              className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300"
+              className="bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-700"
             >
               <div className="p-6">
                 {/* Event Header */}
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <div className="flex items-center space-x-reverse space-x-4 mb-2">
+                    <div className="flex items-center  space-x-4 mb-2">
                       <div
                         className="w-4 h-4 rounded-full"
                         style={{ backgroundColor: event.color || "#8884d8" }}
                       ></div>
-                      <h3 className="text-xl font-semibold text-slate-800">
+                      <h3 className="text-xl font-semibold text-white">
                         {event.name}
                       </h3>
                     </div>
 
                     {event.description && (
-                      <p className="text-slate-600 mb-3">{event.description}</p>
+                      <p className="text-gray-300 mb-3">{event.description}</p>
                     )}
 
-                    <div className="flex flex-wrap gap-4 text-sm text-slate-600">
-                      <div className="flex items-center space-x-reverse space-x-2">
+                    <div className="flex flex-wrap gap-4 text-sm text-gray-400">
+                      <div className="flex items-center  space-x-2">
                         <svg
                           className="w-4 h-4"
                           fill="none"
@@ -485,7 +501,7 @@ const EventsManagement: React.FC = () => {
                         </span>
                       </div>
 
-                      <div className="flex items-center space-x-reverse space-x-2">
+                      <div className="flex items-center  space-x-2">
                         <svg
                           className="w-4 h-4"
                           fill="none"
@@ -505,7 +521,7 @@ const EventsManagement: React.FC = () => {
                       </div>
 
                       {event.capacity && (
-                        <div className="flex items-center space-x-reverse space-x-2">
+                        <div className="flex items-center  space-x-2">
                           <svg
                             className="w-4 h-4"
                             fill="none"
@@ -524,7 +540,7 @@ const EventsManagement: React.FC = () => {
                       )}
 
                       {event.maxAttendees && (
-                        <div className="flex items-center space-x-reverse space-x-2">
+                        <div className="flex items-center  space-x-2">
                           <svg
                             className="w-4 h-4"
                             fill="none"
@@ -544,9 +560,9 @@ const EventsManagement: React.FC = () => {
                     </div>
 
                     {event.registrar && (
-                      <div className="mt-3 flex items-center space-x-reverse space-x-2 text-sm text-slate-600">
+                      <div className="mt-3 flex items-center  space-x-2 text-sm text-gray-400">
                         <span>ثبت شده توسط:</span>
-                        <span className="font-medium">
+                        <span className="font-medium text-gray-300">
                           {event.registrar.first_name}{" "}
                           {event.registrar.last_name}
                         </span>
@@ -564,13 +580,13 @@ const EventsManagement: React.FC = () => {
                       {getStatusText(event.status)}
                     </span>
 
-                    <div className="flex items-center space-x-reverse space-x-2">
+                    <div className="flex items-center  space-x-2">
                       {(userLevel === "Manager" ||
                         userLevel === "Editor" ||
                         userLevel === "Ghost") && (
                         <Link
                           href={`/admin/events/edit/${event._id}`}
-                          className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors text-sm font-medium"
+                          className="px-3 py-1.5 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors text-sm font-medium"
                         >
                           ویرایش
                         </Link>
@@ -580,8 +596,8 @@ const EventsManagement: React.FC = () => {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex items-center justify-between pt-4 border-t border-slate-100">
-                  <div className="flex items-center space-x-reverse space-x-2">
+                <div className="flex items-center justify-between pt-4 border-t border-gray-700">
+                  <div className="flex items-center  space-x-2">
                     {event.status !== "published" &&
                       (userLevel === "Manager" ||
                         userLevel === "Editor" ||
@@ -591,7 +607,7 @@ const EventsManagement: React.FC = () => {
                             handleStatusChange(event._id!, "published")
                           }
                           disabled={actionLoading === event._id}
-                          className="px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors text-sm font-medium disabled:opacity-50"
+                          className="px-4 py-2 bg-green-900/30 text-green-400 border border-green-800 rounded-lg hover:bg-green-800/50 transition-colors text-sm font-medium disabled:opacity-50"
                         >
                           انتشار
                         </button>
@@ -606,7 +622,7 @@ const EventsManagement: React.FC = () => {
                             handleStatusChange(event._id!, "draft")
                           }
                           disabled={actionLoading === event._id}
-                          className="px-4 py-2 bg-yellow-100 text-yellow-700 rounded-lg hover:bg-yellow-200 transition-colors text-sm font-medium disabled:opacity-50"
+                          className="px-4 py-2 bg-yellow-900/30 text-yellow-400 border border-yellow-800 rounded-lg hover:bg-yellow-800/50 transition-colors text-sm font-medium disabled:opacity-50"
                         >
                           پیش نویس
                         </button>
@@ -621,7 +637,7 @@ const EventsManagement: React.FC = () => {
                             handleStatusChange(event._id!, "cancelled")
                           }
                           disabled={actionLoading === event._id}
-                          className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors text-sm font-medium disabled:opacity-50"
+                          className="px-4 py-2 bg-red-900/30 text-red-400 border border-red-800 rounded-lg hover:bg-red-800/50 transition-colors text-sm font-medium disabled:opacity-50"
                         >
                           لغو
                         </button>
@@ -637,7 +653,7 @@ const EventsManagement: React.FC = () => {
                         setSelectedEvent(event);
                         setShowDeleteModal(true);
                       }}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      className="p-2 text-red-400 hover:bg-red-900/50 rounded-lg transition-colors"
                       title="حذف رویداد"
                     >
                       <svg
@@ -657,7 +673,7 @@ const EventsManagement: React.FC = () => {
                   )}
 
                   {actionLoading === event._id && (
-                    <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-5 h-5 border-2 border-pink-500 border-t-transparent rounded-full animate-spin"></div>
                   )}
                 </div>
               </div>
@@ -669,16 +685,16 @@ const EventsManagement: React.FC = () => {
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-center mt-8">
-          <div className="flex items-center space-x-reverse space-x-2">
+          <div className="flex items-center  space-x-2">
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className="px-4 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-4 py-2 text-sm font-medium text-gray-400 bg-gray-800 border border-gray-600 rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               قبلی
             </button>
 
-            <div className="flex items-center space-x-reverse space-x-1">
+            <div className="flex items-center  space-x-1">
               {Array.from({ length: totalPages }, (_, i) => i + 1).map(
                 (page) => (
                   <button
@@ -686,8 +702,8 @@ const EventsManagement: React.FC = () => {
                     onClick={() => setCurrentPage(page)}
                     className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                       currentPage === page
-                        ? "bg-purple-600 text-white"
-                        : "text-slate-600 bg-white border border-slate-300 hover:bg-slate-50"
+                        ? "bg-pink-600 text-white"
+                        : "text-gray-300 bg-gray-800 border border-gray-600 hover:bg-gray-700"
                     }`}
                   >
                     {formatPersianNumber(page)}
@@ -701,7 +717,7 @@ const EventsManagement: React.FC = () => {
                 setCurrentPage((prev) => Math.min(prev + 1, totalPages))
               }
               disabled={currentPage === totalPages}
-              className="px-4 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-4 py-2 text-sm font-medium text-gray-400 bg-gray-800 border border-gray-600 rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               بعدی
             </button>
@@ -711,12 +727,12 @@ const EventsManagement: React.FC = () => {
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && selectedEvent && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full border border-gray-700">
             <div className="p-6">
-              <div className="flex items-center justify-center w-12 h-12 mx-auto bg-red-100 rounded-full mb-4">
+              <div className="flex items-center justify-center w-12 h-12 mx-auto bg-red-900/30 rounded-full mb-4 border border-red-700">
                 <svg
-                  className="w-6 h-6 text-red-600"
+                  className="w-6 h-6 text-red-500"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -730,22 +746,22 @@ const EventsManagement: React.FC = () => {
                 </svg>
               </div>
 
-              <h3 className="text-lg font-semibold text-slate-900 text-center mb-2">
+              <h3 className="text-lg font-semibold text-white text-center mb-2">
                 حذف رویداد
               </h3>
-              <p className="text-slate-600 text-center mb-6">
+              <p className="text-gray-400 text-center mb-6">
                 آیا مطمئن هستید که می‌خواهید رویداد{" "}
                 <span className="font-semibold">{selectedEvent.name}</span> را
                 حذف کنید؟ این عمل قابل بازگشت نیست.
               </p>
 
-              <div className="flex justify-center space-x-reverse space-x-3">
+              <div className="flex justify-center  space-x-3">
                 <button
                   onClick={() => {
                     setShowDeleteModal(false);
                     setSelectedEvent(null);
                   }}
-                  className="px-4 py-2 text-sm font-medium text-slate-600 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-gray-300 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors"
                 >
                   انصراف
                 </button>

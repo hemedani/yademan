@@ -23,20 +23,20 @@ const UserDashboard = async ({
     last_name: 1,
     level: 1,
   };
-  const users = await getUsers({ set, get });
+  const usersResponse = await getUsers({ set, get });
+  const users =
+    usersResponse.success && usersResponse.body ? usersResponse.body : [];
   const countDataUsers = await CountUsers({
     set: { levels: levels },
     get: { qty: 1 },
   });
   return (
-    <div className="relative min-h-full">
+    <div className="relative min-h-full text-white">
       <div className="flex items-start">
-        <div className="bg-blue-500 w-1 h-8 ml-3 rounded-full"></div>
+        <div className="bg-pink-500 w-1 h-8 ml-3 rounded-full"></div>
         <div>
-          <h1 className="text-2xl md:text-3xl text-gray-800 font-bold">
-            کاربران
-          </h1>
-          <p className="text-gray-500 mt-2 text-sm">
+          <h1 className="text-2xl md:text-3xl text-white font-bold">کاربران</h1>
+          <p className="text-gray-400 mt-2 text-sm">
             مدیریت تمامی کاربران وب‌سایت
           </p>
         </div>

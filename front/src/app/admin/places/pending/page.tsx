@@ -201,12 +201,12 @@ export default function PendingPlacesPage() {
   if (loading) {
     return (
       <div
-        className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 flex items-center justify-center"
+        className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-slate-900 flex items-center justify-center"
         dir="rtl"
       >
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-slate-600">در حال بارگذاری...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-pink-600 mx-auto mb-4"></div>
+          <p className="text-gray-400">در حال بارگذاری...</p>
         </div>
       </div>
     );
@@ -214,7 +214,7 @@ export default function PendingPlacesPage() {
 
   return (
     <div
-      className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-6"
+      className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-slate-900 p-6"
       dir="rtl"
     >
       <div className="max-w-7xl mx-auto">
@@ -222,27 +222,27 @@ export default function PendingPlacesPage() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
                 مکان‌های در انتظار تأیید
               </h1>
-              <p className="text-slate-600 mt-2">
+              <p className="text-gray-400 mt-2">
                 {formatPersianNumber(pendingPlaces.length)} مکان در انتظار بررسی
                 و تأیید شما
               </p>
             </div>
             <button
               onClick={() => router.push("/admin/places")}
-              className="bg-slate-500 hover:bg-slate-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+              className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
             >
               بازگشت به همه مکان‌ها
             </button>
           </div>
 
           {/* Filters */}
-          <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20">
+          <div className="bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-gray-700/60">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   جستجو
                 </label>
                 <input
@@ -250,17 +250,17 @@ export default function PendingPlacesPage() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="جستجو در نام یا آدرس..."
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-600 bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
                 />
               </div>
               <div className="flex-1">
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   فیلتر بر اساس دسته‌بندی
                 </label>
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-600 bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
                 >
                   <option value="">همه دسته‌بندی‌ها</option>
                   <option value="1">رستوران</option>
@@ -277,22 +277,22 @@ export default function PendingPlacesPage() {
         {paginatedPlaces.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-6xl mb-4">🏛️</div>
-            <h3 className="text-xl font-bold text-slate-600 mb-2">
+            <h3 className="text-xl font-bold text-white mb-2">
               هیچ مکان در انتظاری وجود ندارد
             </h3>
-            <p className="text-slate-500">همه مکان‌ها بررسی و تأیید شده‌اند</p>
+            <p className="text-gray-400">همه مکان‌ها بررسی و تأیید شده‌اند</p>
           </div>
         ) : (
           <div className="space-y-6">
             {paginatedPlaces.map((place) => (
               <div
                 key={place._id}
-                className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-300"
+                className="bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-gray-700 hover:shadow-2xl hover:shadow-pink-500/10 transition-all duration-300"
               >
                 <div className="flex flex-col lg:flex-row gap-6">
                   {/* Image */}
                   <div className="lg:w-64">
-                    <div className="aspect-video bg-slate-200 rounded-xl overflow-hidden">
+                    <div className="aspect-video bg-gray-700 rounded-xl overflow-hidden">
                       {place.images && place.images.length > 0 ? (
                         <img
                           src={place.images[0]}
@@ -300,7 +300,7 @@ export default function PendingPlacesPage() {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-slate-400">
+                        <div className="w-full h-full flex items-center justify-center text-gray-400">
                           <svg
                             className="w-12 h-12"
                             fill="currentColor"
@@ -321,13 +321,13 @@ export default function PendingPlacesPage() {
                   <div className="flex-1">
                     <div className="flex justify-between items-start mb-4">
                       <div>
-                        <h3 className="text-xl font-bold text-slate-800 mb-2">
+                        <h3 className="text-xl font-bold text-white mb-2">
                           {place.name}
                         </h3>
-                        <p className="text-slate-600 mb-2">
+                        <p className="text-gray-300 mb-2">
                           {place.shortDescription}
                         </p>
-                        <div className="flex items-center text-sm text-slate-500 mb-2">
+                        <div className="flex items-center text-sm text-gray-400 mb-2">
                           <svg
                             className="w-4 h-4 ml-2"
                             fill="none"
@@ -349,7 +349,7 @@ export default function PendingPlacesPage() {
                           </svg>
                           {place.address}
                         </div>
-                        <div className="flex items-center text-sm text-slate-500 mb-4">
+                        <div className="flex items-center text-sm text-gray-400 mb-4">
                           <svg
                             className="w-4 h-4 ml-2"
                             fill="none"
@@ -368,7 +368,7 @@ export default function PendingPlacesPage() {
                       </div>
 
                       {/* Status Badge */}
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-900/30 text-yellow-400">
                         در انتظار تأیید
                       </span>
                     </div>
@@ -379,7 +379,7 @@ export default function PendingPlacesPage() {
                         {place.tags.map((tag) => (
                           <span
                             key={tag._id}
-                            className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800"
+                            className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-purple-900/30 text-purple-400"
                           >
                             {tag.name}
                           </span>
@@ -388,11 +388,11 @@ export default function PendingPlacesPage() {
                     </div>
 
                     {/* Submitter Info */}
-                    <div className="mb-4 p-3 bg-slate-50 rounded-lg">
-                      <h4 className="text-sm font-medium text-slate-700 mb-1">
+                    <div className="mb-4 p-3 bg-gray-700/50 rounded-lg">
+                      <h4 className="text-sm font-medium text-gray-300 mb-1">
                         ارسال شده توسط:
                       </h4>
-                      <div className="text-sm text-slate-600">
+                      <div className="text-sm text-gray-400">
                         <p>
                           {place.submittedBy.first_name}{" "}
                           {place.submittedBy.last_name}
@@ -404,10 +404,10 @@ export default function PendingPlacesPage() {
                       </div>
                       {place.reasonForPending && (
                         <div className="mt-2">
-                          <p className="text-sm font-medium text-amber-700">
+                          <p className="text-sm font-medium text-amber-500">
                             دلیل در انتظار:
                           </p>
-                          <p className="text-sm text-amber-600">
+                          <p className="text-sm text-amber-400">
                             {place.reasonForPending}
                           </p>
                         </div>
@@ -421,27 +421,27 @@ export default function PendingPlacesPage() {
                           setSelectedPlace(place);
                           setShowModal(true);
                         }}
-                        className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors duration-200 text-sm font-medium"
+                        className="px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-lg transition-colors duration-200 text-sm font-medium"
                       >
                         مشاهده جزئیات
                       </button>
                       <button
                         onClick={() => router.push(`/fa/location/${place._id}`)}
-                        className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg transition-colors duration-200 text-sm font-medium"
+                        className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg transition-colors duration-200 text-sm font-medium"
                       >
                         پیش‌نمایش
                       </button>
                       <button
                         onClick={() => handleApprove(place._id)}
                         disabled={actionLoading}
-                        className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors duration-200 text-sm font-medium disabled:opacity-50"
+                        className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg transition-colors duration-200 text-sm font-medium disabled:opacity-50"
                       >
                         تأیید
                       </button>
                       <button
                         onClick={() => handleReject(place._id)}
                         disabled={actionLoading}
-                        className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors duration-200 text-sm font-medium disabled:opacity-50"
+                        className="px-4 py-2 bg-gradient-to-r from-red-600 to-pink-600 text-white rounded-lg transition-colors duration-200 text-sm font-medium disabled:opacity-50"
                       >
                         رد
                       </button>
@@ -456,11 +456,11 @@ export default function PendingPlacesPage() {
         {/* Pagination */}
         {totalPages > 1 && (
           <div className="mt-8 flex justify-center">
-            <div className="flex items-center space-x-2 space-x-reverse">
+            <div className="flex items-center space-x-2 ">
               <button
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
-                className="px-3 py-2 text-sm font-medium text-slate-500 hover:text-slate-700 disabled:opacity-50"
+                className="px-3 py-2 text-sm font-medium text-gray-400 hover:text-gray-200 disabled:opacity-50"
               >
                 قبلی
               </button>
@@ -471,8 +471,8 @@ export default function PendingPlacesPage() {
                   onClick={() => setCurrentPage(i + 1)}
                   className={`px-3 py-2 text-sm font-medium rounded-lg ${
                     currentPage === i + 1
-                      ? "bg-blue-500 text-white"
-                      : "text-slate-700 hover:bg-slate-100"
+                      ? "bg-pink-600 text-white"
+                      : "text-gray-300 hover:bg-gray-700"
                   }`}
                 >
                   {formatPersianNumber(i + 1)}
@@ -484,7 +484,7 @@ export default function PendingPlacesPage() {
                   setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                 }
                 disabled={currentPage === totalPages}
-                className="px-3 py-2 text-sm font-medium text-slate-500 hover:text-slate-700 disabled:opacity-50"
+                className="px-3 py-2 text-sm font-medium text-gray-400 hover:text-gray-200 disabled:opacity-50"
               >
                 بعدی
               </button>
@@ -496,15 +496,13 @@ export default function PendingPlacesPage() {
       {/* Detail Modal */}
       {showModal && selectedPlace && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-gray-800/90 backdrop-blur-xl rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-gray-700 shadow-2xl">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-slate-800">
-                  جزئیات مکان
-                </h2>
+                <h2 className="text-2xl font-bold text-white">جزئیات مکان</h2>
                 <button
                   onClick={() => setShowModal(false)}
-                  className="p-2 hover:bg-slate-100 rounded-lg transition-colors duration-200"
+                  className="p-2 hover:bg-gray-700 rounded-lg transition-colors duration-200 text-gray-300"
                 >
                   <svg
                     className="w-6 h-6"
@@ -524,47 +522,45 @@ export default function PendingPlacesPage() {
 
               <div className="space-y-6">
                 <div>
-                  <h3 className="font-bold text-slate-700 mb-2">نام مکان</h3>
-                  <p className="text-slate-600">{selectedPlace.name}</p>
+                  <h3 className="font-bold text-gray-300 mb-2">نام مکان</h3>
+                  <p className="text-gray-300">{selectedPlace.name}</p>
                 </div>
 
                 <div>
-                  <h3 className="font-bold text-slate-700 mb-2">
-                    توضیحات کامل
-                  </h3>
-                  <p className="text-slate-600 leading-relaxed">
+                  <h3 className="font-bold text-gray-300 mb-2">توضیحات کامل</h3>
+                  <p className="text-gray-300 leading-relaxed">
                     {selectedPlace.description}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <h3 className="font-bold text-slate-700 mb-2">آدرس</h3>
-                    <p className="text-slate-600">{selectedPlace.address}</p>
+                    <h3 className="font-bold text-gray-300 mb-2">آدرس</h3>
+                    <p className="text-gray-300">{selectedPlace.address}</p>
                   </div>
 
                   <div>
-                    <h3 className="font-bold text-slate-700 mb-2">دسته‌بندی</h3>
-                    <p className="text-slate-600">
+                    <h3 className="font-bold text-gray-300 mb-2">دسته‌بندی</h3>
+                    <p className="text-gray-300">
                       {selectedPlace.category.name}
                     </p>
                   </div>
 
                   {selectedPlace.phone && (
                     <div>
-                      <h3 className="font-bold text-slate-700 mb-2">تلفن</h3>
-                      <p className="text-slate-600">{selectedPlace.phone}</p>
+                      <h3 className="font-bold text-gray-300 mb-2">تلفن</h3>
+                      <p className="text-gray-300">{selectedPlace.phone}</p>
                     </div>
                   )}
 
                   {selectedPlace.website && (
                     <div>
-                      <h3 className="font-bold text-slate-700 mb-2">وب‌سایت</h3>
+                      <h3 className="font-bold text-gray-300 mb-2">وب‌سایت</h3>
                       <a
                         href={selectedPlace.website}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
+                        className="text-pink-400 hover:underline"
                       >
                         {selectedPlace.website}
                       </a>
@@ -574,7 +570,7 @@ export default function PendingPlacesPage() {
 
                 {selectedPlace.images && selectedPlace.images.length > 0 && (
                   <div>
-                    <h3 className="font-bold text-slate-700 mb-2">تصاویر</h3>
+                    <h3 className="font-bold text-gray-300 mb-2">تصاویر</h3>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                       {selectedPlace.images.map((image, index) => (
                         <img
@@ -589,10 +585,10 @@ export default function PendingPlacesPage() {
                 )}
               </div>
 
-              <div className="flex justify-end gap-3 mt-8 pt-6 border-t">
+              <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-gray-700">
                 <button
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 bg-slate-500 hover:bg-slate-600 text-white rounded-lg transition-colors duration-200"
+                  className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors duration-200"
                 >
                   بستن
                 </button>
@@ -601,7 +597,7 @@ export default function PendingPlacesPage() {
                     handleApprove(selectedPlace._id);
                     setShowModal(false);
                   }}
-                  className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors duration-200"
+                  className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg transition-colors duration-200"
                 >
                   تأیید مکان
                 </button>
@@ -610,7 +606,7 @@ export default function PendingPlacesPage() {
                     handleReject(selectedPlace._id);
                     setShowModal(false);
                   }}
-                  className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors duration-200"
+                  className="px-4 py-2 bg-gradient-to-r from-red-600 to-pink-600 text-white rounded-lg transition-colors duration-200"
                 >
                   رد مکان
                 </button>

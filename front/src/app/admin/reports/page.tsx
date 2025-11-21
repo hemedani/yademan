@@ -143,27 +143,27 @@ export default function ReportsPage() {
   const getActivityColor = (type: string) => {
     switch (type) {
       case "place_added":
-        return "bg-blue-100 text-blue-600";
+        return "bg-gray-700 text-blue-400";
       case "user_registered":
-        return "bg-green-100 text-green-600";
+        return "bg-gray-700 text-green-400";
       case "comment_posted":
-        return "bg-purple-100 text-purple-600";
+        return "bg-gray-700 text-purple-400";
       case "place_approved":
-        return "bg-emerald-100 text-emerald-600";
+        return "bg-gray-700 text-emerald-400";
       default:
-        return "bg-slate-100 text-slate-600";
+        return "bg-gray-700 text-gray-400";
     }
   };
 
   if (loading) {
     return (
       <div
-        className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 flex items-center justify-center"
+        className="min-h-screen bg-gray-900 flex items-center justify-center"
         dir="rtl"
       >
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-slate-600">در حال بارگذاری گزارشات...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-pink-500 mx-auto mb-4"></div>
+          <p className="text-gray-400">در حال بارگذاری گزارشات...</p>
         </div>
       </div>
     );
@@ -172,34 +172,31 @@ export default function ReportsPage() {
   if (!reportData) {
     return (
       <div
-        className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 flex items-center justify-center"
+        className="min-h-screen bg-gray-900 flex items-center justify-center"
         dir="rtl"
       >
         <div className="text-center">
           <div className="text-6xl mb-4">⚠️</div>
-          <h3 className="text-xl font-bold text-slate-600 mb-2">
+          <h3 className="text-xl font-bold text-white mb-2">
             خطا در بارگذاری گزارشات
           </h3>
-          <p className="text-slate-500">لطفاً دوباره تلاش کنید</p>
+          <p className="text-gray-400">لطفاً دوباره تلاش کنید</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div
-      className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 p-6"
-      dir="rtl"
-    >
+    <div className="min-h-screen bg-gray-900 p-6 text-white" dir="rtl">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
                 گزارشات و آمار
               </h1>
-              <p className="text-slate-600 mt-2">
+              <p className="text-gray-400 mt-2">
                 آمار و گزارشات جامع از وضعیت سایت
               </p>
             </div>
@@ -208,18 +205,28 @@ export default function ReportsPage() {
               <select
                 value={dateRange}
                 onChange={(e) => setDateRange(e.target.value)}
-                className="px-4 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-4 py-2 rounded-lg border border-gray-600 bg-gray-800 focus:outline-none focus:ring-2 focus:ring-pink-500 text-white"
               >
-                <option value="1">امروز</option>
-                <option value="7">هفته گذشته</option>
-                <option value="30">ماه گذشته</option>
-                <option value="90">سه ماه گذشته</option>
-                <option value="365">سال گذشته</option>
+                <option value="1" className="bg-gray-700">
+                  امروز
+                </option>
+                <option value="7" className="bg-gray-700">
+                  هفته گذشته
+                </option>
+                <option value="30" className="bg-gray-700">
+                  ماه گذشته
+                </option>
+                <option value="90" className="bg-gray-700">
+                  سه ماه گذشته
+                </option>
+                <option value="365" className="bg-gray-700">
+                  سال گذشته
+                </option>
               </select>
 
               <button
                 onClick={loadReportData}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+                className="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white px-4 py-2 rounded-lg transition-all duration-300 shadow-lg shadow-pink-500/30"
               >
                 به‌روزرسانی
               </button>
@@ -229,11 +236,11 @@ export default function ReportsPage() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20">
+          <div className="bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-gray-700/50">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-blue-100 rounded-xl">
+              <div className="p-3 bg-gray-700 rounded-xl">
                 <svg
-                  className="w-6 h-6 text-blue-600"
+                  className="w-6 h-6 text-pink-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -252,23 +259,23 @@ export default function ReportsPage() {
                   />
                 </svg>
               </div>
-              <span className="text-green-500 text-sm font-medium">
+              <span className="text-green-400 text-sm font-medium">
                 +{formatPersianNumber(reportData.monthlyGrowth.places)}%
               </span>
             </div>
             <div>
-              <p className="text-slate-600 text-sm mb-1">کل مکان‌ها</p>
-              <p className="text-2xl font-bold text-slate-800">
+              <p className="text-gray-400 text-sm mb-1">کل مکان‌ها</p>
+              <p className="text-2xl font-bold text-white">
                 {formatPersianNumber(reportData.totalPlaces)}
               </p>
             </div>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20">
+          <div className="bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-gray-700/50">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-green-100 rounded-xl">
+              <div className="p-3 bg-gray-700 rounded-xl">
                 <svg
-                  className="w-6 h-6 text-green-600"
+                  className="w-6 h-6 text-green-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -281,23 +288,23 @@ export default function ReportsPage() {
                   />
                 </svg>
               </div>
-              <span className="text-green-500 text-sm font-medium">
+              <span className="text-green-400 text-sm font-medium">
                 +{formatPersianNumber(reportData.monthlyGrowth.users)}%
               </span>
             </div>
             <div>
-              <p className="text-slate-600 text-sm mb-1">کل کاربران</p>
-              <p className="text-2xl font-bold text-slate-800">
+              <p className="text-gray-400 text-sm mb-1">کل کاربران</p>
+              <p className="text-2xl font-bold text-white">
                 {formatPersianNumber(reportData.totalUsers)}
               </p>
             </div>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20">
+          <div className="bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-gray-700/50">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-purple-100 rounded-xl">
+              <div className="p-3 bg-gray-700 rounded-xl">
                 <svg
-                  className="w-6 h-6 text-purple-600"
+                  className="w-6 h-6 text-purple-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -310,23 +317,23 @@ export default function ReportsPage() {
                   />
                 </svg>
               </div>
-              <span className="text-blue-500 text-sm font-medium">
+              <span className="text-blue-400 text-sm font-medium">
                 {formatPersianNumber(reportData.pendingPlaces)} در انتظار
               </span>
             </div>
             <div>
-              <p className="text-slate-600 text-sm mb-1">کل نظرات</p>
-              <p className="text-2xl font-bold text-slate-800">
+              <p className="text-gray-400 text-sm mb-1">کل نظرات</p>
+              <p className="text-2xl font-bold text-white">
                 {formatPersianNumber(reportData.totalComments)}
               </p>
             </div>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20">
+          <div className="bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-gray-700/50">
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-amber-100 rounded-xl">
+              <div className="p-3 bg-gray-700 rounded-xl">
                 <svg
-                  className="w-6 h-6 text-amber-600"
+                  className="w-6 h-6 text-amber-400"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -345,13 +352,13 @@ export default function ReportsPage() {
                   />
                 </svg>
               </div>
-              <span className="text-green-500 text-sm font-medium">
+              <span className="text-green-400 text-sm font-medium">
                 +{formatPersianNumber(reportData.monthlyGrowth.views)}%
               </span>
             </div>
             <div>
-              <p className="text-slate-600 text-sm mb-1">کل بازدیدها</p>
-              <p className="text-2xl font-bold text-slate-800">
+              <p className="text-gray-400 text-sm mb-1">کل بازدیدها</p>
+              <p className="text-2xl font-bold text-white">
                 {formatPersianNumber(reportData.totalViews)}
               </p>
             </div>
@@ -360,29 +367,29 @@ export default function ReportsPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Top Categories */}
-          <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20">
-            <h3 className="text-xl font-bold text-slate-800 mb-6">
+          <div className="bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-gray-700/50">
+            <h3 className="text-xl font-bold text-white mb-6">
               محبوب‌ترین دسته‌بندی‌ها
             </h3>
             <div className="space-y-4">
               {reportData.topCategories.map((category, index) => (
                 <div key={index} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-sm font-bold">
+                    <div className="w-8 h-8 bg-gray-700 text-pink-400 rounded-lg flex items-center justify-center text-sm font-bold">
                       {formatPersianNumber(index + 1)}
                     </div>
-                    <span className="font-medium text-slate-700">
+                    <span className="font-medium text-white">
                       {category.name}
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <div className="w-24 bg-slate-200 rounded-full h-2">
+                    <div className="w-24 bg-gray-700 rounded-full h-2">
                       <div
-                        className="bg-blue-500 h-2 rounded-full transition-all duration-500"
+                        className="bg-pink-500 h-2 rounded-full transition-all duration-500"
                         style={{ width: `${category.percentage}%` }}
                       />
                     </div>
-                    <span className="text-sm text-slate-600 w-16 text-left">
+                    <span className="text-sm text-gray-400 w-16 text-left">
                       {formatPersianNumber(category.count)} مکان
                     </span>
                   </div>
@@ -392,15 +399,15 @@ export default function ReportsPage() {
           </div>
 
           {/* Recent Activity */}
-          <div className="bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20">
-            <h3 className="text-xl font-bold text-slate-800 mb-6">
+          <div className="bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-gray-700/50">
+            <h3 className="text-xl font-bold text-white mb-6">
               فعالیت‌های اخیر
             </h3>
             <div className="space-y-4 max-h-80 overflow-y-auto">
               {reportData.recentActivity.map((activity) => (
                 <div
                   key={activity.id}
-                  className="flex items-start gap-3 p-3 rounded-lg hover:bg-slate-50 transition-colors duration-200"
+                  className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-700/50 transition-colors duration-200"
                 >
                   <div
                     className={`p-2 rounded-lg text-sm ${getActivityColor(activity.type)}`}
@@ -408,10 +415,10 @@ export default function ReportsPage() {
                     {getActivityIcon(activity.type)}
                   </div>
                   <div className="flex-1">
-                    <p className="text-slate-800 text-sm font-medium mb-1">
+                    <p className="text-white text-sm font-medium mb-1">
                       {activity.description}
                     </p>
-                    <div className="flex items-center gap-3 text-xs text-slate-500">
+                    <div className="flex items-center gap-3 text-xs text-gray-400">
                       <span>{formatPersianDate(activity.timestamp)}</span>
                       {activity.user && <span>توسط {activity.user}</span>}
                     </div>
@@ -423,12 +430,10 @@ export default function ReportsPage() {
         </div>
 
         {/* Export Actions */}
-        <div className="mt-8 bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20">
-          <h3 className="text-xl font-bold text-slate-800 mb-4">
-            خروجی گزارشات
-          </h3>
+        <div className="mt-8 bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-gray-700/50">
+          <h3 className="text-xl font-bold text-white mb-4">خروجی گزارشات</h3>
           <div className="flex flex-wrap gap-3">
-            <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center gap-2">
+            <button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2 shadow-lg shadow-green-500/30">
               <svg
                 className="w-4 h-4"
                 fill="none"
@@ -444,7 +449,7 @@ export default function ReportsPage() {
               </svg>
               دانلود Excel
             </button>
-            <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center gap-2">
+            <button className="bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2 shadow-lg shadow-red-500/30">
               <svg
                 className="w-4 h-4"
                 fill="none"
@@ -460,7 +465,7 @@ export default function ReportsPage() {
               </svg>
               دانلود PDF
             </button>
-            <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center gap-2">
+            <button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-2 shadow-lg shadow-blue-500/30">
               <svg
                 className="w-4 h-4"
                 fill="none"
