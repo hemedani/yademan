@@ -27,7 +27,7 @@ const MyInput = <T extends FieldValues = FieldValues>({
     <div className={`flex flex-col gap-2 ${className || ""}`}>
       <label
         htmlFor={name}
-        className="text-sm font-medium text-slate-700 text-right"
+        className="text-sm font-medium text-gray-300 text-right"
       >
         {label}
       </label>
@@ -38,15 +38,15 @@ const MyInput = <T extends FieldValues = FieldValues>({
           {...register(name)}
           placeholder={placeholder || label}
           className={`
-            w-full px-4 py-3 text-slate-800 bg-white border rounded-xl resize-none
-            placeholder:text-slate-400 text-right
+            w-full px-4 py-3 text-white bg-gray-700 border rounded-xl resize-none
+            placeholder:text-gray-400 text-right
             transition-all duration-200 ease-in-out
-            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 focus:border-blue-500
-            hover:border-slate-400
+            focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-0 focus:border-pink-500
+            hover:border-gray-500
             ${
               errMsg
-                ? "border-red-300 bg-red-50/30 focus:ring-red-500 focus:border-red-500"
-                : "border-slate-300 hover:bg-slate-50/50"
+                ? "border-red-500 bg-red-900/30 focus:ring-red-500 focus:border-red-500"
+                : "border-gray-600 hover:bg-gray-600/50"
             }
           `}
           rows={4}
@@ -59,15 +59,15 @@ const MyInput = <T extends FieldValues = FieldValues>({
           placeholder={placeholder || label}
           step={step}
           className={`
-            w-full px-4 py-3 text-slate-800 bg-white border rounded-xl
-            placeholder:text-slate-400 text-right
+            w-full px-4 py-3 text-white bg-gray-700 border rounded-xl
+            placeholder:text-gray-400 text-right
             transition-all duration-200 ease-in-out
-            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 focus:border-blue-500
-            hover:border-slate-400
+            focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-0 focus:border-pink-500
+            hover:border-gray-500
             ${
               errMsg
-                ? "border-red-300 bg-red-50/30 focus:ring-red-500 focus:border-red-500"
-                : "border-slate-300 hover:bg-slate-50/50"
+                ? "border-red-500 bg-red-900/30 focus:ring-red-500 focus:border-red-500"
+                : "border-gray-600 hover:bg-gray-600/50"
             }
             ${type === "date" ? "text-left" : ""}
           `}
@@ -75,7 +75,7 @@ const MyInput = <T extends FieldValues = FieldValues>({
       )}
 
       {errMsg && (
-        <span className="text-red-500 text-xs font-medium text-right mt-1 flex items-center gap-1">
+        <span className="text-red-400 text-xs font-medium text-right mt-1 flex items-center gap-1">
           <svg
             className="w-3 h-3 flex-shrink-0"
             fill="currentColor"

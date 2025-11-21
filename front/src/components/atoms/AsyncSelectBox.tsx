@@ -23,6 +23,7 @@ interface InputProps<
   label: string;
   setValue: UseFormSetValue<T>;
   labelAsValue?: boolean;
+  isMulti?: boolean;
   errMsg?: string;
   placeholder?: string;
   loadOptions?: (
@@ -45,6 +46,7 @@ const AsyncSelectBox = <
   loadOptions,
   setValue,
   labelAsValue,
+  isMulti,
   defaultOptions,
   className,
   placeholder,
@@ -53,26 +55,26 @@ const AsyncSelectBox = <
     control: (provided, state) => ({
       ...provided,
       minHeight: "48px",
-      backgroundColor: errMsg ? "#fef2f2" : "white",
+      backgroundColor: errMsg ? "#450a0a" : "#374151", // dark gray background
       borderColor: errMsg
         ? state.isFocused
           ? "#ef4444"
-          : "#fca5a5"
+          : "#f87171"
         : state.isFocused
-          ? "#3b82f6"
+          ? "#ec4899" // pink
           : state.menuIsOpen
-            ? "#64748b"
-            : "#cbd5e1",
+            ? "#6b7280"
+            : "#4b5563",
       borderWidth: "1px",
       borderRadius: "12px",
       boxShadow: state.isFocused
         ? errMsg
-          ? "0 0 0 2px rgba(239, 68, 68, 0.1)"
-          : "0 0 0 2px rgba(59, 130, 246, 0.1)"
+          ? "0 0 0 2px rgba(239, 68, 68, 0.3)"
+          : "0 0 0 2px rgba(236, 72, 153, 0.3)" // pink glow
         : "none",
       "&:hover": {
-        borderColor: errMsg ? "#f87171" : "#64748b",
-        backgroundColor: errMsg ? "#fef2f2" : "#f8fafc",
+        borderColor: errMsg ? "#ef4444" : "#6b7280",
+        backgroundColor: errMsg ? "#450a0a" : "#4b5563",
       },
       transition: "all 0.2s ease-in-out",
       cursor: "pointer",
@@ -83,19 +85,20 @@ const AsyncSelectBox = <
       ...provided,
       padding: "2px 16px",
       direction: "rtl",
+      color: "#f3f4f6", // light text
     }),
 
     input: (provided) => ({
       ...provided,
       margin: "0",
       padding: "0",
-      color: "#1e293b",
+      color: "#f3f4f6", // light text
       direction: "rtl",
     }),
 
     placeholder: (provided) => ({
       ...provided,
-      color: "#94a3b8",
+      color: "#9ca3af", // gray text
       fontSize: "14px",
       direction: "rtl",
       textAlign: "right",
@@ -103,7 +106,7 @@ const AsyncSelectBox = <
 
     singleValue: (provided) => ({
       ...provided,
-      color: "#1e293b",
+      color: "#f3f4f6", // light text
       direction: "rtl",
       textAlign: "right",
     }),
@@ -114,10 +117,10 @@ const AsyncSelectBox = <
 
     dropdownIndicator: (provided, state) => ({
       ...provided,
-      color: "#64748b",
+      color: "#9ca3af", // gray
       padding: "8px 12px",
       "&:hover": {
-        color: "#3b82f6",
+        color: "#ec4899", // pink
       },
       transform: state.selectProps.menuIsOpen
         ? "rotate(180deg)"
@@ -127,10 +130,10 @@ const AsyncSelectBox = <
 
     clearIndicator: (provided) => ({
       ...provided,
-      color: "#64748b",
+      color: "#9ca3af", // gray
       padding: "8px",
       "&:hover": {
-        color: "#ef4444",
+        color: "#ef4444", // red
       },
       cursor: "pointer",
       transition: "all 0.2s ease-in-out",
@@ -138,11 +141,11 @@ const AsyncSelectBox = <
 
     menu: (provided) => ({
       ...provided,
-      backgroundColor: "white",
-      border: "1px solid #e2e8f0",
+      backgroundColor: "#1f2937", // dark blue-gray
+      border: "1px solid #374151",
       borderRadius: "12px",
       boxShadow:
-        "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+        "0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3)",
       marginTop: "4px",
       overflow: "hidden",
       zIndex: 9999,
@@ -152,16 +155,29 @@ const AsyncSelectBox = <
       ...provided,
       padding: "8px",
       maxHeight: "200px",
+      "::-webkit-scrollbar": {
+        width: "6px",
+      },
+      "::-webkit-scrollbar-track": {
+        background: "#1f2937",
+      },
+      "::-webkit-scrollbar-thumb": {
+        background: "#4b5563",
+        borderRadius: "3px",
+      },
+      "::-webkit-scrollbar-thumb:hover": {
+        background: "#6b7280",
+      },
     }),
 
     option: (provided, state) => ({
       ...provided,
       backgroundColor: state.isSelected
-        ? "#3b82f6"
+        ? "#8b5cf6" // purple
         : state.isFocused
-          ? "#f1f5f9"
-          : "transparent",
-      color: state.isSelected ? "white" : "#1e293b",
+          ? "#374151" // dark gray
+          : "#1f2937", // dark blue-gray
+      color: state.isSelected ? "white" : "#d1d5db",
       borderRadius: "8px",
       margin: "2px 0",
       padding: "12px 16px",
@@ -171,14 +187,14 @@ const AsyncSelectBox = <
       direction: "rtl",
       textAlign: "right",
       "&:hover": {
-        backgroundColor: state.isSelected ? "#2563eb" : "#f1f5f9",
+        backgroundColor: state.isSelected ? "#7c3aed" : "#374151",
       },
       transition: "all 0.15s ease-in-out",
     }),
 
     noOptionsMessage: (provided) => ({
       ...provided,
-      color: "#64748b",
+      color: "#9ca3af",
       fontSize: "14px",
       padding: "12px 16px",
       direction: "rtl",
@@ -187,7 +203,7 @@ const AsyncSelectBox = <
 
     loadingMessage: (provided) => ({
       ...provided,
-      color: "#64748b",
+      color: "#9ca3af",
       fontSize: "14px",
       padding: "12px 16px",
       direction: "rtl",
@@ -199,7 +215,7 @@ const AsyncSelectBox = <
     <div className={`flex flex-col gap-2 ${className || ""}`}>
       <label
         htmlFor={name}
-        className="text-sm font-medium text-slate-700 text-right"
+        className="text-sm font-medium text-gray-300 text-right"
       >
         {label}
       </label>
@@ -208,22 +224,39 @@ const AsyncSelectBox = <
         <Controller
           name={name}
           control={control}
-          render={({ field: { onChange } }) => (
+          render={({ field: { onChange, value } }) => (
             <AsyncSelect
               cacheOptions
               defaultOptions={defaultOptions}
               loadOptions={loadOptions}
+              value={value}
               onChange={(newVal: any, actionMeta: any) => {
-                if (newVal) {
-                  const selectedValue = labelAsValue
-                    ? newVal.label
-                    : newVal.value;
-                  onChange(selectedValue as PathValue<T, Path<T>>);
-                  // Also call setValue to ensure form is updated properly
-                  setValue(name, selectedValue as PathValue<T, Path<T>>);
+                if (isMulti) {
+                  // Handle multi-select
+                  if (newVal && Array.isArray(newVal)) {
+                    const selectedValues = newVal.map((option: any) =>
+                      labelAsValue ? option.label : option.value,
+                    );
+                    onChange(selectedValues as PathValue<T, Path<T>>);
+                    // Also call setValue to ensure form is updated properly
+                    setValue(name, selectedValues as PathValue<T, Path<T>>);
+                  } else {
+                    onChange([] as PathValue<T, Path<T>>);
+                    setValue(name, [] as PathValue<T, Path<T>>);
+                  }
                 } else {
-                  onChange(null as PathValue<T, Path<T>>);
-                  setValue(name, null as PathValue<T, Path<T>>);
+                  // Handle single select
+                  if (newVal) {
+                    const selectedValue = labelAsValue
+                      ? newVal.label
+                      : newVal.value;
+                    onChange(selectedValue as PathValue<T, Path<T>>);
+                    // Also call setValue to ensure form is updated properly
+                    setValue(name, selectedValue as PathValue<T, Path<T>>);
+                  } else {
+                    onChange(null as PathValue<T, Path<T>>);
+                    setValue(name, null as PathValue<T, Path<T>>);
+                  }
                 }
               }}
               name={name}
@@ -233,6 +266,7 @@ const AsyncSelectBox = <
               loadingMessage={() => "در حال بارگذاری..."}
               isClearable
               isRtl={true}
+              isMulti={isMulti}
               className="react-select-container"
               classNamePrefix="react-select"
             />
@@ -241,7 +275,7 @@ const AsyncSelectBox = <
       </div>
 
       {errMsg && (
-        <span className="text-red-500 text-xs font-medium text-right mt-1 flex items-center gap-1">
+        <span className="text-red-400 text-xs font-medium text-right mt-1 flex items-center gap-1">
           <svg
             className="w-3 h-3 flex-shrink-0"
             fill="currentColor"
