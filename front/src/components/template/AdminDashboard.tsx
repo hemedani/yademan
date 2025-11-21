@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import "@/app/dark-theme.css";
 
 interface DashboardStats {
   users?: number;
@@ -256,7 +257,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
       {
         title: "افزودن مکان جدید",
         description: "ثبت مکان فرهنگی و تاریخی جدید",
-        href: "/admin/places/add",
+        href: "/admin/places/create",
         color: "text-blue-600",
         bgGradient: "from-blue-50 to-blue-100",
         icon: (
@@ -473,39 +474,41 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
   return (
     <div className="space-y-8 animate-fadeIn">
       {/* Welcome Header */}
-      <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-2xl p-8 text-white relative overflow-hidden">
+      <div className="bg-gradient-to-r from-gray-900 to-black rounded-2xl p-8 text-white relative overflow-hidden border border-gray-700/70 backdrop-blur-xl shadow-2xl shadow-pink-500/10">
         <div className="relative z-10">
           <div className="flex items-center justify-between">
             <div className="space-y-2">
-              <h1 className="text-3xl font-bold">خوش آمدید!</h1>
-              <p className="text-blue-100 text-lg">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
+                خوش آمدید!
+              </h1>
+              <p className="text-gray-300 text-lg">
                 آمار و وضعیت کلی سیستم مدیریت نقشه ایران
               </p>
-              <div className="flex items-center space-x-reverse space-x-4 text-sm text-blue-100 mt-4">
-                <div className="flex items-center space-x-reverse space-x-2">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span>سیستم فعال</span>
+              <div className="flex items-center space-x-4 text-sm text-gray-400 mt-4">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-gray-300">سیستم فعال</span>
                 </div>
-                <div className="w-px h-4 bg-blue-300"></div>
+                <div className="w-px h-4 bg-gray-600"></div>
                 {mounted ? (
                   <>
                     <span>{formatPersianDate(currentTime)}</span>
-                    <div className="w-px h-4 bg-blue-300"></div>
+                    <div className="w-px h-4 bg-gray-600"></div>
                     <span>{formatPersianTime(currentTime)}</span>
                   </>
                 ) : (
                   <>
                     <span>در حال بارگذاری...</span>
-                    <div className="w-px h-4 bg-blue-300"></div>
+                    <div className="w-px h-4 bg-gray-600"></div>
                     <span>--:--:--</span>
                   </>
                 )}
               </div>
             </div>
             <div className="hidden lg:block">
-              <div className="w-32 h-32 bg-white/10 rounded-full flex items-center justify-center">
+              <div className="w-32 h-32 bg-gray-800/50 rounded-full flex items-center justify-center">
                 <svg
-                  className="w-16 h-16 text-white"
+                  className="w-16 h-16 text-pink-500"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -521,9 +524,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
             </div>
           </div>
         </div>
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
-        <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full"></div>
-        <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-white/5 rounded-full"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-pink-900/10 to-purple-900/10"></div>
+        <div className="absolute -top-4 -right-4 w-24 h-24 bg-pink-500/5 rounded-full"></div>
+        <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-purple-500/5 rounded-full"></div>
       </div>
 
       {/* Statistics Cards */}
@@ -531,7 +534,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
         {statCards.map((card, index) => (
           <div
             key={card.title}
-            className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer transform hover:-translate-y-1"
+            className="bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-gray-700 shadow-lg shadow-gray-900/50 hover:shadow-xl hover:shadow-pink-500/10 transition-all duration-300 overflow-hidden group cursor-pointer transform hover:-translate-y-1"
             onClick={() => card.href && router.push(card.href)}
             style={{ animationDelay: `${index * 100}ms` }}
           >
@@ -543,15 +546,15 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
                   {card.icon}
                 </div>
                 {card.change && (
-                  <div className="flex items-center space-x-reverse space-x-1">
+                  <div className="flex items-center space-x-1">
                     {getTrendIcon(card.change.trend)}
                     <span
                       className={`text-sm font-medium ${
                         card.change.trend === "up"
-                          ? "text-green-600"
+                          ? "text-green-400"
                           : card.change.trend === "down"
-                            ? "text-red-600"
-                            : "text-gray-600"
+                            ? "text-red-400"
+                            : "text-gray-400"
                       }`}
                     >
                       %{formatPersianNumber(card.change.value)}
@@ -560,10 +563,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
                 )}
               </div>
               <div className="space-y-1">
-                <h3 className="text-2xl font-bold text-slate-800">
+                <h3 className="text-2xl font-bold text-white">
                   {formatPersianNumber(card.value)}
                 </h3>
-                <p className="text-slate-600 font-medium">{card.title}</p>
+                <p className="text-gray-300 font-medium">{card.title}</p>
               </div>
             </div>
             <div className={`h-1 bg-gradient-to-r ${card.bgGradient}`}></div>
@@ -574,36 +577,32 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Quick Actions */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center">
-              <div className="w-2 h-8 bg-gradient-to-b from-blue-500 to-purple-600 rounded-full mr-3"></div>
+          <div className="bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-gray-700 shadow-lg p-6">
+            <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
+              <div className="w-2 h-8 bg-gradient-to-b from-pink-500 to-purple-600 rounded-full ml-3"></div>
               اقدامات سریع
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {quickActions.map((action, index) => (
                 <div
                   key={action.title}
-                  className={`bg-gradient-to-r ${action.bgGradient} p-6 rounded-xl cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105 group`}
+                  className="bg-gray-800/60 backdrop-blur-md p-6 rounded-xl cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-pink-500/10 hover:scale-105 border border-gray-700 group"
                   onClick={() => router.push(action.href)}
                   style={{ animationDelay: `${index * 150}ms` }}
                 >
-                  <div className="flex items-center space-x-reverse space-x-4">
-                    <div
-                      className={`${action.color} group-hover:scale-110 transition-transform duration-300`}
-                    >
+                  <div className="flex items-center space-x-4">
+                    <div className="text-pink-500 group-hover:scale-110 transition-transform duration-300">
                       {action.icon}
                     </div>
                     <div className="flex-1">
-                      <h3 className={`text-lg font-bold ${action.color} mb-1`}>
+                      <h3 className="text-lg font-bold text-white mb-1">
                         {action.title}
                       </h3>
-                      <p className="text-slate-600 text-sm leading-relaxed">
+                      <p className="text-gray-400 text-sm leading-relaxed">
                         {action.description}
                       </p>
                     </div>
-                    <div
-                      className={`${action.color} opacity-70 group-hover:opacity-100 transition-opacity duration-300`}
-                    >
+                    <div className="text-pink-500 opacity-70 group-hover:opacity-100 transition-opacity duration-300">
                       <svg
                         className="w-6 h-6"
                         fill="none"
@@ -625,21 +624,21 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
           </div>
 
           {/* System Status */}
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center">
-              <div className="w-2 h-8 bg-gradient-to-b from-green-500 to-green-600 rounded-full mr-3"></div>
+          <div className="bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-gray-700 shadow-lg p-6">
+            <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
+              <div className="w-2 h-8 bg-gradient-to-b from-green-500 to-green-600 rounded-full ml-3"></div>
               وضعیت سیستم
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+              <div className="bg-gray-800/60 border border-gray-700 rounded-xl p-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-reverse space-x-3">
+                  <div className="flex items-center space-x-3">
                     <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                    <span className="font-medium text-green-800">
+                    <span className="font-medium text-green-400">
                       پایگاه داده
                     </span>
                   </div>
-                  <div className="text-green-600">
+                  <div className="text-green-400">
                     <svg
                       className="w-5 h-5"
                       fill="currentColor"
@@ -653,16 +652,16 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
                     </svg>
                   </div>
                 </div>
-                <p className="text-sm text-green-600 mt-2">متصل</p>
+                <p className="text-sm text-green-400 mt-2">متصل</p>
               </div>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+              <div className="bg-gray-800/60 border border-gray-700 rounded-xl p-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-reverse space-x-3">
+                  <div className="flex items-center space-x-3">
                     <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
-                    <span className="font-medium text-blue-800">API سرور</span>
+                    <span className="font-medium text-blue-400">API سرور</span>
                   </div>
-                  <div className="text-blue-600">
+                  <div className="text-blue-400">
                     <svg
                       className="w-5 h-5"
                       fill="currentColor"
@@ -676,18 +675,18 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
                     </svg>
                   </div>
                 </div>
-                <p className="text-sm text-blue-600 mt-2">سالم</p>
+                <p className="text-sm text-blue-400 mt-2">سالم</p>
               </div>
 
-              <div className="bg-purple-50 border border-purple-200 rounded-xl p-4">
+              <div className="bg-gray-800/60 border border-gray-700 rounded-xl p-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-reverse space-x-3">
+                  <div className="flex items-center space-x-3">
                     <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse"></div>
-                    <span className="font-medium text-purple-800">
+                    <span className="font-medium text-purple-400">
                       فضای ذخیره
                     </span>
                   </div>
-                  <div className="text-purple-600">
+                  <div className="text-purple-400">
                     <svg
                       className="w-5 h-5"
                       fill="currentColor"
@@ -701,7 +700,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
                     </svg>
                   </div>
                 </div>
-                <p className="text-sm text-purple-600 mt-2">در دسترس</p>
+                <p className="text-sm text-purple-400 mt-2">در دسترس</p>
               </div>
             </div>
           </div>
@@ -710,13 +709,13 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
         {/* Recent Activities & Performance */}
         <div className="space-y-6">
           {/* Recent Activities */}
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center">
-              <div className="w-2 h-8 bg-gradient-to-b from-orange-500 to-red-600 rounded-full mr-3"></div>
+          <div className="bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-gray-700 shadow-lg p-6">
+            <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
+              <div className="w-2 h-8 bg-gradient-to-b from-orange-500 to-red-600 rounded-full ml-3"></div>
               فعالیت‌های اخیر
             </h2>
             <div className="space-y-4">
-              <div className="flex items-center space-x-reverse space-x-4 p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl border-r-4 border-blue-500">
+              <div className="flex items-center  space-x-4 p-4 bg-gray-800/60 rounded-xl border-r-4 border-blue-500">
                 <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white">
                   <svg
                     className="w-6 h-6"
@@ -731,15 +730,15 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-semibold text-slate-800">کاربر جدید</h4>
-                  <p className="text-sm text-slate-600">
+                  <h4 className="font-semibold text-white">کاربر جدید</h4>
+                  <p className="text-sm text-gray-400">
                     علی محمدی به سیستم پیوست
                   </p>
                 </div>
-                <span className="text-sm text-slate-500">۱۰ دقیقه پیش</span>
+                <span className="text-sm text-gray-400">۱۰ دقیقه پیش</span>
               </div>
 
-              <div className="flex items-center space-x-reverse space-x-4 p-4 bg-gradient-to-r from-green-50 to-green-100 rounded-xl border-r-4 border-green-500">
+              <div className="flex items-center  space-x-4 p-4 bg-gray-800/60 rounded-xl border-r-4 border-green-500">
                 <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white">
                   <svg
                     className="w-6 h-6"
@@ -762,17 +761,15 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-semibold text-slate-800">
-                    مکان تایید شد
-                  </h4>
-                  <p className="text-sm text-slate-600">
+                  <h4 className="font-semibold text-white">مکان تایید شد</h4>
+                  <p className="text-sm text-gray-400">
                     باغ ارم شیراز تایید و منتشر شد
                   </p>
                 </div>
-                <span className="text-sm text-slate-500">۲۰ دقیقه پیش</span>
+                <span className="text-sm text-gray-400">۲۰ دقیقه پیش</span>
               </div>
 
-              <div className="flex items-center space-x-reverse space-x-4 p-4 bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-xl border-r-4 border-yellow-500">
+              <div className="flex items-center  space-x-4 p-4 bg-gray-800/60 rounded-xl border-r-4 border-yellow-500">
                 <div className="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center text-white">
                   <svg
                     className="w-6 h-6"
@@ -789,15 +786,15 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-semibold text-slate-800">نظر جدید</h4>
-                  <p className="text-sm text-slate-600">
+                  <h4 className="font-semibold text-white">نظر جدید</h4>
+                  <p className="text-sm text-gray-400">
                     نظر جدید منتظر بررسی است
                   </p>
                 </div>
-                <span className="text-sm text-slate-500">۱ ساعت پیش</span>
+                <span className="text-sm text-gray-400">۱ ساعت پیش</span>
               </div>
 
-              <div className="flex items-center space-x-reverse space-x-4 p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl border-r-4 border-purple-500">
+              <div className="flex items-center  space-x-4 p-4 bg-gray-800/60 rounded-xl border-r-4 border-purple-500">
                 <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white">
                   <svg
                     className="w-6 h-6"
@@ -814,17 +811,17 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
                   </svg>
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-semibold text-slate-800">فایل آپلود</h4>
-                  <p className="text-sm text-slate-600">
+                  <h4 className="font-semibold text-white">فایل آپلود</h4>
+                  <p className="text-sm text-gray-400">
                     تصاویر جدید به گالری اضافه شد
                   </p>
                 </div>
-                <span className="text-sm text-slate-500">۲ ساعت پیش</span>
+                <span className="text-sm text-gray-400">۲ ساعت پیش</span>
               </div>
 
               <button
                 onClick={() => router.push("/admin/reports")}
-                className="w-full text-center py-3 text-blue-600 hover:text-blue-700 font-medium transition-colors duration-200 border-t border-slate-100"
+                className="w-full text-center py-3 text-pink-500 hover:text-pink-400 font-medium transition-colors duration-200 border-t border-gray-700"
               >
                 مشاهده همه فعالیت‌ها
                 <svg
@@ -845,46 +842,46 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
           </div>
 
           {/* Performance Summary */}
-          <div className="bg-white rounded-2xl shadow-lg p-6">
-            <h2 className="text-2xl font-bold text-slate-800 mb-6 flex items-center">
-              <div className="w-2 h-8 bg-gradient-to-b from-indigo-500 to-purple-600 rounded-full mr-3"></div>
+          <div className="bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-gray-700 shadow-lg p-6">
+            <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
+              <div className="w-2 h-8 bg-gradient-to-b from-indigo-500 to-purple-600 rounded-full ml-3"></div>
               عملکرد سیستم
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl p-6 text-center">
-                <div className="text-3xl font-bold text-blue-600 mb-2">
+              <div className="bg-gray-800/60 rounded-xl p-6 text-center border border-gray-700">
+                <div className="text-3xl font-bold text-blue-400 mb-2">
                   {formatPersianNumber(98)}%
                 </div>
-                <p className="text-slate-600 font-medium">سرعت سایت</p>
-                <div className="mt-3 bg-blue-200 rounded-full h-2">
+                <p className="text-gray-400 font-medium">سرعت سایت</p>
+                <div className="mt-3 bg-gray-700 rounded-full h-2">
                   <div
-                    className="bg-blue-600 h-2 rounded-full"
+                    className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full"
                     style={{ width: "98%" }}
                   ></div>
                 </div>
               </div>
 
-              <div className="bg-gradient-to-r from-green-50 to-green-100 rounded-xl p-6 text-center">
-                <div className="text-3xl font-bold text-green-600 mb-2">
+              <div className="bg-gray-800/60 rounded-xl p-6 text-center border border-gray-700">
+                <div className="text-3xl font-bold text-green-400 mb-2">
                   {formatPersianNumber(99.9)}%
                 </div>
-                <p className="text-slate-600 font-medium">دسترسی سرور</p>
-                <div className="mt-3 bg-green-200 rounded-full h-2">
+                <p className="text-gray-400 font-medium">دسترسی سرور</p>
+                <div className="mt-3 bg-gray-700 rounded-full h-2">
                   <div
-                    className="bg-green-600 h-2 rounded-full"
+                    className="bg-gradient-to-r from-green-500 to-cyan-500 h-2 rounded-full"
                     style={{ width: "99.9%" }}
                   ></div>
                 </div>
               </div>
 
-              <div className="bg-gradient-to-r from-purple-50 to-purple-100 rounded-xl p-6 text-center">
-                <div className="text-3xl font-bold text-purple-600 mb-2">
+              <div className="bg-gray-800/60 rounded-xl p-6 text-center border border-gray-700">
+                <div className="text-3xl font-bold text-purple-400 mb-2">
                   {formatPersianNumber(1.2)}s
                 </div>
-                <p className="text-slate-600 font-medium">زمان پاسخ</p>
-                <div className="mt-3 bg-purple-200 rounded-full h-2">
+                <p className="text-gray-400 font-medium">زمان پاسخ</p>
+                <div className="mt-3 bg-gray-700 rounded-full h-2">
                   <div
-                    className="bg-purple-600 h-2 rounded-full"
+                    className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full"
                     style={{ width: "80%" }}
                   ></div>
                 </div>
@@ -895,15 +892,15 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
       </div>
 
       {/* Bottom Summary */}
-      <div className="bg-gradient-to-r from-slate-50 to-slate-100 rounded-2xl p-8 text-center">
-        <h3 className="text-xl font-bold text-slate-800 mb-4">
+      <div className="bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-gray-700 p-8 text-center shadow-lg">
+        <h3 className="text-xl font-bold text-white mb-4">
           سیستم مدیریت نقشه ایران آماده خدمات‌رسانی است
         </h3>
-        <p className="text-slate-600 mb-6 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-gray-400 mb-6 max-w-2xl mx-auto leading-relaxed">
           تمام اجزای سیستم به درستی کار می‌کند و آماده ارائه خدمات به کاربران
           عزیز است. برای دسترسی سریع از منوی کناری یا اقدامات سریع استفاده کنید.
         </p>
-        <div className="flex items-center justify-center space-x-reverse space-x-6 text-sm text-slate-500">
+        <div className="flex items-center justify-center  space-x-6 text-sm text-gray-400">
           <span>آخرین به‌روزرسانی: {formatPersianTime(currentTime)}</span>
           <span>•</span>
           <span>نسخه ۱.۰.۰</span>

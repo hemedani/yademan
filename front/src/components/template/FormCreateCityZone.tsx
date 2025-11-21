@@ -347,11 +347,11 @@ export const FormCreateCityZone = ({
   }, []);
 
   return (
-    <div className="p-8">
+    <div className="p-8 bg-gray-900 text-white">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Basic Information */}
-        <div className="bg-white p-6 border rounded-lg shadow-sm">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">
+        <div className="bg-gray-800 p-6 border border-gray-700 rounded-xl shadow-lg">
+          <h2 className="text-lg font-semibold text-white mb-4">
             اطلاعات پایه منطقه شهری
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -366,7 +366,7 @@ export const FormCreateCityZone = ({
 
           {/* City Selection */}
           <div className="mt-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               شهر *
             </label>
             <AsyncSelect
@@ -384,38 +384,46 @@ export const FormCreateCityZone = ({
                 control: (provided: any) => ({
                   ...provided,
                   minHeight: "44px",
-                  border: "1px solid #d1d5db",
+                  backgroundColor: "#111827",
+                  border: "1px solid #374151",
                   borderRadius: "0.5rem",
                   fontSize: "14px",
                   direction: "rtl",
+                  color: "#f3f4f6",
                 }),
                 placeholder: (provided: any) => ({
                   ...provided,
-                  color: "#94a3b8",
+                  color: "#9ca3af",
                   direction: "rtl",
                   textAlign: "right",
                 }),
                 singleValue: (provided: any) => ({
                   ...provided,
-                  color: "#1e293b",
+                  color: "#f3f4f6",
                   direction: "rtl",
                   textAlign: "right",
                 }),
                 option: (provided: any, state: any) => ({
                   ...provided,
                   backgroundColor: state.isSelected
-                    ? "#3b82f6"
+                    ? "#4f46e5"
                     : state.isFocused
-                      ? "#f1f5f9"
-                      : "transparent",
-                  color: state.isSelected ? "white" : "#1e293b",
+                      ? "#374151"
+                      : "#1f2937",
+                  color: state.isSelected ? "white" : "#f3f4f6",
                   direction: "rtl",
                   textAlign: "right",
+                }),
+                menu: (provided: any) => ({
+                  ...provided,
+                  backgroundColor: "#1f2937",
+                  border: "1px solid #374151",
+                  borderRadius: "8px",
                 }),
               }}
             />
             {errors.cityId && (
-              <span className="text-red-500 text-xs font-medium text-right mt-1">
+              <span className="text-red-400 text-xs font-medium text-right mt-1">
                 {errors.cityId.message}
               </span>
             )}
@@ -423,9 +431,9 @@ export const FormCreateCityZone = ({
         </div>
 
         {/* Map Section */}
-        <div className="bg-gray-100 p-6 border rounded-lg">
+        <div className="bg-gray-800 p-6 border border-gray-700 rounded-xl shadow-lg">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-700">
+            <h2 className="text-lg font-semibold text-white">
               ترسیم منطقه و انتخاب مرکز بر روی نقشه
             </h2>
             <div className="flex gap-2">
@@ -433,7 +441,7 @@ export const FormCreateCityZone = ({
                 <button
                   type="button"
                   onClick={clearCenterPoint}
-                  className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
+                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
                 >
                   <svg
                     className="w-4 h-4"
@@ -462,9 +470,9 @@ export const FormCreateCityZone = ({
                 onClick={toggleCenterMode}
                 className={`${
                   isCenterMode
-                    ? "bg-red-600 hover:bg-red-700"
-                    : "bg-green-600 hover:bg-green-700"
-                } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2`}
+                    ? "bg-pink-600 hover:bg-pink-700"
+                    : "bg-purple-600 hover:bg-purple-700"
+                } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2 shadow-lg ${isCenterMode ? "shadow-pink-500/30" : "shadow-purple-500/30"}`}
               >
                 <svg
                   className="w-4 h-4"
@@ -514,9 +522,9 @@ export const FormCreateCityZone = ({
                 onClick={toggleDrawingMode}
                 className={`${
                   isDrawingMode
-                    ? "bg-red-600 hover:bg-red-700"
+                    ? "bg-pink-600 hover:bg-pink-700"
                     : "bg-blue-600 hover:bg-blue-700"
-                } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2`}
+                } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2 shadow-lg ${isDrawingMode ? "shadow-pink-500/30" : "shadow-blue-500/30"}`}
               >
                 <svg
                   className="w-4 h-4"
@@ -537,8 +545,8 @@ export const FormCreateCityZone = ({
           </div>
 
           {isDrawingMode && (
-            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm text-blue-800 font-medium">
+            <div className="mb-4 p-3 bg-gray-700/50 border border-gray-600 rounded-lg">
+              <p className="text-sm text-pink-400 font-medium">
                 🖱️ کلیک چپ: اضافه کردن نقطه | راست کلیک: تمام کردن شکل | ESC:
                 لغو
               </p>
@@ -546,14 +554,14 @@ export const FormCreateCityZone = ({
           )}
 
           {isCenterMode && (
-            <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-              <p className="text-sm text-green-800 font-medium">
+            <div className="mb-4 p-3 bg-gray-700/50 border border-gray-600 rounded-lg">
+              <p className="text-sm text-pink-400 font-medium">
                 📍 روی نقشه کلیک کنید تا مرکز منطقه را انتخاب کنید
               </p>
             </div>
           )}
 
-          <div className="h-96 rounded-lg overflow-hidden border border-gray-300">
+          <div className="h-96 rounded-lg overflow-hidden border border-gray-600">
             <MapContainer
               key={mapKey}
               center={mapCenter}
@@ -569,11 +577,11 @@ export const FormCreateCityZone = ({
                 <Polygon
                   positions={drawnPolygon}
                   pathOptions={{
-                    color: "#3b82f6",
+                    color: "#ec4899",
                     weight: 3,
                     opacity: 0.8,
                     fillOpacity: 0.2,
-                    fillColor: "#3b82f6",
+                    fillColor: "#ec4899",
                   }}
                 />
               )}
@@ -589,23 +597,23 @@ export const FormCreateCityZone = ({
           </div>
 
           {errors.area && (
-            <p className="text-red-500 text-sm mt-2 text-right">
+            <p className="text-red-400 text-sm mt-2 text-right">
               {errors.area.message}
             </p>
           )}
 
           {errors.center && (
-            <p className="text-red-500 text-sm mt-2 text-right">
+            <p className="text-red-400 text-sm mt-2 text-right">
               {errors.center.message}
             </p>
           )}
 
           <div className="mt-4 space-y-3">
             {drawnPolygon && (
-              <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+              <div className="p-4 bg-gray-700/30 border border-gray-600 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <svg
-                    className="w-5 h-5 text-green-600"
+                    className="w-5 h-5 text-green-500"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -617,27 +625,27 @@ export const FormCreateCityZone = ({
                       d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
-                  <span className="text-green-800 font-medium">
+                  <span className="text-green-400 font-medium">
                     منطقه ترسیم شده
                   </span>
                 </div>
-                <p className="text-sm text-green-700">
+                <p className="text-sm text-gray-300">
                   • تعداد نقاط: {drawnPolygon.length}
                 </p>
-                <p className="text-sm text-green-700">
+                <p className="text-sm text-gray-300">
                   • منطقه بر روی نقشه نمایش داده شده و آماده ثبت است
                 </p>
-                <p className="text-sm text-green-700">
+                <p className="text-sm text-gray-300">
                   • برای تغییر منطقه، دکمه &quot;حذف منطقه&quot; را فشار دهید
                 </p>
               </div>
             )}
 
             {centerPoint && (
-              <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg">
+              <div className="p-4 bg-gray-700/30 border border-gray-600 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <svg
-                    className="w-5 h-5 text-orange-600"
+                    className="w-5 h-5 text-purple-500"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -655,11 +663,11 @@ export const FormCreateCityZone = ({
                       d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                     />
                   </svg>
-                  <span className="text-orange-800 font-medium">
+                  <span className="text-purple-400 font-medium">
                     مرکز منطقه انتخاب شده
                   </span>
                 </div>
-                <p className="text-sm text-orange-700">
+                <p className="text-sm text-gray-300">
                   📍 موقعیت: {centerPoint.lat.toFixed(6)},{" "}
                   {centerPoint.lng.toFixed(6)}
                 </p>
@@ -673,7 +681,7 @@ export const FormCreateCityZone = ({
           <button
             type="submit"
             disabled={isSubmitting || !isValid}
-            className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
+            className="px-8 py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-semibold rounded-lg hover:from-pink-700 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed transition-all duration-300 shadow-lg shadow-pink-500/30"
           >
             {isSubmitting ? "در حال ایجاد..." : "ایجاد منطقه شهری"}
           </button>

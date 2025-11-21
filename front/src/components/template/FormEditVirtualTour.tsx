@@ -23,7 +23,8 @@ export const VirtualTourEditSchema = z.object({
 });
 
 export type VirtualTourEditFormData = z.infer<typeof VirtualTourEditSchema>;
-export type VirtualTourUpdateObj = ReqType["main"]["virtual_tour"]["update"]["set"];
+export type VirtualTourUpdateObj =
+  ReqType["main"]["virtual_tour"]["update"]["set"];
 
 type PlaceOption = {
   value: string;
@@ -125,7 +126,7 @@ export const FormEditVirtualTour = ({
       } else {
         ToastNotify(
           "error",
-          result.body?.message || "خطا در بروزرسانی تور مجازی"
+          result.body?.message || "خطا در بروزرسانی تور مجازی",
         );
       }
     } catch (error) {
@@ -135,14 +136,14 @@ export const FormEditVirtualTour = ({
   };
 
   return (
-    <div className="p-8">
+    <div className="p-8 bg-gray-900 text-white">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-6 bg-gray-100 p-6 border rounded-lg"
+        className="space-y-6 bg-gray-800 p-6 border border-gray-700 rounded-xl shadow-lg"
       >
         <div className="w-full flex flex-wrap">
           <div className="w-full p-4">
-            <span className="text-sm font-medium text-gray-700">
+            <span className="text-sm font-medium text-gray-300">
               تصویر پانوراما
             </span>
             <UploadImage
@@ -155,17 +156,14 @@ export const FormEditVirtualTour = ({
               filePath={tourData.panorama?.name}
             />
             {errors.panoramaId && (
-              <p className="text-red-500 text-xs mt-1">
+              <p className="text-red-400 text-xs mt-1">
                 {errors.panoramaId.message}
               </p>
             )}
           </div>
 
           {/* Hidden field for ID */}
-          <input
-            type="hidden"
-            {...register("_id")}
-          />
+          <input type="hidden" {...register("_id")} />
 
           <MyInput
             label="نام تور مجازی"
@@ -219,8 +217,8 @@ export const FormEditVirtualTour = ({
                         tourData.status === "draft"
                           ? "پیش‌نویس"
                           : tourData.status === "active"
-                          ? "فعال"
-                          : "بایگانی شده",
+                            ? "فعال"
+                            : "بایگانی شده",
                     }
                   : undefined
               }
@@ -230,23 +228,23 @@ export const FormEditVirtualTour = ({
 
         <div className="w-full flex gap-4 justify-end">
           {!isValid && Object.keys(errors).length > 0 && (
-            <div className="text-sm text-red-600 mr-4 self-center">
+            <div className="text-sm text-red-400 mr-4 self-center">
               لطفاً فیلدهای اجباری را تکمیل کنید
             </div>
           )}
           <button
             type="button"
             onClick={() => router.back()}
-            className="p-4 px-8 bg-gray-500 text-white text-center font-semibold rounded-lg hover:bg-gray-600"
+            className="p-4 px-8 bg-gradient-to-r from-gray-700 to-gray-800 text-white text-center font-semibold rounded-lg hover:from-gray-600 hover:to-gray-700 border border-gray-600"
           >
             بازگشت
           </button>
           <button
             type="submit"
             disabled={isSubmitting || !isValid}
-            className="p-4 px-8 bg-blue-600 text-white text-center font-semibold rounded-lg hover:bg-blue-700 disabled:bg-blue-300"
+            className="p-4 px-8 bg-gradient-to-r from-pink-600 to-purple-600 text-white text-center font-semibold rounded-lg hover:from-pink-700 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed shadow-lg shadow-pink-500/30"
           >
-            {isSubmitting ? "در حال ارسال..." : "بروزرسانی تور مجازی"}
+            {isSubmitting ? "در حال بروزرسانی..." : "بروزرسانی تور مجازی"}
           </button>
         </div>
       </form>

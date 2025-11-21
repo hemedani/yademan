@@ -64,25 +64,25 @@ export default function VirtualToursDashboard({ data, remove }: Props) {
     switch (status) {
       case "active":
         return (
-          <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+          <span className="px-2 py-1 bg-green-900/30 text-green-400 rounded-full text-xs font-medium border border-green-800">
             فعال
           </span>
         );
       case "draft":
         return (
-          <span className="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">
+          <span className="px-2 py-1 bg-yellow-900/30 text-yellow-400 rounded-full text-xs font-medium border border-yellow-800">
             پیش‌نویس
           </span>
         );
       case "archived":
         return (
-          <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
+          <span className="px-2 py-1 bg-gray-900/30 text-gray-400 rounded-full text-xs font-medium border border-gray-800">
             بایگانی شده
           </span>
         );
       default:
         return (
-          <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium">
+          <span className="px-2 py-1 bg-gray-900/30 text-gray-400 rounded-full text-xs font-medium border border-gray-800">
             نامشخص
           </span>
         );
@@ -98,12 +98,12 @@ export default function VirtualToursDashboard({ data, remove }: Props) {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full text-white">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-gray-800">مدیریت تورهای مجازی</h2>
+        <h2 className="text-xl font-bold text-white">مدیریت تورهای مجازی</h2>
         <Link
           href="/admin/virtual-tours/create"
-          className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-300"
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-lg hover:from-pink-700 hover:to-purple-700 transition-all duration-300 shadow-lg shadow-pink-500/30"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -124,15 +124,15 @@ export default function VirtualToursDashboard({ data, remove }: Props) {
       </div>
 
       {data.length === 0 ? (
-        <div className="bg-white rounded-lg shadow-md p-8 text-center">
-          <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-full bg-blue-50">
+        <div className="bg-gray-800 rounded-xl shadow-lg p-8 text-center border border-gray-700">
+          <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-full bg-gray-700">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-10 h-10 text-blue-500"
+              className="w-10 h-10 text-pink-400"
             >
               <path
                 strokeLinecap="round"
@@ -141,42 +141,42 @@ export default function VirtualToursDashboard({ data, remove }: Props) {
               />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-gray-800 mb-2">
+          <h3 className="text-lg font-semibold text-white mb-2">
             هیچ تور مجازی یافت نشد
           </h3>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-400 mb-6">
             با کلیک بر روی دکمه «ایجاد تور مجازی جدید» اولین تور مجازی خود را
             بسازید.
           </p>
           <Link
             href="/admin/virtual-tours/create"
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-300"
+            className="px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-lg hover:from-pink-700 hover:to-purple-700 transition-all duration-300 shadow-lg shadow-pink-500/30"
           >
             ایجاد تور مجازی
           </Link>
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-700">
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
               <thead>
-                <tr className="bg-gray-100 border-b">
-                  <th className="p-4 text-right font-semibold text-gray-700">
+                <tr className="bg-gray-700 border-b border-gray-600">
+                  <th className="p-4 text-right font-semibold text-white">
                     نام
                   </th>
-                  <th className="p-4 text-right font-semibold text-gray-700">
+                  <th className="p-4 text-right font-semibold text-white">
                     مکان
                   </th>
-                  <th className="p-4 text-right font-semibold text-gray-700">
+                  <th className="p-4 text-right font-semibold text-white">
                     وضعیت
                   </th>
-                  <th className="p-4 text-right font-semibold text-gray-700">
+                  <th className="p-4 text-right font-semibold text-white">
                     تاریخ ایجاد
                   </th>
-                  <th className="p-4 text-right font-semibold text-gray-700">
+                  <th className="p-4 text-right font-semibold text-white">
                     آخرین بروزرسانی
                   </th>
-                  <th className="p-4 text-right font-semibold text-gray-700">
+                  <th className="p-4 text-right font-semibold text-white">
                     عملیات
                   </th>
                 </tr>
@@ -185,21 +185,21 @@ export default function VirtualToursDashboard({ data, remove }: Props) {
                 {data.map((item) => (
                   <tr
                     key={item._id}
-                    className="border-b hover:bg-gray-50 transition-colors"
+                    className="border-b border-gray-700 hover:bg-gray-700/50 transition-colors"
                   >
                     <td className="p-4">
-                      <div className="font-semibold text-gray-800">
+                      <div className="font-semibold text-white">
                         {item.name}
                       </div>
                       {item.description && (
-                        <div className="text-xs text-gray-500 mt-1 line-clamp-2 max-w-xs">
+                        <div className="text-xs text-gray-400 mt-1 line-clamp-2 max-w-xs">
                           {item.description}
                         </div>
                       )}
                     </td>
                     <td className="p-4">
                       {item.place ? (
-                        <span className="text-sm text-gray-700">
+                        <span className="text-sm text-gray-300">
                           {item.place.name}
                         </span>
                       ) : (
@@ -209,17 +209,17 @@ export default function VirtualToursDashboard({ data, remove }: Props) {
                       )}
                     </td>
                     <td className="p-4">{getStatusBadge(item.status)}</td>
-                    <td className="p-4 text-gray-700">
+                    <td className="p-4 text-gray-300">
                       {formatDate(item.createdAt)}
                     </td>
-                    <td className="p-4 text-gray-700">
+                    <td className="p-4 text-gray-300">
                       {formatDate(item.updatedAt)}
                     </td>
                     <td className="p-4">
                       <div className="flex gap-2">
                         <Link
                           href={`/admin/virtual-tours/view/${item._id}`}
-                          className="p-1.5 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 transition-colors"
+                          className="p-1.5 bg-gray-700 text-pink-400 rounded-md hover:bg-gray-600 transition-colors"
                           title="مشاهده"
                         >
                           <svg
@@ -244,7 +244,7 @@ export default function VirtualToursDashboard({ data, remove }: Props) {
                         </Link>
                         <Link
                           href={`/admin/virtual-tours/edit/${item._id}`}
-                          className="p-1.5 bg-green-50 text-green-600 rounded-md hover:bg-green-100 transition-colors"
+                          className="p-1.5 bg-gray-700 text-green-400 rounded-md hover:bg-gray-600 transition-colors"
                           title="ویرایش"
                         >
                           <svg
@@ -269,7 +269,7 @@ export default function VirtualToursDashboard({ data, remove }: Props) {
                         </Link>
                         <button
                           onClick={() => openConfirmDialog(item._id)}
-                          className="p-1.5 bg-red-50 text-red-600 rounded-md hover:bg-red-100 transition-colors"
+                          className="p-1.5 bg-gray-700 text-red-400 rounded-md hover:bg-gray-600 transition-colors"
                           title="حذف"
                         >
                           <svg

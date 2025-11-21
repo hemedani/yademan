@@ -74,15 +74,15 @@ const SeedCityZonesModal: React.FC<SeedCityZonesModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[2000]">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-800">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[2000]">
+      <div className="bg-gray-800 rounded-xl shadow-2xl w-full max-w-md mx-4 border border-gray-700">
+        <div className="flex items-center justify-between p-6 border-b border-gray-700">
+          <h2 className="text-xl font-semibold text-white">
             اضافه کردن مناطق شهر {cityName}
           </h2>
           <button
             onClick={handleClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+            className="text-gray-400 hover:text-pink-400 transition-colors"
             disabled={isProcessing}
           >
             <svg
@@ -103,7 +103,7 @@ const SeedCityZonesModal: React.FC<SeedCityZonesModalProps> = ({
 
         <div className="p-6">
           <div className="mb-4">
-            <p className="text-sm text-gray-600 mb-4">
+            <p className="text-sm text-gray-300 mb-4">
               لطفا فایل GeoJSON حاوی مناطق شهر را آپلود کنید. فایل باید شامل
               اطلاعات جغرافیایی مناطق با فرمت استاندارد GeoJSON باشد.
             </p>
@@ -116,25 +116,25 @@ const SeedCityZonesModal: React.FC<SeedCityZonesModalProps> = ({
           </div>
 
           {uploadedFileId && (
-            <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-md">
-              <p className="text-sm text-green-700">
+            <div className="mb-4 p-3 bg-gray-700/30 border border-gray-600 rounded-md">
+              <p className="text-sm text-green-400">
                 ✓ فایل با موفقیت آپلود شد
               </p>
             </div>
           )}
         </div>
 
-        <div className="flex justify-end gap-3 p-6 border-t bg-gray-50">
+        <div className="flex justify-end gap-3 p-6 border-t border-gray-700 bg-gray-900">
           <button
             onClick={handleClose}
-            className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
+            className="px-4 py-2 text-gray-300 bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg hover:from-gray-600 hover:to-gray-700 transition-colors border border-gray-600"
             disabled={isProcessing}
           >
             انصراف
           </button>
           <button
             onClick={handleSeedZones}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center gap-2"
+            className="px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-lg hover:from-pink-700 hover:to-purple-700 transition-colors disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed flex items-center gap-2 shadow-lg shadow-pink-500/30"
             disabled={!uploadedFileId || isProcessing}
           >
             {isProcessing ? (

@@ -3,8 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { DeleteModal } from "./DeleteModal";
-import { ModelName, ToastNotify, translateModelNameToPersian } from "@/utils/helper";
+import {
+  ModelName,
+  ToastNotify,
+  translateModelNameToPersian,
+} from "@/utils/helper";
 import Link from "next/link";
+import "@/app/dark-theme.css";
 
 interface PlaceData {
   _id: string;
@@ -54,13 +59,13 @@ const formatPersianDate = (dateString?: string): string => {
 const getStatusColor = (status: string) => {
   switch (status) {
     case "active":
-      return "bg-green-100 text-green-800 border-green-200";
+      return "bg-green-900/30 text-green-400 border-green-800";
     case "draft":
-      return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      return "bg-yellow-900/30 text-yellow-400 border-yellow-800";
     case "archived":
-      return "bg-gray-100 text-gray-800 border-gray-200";
+      return "bg-gray-900/30 text-gray-400 border-gray-700";
     default:
-      return "bg-gray-100 text-gray-800 border-gray-200";
+      return "bg-gray-900/30 text-gray-400 border-gray-700";
   }
 };
 
@@ -106,9 +111,15 @@ const PlacesDashboard: React.FC<PlacesDashboardProps> = ({
       const removedItem = await remove(selectedPlace._id, hardCascade);
 
       if (removedItem.success) {
-        ToastNotify("success", `${translateModelNameToPersian(model)} با موفقیت حذف شد`);
+        ToastNotify(
+          "success",
+          `${translateModelNameToPersian(model)} با موفقیت حذف شد`,
+        );
       } else {
-        ToastNotify("error", `مشکلی در حذف ${translateModelNameToPersian(model)} وجود دارد - ${removedItem.body.message}`);
+        ToastNotify(
+          "error",
+          `مشکلی در حذف ${translateModelNameToPersian(model)} وجود دارد - ${removedItem.body.message}`,
+        );
       }
 
       router.refresh();
@@ -121,13 +132,13 @@ const PlacesDashboard: React.FC<PlacesDashboardProps> = ({
     <div className="mt-6">
       {/* View Mode Toggle */}
       <div className="flex justify-end mb-4">
-        <div className="flex bg-gray-100 rounded-lg p-1">
+        <div className="flex bg-gray-800 rounded-lg p-1">
           <button
             onClick={() => setViewMode("grid")}
             className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 text-sm ${
               viewMode === "grid"
-                ? "bg-white shadow-sm text-blue-600"
-                : "text-gray-600"
+                ? "bg-gray-700 shadow-sm text-pink-400"
+                : "text-gray-400"
             }`}
           >
             <svg
@@ -150,8 +161,8 @@ const PlacesDashboard: React.FC<PlacesDashboardProps> = ({
             onClick={() => setViewMode("list")}
             className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 text-sm ${
               viewMode === "list"
-                ? "bg-white shadow-sm text-blue-600"
-                : "text-gray-600"
+                ? "bg-gray-700 shadow-sm text-pink-400"
+                : "text-gray-400"
             }`}
           >
             <svg
@@ -176,15 +187,15 @@ const PlacesDashboard: React.FC<PlacesDashboardProps> = ({
       {data.length === 0 ? (
         <div className="text-center py-12">
           <div className="text-6xl mb-4">📍</div>
-          <h3 className="text-xl font-bold text-slate-600 mb-2">
+          <h3 className="text-xl font-bold text-white mb-2">
             هیچ {translateModelNameToPersian(model)} یافت نشد
           </h3>
-          <p className="text-slate-500 mb-6">
+          <p className="text-gray-400 mb-6">
             می‌توانید یک {translateModelNameToPersian(model)} جدید ایجاد کنید
           </p>
           <Link
             href="/admin/places/create"
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-lg hover:from-pink-700 hover:to-purple-700 transition-colors"
           >
             ایجاد {translateModelNameToPersian(model)} جدید
           </Link>
@@ -194,35 +205,35 @@ const PlacesDashboard: React.FC<PlacesDashboardProps> = ({
           {data.map((place) => (
             <div
               key={place._id}
-              className={`relative bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-200 transform hover:-translate-y-1 overflow-hidden ${
+              className={`relative bg-gray-800/80 backdrop-blur-xl rounded-xl border border-gray-700 shadow-lg hover:shadow-xl hover:shadow-pink-500/10 transition-all duration-200 transform hover:-translate-y-1 overflow-hidden ${
                 actionLoading === place._id ? "opacity-60" : ""
               }`}
             >
               <div className="p-5">
                 <div className="flex justify-between items-start mb-3">
-                  <h3 className="font-bold text-slate-800 text-lg line-clamp-1">
+                  <h3 className="font-bold text-white text-lg line-clamp-1">
                     {place.name}
                   </h3>
                   <div className="relative group">
-                    <button className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors">
+                    <button className="w-8 h-8 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors">
                       <svg
-                        className="w-4 h-4"
+                        className="w-4 h-4 text-gray-300"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
                         <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
                       </svg>
                     </button>
-                    <div className="absolute left-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-slate-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                    <div className="absolute left-0 top-full mt-1 bg-gray-700 rounded-lg shadow-lg border border-gray-600 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
                       <Link
                         href={`/admin/places/edit/${place._id}`}
-                        className="w-full px-4 py-2 text-right text-sm text-slate-700 hover:bg-slate-50 rounded-t-lg block"
+                        className="w-full px-4 py-2 text-right text-sm text-white hover:bg-gray-600 rounded-t-lg block"
                       >
                         ویرایش
                       </Link>
                       <button
                         onClick={() => openDeleteModal(place)}
-                        className="w-full px-4 py-2 text-right text-sm text-red-600 hover:bg-red-50 rounded-b-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full px-4 py-2 text-right text-sm text-red-500 hover:bg-red-900/30 rounded-b-lg disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled={actionLoading !== null}
                       >
                         حذف
@@ -235,22 +246,22 @@ const PlacesDashboard: React.FC<PlacesDashboardProps> = ({
                   <div
                     className="inline-block px-3 py-1 rounded-full text-xs mb-3"
                     style={{
-                      backgroundColor: `${place.category.color || '#3B82F6'}20`,
-                      color: place.category.color || '#3B82F6'
+                      backgroundColor: `${place.category.color || "#BE185D"}20`,
+                      color: place.category.color || "#F472B6",
                     }}
                   >
                     {place.category.name}
                   </div>
                 )}
 
-                <p className="text-slate-600 text-sm mb-4 line-clamp-2">
+                <p className="text-gray-300 text-sm mb-4 line-clamp-2">
                   {place.description || "بدون توضیحات"}
                 </p>
 
                 {place.address && (
                   <div className="flex items-start gap-2 mb-2">
                     <svg
-                      className="w-4 h-4 text-slate-500 mt-0.5 flex-shrink-0"
+                      className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -268,19 +279,19 @@ const PlacesDashboard: React.FC<PlacesDashboardProps> = ({
                         d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                       />
                     </svg>
-                    <span className="text-slate-600 text-xs line-clamp-1">
+                    <span className="text-gray-400 text-xs line-clamp-1">
                       {place.address}
                     </span>
                   </div>
                 )}
 
                 <div className="flex items-center justify-between text-xs mt-4">
-                  <span className="text-slate-500">
+                  <span className="text-gray-400">
                     {formatPersianDate(place.updatedAt)}
                   </span>
                   <span
                     className={`px-2 py-1 rounded-full text-xs ${getStatusColor(
-                      place.status
+                      place.status,
                     )}`}
                   >
                     {getStatusText(place.status)}
@@ -291,40 +302,40 @@ const PlacesDashboard: React.FC<PlacesDashboardProps> = ({
           ))}
         </div>
       ) : (
-        <div className="overflow-x-auto bg-white rounded-xl shadow-md">
-          <table className="min-w-full divide-y divide-slate-200">
-            <thead className="bg-slate-50">
+        <div className="overflow-x-auto bg-gray-800/80 backdrop-blur-xl rounded-xl border border-gray-700 shadow-lg">
+          <table className="min-w-full divide-y divide-gray-700">
+            <thead className="bg-gray-700">
               <tr>
-                <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
                   نام
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
                   دسته‌بندی
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
                   آدرس
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
                   وضعیت
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
                   تاریخ بروزرسانی
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
                   عملیات
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-slate-200">
+            <tbody className="bg-gray-800 divide-y divide-gray-700">
               {data.map((place) => (
                 <tr
                   key={place._id}
-                  className={`hover:bg-slate-50 ${
+                  className={`hover:bg-gray-700 ${
                     actionLoading === place._id ? "opacity-60" : ""
                   }`}
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-slate-900">
+                    <div className="text-sm font-medium text-white">
                       {place.name}
                     </div>
                   </td>
@@ -333,44 +344,44 @@ const PlacesDashboard: React.FC<PlacesDashboardProps> = ({
                       <div
                         className="inline-block px-2 py-1 rounded-full text-xs"
                         style={{
-                          backgroundColor: `${place.category.color || '#3B82F6'}20`,
-                          color: place.category.color || '#3B82F6',
+                          backgroundColor: `${place.category.color || "#BE185D"}20`,
+                          color: place.category.color || "#F472B6",
                         }}
                       >
                         {place.category.name}
                       </div>
                     ) : (
-                      <span className="text-slate-400 text-xs">-</span>
+                      <span className="text-gray-400 text-xs">-</span>
                     )}
                   </td>
                   <td className="px-6 py-4">
-                    <div className="text-sm text-slate-500 line-clamp-1 max-w-xs">
+                    <div className="text-sm text-gray-300 line-clamp-1 max-w-xs">
                       {place.address || "-"}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-2 py-1 inline-flex text-xs leading-5 font-medium rounded-full ${getStatusColor(
-                        place.status
+                        place.status,
                       )}`}
                     >
                       {getStatusText(place.status)}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                     {formatPersianDate(place.updatedAt)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex space-x-reverse space-x-2">
+                    <div className="flex  space-x-2">
                       <Link
                         href={`/admin/places/edit/${place._id}`}
-                        className="text-indigo-600 hover:text-indigo-900"
+                        className="text-pink-400 hover:text-pink-300"
                       >
                         ویرایش
                       </Link>
                       <button
                         onClick={() => openDeleteModal(place)}
-                        className="text-red-600 hover:text-red-900"
+                        className="text-red-400 hover:text-red-300"
                         disabled={actionLoading !== null}
                       >
                         حذف

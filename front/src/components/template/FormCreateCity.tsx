@@ -379,13 +379,11 @@ export const FormCreateCity = ({
   }, []);
 
   return (
-    <div className="p-8">
+    <div className="p-8 bg-gray-900 text-white">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Form Fields */}
-        <div className="bg-gray-100 p-6 border rounded-lg space-y-4">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">
-            اطلاعات شهر
-          </h2>
+        <div className="bg-gray-800 p-6 border border-gray-700 rounded-xl space-y-4 shadow-lg">
+          <h2 className="text-lg font-semibold text-white mb-4">اطلاعات شهر</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Name Input */}
@@ -407,7 +405,7 @@ export const FormCreateCity = ({
 
           {/* Province Selection */}
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-slate-700 text-right">
+            <label className="text-sm font-medium text-gray-300 text-right">
               انتخاب استان
             </label>
             <AsyncSelect
@@ -427,49 +425,53 @@ export const FormCreateCity = ({
                 control: (provided: any, state: any) => ({
                   ...provided,
                   minHeight: "48px",
-                  backgroundColor: errors.provinceId ? "#fef2f2" : "white",
-                  borderColor: errors.provinceId
-                    ? state.isFocused
-                      ? "#ef4444"
-                      : "#fca5a5"
-                    : state.isFocused
-                      ? "#3b82f6"
-                      : "#cbd5e1",
+                  backgroundColor: state.isFocused ? "#1f2937" : "#111827",
+                  borderColor: state.isFocused ? "#8b5cf6" : "#374151",
+                  borderWidth: state.isFocused ? "2px" : "1px",
                   borderRadius: "12px",
                   direction: "rtl",
+                  color: "#f3f4f6",
+                  boxShadow: state.isFocused ? "0 0 0 1px #8b5cf6" : "none",
                 }),
                 valueContainer: (provided: any) => ({
                   ...provided,
                   padding: "2px 16px",
                   direction: "rtl",
+                  color: "#f3f4f6",
                 }),
                 placeholder: (provided: any) => ({
                   ...provided,
-                  color: "#94a3b8",
+                  color: "#9ca3af",
                   direction: "rtl",
                   textAlign: "right",
                 }),
                 singleValue: (provided: any) => ({
                   ...provided,
-                  color: "#1e293b",
+                  color: "#f3f4f6",
                   direction: "rtl",
                   textAlign: "right",
                 }),
                 option: (provided: any, state: any) => ({
                   ...provided,
                   backgroundColor: state.isSelected
-                    ? "#3b82f6"
+                    ? "#4f46e5"
                     : state.isFocused
-                      ? "#f1f5f9"
-                      : "transparent",
-                  color: state.isSelected ? "white" : "#1e293b",
+                      ? "#374151"
+                      : "#1f2937",
+                  color: state.isSelected ? "white" : "#f3f4f6",
                   direction: "rtl",
                   textAlign: "right",
+                }),
+                menu: (provided: any) => ({
+                  ...provided,
+                  backgroundColor: "#1f2937",
+                  border: "1px solid #374151",
+                  borderRadius: "8px",
                 }),
               }}
             />
             {errors.provinceId && (
-              <span className="text-red-500 text-xs font-medium text-right mt-1">
+              <span className="text-red-400 text-xs font-medium text-right mt-1">
                 {errors.provinceId.message}
               </span>
             )}
@@ -488,9 +490,9 @@ export const FormCreateCity = ({
         </div>
 
         {/* Map Section */}
-        <div className="bg-gray-100 p-6 border rounded-lg">
+        <div className="bg-gray-800 p-6 border border-gray-700 rounded-xl shadow-lg">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-700">
+            <h2 className="text-lg font-semibold text-white">
               ترسیم شهر و انتخاب مرکز بر روی نقشه
             </h2>
             <div className="flex gap-2">
@@ -547,10 +549,11 @@ export const FormCreateCity = ({
               <button
                 type="button"
                 onClick={toggleCenterMode}
-                className={`${isCenterMode
-                  ? "bg-orange-600 hover:bg-orange-700"
-                  : "bg-purple-600 hover:bg-purple-700"
-                  } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2`}
+                className={`${
+                  isCenterMode
+                    ? "bg-pink-600 hover:bg-pink-700"
+                    : "bg-purple-600 hover:bg-purple-700"
+                } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2 shadow-lg ${isCenterMode ? "shadow-pink-500/30" : "shadow-purple-500/30"}`}
               >
                 <svg
                   className="w-4 h-4"
@@ -576,10 +579,11 @@ export const FormCreateCity = ({
               <button
                 type="button"
                 onClick={toggleDrawingMode}
-                className={`${isDrawingMode
-                  ? "bg-red-600 hover:bg-red-700"
-                  : "bg-blue-600 hover:bg-blue-700"
-                  } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2`}
+                className={`${
+                  isDrawingMode
+                    ? "bg-pink-600 hover:bg-pink-700"
+                    : "bg-blue-600 hover:bg-blue-700"
+                } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2 shadow-lg ${isDrawingMode ? "shadow-pink-500/30" : "shadow-blue-500/30"}`}
               >
                 <svg
                   className="w-4 h-4"
@@ -600,15 +604,15 @@ export const FormCreateCity = ({
           </div>
 
           {(isDrawingMode || isCenterMode) && (
-            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="mb-4 p-3 bg-gray-700/50 border border-gray-600 rounded-lg">
               {isDrawingMode && (
-                <p className="text-sm text-blue-800 font-medium">
+                <p className="text-sm text-pink-400 font-medium">
                   🖱️ حالت ترسیم منطقه: کلیک چپ: اضافه کردن نقطه | راست کلیک:
                   تمام کردن شکل | ESC: لغو
                 </p>
               )}
               {isCenterMode && (
-                <p className="text-sm text-blue-800 font-medium">
+                <p className="text-sm text-pink-400 font-medium">
                   📍 حالت انتخاب مرکز: بر روی نقشه کلیک کنید تا مرکز شهر مشخص
                   شود
                 </p>
@@ -616,7 +620,7 @@ export const FormCreateCity = ({
             </div>
           )}
 
-          <div className="h-96 rounded-lg overflow-hidden border border-gray-300">
+          <div className="h-96 rounded-lg overflow-hidden border border-gray-600">
             <MapContainer
               key={mapKey}
               center={mapCenter}
@@ -632,11 +636,11 @@ export const FormCreateCity = ({
                 <Polygon
                   positions={drawnPolygon}
                   pathOptions={{
-                    color: "#3b82f6",
+                    color: "#ec4899",
                     weight: 3,
                     opacity: 0.8,
                     fillOpacity: 0.2,
-                    fillColor: "#3b82f6",
+                    fillColor: "#ec4899",
                   }}
                 />
               )}
@@ -652,23 +656,23 @@ export const FormCreateCity = ({
           </div>
 
           {errors.area && (
-            <p className="text-red-500 text-sm mt-2 text-right">
+            <p className="text-red-400 text-sm mt-2 text-right">
               {errors.area.message}
             </p>
           )}
 
           {errors.center && (
-            <p className="text-red-500 text-sm mt-2 text-right">
+            <p className="text-red-400 text-sm mt-2 text-right">
               {errors.center.message}
             </p>
           )}
 
           <div className="mt-4 space-y-3">
             {drawnPolygon && (
-              <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+              <div className="p-4 bg-gray-700/30 border border-gray-600 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <svg
-                    className="w-5 h-5 text-green-600"
+                    className="w-5 h-5 text-green-500"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -680,11 +684,11 @@ export const FormCreateCity = ({
                       d="M5 13l4 4L19 7"
                     />
                   </svg>
-                  <p className="text-sm text-green-800 font-semibold">
+                  <p className="text-sm text-green-400 font-semibold">
                     منطقه شهر ترسیم شد
                   </p>
                 </div>
-                <div className="text-xs text-green-700 space-y-1">
+                <div className="text-xs text-gray-300 space-y-1">
                   <p>• تعداد نقاط: {drawnPolygon.length}</p>
                   <p>• منطقه بر روی نقشه نمایش داده شده و آماده ثبت است</p>
                 </div>
@@ -692,10 +696,10 @@ export const FormCreateCity = ({
             )}
 
             {centerPoint && (
-              <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+              <div className="p-4 bg-gray-700/30 border border-gray-600 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <svg
-                    className="w-5 h-5 text-purple-600"
+                    className="w-5 h-5 text-purple-500"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -707,11 +711,11 @@ export const FormCreateCity = ({
                       d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
                     />
                   </svg>
-                  <p className="text-sm text-purple-800 font-semibold">
+                  <p className="text-sm text-purple-400 font-semibold">
                     مرکز شهر انتخاب شد
                   </p>
                 </div>
-                <div className="text-xs text-purple-700 space-y-1">
+                <div className="text-xs text-gray-300 space-y-1">
                   <p>• عرض جغرافیایی: {centerPoint.lat.toFixed(6)}</p>
                   <p>• طول جغرافیایی: {centerPoint.lng.toFixed(6)}</p>
                   <p>• مرکز بر روی نقشه نمایش داده شده است</p>
@@ -726,7 +730,7 @@ export const FormCreateCity = ({
           <button
             type="submit"
             disabled={isSubmitting || !isValid}
-            className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
+            className="px-8 py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-semibold rounded-lg hover:from-pink-700 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed transition-all duration-300 shadow-lg shadow-pink-500/30"
           >
             {isSubmitting ? "در حال ایجاد..." : "ایجاد شهر"}
           </button>

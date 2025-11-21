@@ -153,13 +153,13 @@ const CreateUpdateModal = ({
       }`}
     >
       <div
-        className={`bg-white p-6 rounded-lg shadow-lg w-1/3 transform transition-all duration-500 ${
+        className={`bg-gray-800/90 backdrop-blur-xl p-6 rounded-xl border border-gray-700 shadow-2xl w-1/3 transform transition-all duration-500 ${
           isOpen
             ? "scale-100 opacity-100 translate-y-0"
             : "scale-90 opacity-0 translate-y-10"
         }`}
       >
-        <h2 className="text-lg font-bold mb-4">
+        <h2 className="text-lg font-bold text-white mb-4">
           {itemToEdit
             ? `ویرایش ${translateModelNameToPersian(model)}`
             : `ایجاد ${translateModelNameToPersian(model)} جدید`}
@@ -184,18 +184,18 @@ const CreateUpdateModal = ({
 
           <>
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-300 mb-1">
                 آیکون
               </label>
-              <div className="grid grid-cols-8 gap-2 max-h-40 overflow-y-auto p-2 border rounded-md mb-2">
+              <div className="grid grid-cols-8 gap-2 max-h-40 overflow-y-auto p-2 border border-gray-700 rounded-lg bg-gray-700/50 mb-2">
                 {availableIcons.map((icon) => (
                   <button
                     key={icon}
                     type="button"
-                    className={`text-2xl p-2 rounded-md hover:bg-gray-100 ${
+                    className={`text-2xl p-2 rounded-md hover:bg-gray-600 ${
                       watchedIcon === icon
-                        ? "bg-blue-100 border-2 border-blue-500"
-                        : ""
+                        ? "bg-pink-500/20 border-2 border-pink-500"
+                        : "border border-gray-600"
                     }`}
                     onClick={() => {
                       setValue("icon", icon);
@@ -206,25 +206,25 @@ const CreateUpdateModal = ({
                 ))}
               </div>
               <div className="mt-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-300 mb-1">
                   آیکون سفارشی
                 </label>
                 <input
                   type="text"
                   {...register("icon")}
-                  className="w-full p-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="w-full p-2 rounded-md bg-gray-700 border-gray-600 text-white focus:border-pink-500 focus:ring-pink-500"
                   placeholder="آیکون سفارشی وارد کنید"
                 />
               </div>
               {errors.icon?.message && (
-                <p className="text-red-500 text-xs mt-1">
+                <p className="text-red-400 text-xs mt-1">
                   {errors.icon.message}
                 </p>
               )}
             </div>
 
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-300 mb-1">
                 رنگ
               </label>
               <div className="grid grid-cols-10 gap-2 mt-2 mb-2">
@@ -234,8 +234,8 @@ const CreateUpdateModal = ({
                     type="button"
                     className={`w-8 h-8 rounded-full border-2 ${
                       watchedColor === color
-                        ? "border-gray-800 ring-2 ring-offset-2"
-                        : "border-gray-200"
+                        ? "border-white ring-2 ring-pink-500 ring-offset-2 ring-offset-gray-800"
+                        : "border-gray-400"
                     }`}
                     style={{ backgroundColor: color }}
                     onClick={() => {
@@ -245,24 +245,24 @@ const CreateUpdateModal = ({
                 ))}
               </div>
               <div className="mt-2 flex items-center gap-2">
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-300">
                   رنگ سفارشی
                 </label>
                 <input
                   type="color"
                   {...register("color")}
-                  className="h-8 w-8 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="h-8 w-8 rounded-md bg-gray-700 border-gray-600 focus:border-pink-500 focus:ring-pink-500"
                 />
                 <input
                   type="text"
                   value={watchedColor}
                   onChange={(e) => setValue("color", e.target.value)}
-                  className="flex-1 p-2 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="flex-1 p-2 rounded-md bg-gray-700 border-gray-600 text-white focus:border-pink-500 focus:ring-pink-500"
                   placeholder="#RRGGBB"
                 />
               </div>
               {errors.color?.message && (
-                <p className="text-red-500 text-xs mt-1">
+                <p className="text-red-400 text-xs mt-1">
                   {errors.color.message}
                 </p>
               )}
@@ -273,13 +273,13 @@ const CreateUpdateModal = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+              className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
             >
               بستن
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+              className="px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-lg hover:from-pink-700 hover:to-purple-700 transition-colors"
             >
               {itemToEdit ? "ویرایش" : "ایجاد"}
             </button>

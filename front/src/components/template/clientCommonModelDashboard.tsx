@@ -128,9 +128,22 @@ const ClientCommonModelDashboard: React.FC<ClientDashboardProps> = ({
   return (
     <div>
       <button
-        className="absolute top-1 left-5 mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+        className="absolute top-1 left-5 mt-4 px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-lg hover:from-pink-700 hover:to-purple-700 transition-colors flex items-center gap-2"
         onClick={() => openModal("edit")}
       >
+        <svg
+          className="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 4v16m8-8H4"
+          />
+        </svg>
         ایجاد {translateModelNameToPersian(model)} جدید
       </button>
 
@@ -138,10 +151,10 @@ const ClientCommonModelDashboard: React.FC<ClientDashboardProps> = ({
       {data.length === 0 ? (
         <div className="text-center py-12 mt-6">
           <div className="text-6xl mb-4">📂</div>
-          <h3 className="text-xl font-bold text-slate-600 mb-2">
+          <h3 className="text-xl font-bold text-white mb-2">
             هیچ {translateModelNameToPersian(model)} یافت نشد
           </h3>
-          <p className="text-slate-500 mb-4">
+          <p className="text-gray-400 mb-4">
             "نتیجه‌ای برای جستجوی شما یافت نشد"
           </p>
         </div>
@@ -150,7 +163,7 @@ const ClientCommonModelDashboard: React.FC<ClientDashboardProps> = ({
           {data.map((item) => (
             <div
               key={item._id}
-              className={`relative bg-white/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 ${
+              className={`relative bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-xl border border-gray-700 hover:shadow-2xl hover:shadow-pink-500/10 transition-all duration-300 transform hover:-translate-y-1 ${
                 actionLoading === item._id ? "opacity-60" : ""
               }`}
             >
@@ -165,14 +178,14 @@ const ClientCommonModelDashboard: React.FC<ClientDashboardProps> = ({
                 >
                   {item.icon}
                 </div>
-                <div className="flex items-center space-x-reverse space-x-2">
+                <div className="flex items-center  space-x-2">
                   <button
                     onClick={() => handleToggleStatus(item._id)}
                     disabled={actionLoading !== null}
                     className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 ${
                       item.isActive
-                        ? "bg-green-100 text-green-600"
-                        : "bg-slate-100 text-slate-400"
+                        ? "bg-green-500/20 text-green-400"
+                        : "bg-gray-700 text-gray-400"
                     }`}
                   >
                     <svg
@@ -188,7 +201,7 @@ const ClientCommonModelDashboard: React.FC<ClientDashboardProps> = ({
                     </svg>
                   </button>
                   <div className="relative group">
-                    <button className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors duration-200">
+                    <button className="w-8 h-8 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors duration-200">
                       <svg
                         className="w-4 h-4"
                         fill="currentColor"
@@ -197,16 +210,16 @@ const ClientCommonModelDashboard: React.FC<ClientDashboardProps> = ({
                         <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
                       </svg>
                     </button>
-                    <div className="absolute left-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-slate-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                    <div className="absolute left-0 top-full mt-1 bg-gray-700 rounded-lg shadow-lg border border-gray-600 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
                       <button
                         onClick={() => openModal("edit", item)}
-                        className="w-full px-4 py-2 text-right text-sm text-slate-700 hover:bg-slate-50 rounded-t-lg"
+                        className="w-full px-4 py-2 text-right text-sm text-gray-300 hover:bg-gray-600 rounded-t-lg"
                       >
                         ویرایش
                       </button>
                       <button
                         onClick={() => openModal("delete", item)}
-                        className="w-full px-4 py-2 text-right text-sm text-red-600 hover:bg-red-50 rounded-b-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full px-4 py-2 text-right text-sm text-red-400 hover:bg-red-900/30 rounded-b-lg disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         حذف
                       </button>
@@ -225,14 +238,12 @@ const ClientCommonModelDashboard: React.FC<ClientDashboardProps> = ({
                       title={`رنگ: ${item.color}`}
                     />
                   )}
-                  <h3 className="text-lg font-bold text-slate-800">
-                    {item.name}
-                  </h3>
+                  <h3 className="text-lg font-bold text-white">{item.name}</h3>
                 </div>
-                <p className="text-slate-600 text-sm mb-3 line-clamp-2">
+                <p className="text-gray-400 text-sm mb-3 line-clamp-2">
                   {item.description}
                 </p>
-                <div className="flex items-center justify-between text-xs text-slate-500">
+                <div className="flex items-center justify-between text-xs text-gray-400">
                   <span>
                     {/* fellan faghat  tool data  ro gozashtam ta baadan ye dogme konam jodagane az backend begiram */}
                     {formatPersianNumber(data.length || 0)} مکان
@@ -240,8 +251,8 @@ const ClientCommonModelDashboard: React.FC<ClientDashboardProps> = ({
                   <span
                     className={`px-2 py-1 rounded-full ${
                       item.isActive
-                        ? "bg-green-100 text-green-600"
-                        : "bg-slate-100 text-slate-500"
+                        ? "bg-green-900/30 text-green-400"
+                        : "bg-gray-700 text-gray-400"
                     }`}
                   >
                     {item.isActive ? "فعال" : "غیرفعال"}

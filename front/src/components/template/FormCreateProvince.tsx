@@ -276,11 +276,11 @@ export const FormCreateProvince = ({
   }, []);
 
   return (
-    <div className="p-8">
+    <div className="p-8 bg-gray-900 text-white">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Form Fields */}
-        <div className="bg-gray-100 p-6 border rounded-lg space-y-4">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">
+        <div className="bg-gray-800 p-6 border border-gray-700 rounded-xl space-y-4 shadow-lg">
+          <h2 className="text-lg font-semibold text-white mb-4">
             اطلاعات استان
           </h2>
 
@@ -304,9 +304,9 @@ export const FormCreateProvince = ({
         </div>
 
         {/* Map Section */}
-        <div className="bg-gray-100 p-6 border rounded-lg">
+        <div className="bg-gray-800 p-6 border border-gray-700 rounded-xl shadow-lg">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-700">
+            <h2 className="text-lg font-semibold text-white">
               ترسیم استان و انتخاب مرکز بر روی نقشه
             </h2>
             <div className="flex gap-2">
@@ -365,9 +365,9 @@ export const FormCreateProvince = ({
                 onClick={toggleCenterMode}
                 className={`${
                   isCenterMode
-                    ? "bg-orange-600 hover:bg-orange-700"
+                    ? "bg-pink-600 hover:bg-pink-700"
                     : "bg-purple-600 hover:bg-purple-700"
-                } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2`}
+                } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2 shadow-lg ${isCenterMode ? "shadow-pink-500/30" : "shadow-purple-500/30"}`}
               >
                 <svg
                   className="w-4 h-4"
@@ -395,9 +395,9 @@ export const FormCreateProvince = ({
                 onClick={toggleDrawingMode}
                 className={`${
                   isDrawingMode
-                    ? "bg-red-600 hover:bg-red-700"
+                    ? "bg-pink-600 hover:bg-pink-700"
                     : "bg-blue-600 hover:bg-blue-700"
-                } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2`}
+                } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2 shadow-lg ${isDrawingMode ? "shadow-pink-500/30" : "shadow-blue-500/30"}`}
               >
                 <svg
                   className="w-4 h-4"
@@ -418,15 +418,15 @@ export const FormCreateProvince = ({
           </div>
 
           {(isDrawingMode || isCenterMode) && (
-            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="mb-4 p-3 bg-gray-700/50 border border-gray-600 rounded-lg">
               {isDrawingMode && (
-                <p className="text-sm text-blue-800 font-medium">
+                <p className="text-sm text-pink-400 font-medium">
                   🖱️ حالت ترسیم منطقه: کلیک چپ: اضافه کردن نقطه | راست کلیک:
                   تمام کردن شکل | ESC: لغو
                 </p>
               )}
               {isCenterMode && (
-                <p className="text-sm text-blue-800 font-medium">
+                <p className="text-sm text-pink-400 font-medium">
                   📍 حالت انتخاب مرکز: بر روی نقشه کلیک کنید تا مرکز استان مشخص
                   شود
                 </p>
@@ -434,7 +434,7 @@ export const FormCreateProvince = ({
             </div>
           )}
 
-          <div className="h-96 rounded-lg overflow-hidden border border-gray-300">
+          <div className="h-96 rounded-lg overflow-hidden border border-gray-600">
             <MapContainer
               key={mapKey}
               center={mapCenter}
@@ -444,7 +444,7 @@ export const FormCreateProvince = ({
             >
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
               />
               <MapClickHandler
                 isActive={isCenterMode}
@@ -454,11 +454,11 @@ export const FormCreateProvince = ({
                 <Polygon
                   positions={drawnPolygon}
                   pathOptions={{
-                    color: "#3b82f6",
+                    color: "#ec4899",
                     weight: 3,
                     opacity: 0.8,
                     fillOpacity: 0.2,
-                    fillColor: "#3b82f6",
+                    fillColor: "#ec4899",
                   }}
                 />
               )}
@@ -473,23 +473,23 @@ export const FormCreateProvince = ({
           </div>
 
           {errors.area && (
-            <p className="text-red-500 text-sm mt-2 text-right">
+            <p className="text-red-400 text-sm mt-2 text-right">
               {errors.area.message}
             </p>
           )}
 
           {errors.center && (
-            <p className="text-red-500 text-sm mt-2 text-right">
+            <p className="text-red-400 text-sm mt-2 text-right">
               {errors.center.message}
             </p>
           )}
 
           <div className="mt-4 space-y-3">
             {drawnPolygon && (
-              <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+              <div className="p-4 bg-gray-700/30 border border-gray-600 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <svg
-                    className="w-5 h-5 text-green-600"
+                    className="w-5 h-5 text-green-500"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -501,11 +501,11 @@ export const FormCreateProvince = ({
                       d="M5 13l4 4L19 7"
                     />
                   </svg>
-                  <p className="text-sm text-green-800 font-semibold">
+                  <p className="text-sm text-green-400 font-semibold">
                     منطقه استان ترسیم شد
                   </p>
                 </div>
-                <div className="text-xs text-green-700 space-y-1">
+                <div className="text-xs text-gray-300 space-y-1">
                   <p>• تعداد نقاط: {drawnPolygon.length}</p>
                   <p>• منطقه بر روی نقشه نمایش داده شده و آماده ثبت است</p>
                 </div>
@@ -513,10 +513,10 @@ export const FormCreateProvince = ({
             )}
 
             {centerPoint && (
-              <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+              <div className="p-4 bg-gray-700/30 border border-gray-600 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <svg
-                    className="w-5 h-5 text-purple-600"
+                    className="w-5 h-5 text-purple-500"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -528,11 +528,11 @@ export const FormCreateProvince = ({
                       d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
                     />
                   </svg>
-                  <p className="text-sm text-purple-800 font-semibold">
+                  <p className="text-sm text-purple-400 font-semibold">
                     مرکز استان انتخاب شد
                   </p>
                 </div>
-                <div className="text-xs text-purple-700 space-y-1">
+                <div className="text-xs text-gray-300 space-y-1">
                   <p>• عرض جغرافیایی: {centerPoint.lat.toFixed(6)}</p>
                   <p>• طول جغرافیایی: {centerPoint.lng.toFixed(6)}</p>
                   <p>• مرکز بر روی نقشه نمایش داده شده است</p>
@@ -547,7 +547,7 @@ export const FormCreateProvince = ({
           <button
             type="submit"
             disabled={isSubmitting || !isValid}
-            className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors"
+            className="px-8 py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-semibold rounded-lg hover:from-pink-700 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed transition-all duration-300 shadow-lg shadow-pink-500/30"
           >
             {isSubmitting ? "در حال ایجاد..." : "ایجاد استان"}
           </button>

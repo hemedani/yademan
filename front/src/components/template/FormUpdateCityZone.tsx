@@ -290,11 +290,11 @@ export const FormUpdateCityZone = ({
   }
 
   return (
-    <div className="p-8">
+    <div className="p-8 bg-gray-900 text-white">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Form Fields */}
-        <div className="bg-gray-100 p-6 border rounded-lg space-y-4">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">
+        <div className="bg-gray-800 p-6 border border-gray-700 rounded-xl space-y-4 shadow-lg">
+          <h2 className="text-lg font-semibold text-white mb-4">
             ویرایش اطلاعات منطقه شهری
           </h2>
 
@@ -310,9 +310,9 @@ export const FormUpdateCityZone = ({
         </div>
 
         {/* Map Section */}
-        <div className="bg-gray-100 p-6 border rounded-lg">
+        <div className="bg-gray-800 p-6 border border-gray-700 rounded-xl shadow-lg">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-700">
+            <h2 className="text-lg font-semibold text-white">
               ویرایش منطقه شهری بر روی نقشه
             </h2>
             <div className="flex gap-2">
@@ -343,9 +343,9 @@ export const FormUpdateCityZone = ({
                 onClick={toggleDrawingMode}
                 className={`${
                   isDrawingMode
-                    ? "bg-red-600 hover:bg-red-700"
+                    ? "bg-pink-600 hover:bg-pink-700"
                     : "bg-blue-600 hover:bg-blue-700"
-                } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2`}
+                } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2 shadow-lg ${isDrawingMode ? "shadow-pink-500/30" : "shadow-blue-500/30"}`}
               >
                 <svg
                   className="w-4 h-4"
@@ -366,15 +366,15 @@ export const FormUpdateCityZone = ({
           </div>
 
           {isDrawingMode && (
-            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm text-blue-800 font-medium">
+            <div className="mb-4 p-3 bg-gray-700/50 border border-gray-600 rounded-lg">
+              <p className="text-sm text-pink-400 font-medium">
                 🖱️ حالت ترسیم منطقه: کلیک چپ: اضافه کردن نقطه | راست کلیک: تمام
                 کردن شکل | ESC: لغو
               </p>
             </div>
           )}
 
-          <div className="h-96 rounded-lg overflow-hidden border border-gray-300">
+          <div className="h-96 rounded-lg overflow-hidden border border-gray-600">
             <MapContainer
               key={mapKey}
               center={mapCenter}
@@ -390,11 +390,11 @@ export const FormUpdateCityZone = ({
                 <Polygon
                   positions={drawnPolygon}
                   pathOptions={{
-                    color: "#3b82f6",
+                    color: "#ec4899",
                     weight: 3,
                     opacity: 0.8,
                     fillOpacity: 0.2,
-                    fillColor: "#3b82f6",
+                    fillColor: "#ec4899",
                   }}
                 />
               )}
@@ -406,17 +406,17 @@ export const FormUpdateCityZone = ({
           </div>
 
           {errors.area && (
-            <p className="text-red-500 text-sm mt-2 text-right">
+            <p className="text-red-400 text-sm mt-2 text-right">
               {errors.area.message}
             </p>
           )}
 
           <div className="mt-4 space-y-3">
             {drawnPolygon && (
-              <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+              <div className="p-4 bg-gray-700/30 border border-gray-600 rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
                   <svg
-                    className="w-5 h-5 text-green-600"
+                    className="w-5 h-5 text-green-500"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -428,11 +428,11 @@ export const FormUpdateCityZone = ({
                       d="M5 13l4 4L19 7"
                     />
                   </svg>
-                  <p className="text-sm text-green-800 font-semibold">
+                  <p className="text-sm text-green-400 font-semibold">
                     منطقه شهری ترسیم شد
                   </p>
                 </div>
-                <div className="text-xs text-green-700 space-y-1">
+                <div className="text-xs text-gray-300 space-y-1">
                   <p>• تعداد نقاط: {drawnPolygon.length}</p>
                   <p>• منطقه بر روی نقشه نمایش داده شده و آماده ثبت است</p>
                 </div>
@@ -446,7 +446,7 @@ export const FormUpdateCityZone = ({
           <button
             type="submit"
             disabled={isSubmitting || !isValid}
-            className="px-8 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 disabled:bg-green-300 disabled:cursor-not-allowed transition-colors"
+            className="px-8 py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-semibold rounded-lg hover:from-pink-700 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed transition-all duration-300 shadow-lg shadow-pink-500/30"
           >
             {isSubmitting ? "در حال ویرایش..." : "ویرایش منطقه شهری"}
           </button>

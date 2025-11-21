@@ -16,7 +16,7 @@ import L from "leaflet";
 import { useEffect, useState, useCallback } from "react";
 import React from "react";
 import SelectBox from "../atoms/Select";
-import AsyncSelect from "react-select/async";
+import AsyncSelectBox from "../atoms/AsyncSelectBox";
 import { UploadImage } from "@/components/molecules/UploadFile";
 import MapClickHandler from "@/components/MapClickHandler";
 import "leaflet/dist/leaflet.css";
@@ -146,19 +146,6 @@ const FormCreatePlace = ({
   const [mapKey, setMapKey] = useState(0);
   const [isMapReady, setIsMapReady] = useState(false);
 
-  // Relationship state
-  const [selectedProvince, setSelectedProvince] = useState<SelectOption | null>(
-    null,
-  );
-  const [selectedCity, setSelectedCity] = useState<SelectOption | null>(null);
-  const [selectedCityZone, setSelectedCityZone] = useState<SelectOption | null>(
-    null,
-  );
-  const [selectedCategory, setSelectedCategory] = useState<SelectOption | null>(
-    null,
-  );
-  const [selectedTags, setSelectedTags] = useState<SelectOption[]>([]);
-
   // Categories, tags lists
   const [categories, setCategories] = useState<{ _id: string; name: string }[]>(
     [],
@@ -171,6 +158,7 @@ const FormCreatePlace = ({
     setValue,
     watch,
     trigger,
+    control,
     formState: { errors },
   } = useForm<PlaceFormValues>({
     resolver: zodResolver(placeSchema),
@@ -264,8 +252,8 @@ const FormCreatePlace = ({
   const loadCitiesOptions = async (
     inputValue?: string,
   ): Promise<SelectOption[]> => {
-    console.log("loadCitiesOptions called with province:", selectedProvince);
-    if (!selectedProvince?.value) {
+    const selectedProvinceValue = watch("province");
+    if (!selectedProvinceValue) {
       console.log("No province selected, returning empty array");
       return [];
     }
@@ -278,7 +266,7 @@ const FormCreatePlace = ({
     } = {
       limit: 20,
       page: 1,
-      provinceId: selectedProvince.value,
+      provinceId: selectedProvinceValue,
     };
     if (inputValue) {
       setParams.name = inputValue;
@@ -314,8 +302,8 @@ const FormCreatePlace = ({
   const loadCityZonesOptions = async (
     inputValue?: string,
   ): Promise<SelectOption[]> => {
-    console.log("loadCityZonesOptions called with city:", selectedCity);
-    if (!selectedCity?.value) {
+    const selectedCityValue = watch("city");
+    if (!selectedCityValue) {
       console.log("No city selected, returning empty array");
       return [];
     }
@@ -328,7 +316,7 @@ const FormCreatePlace = ({
     } = {
       limit: 20,
       page: 1,
-      cityId: selectedCity.value,
+      cityId: selectedCityValue,
     };
     if (inputValue) {
       setParams.name = inputValue;
@@ -418,35 +406,17 @@ const FormCreatePlace = ({
     }
   };
 
-  // Handle province selection
-  const handleProvinceSelect = async (option: SelectOption | null) => {
-    console.log("Province selected:", option);
-    setSelectedProvince(option);
-    setValue("province", option?.value || "", { shouldValidate: true });
-    setValue("city", "", { shouldValidate: true });
-    setValue("city_zone", "", { shouldValidate: true });
-    setSelectedCity(null);
-    setSelectedCityZone(null);
-
-    // If a province is selected, fetch the associated cities
-    if (option) {
-      await loadCitiesOptions();
-    }
-
-    // If a province is selected, try to center the map on it
-    if (option) {
-      console.log("Setting province with value:", option.value);
-      // In a real app, you would get the province's center point from the database
-      // For now, we'll just use a hardcoded value for Tehran province
-      setMapCenter([35.6892, 51.389]);
-      setMapZoom(8);
-
-      // Don't recreate the map immediately, use setTimeout to allow React to finish its current update cycle
-      setTimeout(() => {
-        setMapKey((prev) => prev + 1);
-      }, 100); // Increased timeout to ensure React has time to update
-    }
-  };
+  // Handle province selection (now handled by the AsyncSelectBox)
+  // When province changes, city and city_zone should be cleared
+  useEffect(() => {
+    const subscription = watch((value, { name }) => {
+      if (name === "province" && !value.province) {
+        setValue("city", "", { shouldValidate: true });
+        setValue("city_zone", "", { shouldValidate: true });
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, setValue]);
 
   // Handle city selection
   const handleCitySelect = async (option: SelectOption | null) => {
@@ -685,9 +655,9 @@ const FormCreatePlace = ({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-      <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
-          <div className="w-2 h-6 bg-blue-500 rounded-full ml-2"></div>
+      <div className="bg-gray-800/80 backdrop-blur-xl rounded-xl border border-gray-700 shadow-lg p-6 mb-6">
+        <h2 className="text-xl font-bold text-white mb-6 flex items-center">
+          <div className="w-2 h-6 bg-pink-500 rounded-full ml-2"></div>
           اطلاعات اصلی
         </h2>
 
@@ -709,10 +679,8 @@ const FormCreatePlace = ({
           />
 
           <div className="col-span-1">
-            <span className="text-sm font-medium text-gray-700 block mb-2">
-              تصویر شاخص
-            </span>
             <UploadImage
+              label="تصویر شاخص"
               inputName="thumbnail"
               setUploadedImage={(uploaded: string) =>
                 setValue("thumbnail", uploaded, { shouldValidate: true })
@@ -721,18 +689,16 @@ const FormCreatePlace = ({
               token={token}
             />
             {errors.thumbnail && (
-              <p className="text-red-500 text-xs mt-1">
+              <p className="text-red-400 text-xs mt-1">
                 {errors.thumbnail.message}
               </p>
             )}
           </div>
 
           <div className="col-span-2">
-            <span className="text-sm font-medium text-gray-700 block mb-2">
-              گالری تصاویر
-            </span>
             <div className="flex flex-wrap gap-4">
               <UploadImage
+                label="گالری تصاویر"
                 inputName="gallery"
                 setUploadedImage={(uploaded: string) => {
                   setGalleryImages((prev) => [...prev, uploaded]);
@@ -745,14 +711,14 @@ const FormCreatePlace = ({
               />
               {galleryImages.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-2">
-                  <p className="w-full text-sm text-gray-500">
+                  <p className="w-full text-sm text-gray-400">
                     {galleryImages.length} تصویر آپلود شده
                   </p>
                 </div>
               )}
             </div>
             {errors.gallery && (
-              <p className="text-red-500 text-xs mt-1">
+              <p className="text-red-400 text-xs mt-1">
                 {errors.gallery.message}
               </p>
             )}
@@ -769,238 +735,54 @@ const FormCreatePlace = ({
         />
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
-          <div className="w-2 h-6 bg-blue-500 rounded-full ml-2"></div>
+      <div className="bg-gray-800/80 backdrop-blur-xl rounded-xl border border-gray-700 shadow-lg p-6 mb-6">
+        <h2 className="text-xl font-bold text-white mb-6 flex items-center">
+          <div className="w-2 h-6 bg-pink-500 rounded-full ml-2"></div>
           موقعیت اداری
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           {/* Province Selection */}
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-slate-700 text-right">
-              انتخاب استان *
-            </label>
-            <AsyncSelect
-              cacheOptions={false}
-              defaultOptions
-              value={selectedProvince}
-              loadOptions={loadProvincesOptions}
-              onChange={(newValue) =>
-                handleProvinceSelect(newValue as SelectOption | null)
-              }
-              placeholder="استان را انتخاب کنید"
-              noOptionsMessage={() => "استانی یافت نشد"}
-              loadingMessage={() => "در حال بارگذاری..."}
-              isRtl={true}
-              isClearable
-              styles={{
-                control: (provided: any, state: any) => ({
-                  ...provided,
-                  minHeight: "48px",
-                  backgroundColor: errors.province ? "#fef2f2" : "white",
-                  borderColor: errors.province
-                    ? state.isFocused
-                      ? "#ef4444"
-                      : "#fca5a5"
-                    : state.isFocused
-                      ? "#3b82f6"
-                      : "#cbd5e1",
-                  borderRadius: "12px",
-                  direction: "rtl",
-                }),
-                valueContainer: (provided: any) => ({
-                  ...provided,
-                  padding: "2px 16px",
-                  direction: "rtl",
-                }),
-                placeholder: (provided: any) => ({
-                  ...provided,
-                  color: "#94a3b8",
-                  direction: "rtl",
-                  textAlign: "right",
-                }),
-                singleValue: (provided: any) => ({
-                  ...provided,
-                  color: "#1e293b",
-                  direction: "rtl",
-                  textAlign: "right",
-                }),
-                option: (provided: any, state: any) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected
-                    ? "#3b82f6"
-                    : state.isFocused
-                      ? "#f1f5f9"
-                      : "transparent",
-                  color: state.isSelected ? "white" : "#1e293b",
-                  direction: "rtl",
-                  textAlign: "right",
-                }),
-              }}
-            />
-            {errors.province && (
-              <span className="text-red-500 text-xs font-medium text-right mt-1">
-                {errors.province.message}
-              </span>
-            )}
-          </div>
+          <AsyncSelectBox
+            name="province"
+            control={control}
+            label="انتخاب استان *"
+            setValue={setValue}
+            loadOptions={loadProvincesOptions}
+            defaultOptions
+            placeholder="استان را انتخاب کنید"
+            errMsg={errors.province?.message}
+          />
 
           {/* City Selection */}
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-slate-700 text-right">
-              انتخاب شهر *
-            </label>
-            <AsyncSelect
-              cacheOptions={false}
-              defaultOptions={selectedProvince !== null}
-              value={selectedCity}
-              loadOptions={loadCitiesOptions}
-              onChange={(newValue) =>
-                handleCitySelect(newValue as SelectOption | null)
-              }
-              placeholder="شهر را انتخاب کنید"
-              key={selectedProvince?.value || "no-province"}
-              noOptionsMessage={() =>
-                selectedProvince
-                  ? "شهری یافت نشد"
-                  : "ابتدا استان را انتخاب کنید"
-              }
-              loadingMessage={() => "در حال بارگذاری..."}
-              isRtl={true}
-              isClearable
-              isDisabled={!selectedProvince}
-              styles={{
-                control: (provided: any, state: any) => ({
-                  ...provided,
-                  minHeight: "48px",
-                  backgroundColor: errors.city ? "#fef2f2" : "white",
-                  borderColor: errors.city
-                    ? state.isFocused
-                      ? "#ef4444"
-                      : "#fca5a5"
-                    : state.isFocused
-                      ? "#3b82f6"
-                      : "#cbd5e1",
-                  borderRadius: "12px",
-                  direction: "rtl",
-                }),
-                valueContainer: (provided: any) => ({
-                  ...provided,
-                  padding: "2px 16px",
-                  direction: "rtl",
-                }),
-                placeholder: (provided: any) => ({
-                  ...provided,
-                  color: "#94a3b8",
-                  direction: "rtl",
-                  textAlign: "right",
-                }),
-                singleValue: (provided: any) => ({
-                  ...provided,
-                  color: "#1e293b",
-                  direction: "rtl",
-                  textAlign: "right",
-                }),
-                option: (provided: any, state: any) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected
-                    ? "#3b82f6"
-                    : state.isFocused
-                      ? "#f1f5f9"
-                      : "transparent",
-                  color: state.isSelected ? "white" : "#1e293b",
-                  direction: "rtl",
-                  textAlign: "right",
-                }),
-              }}
-            />
-            {errors.city && (
-              <span className="text-red-500 text-xs font-medium text-right mt-1">
-                {errors.city.message}
-              </span>
-            )}
-          </div>
+          <AsyncSelectBox
+            name="city"
+            control={control}
+            label="انتخاب شهر *"
+            setValue={setValue}
+            loadOptions={loadCitiesOptions}
+            defaultOptions={false}
+            placeholder="شهر را انتخاب کنید"
+            errMsg={errors.city?.message}
+          />
 
           {/* City Zone Selection */}
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-slate-700 text-right">
-              انتخاب منطقه
-            </label>
-            <AsyncSelect
-              cacheOptions={false}
-              defaultOptions={selectedCity !== null}
-              value={selectedCityZone}
-              loadOptions={loadCityZonesOptions}
-              onChange={(newValue) =>
-                handleCityZoneSelect(newValue as SelectOption | null)
-              }
-              placeholder="منطقه را انتخاب کنید"
-              key={selectedCity?.value || "no-city"}
-              noOptionsMessage={() =>
-                selectedCity ? "منطقه‌ای یافت نشد" : "ابتدا شهر را انتخاب کنید"
-              }
-              loadingMessage={() => "در حال بارگذاری..."}
-              isRtl={true}
-              isClearable
-              isDisabled={!selectedCity}
-              styles={{
-                control: (provided: any, state: any) => ({
-                  ...provided,
-                  minHeight: "48px",
-                  backgroundColor: errors.city_zone ? "#fef2f2" : "white",
-                  borderColor: errors.city_zone
-                    ? state.isFocused
-                      ? "#ef4444"
-                      : "#fca5a5"
-                    : state.isFocused
-                      ? "#3b82f6"
-                      : "#cbd5e1",
-                  borderRadius: "12px",
-                  direction: "rtl",
-                }),
-                valueContainer: (provided: any) => ({
-                  ...provided,
-                  padding: "2px 16px",
-                  direction: "rtl",
-                }),
-                placeholder: (provided: any) => ({
-                  ...provided,
-                  color: "#94a3b8",
-                  direction: "rtl",
-                  textAlign: "right",
-                }),
-                singleValue: (provided: any) => ({
-                  ...provided,
-                  color: "#1e293b",
-                  direction: "rtl",
-                  textAlign: "right",
-                }),
-                option: (provided: any, state: any) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected
-                    ? "#3b82f6"
-                    : state.isFocused
-                      ? "#f1f5f9"
-                      : "transparent",
-                  color: state.isSelected ? "white" : "#1e293b",
-                  direction: "rtl",
-                  textAlign: "right",
-                }),
-              }}
-            />
-            {errors.city_zone && (
-              <span className="text-red-500 text-xs font-medium text-right mt-1">
-                {errors.city_zone.message}
-              </span>
-            )}
-          </div>
+          <AsyncSelectBox
+            name="city_zone"
+            control={control}
+            label="انتخاب منطقه"
+            setValue={setValue}
+            loadOptions={loadCityZonesOptions}
+            defaultOptions={false}
+            placeholder="منطقه را انتخاب کنید"
+            errMsg={errors.city_zone?.message}
+          />
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
-          <div className="w-2 h-6 bg-blue-500 rounded-full ml-2"></div>
+      <div className="bg-gray-800/80 backdrop-blur-xl rounded-xl border border-gray-700 shadow-lg p-6 mb-6">
+        <h2 className="text-xl font-bold text-white mb-6 flex items-center">
+          <div className="w-2 h-6 bg-pink-500 rounded-full ml-2"></div>
           موقعیت مکانی
         </h2>
 
@@ -1013,9 +795,9 @@ const FormCreatePlace = ({
         />
 
         {/* Map Section */}
-        <div className="bg-gray-100 p-6 border rounded-lg mt-4">
+        <div className="bg-gray-800/50 p-6 border border-gray-700 rounded-lg mt-4">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-700">
+            <h2 className="text-lg font-semibold text-white">
               ترسیم محدوده و انتخاب مرکز بر روی نقشه
             </h2>
             <div className="flex gap-2">
@@ -1023,7 +805,7 @@ const FormCreatePlace = ({
                 <button
                   type="button"
                   onClick={clearDrawnPolygon}
-                  className="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-sm flex items-center gap-1 hover:bg-red-100 transition-colors"
+                  className="bg-red-900/30 text-red-400 px-3 py-1.5 rounded-lg text-sm flex items-center gap-1 hover:bg-red-900/50 transition-colors border border-red-800"
                 >
                   <svg
                     className="w-4 h-4"
@@ -1045,7 +827,7 @@ const FormCreatePlace = ({
                 <button
                   type="button"
                   onClick={clearCenterPoint}
-                  className="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-sm flex items-center gap-1 hover:bg-red-100 transition-colors"
+                  className="bg-red-900/30 text-red-400 px-3 py-1.5 rounded-lg text-sm flex items-center gap-1 hover:bg-red-900/50 transition-colors border border-red-800"
                 >
                   <svg
                     className="w-4 h-4"
@@ -1070,10 +852,11 @@ const FormCreatePlace = ({
             <button
               type="button"
               onClick={toggleDrawingMode}
-              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${isDrawingMode
-                ? "bg-blue-500 text-white"
-                : "bg-white text-gray-700 border"
-                }`}
+              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
+                isDrawingMode
+                  ? "bg-pink-600 text-white"
+                  : "bg-gray-700 text-white border border-gray-600 hover:bg-gray-600"
+              }`}
             >
               <svg
                 className="w-4 h-4"
@@ -1094,10 +877,11 @@ const FormCreatePlace = ({
             <button
               type="button"
               onClick={toggleCenterMode}
-              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${isCenterMode
-                ? "bg-purple-500 text-white"
-                : "bg-white text-gray-700 border"
-                }`}
+              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
+                isCenterMode
+                  ? "bg-purple-600 text-white"
+                  : "bg-gray-700 text-white border border-gray-600 hover:bg-gray-600"
+              }`}
             >
               <svg
                 className="w-4 h-4"
@@ -1122,7 +906,7 @@ const FormCreatePlace = ({
             </button>
           </div>
 
-          <div className="h-[400px] rounded-lg overflow-hidden border">
+          <div className="h-[400px] rounded-lg overflow-hidden border border-gray-600">
             <MapContainer
               key={mapKey}
               center={mapCenter}
@@ -1142,11 +926,11 @@ const FormCreatePlace = ({
                 <Polygon
                   positions={drawnPolygon}
                   pathOptions={{
-                    color: "#3b82f6",
+                    color: "#FF007A", // Pink
                     weight: 3,
                     opacity: 0.8,
                     fillOpacity: 0.2,
-                    fillColor: "#3b82f6",
+                    fillColor: "#FF007A", // Pink
                   }}
                 />
               )}
@@ -1227,156 +1011,44 @@ const FormCreatePlace = ({
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
-          <div className="w-2 h-6 bg-blue-500 rounded-full ml-2"></div>
+      <div className="bg-gray-800/80 backdrop-blur-xl rounded-xl border border-gray-700 shadow-lg p-6 mb-6">
+        <h2 className="text-xl font-bold text-white mb-6 flex items-center">
+          <div className="w-2 h-6 bg-pink-500 rounded-full ml-2"></div>
           دسته‌بندی و برچسب‌ها
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           {/* Category Selection */}
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-slate-700 text-right">
-              دسته‌بندی *
-            </label>
-            <AsyncSelect
-              cacheOptions
-              defaultOptions
-              value={selectedCategory}
-              loadOptions={loadCategoriesOptions}
-              onChange={(newValue) =>
-                handleCategorySelect(newValue as SelectOption | null)
-              }
-              placeholder="دسته‌بندی را انتخاب کنید"
-              noOptionsMessage={() => "دسته‌بندی یافت نشد"}
-              loadingMessage={() => "در حال بارگذاری..."}
-              isRtl={true}
-              isClearable
-              styles={{
-                control: (provided: any, state: any) => ({
-                  ...provided,
-                  minHeight: "48px",
-                  backgroundColor: errors.category ? "#fef2f2" : "white",
-                  borderColor: errors.category
-                    ? state.isFocused
-                      ? "#ef4444"
-                      : "#fca5a5"
-                    : state.isFocused
-                      ? "#3b82f6"
-                      : "#cbd5e1",
-                  borderRadius: "12px",
-                  direction: "rtl",
-                }),
-                valueContainer: (provided: any) => ({
-                  ...provided,
-                  padding: "2px 16px",
-                  direction: "rtl",
-                }),
-                placeholder: (provided: any) => ({
-                  ...provided,
-                  color: "#94a3b8",
-                  direction: "rtl",
-                  textAlign: "right",
-                }),
-                singleValue: (provided: any) => ({
-                  ...provided,
-                  color: "#1e293b",
-                  direction: "rtl",
-                  textAlign: "right",
-                }),
-                option: (provided: any, state: any) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected
-                    ? "#3b82f6"
-                    : state.isFocused
-                      ? "#f1f5f9"
-                      : "transparent",
-                  color: state.isSelected ? "white" : "#1e293b",
-                  direction: "rtl",
-                  textAlign: "right",
-                }),
-              }}
-            />
-            {errors.category && (
-              <span className="text-red-500 text-xs font-medium text-right mt-1">
-                {errors.category.message}
-              </span>
-            )}
-          </div>
+          <AsyncSelectBox
+            name="category"
+            control={control}
+            label="دسته‌بندی *"
+            setValue={setValue}
+            loadOptions={loadCategoriesOptions}
+            defaultOptions
+            placeholder="دسته‌بندی را انتخاب کنید"
+            errMsg={errors.category?.message}
+          />
 
           {/* Tags Selection */}
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-slate-700 text-right">
-              برچسب‌ها
-            </label>
-            <AsyncSelect
-              cacheOptions
-              defaultOptions
-              isMulti
-              value={selectedTags}
-              loadOptions={loadTagsOptions}
-              onChange={(newValue) =>
-                handleTagsSelect(newValue as readonly SelectOption[])
-              }
-              placeholder="برچسب‌ها را انتخاب کنید"
-              noOptionsMessage={() => "برچسبی یافت نشد"}
-              loadingMessage={() => "در حال بارگذاری..."}
-              isRtl={true}
-              styles={{
-                control: (provided: any, state: any) => ({
-                  ...provided,
-                  minHeight: "48px",
-                  backgroundColor: errors.tags ? "#fef2f2" : "white",
-                  borderColor: errors.tags
-                    ? state.isFocused
-                      ? "#ef4444"
-                      : "#fca5a5"
-                    : state.isFocused
-                      ? "#3b82f6"
-                      : "#cbd5e1",
-                  borderRadius: "12px",
-                  direction: "rtl",
-                }),
-                valueContainer: (provided: any) => ({
-                  ...provided,
-                  padding: "2px 16px",
-                  direction: "rtl",
-                }),
-                placeholder: (provided: any) => ({
-                  ...provided,
-                  color: "#94a3b8",
-                  direction: "rtl",
-                  textAlign: "right",
-                }),
-                multiValue: (provided: any) => ({
-                  ...provided,
-                  direction: "rtl",
-                }),
-                option: (provided: any, state: any) => ({
-                  ...provided,
-                  backgroundColor: state.isSelected
-                    ? "#3b82f6"
-                    : state.isFocused
-                      ? "#f1f5f9"
-                      : "transparent",
-                  color: state.isSelected ? "white" : "#1e293b",
-                  direction: "rtl",
-                  textAlign: "right",
-                }),
-              }}
-            />
-            {errors.tags && (
-              <span className="text-red-500 text-xs font-medium text-right mt-1">
-                {errors.tags.message}
-              </span>
-            )}
-          </div>
+          <AsyncSelectBox
+            name="tags"
+            control={control}
+            label="برچسب‌ها"
+            setValue={setValue}
+            loadOptions={loadTagsOptions}
+            defaultOptions
+            placeholder="برچسب‌ها را انتخاب کنید"
+            errMsg={errors.tags?.message}
+            isMulti={true}
+            labelAsValue={true} // This is for multi-select
+          />
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
-          <div className="w-2 h-6 bg-blue-500 rounded-full ml-2"></div>
+      <div className="bg-gray-800/80 backdrop-blur-xl rounded-xl border border-gray-700 shadow-lg p-6 mb-6">
+        <h2 className="text-xl font-bold text-white mb-6 flex items-center">
+          <div className="w-2 h-6 bg-pink-500 rounded-full ml-2"></div>
           اطلاعات تماس و ساعات کاری
         </h2>
 
@@ -1416,16 +1088,16 @@ const FormCreatePlace = ({
         />
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
-          <div className="w-2 h-6 bg-blue-500 rounded-full ml-2"></div>
+      <div className="bg-gray-800/80 backdrop-blur-xl rounded-xl border border-gray-700 shadow-lg p-6 mb-6">
+        <h2 className="text-xl font-bold text-white mb-6 flex items-center">
+          <div className="w-2 h-6 bg-pink-500 rounded-full ml-2"></div>
           وضعیت
         </h2>
 
         <div>
           <label
             htmlFor="status"
-            className="block text-sm font-medium text-gray-700 mb-2 text-right"
+            className="block text-sm font-medium text-gray-300 mb-2 text-right"
           >
             وضعیت *
           </label>
@@ -1433,22 +1105,29 @@ const FormCreatePlace = ({
             id="status"
             {...register("status")}
             className={`
-              w-full px-4 py-3 text-gray-800 bg-white border rounded-xl
+              w-full px-4 py-3 text-white bg-gray-700 border rounded-xl
               text-right transition-all duration-200 ease-in-out
-              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 focus:border-blue-500
-              hover:border-gray-400
-              ${errors.status
-                ? "border-red-300 bg-red-50/30 focus:ring-red-500 focus:border-red-500"
-                : "border-gray-300 hover:bg-gray-50/50"
+              focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-0 focus:border-pink-500
+              hover:border-gray-500
+              ${
+                errors.status
+                  ? "border-red-500 bg-red-900/30 focus:ring-red-500 focus:border-red-500"
+                  : "border-gray-600 hover:bg-gray-600/50"
               }
             `}
           >
-            <option value="draft">پیش‌نویس</option>
-            <option value="active">منتشر شده</option>
-            <option value="archived">آرشیو شده</option>
+            <option value="draft" className="bg-gray-700 text-white">
+              پیش‌نویس
+            </option>
+            <option value="active" className="bg-gray-700 text-white">
+              منتشر شده
+            </option>
+            <option value="archived" className="bg-gray-700 text-white">
+              آرشیو شده
+            </option>
           </select>
           {errors.status && (
-            <span className="text-red-500 text-xs font-medium text-right mt-1 flex items-center gap-1">
+            <span className="text-red-400 text-xs font-medium text-right mt-1 flex items-center gap-1">
               <svg
                 className="w-3 h-3 flex-shrink-0"
                 fill="currentColor"
@@ -1471,14 +1150,14 @@ const FormCreatePlace = ({
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-6 py-3 bg-gray-200 text-gray-800 rounded-xl hover:bg-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
+          className="px-6 py-3 bg-gray-700 text-white rounded-xl hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
         >
           انصراف
         </button>
         <button
           type="submit"
           disabled={loading}
-          className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-70 flex items-center gap-2"
+          className="px-6 py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl hover:from-pink-700 hover:to-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 disabled:opacity-70 flex items-center gap-2"
         >
           {loading && (
             <svg

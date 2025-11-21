@@ -12,23 +12,24 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import React from "react";
 import { ReqType } from "@/types/declarations/selectInp";
+import AsyncSelectBox from "../atoms/AsyncSelectBox";
 
 // Dynamically import map components to avoid SSR issues
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
-  { ssr: false }
+  { ssr: false },
 );
 const TileLayer = dynamic(
   () => import("react-leaflet").then((mod) => mod.TileLayer),
-  { ssr: false }
+  { ssr: false },
 );
 const Marker = dynamic(
   () => import("react-leaflet").then((mod) => mod.Marker),
-  { ssr: false }
+  { ssr: false },
 );
 const useMapEvents = dynamic(
   () => import("react-leaflet").then((mod) => mod.useMapEvents),
-  { ssr: false }
+  { ssr: false },
 );
 
 // Define Zod schema for form validation
@@ -119,7 +120,7 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
   const [loading, setLoading] = useState(false);
   const [loadingInitial, setLoadingInitial] = useState(true);
   const [categories, setCategories] = useState<{ _id: string; name: string }[]>(
-    []
+    [],
   );
   const [markerPosition, setMarkerPosition] = useState<[number, number]>([
     35.6892, 51.389,
@@ -132,6 +133,7 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
     setValue,
     watch,
     reset,
+    control,
     formState: { errors },
   } = useForm<PlaceFormValues>({
     resolver: zodResolver(placeSchema),
@@ -304,9 +306,9 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-      <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
-          <div className="w-2 h-6 bg-blue-500 rounded-full ml-2"></div>
+      <div className="bg-gray-800/80 backdrop-blur-xl rounded-xl border border-gray-700 shadow-lg p-6 mb-6">
+        <h2 className="text-xl font-bold text-white mb-6 flex items-center">
+          <div className="w-2 h-6 bg-pink-500 rounded-full ml-2"></div>
           اطلاعات اصلی
         </h2>
 
@@ -338,9 +340,9 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
         />
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
-          <div className="w-2 h-6 bg-blue-500 rounded-full ml-2"></div>
+      <div className="bg-gray-800/80 backdrop-blur-xl rounded-xl border border-gray-700 shadow-lg p-6 mb-6">
+        <h2 className="text-xl font-bold text-white mb-6 flex items-center">
+          <div className="w-2 h-6 bg-pink-500 rounded-full ml-2"></div>
           موقعیت مکانی
         </h2>
 
@@ -352,7 +354,7 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
           placeholder="آدرس کامل مکان"
         />
 
-        <div className="mt-6 rounded-xl overflow-hidden border border-gray-300 h-[400px] relative">
+        <div className="mt-6 rounded-xl overflow-hidden border border-gray-600 h-[400px] relative">
           {typeof window !== "undefined" && (
             <MapContainer
               center={markerPosition}
@@ -390,9 +392,9 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
-          <div className="w-2 h-6 bg-blue-500 rounded-full ml-2"></div>
+      <div className="bg-gray-800/80 backdrop-blur-xl rounded-xl border border-gray-700 shadow-lg p-6 mb-6">
+        <h2 className="text-xl font-bold text-white mb-6 flex items-center">
+          <div className="w-2 h-6 bg-pink-500 rounded-full ml-2"></div>
           اطلاعات تماس و ساعات کاری
         </h2>
 
@@ -432,64 +434,37 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
         />
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center">
-          <div className="w-2 h-6 bg-blue-500 rounded-full ml-2"></div>
+      <div className="bg-gray-800/80 backdrop-blur-xl rounded-xl border border-gray-700 shadow-lg p-6 mb-6">
+        <h2 className="text-xl font-bold text-white mb-6 flex items-center">
+          <div className="w-2 h-6 bg-pink-500 rounded-full ml-2"></div>
           طبقه‌بندی و وضعیت
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label
-              htmlFor="category"
-              className="block text-sm font-medium text-gray-700 mb-2 text-right"
-            >
-              دسته‌بندی
-            </label>
-            <select
-              id="category"
-              {...register("category")}
-              className={`
-                w-full px-4 py-3 text-gray-800 bg-white border rounded-xl
-                text-right transition-all duration-200 ease-in-out
-                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 focus:border-blue-500
-                hover:border-gray-400
-                ${
-                  errors.category
-                    ? "border-red-300 bg-red-50/30 focus:ring-red-500 focus:border-red-500"
-                    : "border-gray-300 hover:bg-gray-50/50"
-                }
-              `}
-            >
-              <option value="">انتخاب دسته‌بندی</option>
-              {categories.map((category) => (
-                <option key={category._id} value={category._id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-            {errors.category && (
-              <span className="text-red-500 text-xs font-medium text-right mt-1 flex items-center gap-1">
-                <svg
-                  className="w-3 h-3 flex-shrink-0"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                {errors.category.message}
-              </span>
-            )}
-          </div>
+          <AsyncSelectBox
+            name="category"
+            control={control}
+            label="دسته‌بندی"
+            setValue={setValue}
+            loadOptions={async () =>
+              categories.map((category) => ({
+                value: category._id,
+                label: category.name,
+              }))
+            }
+            defaultOptions={categories.map((category) => ({
+              value: category._id,
+              label: category.name,
+            }))}
+            placeholder="دسته‌بندی را انتخاب کنید"
+            errMsg={errors.category?.message}
+            labelAsValue={false}
+          />
 
           <div>
             <label
               htmlFor="status"
-              className="block text-sm font-medium text-gray-700 mb-2 text-right"
+              className="block text-sm font-medium text-gray-300 mb-2 text-right"
             >
               وضعیت *
             </label>
@@ -497,23 +472,29 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
               id="status"
               {...register("status")}
               className={`
-                w-full px-4 py-3 text-gray-800 bg-white border rounded-xl
+                w-full px-4 py-3 text-white bg-gray-700 border rounded-xl
                 text-right transition-all duration-200 ease-in-out
-                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 focus:border-blue-500
-                hover:border-gray-400
+                focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-0 focus:border-pink-500
+                hover:border-gray-500
                 ${
                   errors.status
-                    ? "border-red-300 bg-red-50/30 focus:ring-red-500 focus:border-red-500"
-                    : "border-gray-300 hover:bg-gray-50/50"
+                    ? "border-red-500 bg-red-900/30 focus:ring-red-500 focus:border-red-500"
+                    : "border-gray-600 hover:bg-gray-600/50"
                 }
               `}
             >
-              <option value="draft">پیش‌نویس</option>
-              <option value="active">منتشر شده</option>
-              <option value="archived">آرشیو شده</option>
+              <option value="draft" className="bg-gray-700 text-white">
+                پیش‌نویس
+              </option>
+              <option value="active" className="bg-gray-700 text-white">
+                منتشر شده
+              </option>
+              <option value="archived" className="bg-gray-700 text-white">
+                آرشیو شده
+              </option>
             </select>
             {errors.status && (
-              <span className="text-red-500 text-xs font-medium text-right mt-1 flex items-center gap-1">
+              <span className="text-red-400 text-xs font-medium text-right mt-1 flex items-center gap-1">
                 <svg
                   className="w-3 h-3 flex-shrink-0"
                   fill="currentColor"
@@ -537,14 +518,14 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-6 py-3 bg-gray-200 text-gray-800 rounded-xl hover:bg-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
+          className="px-6 py-3 bg-gray-700 text-white rounded-xl hover:bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
         >
           انصراف
         </button>
         <button
           type="submit"
           disabled={loading}
-          className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-70 flex items-center gap-2"
+          className="px-6 py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl hover:from-pink-700 hover:to-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-2 disabled:opacity-70 flex items-center gap-2"
         >
           {loading && (
             <svg
