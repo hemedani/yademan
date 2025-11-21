@@ -86,7 +86,7 @@ export default function UserDropdown() {
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
         className={`
-          flex items-center space-x-3 rtl:space-x-reverse p-2 rounded-lg
+          flex items-center space-x-3 rtl: p-2 rounded-lg
           transition-all duration-200 group focus:outline-none focus:ring-2
           focus:ring-blue-500 focus:ring-offset-2 hover:bg-gray-50
           ${isOpen ? "bg-gray-50 ring-2 ring-blue-500 ring-offset-2" : ""}
@@ -118,7 +118,7 @@ export default function UserDropdown() {
         </div>
 
         {/* User Info */}
-        <div className="hidden sm:flex items-center space-x-2 rtl:space-x-reverse">
+        <div className="hidden sm:flex items-center space-x-2 rtl:">
           <div className="text-left rtl:text-right">
             <p className="text-sm font-medium text-gray-900 truncate max-w-32">
               {displayName}

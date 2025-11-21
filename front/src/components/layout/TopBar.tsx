@@ -178,7 +178,7 @@ export default function TopBar({
         transition={{ duration: 0.3 }}
       >
         {/* Icons Row */}
-        <div className="flex items-center space-x-1 space-x-reverse">
+        <div className="flex items-center space-x-1 ">
           {/* Filter Button */}
           <motion.button
             onClick={handleFilterClick}
@@ -358,7 +358,7 @@ export default function TopBar({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.2 }}
             >
-              <div className="flex items-center space-x-3 space-x-reverse">
+              <div className="flex items-center space-x-3 ">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#FF007A] to-[#A020F0] flex items-center justify-center text-white font-semibold text-lg shadow-lg">
                   {initials || "U"}
                 </div>
@@ -487,7 +487,7 @@ export default function TopBar({
                     <h4 className="text-sm font-medium text-white">
                       {event.title}
                     </h4>
-                    <div className="mt-1 flex items-center space-x-2 space-x-reverse text-xs text-[#a0a0a0]">
+                    <div className="mt-1 flex items-center space-x-2  text-xs text-[#a0a0a0]">
                       <svg
                         className="w-4 h-4 text-[#a0a0a0]"
                         fill="none"
@@ -503,7 +503,7 @@ export default function TopBar({
                       </svg>
                       <span>{formatDate(event.date)}</span>
                     </div>
-                    <div className="mt-1 flex items-center space-x-2 space-x-reverse text-xs text-[#a0a0a0]">
+                    <div className="mt-1 flex items-center space-x-2  text-xs text-[#a0a0a0]">
                       <svg
                         className="w-4 h-4 text-[#a0a0a0]"
                         fill="none"

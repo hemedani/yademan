@@ -258,7 +258,7 @@ const LocationList: React.FC<LocationListProps> = ({
 
                   {/* Rating */}
                   <div className="flex items-center mb-3">
-                    <div className="flex items-center space-x-1 space-x-reverse">
+                    <div className="flex items-center space-x-1 ">
                       {renderStars(location.rating)}
                     </div>
                     <span className="mr-2 text-sm sm:text-base text-gray-600">
