@@ -47,6 +47,22 @@ interface MapState {
     distance?: number;
   };
 
+  // Pathfinding
+  isPathfindingActive: boolean;
+  pathfindingStartLocation: [number, number] | null;
+  pathfindingPlaces: {
+    coordinates: [number, number];
+    name: string;
+    id: string;
+  }[];
+  pathfindingPath: {
+    coordinates: [number, number];
+    name: string;
+    id: string;
+  }[];
+  pathfindingTotalDistance: number;
+  pathfindingRouteGeometry: [number, number][];
+
   // Actions
   setMap: (map: maplibregl.Map | null) => void;
   setCenter: (center: MapCenter) => void;
@@ -63,6 +79,19 @@ interface MapState {
   setSelectedLocationId: (id: string | null) => void;
   setSearchQuery: (query: string) => void;
   setFilters: (filters: Partial<MapState["filters"]>) => void;
+
+  // Pathfinding actions
+  setIsPathfindingActive: (active: boolean) => void;
+  setPathfindingStartLocation: (location: [number, number] | null) => void;
+  setPathfindingPlaces: (
+    places: { coordinates: [number, number]; name: string; id: string }[],
+  ) => void;
+  setPathfindingPath: (
+    path: { coordinates: [number, number]; name: string; id: string }[],
+  ) => void;
+  setPathfindingTotalDistance: (distance: number) => void;
+  setPathfindingRouteGeometry: (geometry: [number, number][]) => void;
+  resetPathfinding: () => void;
 
   // Convenience methods
   flyTo: (center: MapCenter, zoom?: number) => void;
@@ -101,6 +130,12 @@ export const useMapStore = create<MapState>()(
         selectedLocationId: null,
         searchQuery: "",
         filters: {},
+        isPathfindingActive: false,
+        pathfindingStartLocation: null,
+        pathfindingPlaces: [],
+        pathfindingPath: [],
+        pathfindingTotalDistance: 0,
+        pathfindingRouteGeometry: [],
 
         // Basic setters
         setMap: (map) => set({ map }),
@@ -122,6 +157,27 @@ export const useMapStore = create<MapState>()(
           set((state) => ({
             filters: { ...state.filters, ...newFilters },
           })),
+
+        // Pathfinding setters
+        setIsPathfindingActive: (isPathfindingActive) =>
+          set({ isPathfindingActive }),
+        setPathfindingStartLocation: (pathfindingStartLocation) =>
+          set({ pathfindingStartLocation }),
+        setPathfindingPlaces: (pathfindingPlaces) => set({ pathfindingPlaces }),
+        setPathfindingPath: (pathfindingPath) => set({ pathfindingPath }),
+        setPathfindingTotalDistance: (pathfindingTotalDistance) =>
+          set({ pathfindingTotalDistance }),
+        setPathfindingRouteGeometry: (pathfindingRouteGeometry) =>
+          set({ pathfindingRouteGeometry }),
+        resetPathfinding: () =>
+          set({
+            isPathfindingActive: false,
+            pathfindingStartLocation: null,
+            pathfindingPlaces: [],
+            pathfindingPath: [],
+            pathfindingTotalDistance: 0,
+            pathfindingRouteGeometry: [],
+          }),
 
         // Convenience methods
         flyTo: (center, zoom) => {
