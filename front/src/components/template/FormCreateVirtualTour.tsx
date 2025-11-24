@@ -62,14 +62,9 @@ export const FormCreateVirtualTour = ({
         ...data,
       };
 
-      const get = {
-        _id: 1,
-        name: 1,
-      };
-
       const result = await add({
         set: backendData as ReqType["main"]["virtual_tour"]["add"]["set"],
-        get,
+        get: { _id: 1, name: 1 },
       });
 
       if (result.success) {

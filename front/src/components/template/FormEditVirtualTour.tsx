@@ -110,14 +110,9 @@ export const FormEditVirtualTour = ({
         status: data.status,
       };
 
-      const get = {
-        _id: 1,
-        name: 1,
-      };
-
       const result = await update({
         set: updateData,
-        get,
+        get: { _id: 1, name: 1 },
       });
 
       if (result.success) {
