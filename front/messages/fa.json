@@ -181,8 +181,11 @@
     "eventTitle3": "عنوان رویداد 3",
     "eventLocation3": "مکان رویداد 3",
     "viewAll": "مشاهده همه",
+    "viewAllEvents": "مشاهده همه رویدادها",
     "createEvent": "ایجاد رویداد",
-    "upcomingEvents": "رویدادهای آینده"
+    "upcomingEvents": "رویدادهای آینده",
+    "noEvents": "رویدادی یافت نشد",
+    "fetchError": "خطا در دریافت رویدادها"
   },
   "Comments": {
     "title": "نظرات ({count})",
