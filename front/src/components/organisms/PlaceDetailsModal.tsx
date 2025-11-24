@@ -3,11 +3,14 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
 import Image from "next/image";
 import { getLesanBaseUrl } from "@/services/api";
 import CommentSection, { MinimalComment } from "../organisms/CommentSection";
 import { get as getPlace } from "@/app/actions/place";
 import { placeSchema } from "@/types/declarations/selectInp";
+import VirtualTourPreview from "@/components/organisms/VirtualTourPreview";
 
 interface PlaceDetailsModalProps {
   placeId: string;
@@ -23,10 +26,19 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
   onLaunchVirtualTour,
 }) => {
   const t = useTranslations();
+  const router = useRouter();
+  const locale = useLocale();
   const [place, setPlace] = useState<placeSchema | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isFullScreen, setIsFullScreen] = useState(false);
+  const [showVirtualTourSelector, setShowVirtualTourSelector] = useState(false);
   const [loading, setLoading] = useState(true); // Always show loading initially when fetching
+
+  // Use the router to navigate to the virtual tour page
+  const handleLaunchVirtualTour = (tourId: string) => {
+    router.push(`/${locale}/virtual-tour/${tourId}`);
+    onClose();
+  };
 
   // Fetch place details when modal opens
   useEffect(() => {
@@ -215,8 +227,11 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
   if (!place) return null;
 
   return (
-    <AnimatePresence mode="wait">
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">
+    <AnimatePresence>
+      <div
+        key={`place-modal-${placeId}`}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0"
+      >
         <motion.div
           className="fixed inset-0 bg-black/50"
           initial={{ opacity: 0 }}
@@ -276,33 +291,29 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
 
               {/* Actions */}
               <div className="flex gap-2">
-                {hasVirtualTours &&
-                  place.virtual_tours &&
-                  place.virtual_tours[0]?._id && (
-                    <motion.button
-                      onClick={() =>
-                        onLaunchVirtualTour?.(place.virtual_tours![0]._id!)
-                      }
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="px-3 py-2 bg-gradient-to-r from-[#FF007A] to-[#A020F0] text-white rounded-md text-sm font-medium flex items-center gap-2 transition-all hover:shadow-lg hover:shadow-[#FF007A]/30"
+                {hasVirtualTours && place.virtual_tours && (
+                  <motion.button
+                    onClick={() => setShowVirtualTourSelector(true)}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="px-3 py-2 bg-gradient-to-r from-[#FF007A] to-[#A020F0] text-white rounded-md text-sm font-medium flex items-center gap-2 transition-all hover:shadow-lg hover:shadow-[#FF007A]/30"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                        <path
-                          fillRule="evenodd"
-                          d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      {t("place.virtualTour")}
-                    </motion.button>
-                  )}
+                      <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                      <path
+                        fillRule="evenodd"
+                        d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    {t("place.virtualTour")}
+                  </motion.button>
+                )}
 
                 {hasGallery && (
                   <motion.button
@@ -405,7 +416,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                 <div className="flex flex-wrap gap-2">
                   {place.tags.map((tag, index) => (
                     <motion.span
-                      key={tag._id}
+                      key={tag._id || `tag-${index}`}
                       initial={{ opacity: 0, scale: 0 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.4 + index * 0.05 }}
@@ -645,7 +656,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                   >
                     {place.gallery.map((image, index) => (
                       <motion.button
-                        key={image._id}
+                        key={image._id || `image-${index}`}
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: 0.4 + index * 0.05 }}
@@ -714,33 +725,29 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
             </div>
 
             <div className="flex gap-2">
-              {hasVirtualTours &&
-                place?.virtual_tours &&
-                place?.virtual_tours[0]?._id && (
-                  <motion.button
-                    onClick={() =>
-                      onLaunchVirtualTour?.(place.virtual_tours[0]._id!)
-                    }
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="px-4 py-2 bg-gradient-to-r from-[#FF007A] to-[#A020F0] text-white rounded-md text-sm font-medium flex items-center gap-2 transition-all hover:shadow-lg hover:shadow-[#FF007A]/30"
+              {hasVirtualTours && place?.virtual_tours && (
+                <motion.button
+                  onClick={() => setShowVirtualTourSelector(true)}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="px-4 py-2 bg-gradient-to-r from-[#FF007A] to-[#A020F0] text-white rounded-md text-sm font-medium flex items-center gap-2 transition-all hover:shadow-lg hover:shadow-[#FF007A]/30"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                      <path
-                        fillRule="evenodd"
-                        d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    {t("place.virtualTour")}
-                  </motion.button>
-                )}
+                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                    <path
+                      fillRule="evenodd"
+                      d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  {t("place.virtualTour")}
+                </motion.button>
+              )}
 
               {/* Directions button */}
               {place?.center?.coordinates &&
@@ -774,6 +781,20 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
           </div>
         </motion.div>
       </div>
+
+      {/* Virtual Tour Selector Modal */}
+      <AnimatePresence>
+        {showVirtualTourSelector &&
+        place?.virtual_tours &&
+        place.virtual_tours.length > 0 ? (
+          <VirtualTourPreview
+            virtualTours={place.virtual_tours}
+            placeName={place.name}
+            onClose={() => setShowVirtualTourSelector(false)}
+            onLaunchVirtualTour={handleLaunchVirtualTour}
+          />
+        ) : null}
+      </AnimatePresence>
     </AnimatePresence>
   );
 };
