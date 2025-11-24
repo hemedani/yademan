@@ -20,6 +20,7 @@ import AsyncSelectBox from "../atoms/AsyncSelectBox";
 import { UploadImage } from "@/components/molecules/UploadFile";
 import MapClickHandler from "@/components/MapClickHandler";
 import "leaflet/dist/leaflet.css";
+import { ReqType } from "@/types/declarations/selectInp";
 
 // Dynamically import map components
 const MapContainer = dynamic(
@@ -198,7 +199,7 @@ const FormCreatePlace = ({
 
       // Fix for "wrong event specified: touchleave" error
       if (L.Browser && L.Browser.touch && !L.Browser.pointer) {
-        L.DomEvent.disableClickPropagation = L.DomUtil.falseFn;
+        L.DomEvent.disableClickPropagation = (L.DomUtil as any).falseFn;
       }
       setIsMapReady(true);
     }
@@ -568,7 +569,7 @@ const FormCreatePlace = ({
   const onSubmit: SubmitHandler<PlaceFormValues> = async (data) => {
     setLoading(true);
     try {
-      const formData = {
+      const formData: ReqType["main"]["place"]["add"]["set"] = {
         name: data.name,
         description: data.description,
         slug: data.slug || undefined,
@@ -578,7 +579,7 @@ const FormCreatePlace = ({
             ? [centerPoint.lng, centerPoint.lat]
             : [51.389, 35.6892], // Default to Tehran if no center point selected
         },
-        area: data.area,
+        area: data.area!,
         address: data.address || undefined,
         contact: {
           phone: data.phone || undefined,
@@ -587,13 +588,15 @@ const FormCreatePlace = ({
         },
         province: data.province,
         city: data.city,
-        city_zone: data.city_zone || undefined,
+        city_zone: data.city_zone!,
         category: data.category,
         hoursOfOperation: data.hoursOfOperation || undefined,
         status: data.status,
         tags: data.tags || [],
         thumbnail: data.thumbnail || undefined,
         gallery: galleryImages.length > 0 ? galleryImages : undefined,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       };
 
       const result = await add({
