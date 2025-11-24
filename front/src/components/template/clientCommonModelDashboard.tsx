@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import EntityCard from "../organisms/EntityCard";
 import { DeleteModal } from "./DeleteModal";
 import { useRouter } from "next/navigation";
 import {
