@@ -43,11 +43,6 @@ const EventFormSchema = z.object({
   placeIds: z.array(z.string()).optional(),
   thumbnail: z.string().optional(),
   gallery: z.array(z.string()).optional(),
-  meta: z
-    .object({
-      key: z.string().optional(),
-    })
-    .optional(),
 });
 
 type EventFormValues = z.infer<typeof EventFormSchema>;
@@ -86,9 +81,6 @@ const CreateEventPage: React.FC = () => {
       placeIds: [],
       thumbnail: "",
       gallery: [],
-      meta: {
-        key: "",
-      },
     },
     mode: "onChange",
   });
@@ -332,7 +324,7 @@ const CreateEventPage: React.FC = () => {
               control={control}
               render={({ field }) => (
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-slate-700 text-right">
+                  <label className="text-sm font-medium text-gray-300 text-right">
                     وضعیت
                   </label>
                   <select
