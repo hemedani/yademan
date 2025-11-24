@@ -10,11 +10,10 @@ import { virtual_tourSchema } from "@/types/declarations/selectInp";
 import { getLesanBaseUrl } from "@/services/api";
 
 // Dynamically import PhotoSphereViewer to avoid SSR issues
-const PhotoSphereViewer = dynamic<
-  React.ComponentType<
-    import("@/components/organisms/PhotoSphereViewer").default
-  >
->(() => import("@/components/organisms/PhotoSphereViewer"), { ssr: false });
+const PhotoSphereViewer = dynamic(
+  () => import("@/components/organisms/PhotoSphereViewer"),
+  { ssr: false },
+);
 
 const VirtualTourPage = () => {
   const t = useTranslations();
@@ -175,7 +174,10 @@ const VirtualTourPage = () => {
         panoramaUrl={`${getLesanBaseUrl()}/uploads/images/${tour.panorama.name}`}
         height="100vh"
         width="100%"
-        hotspots={tour.hotspots || []}
+        hotspots={(tour.hotspots || []).map((hotspot, index) => ({
+          ...hotspot,
+          id: `hotspot-${index}`,
+        }))}
         onReady={() => setTourLoaded(true)}
       />
 
