@@ -9,7 +9,10 @@ import Image from "next/image";
 import { getLesanBaseUrl } from "@/services/api";
 import CommentSection, { MinimalComment } from "../organisms/CommentSection";
 import { get as getPlace } from "@/app/actions/place";
-import { placeSchema } from "@/types/declarations/selectInp";
+import {
+  placeSchema,
+  virtual_tourSchema,
+} from "@/types/declarations/selectInp";
 import VirtualTourPreview from "@/components/organisms/VirtualTourPreview";
 
 interface PlaceDetailsModalProps {
@@ -788,7 +791,9 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
         place?.virtual_tours &&
         place.virtual_tours.length > 0 ? (
           <VirtualTourPreview
-            virtualTours={place.virtual_tours}
+            virtualTours={
+              place.virtual_tours as unknown as virtual_tourSchema[]
+            }
             placeName={place.name}
             onClose={() => setShowVirtualTourSelector(false)}
             onLaunchVirtualTour={handleLaunchVirtualTour}
