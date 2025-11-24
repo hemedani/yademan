@@ -177,6 +177,38 @@ Clean up any unnecessary code, such as console.log or unused variables or any ot
 
 If you want to use any package please review `package.json` to see what kind of package are available.
 
+### API Calls Best Practice
+
+Please use server actions located in `src/app/actions` for all backend API calls instead of direct API calls from client components. The application has organized all API operations by model (e.g., `src/app/actions/tag`, `src/app/actions/place`, `src/app/actions/event`) with standard operations like `add`, `get`, `gets`, `update`, `remove`, and `count`.
+
+Using server actions provides several benefits:
+
+- Proper authentication handling via cookies
+- Server-side execution for security-sensitive operations
+- Centralized API logic that can be reused across components
+- Consistent error handling and response format
+- Better separation of concerns between UI and data fetching logic
+
+Example usage:
+
+```ts
+// Instead of direct API calls from components
+import { gets as getEvents } from "@/app/actions/event/gets";
+
+const response = await getEvents({
+  set: {
+    limit: 10,
+    skip: 0,
+  },
+  get: {
+    _id: 1,
+    name: 1,
+    startTime: 1,
+    // ... other fields you want to fetch
+  },
+});
+```
+
 ## Important Backend Integration Notes
 
 1. **Backend Authentication Header Format**:
