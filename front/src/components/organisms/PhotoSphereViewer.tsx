@@ -1,6 +1,6 @@
 "use client";
 
-import { Viewer } from "@photo-sphere-viewer/core";
+import { Viewer, ViewerConfig } from "@photo-sphere-viewer/core";
 import { MarkersPlugin } from "@photo-sphere-viewer/markers-plugin";
 import { Component, ErrorInfo, useEffect, useRef, useState } from "react";
 
@@ -10,7 +10,6 @@ interface Hotspot {
   yaw: number;
   description?: string;
   target?: string;
-  [key: string]: any; // Allow additional properties
 }
 
 interface PhotoSphereViewerProps {
@@ -70,7 +69,7 @@ const PhotoSphereViewer: React.FC<PhotoSphereViewerProps> = ({
     const timer = setTimeout(() => {
       try {
         // Create viewer instance
-        const viewerOptions = {
+        const viewerOptions: ViewerConfig = {
           container: containerRef.current as HTMLElement,
           panorama: panoramaUrl,
           navbar: ["zoom", "move", "fullscreen", "caption"],
