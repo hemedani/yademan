@@ -11,13 +11,6 @@ import FilterPanel from "@/components/filters/FilterPanel";
 import { useFilterPanel } from "@/hooks/useFilterPanel";
 import { useMapStore } from "@/stores/mapStore";
 import toast from "react-hot-toast";
-import PlaceDetailsModal from "@/components/organisms/PlaceDetailsModal";
-import {
-  placeSchema,
-  virtual_tourSchema,
-} from "@/types/declarations/selectInp";
-import MyVertualTour from "@/components/organisms/MyVertualTour";
-import { getLesanBaseUrl } from "@/services/api";
 import { useParams } from "next/navigation";
 
 // Dynamic imports for heavy components
@@ -35,12 +28,6 @@ export default function HomePage() {
   const [showSearch, setShowSearch] = useState(false);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
-  const [selectedPlace, setSelectedPlace] = useState<placeSchema | null>(null);
-  const [showPlaceDetails, setShowPlaceDetails] = useState(false);
-  const [selectedVirtualTour, setSelectedVirtualTour] =
-    useState<virtual_tourSchema | null>(null);
-  const [isTourLoading, setIsTourLoading] = useState(false);
-  const [tourError, setTourError] = useState<string | null>(null);
   const { isFilterOpen, toggleFilter, closeFilter } = useFilterPanel();
   const { searchQuery, setSearchQuery, getCurrentBounds, filters } =
     useMapStore();
@@ -72,56 +59,6 @@ export default function HomePage() {
       return () => clearTimeout(timer);
     }
   }, [isMapLoaded, showWelcome]);
-
-  // Handle virtual tour launch
-  const handleLaunchVirtualTour = (tourId: string) => {
-    setTourError(null);
-    setIsTourLoading(true);
-
-    // Reset any existing tour first
-    setSelectedVirtualTour(null);
-
-    if (
-      !selectedPlace?.virtual_tours ||
-      selectedPlace.virtual_tours.length === 0
-    ) {
-      console.warn("No virtual tours available for this place");
-      setTourError("This place does not have virtual tours available");
-      setIsTourLoading(false);
-      return;
-    }
-
-    const tour = selectedPlace.virtual_tours.find(
-      (tour) => tour._id === tourId,
-    );
-
-    // Check if the tour has the required panorama data
-    // Note: The panorama might not be included in the place's virtual_tours data
-    // and may need to be fetched separately in a real implementation
-    if (tour) {
-      // In a proper implementation, we'd need to fetch full tour data including panorama
-      // For now, we'll proceed if we have the tour data
-      console.log("Loading virtual tour:", tour.name);
-
-      // Create complete tour object with potentially missing panorama
-      // For now, we'll set tour as is with the understanding that panorama might be missing
-      // and will be handled in the UI
-      setSelectedVirtualTour(tour as virtual_tourSchema);
-      setShowPlaceDetails(false);
-      setIsTourLoading(false);
-    } else {
-      console.error("Virtual tour is missing or invalid:", tour);
-      setTourError("This virtual tour is not available");
-      setIsTourLoading(false);
-    }
-  };
-
-  // Close the virtual tour
-  const handleCloseTour = () => {
-    setSelectedVirtualTour(null);
-    setTourError(null);
-    setIsTourLoading(false);
-  };
 
   const handleInstallClick = async () => {
     const prompt = window.deferredPrompt;
@@ -333,94 +270,6 @@ export default function HomePage() {
         >
           {/* Map View - InteractiveMap handles fetching and displaying places */}
           {isMapLoaded && <MapView className="h-full" />}
-
-          {/* Place Details Modal */}
-          {selectedPlace && showPlaceDetails && (
-            <PlaceDetailsModal
-              placeId={selectedPlace._id!}
-              onClose={() => setShowPlaceDetails(false)}
-              onLaunchVirtualTour={handleLaunchVirtualTour}
-            />
-          )}
-
-          {/***  Virtual Tour Viewer   **/}
-          {selectedVirtualTour && (
-            <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex flex-col">
-              {/* Tour Header */}
-              <div className="bg-gray-800 text-white p-2 flex justify-between items-center">
-                <h2 className="text-lg font-medium">
-                  {selectedPlace?.name || "Virtual Tour"}
-                </h2>
-                <button
-                  onClick={handleCloseTour}
-                  className="p-1 rounded-full hover:bg-gray-700"
-                  aria-label="Close tour"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </div>
-              {/* Tour Viewer */}
-              <div className="flex-1">
-                {selectedVirtualTour.panorama &&
-                selectedVirtualTour.panorama.name ? (
-                  <MyVertualTour
-                    imageUrl={`${getLesanBaseUrl()}/uploads/images/${selectedVirtualTour.panorama.name}`}
-                  />
-                ) : (
-                  <div className="flex items-center justify-center h-full text-white">
-                    <p>Virtual tour panorama not available</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Tour Error Message */}
-          {tourError && (
-            <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center">
-              <div className="bg-white p-6 rounded-lg max-w-md text-center">
-                <div className="text-red-500 mb-4">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-12 w-12 mx-auto"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  Virtual Tour Error
-                </h3>
-                <p className="text-gray-600 mb-4">{tourError}</p>
-                <button
-                  onClick={handleCloseTour}
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          )}
 
           {/* Floating Action Button for Mobile */}
           <motion.button

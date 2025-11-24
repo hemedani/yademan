@@ -1,18 +1,12 @@
 "use client";
 
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  useCallback,
-  useMemo,
-} from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { createRoot } from "react-dom/client";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 import { useTranslations } from "next-intl";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { useMapStore } from "@/stores/mapStore";
 import { useAuth } from "@/context/AuthContext";
 import MapControls from "./MapControls";
@@ -23,13 +17,11 @@ import { toast } from "react-hot-toast";
 import PlaceSidebar from "@/components/map/PlaceSidebar";
 import RoutePanel from "@/components/map/RoutePanel";
 import MapLayerSwitcher from "@/components/map/MapLayerSwitcher";
-import MyVertualTour from "../organisms/MyVertualTour";
-import { getLesanBaseUrl } from "@/services/api";
 import { placeSchema } from "@/types/declarations/selectInp";
+import { getLesanBaseUrl } from "@/services/api";
 
 // Use placeSchema from selectInp as the base type
 type Place = placeSchema;
-type VirtualTour = placeSchema["virtual_tours"][0];
 
 interface MapLayer {
   id: string;
@@ -102,10 +94,6 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
   const [routeStart, setRouteStart] = useState<[number, number] | null>(null);
   const [routeEnd, setRouteEnd] = useState<[number, number] | null>(null);
   const [showPlaceDetails, setShowPlaceDetails] = useState(false);
-  const [selectedVirtualTour, setSelectedVirtualTour] =
-    useState<VirtualTour | null>(null);
-  const [isTourLoading, setIsTourLoading] = useState(false);
-  const [tourError, setTourError] = useState<string | null>(null);
   const [isFetchingPlaces, setIsFetchingPlaces] = useState(false);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [showTopLoader, setShowTopLoader] = useState(false);
@@ -563,47 +551,6 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
 
   // The addMarkers function has been moved up before loadPlaces
 
-  // Handle launching virtual tour
-  const handleLaunchVirtualTour = (tourId: string) => {
-    setTourError(null);
-    setIsTourLoading(true);
-
-    // Reset any existing tour first
-    setSelectedVirtualTour(null);
-
-    if (
-      !selectedPlace?.virtual_tours ||
-      selectedPlace.virtual_tours.length === 0
-    ) {
-      setTourError("This place does not have virtual tours available");
-      setIsTourLoading(false);
-      return;
-    }
-
-    // Type assertion to handle API response with panorama
-    const tourWithPanorama = selectedPlace.virtual_tours.find(
-      (vt) => vt._id === tourId,
-    ) as
-      | (VirtualTour & { panorama: { _id?: string; name: string } })
-      | undefined;
-
-    if (tourWithPanorama && tourWithPanorama.panorama?.name) {
-      setSelectedVirtualTour(tourWithPanorama);
-      setShowPlaceDetails(false);
-      setIsTourLoading(false);
-    } else {
-      setTourError("This virtual tour is missing its panorama image");
-      setIsTourLoading(false);
-    }
-  };
-
-  // Close the virtual tour
-  const handleCloseTour = () => {
-    setSelectedVirtualTour(null);
-    setTourError(null);
-    setIsTourLoading(false);
-  };
-
   // Fit map to show all places
   const fitMapToPlaces = (places: Place[]) => {
     if (!map.current || !places || places.length === 0) return;
@@ -890,10 +837,10 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         const sourceId = `place-source-${index}`;
 
         // Remove existing marker if it exists
-        if (map.current.getLayer(markerId)) {
+        if (map && map.current && map.current.getLayer(markerId)) {
           map.current.removeLayer(markerId);
         }
-        if (map.current.getSource(sourceId)) {
+        if (map && map.current && map.current.getSource(sourceId)) {
           map.current.removeSource(sourceId);
         }
 
@@ -1195,85 +1142,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           <PlaceDetailsModal
             placeId={selectedPlace._id!}
             onClose={() => setShowPlaceDetails(false)}
-            onLaunchVirtualTour={handleLaunchVirtualTour}
           />
-        )}
-
-        {(() => {
-          // Type assertion to handle API response with panorama
-          const tourWithPanorama = selectedVirtualTour as
-            | (VirtualTour & { panorama: { _id?: string; name: string } })
-            | undefined;
-          return tourWithPanorama && tourWithPanorama.panorama?.name ? (
-            <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex flex-col">
-              {/* Tour Header */}
-              <div className="bg-[#121212] text-white p-2 flex justify-between items-center border-b border-[#333]">
-                <h2 className="text-lg font-medium">
-                  {selectedPlace?.name || "Virtual Tour"}
-                </h2>
-                <button
-                  onClick={handleCloseTour}
-                  className="p-1 rounded-full hover:bg-[#1e1e1e] text-white"
-                  aria-label="Close tour"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </div>
-              {/* Tour Viewer */}
-              <div className="flex-1">
-                <MyVertualTour
-                  imageUrl={`${getLesanBaseUrl()}/uploads/images/${tourWithPanorama.panorama.name}`}
-                />
-              </div>
-            </div>
-          ) : null;
-        })()}
-
-        {/* Tour Error Message */}
-        {tourError && (
-          <div className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center">
-            <div className="bg-[#121212] p-6 rounded-lg max-w-md text-center border border-[#333]">
-              <div className="text-[#FF007A] mb-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-12 w-12 mx-auto"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-lg font-medium text-white mb-2">
-                Virtual Tour Error
-              </h3>
-              <p className="text-[#a0a0a0] mb-4">{tourError}</p>
-              <button
-                onClick={handleCloseTour}
-                className="bg-[#FF007A] text-white px-4 py-2 rounded hover:bg-[#ff339c]"
-              >
-                Close
-              </button>
-            </div>
-          </div>
         )}
       </div>
     </>
