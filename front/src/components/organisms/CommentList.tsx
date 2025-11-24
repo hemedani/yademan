@@ -66,10 +66,10 @@ const CommentList: React.FC<CommentListProps> = ({
   return (
     <div className="space-y-4">
       {commentsArray
-        .filter((comment) => comment && comment._id)
-        .map((comment) => (
+        .filter((comment) => comment)
+        .map((comment, index) => (
           <CommentCard
-            key={comment._id}
+            key={comment._id || `comment-${index}`}
             id={comment._id!}
             avatar={
               comment.user?.avatar?.name
