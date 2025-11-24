@@ -443,7 +443,6 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <AsyncSelectBox
             name="category"
-            control={control}
             label="دسته‌بندی"
             setValue={setValue}
             loadOptions={async () =>
