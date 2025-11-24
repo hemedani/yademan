@@ -8,22 +8,24 @@ import L from "leaflet";
 // Fix for "wrong event specified: touchleave" error
 // This extends Leaflet's capabilities for touch devices
 if (typeof window !== "undefined") {
-  L.Draw.Polyline.prototype._onTouch = L.Util.falseFn;
-  L.Draw.Polygon.prototype._onTouch = L.Util.falseFn;
-  L.Draw.Rectangle.prototype._onTouch = L.Util.falseFn;
-  L.Draw.Circle.prototype._onTouch = L.Util.falseFn;
-  L.Draw.Marker.prototype._onTouch = L.Util.falseFn;
+  L.Draw.Polyline.prototype._onTouch = (L.Util as any).falseFn;
+  L.Draw.Polygon.prototype._onTouch = (L.Util as any).falseFn;
+  L.Draw.Rectangle.prototype._onTouch = (L.Util as any).falseFn;
+  L.Draw.Circle.prototype._onTouch = (L.Util as any).falseFn;
+  L.Draw.Marker.prototype._onTouch = (L.Util as any).falseFn;
 }
 
 interface SimpleDrawingProps {
   isActive: boolean;
   onPolygonCreated: (polygon: L.LatLng[][]) => void;
+  onPolygonDeleted?: () => void;
   existingPolygon?: L.LatLng[][];
 }
 
 const SimpleDrawing: React.FC<SimpleDrawingProps> = ({
   isActive,
   onPolygonCreated,
+  onPolygonDeleted,
   existingPolygon,
 }) => {
   const featureGroupRef = useRef<L.FeatureGroup>(null);
@@ -36,7 +38,7 @@ const SimpleDrawing: React.FC<SimpleDrawingProps> = ({
       L.Browser.touch &&
       !L.Browser.pointer
     ) {
-      L.DomEvent.disableClickPropagation = L.DomUtil.falseFn;
+      L.DomEvent.disableClickPropagation = (L.DomUtil as any).falseFn;
     }
   }, []);
 
@@ -71,6 +73,8 @@ const SimpleDrawing: React.FC<SimpleDrawingProps> = ({
 
   const handleDeleted = () => {
     onPolygonCreated([]);
+    // Call the onPolygonDeleted callback if provided
+    onPolygonDeleted?.();
   };
 
   if (!isActive) {
@@ -104,16 +108,7 @@ const SimpleDrawing: React.FC<SimpleDrawingProps> = ({
               weight: 3,
               fillOpacity: 0.2,
             },
-            touchEnabled: false,
           },
-        }}
-        edit={{
-          remove: true,
-          edit: true,
-          poly: {
-            allowIntersection: false,
-          },
-          featureGroup: featureGroupRef.current,
         }}
       />
     </FeatureGroup>
