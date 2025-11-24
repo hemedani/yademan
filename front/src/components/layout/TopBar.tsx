@@ -6,6 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import { Link as ILink } from "../../../i18n/routing";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import EventsList from "../EventsList";
 
 // Icons
 import MagnifyingGlassIcon from "@heroicons/react/24/outline/MagnifyingGlassIcon";
@@ -53,22 +54,6 @@ export default function TopBar({
   const searchPanelRef = useRef<HTMLDivElement>(null);
   const userPanelRef = useRef<HTMLDivElement>(null);
   const eventsPanelRef = useRef<HTMLDivElement>(null);
-
-  // Function to safely format date (with error handling)
-  const formatDate = (dateString: string) => {
-    try {
-      const date = new Date(dateString);
-      return new Intl.DateTimeFormat("fa-IR", {
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      }).format(date);
-    } catch (error) {
-      console.error("Error formatting date:", error);
-      return dateString;
-    }
-  };
 
   const isAdmin =
     isAuthenticated && (userLevel === "Manager" || userLevel === "Ghost");
@@ -144,29 +129,6 @@ export default function TopBar({
       window.removeEventListener("keydown", handleEsc);
     };
   }, []);
-
-  // Mock events data (in a real app, this would come from an API)
-  const upcomingEvents = [
-    {
-      id: "1",
-      title: t("Events.eventTitle1") || "Art Exhibition Opening",
-      date: "2023-11-15T18:00:00",
-      location:
-        t("Events.eventLocation1") || "Tehran Museum of Contemporary Art",
-    },
-    {
-      id: "2",
-      title: t("Events.eventTitle2") || "Historical Tour",
-      date: "2023-11-20T10:00:00",
-      location: t("Events.eventLocation2") || "Golestan Palace",
-    },
-    {
-      id: "3",
-      title: t("Events.eventTitle3") || "Cultural Festival",
-      date: "2023-11-25T12:00:00",
-      location: t("Events.eventLocation3") || "Milad Tower",
-    },
-  ];
 
   return (
     <div ref={topBarRef} className="fixed top-4 right-4 z-50" dir="rtl">
@@ -477,84 +439,36 @@ export default function TopBar({
               </ILink>
             </motion.div>
 
+            {/* Use the EventsList component to display real events */}
             <div className="py-2 max-h-80 overflow-y-auto">
-              {upcomingEvents.length > 0 ? (
-                upcomingEvents.map((event) => (
-                  <div
-                    key={event.id}
-                    className="px-4 py-3 hover:bg-[#1e1e1e] transition-colors"
-                  >
-                    <h4 className="text-sm font-medium text-white">
-                      {event.title}
-                    </h4>
-                    <div className="mt-1 flex items-center space-x-2  text-xs text-[#a0a0a0]">
-                      <svg
-                        className="w-4 h-4 text-[#a0a0a0]"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
-                      </svg>
-                      <span>{formatDate(event.date)}</span>
-                    </div>
-                    <div className="mt-1 flex items-center space-x-2  text-xs text-[#a0a0a0]">
-                      <svg
-                        className="w-4 h-4 text-[#a0a0a0]"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
-                      <span>{event.location}</span>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="px-4 py-6 text-center text-[#a0a0a0]">
-                  <svg
-                    className="mx-auto h-12 w-12 text-[#a0a0a0]"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                  <p className="mt-2 text-sm">{t("Events.noEvents")}</p>
-                </div>
-              )}
+              <EventsList
+                limit={5}
+                showAllLink={false}
+                upcomingOnly={true}
+                className=""
+              />
             </div>
 
             <div className="p-4 border-t border-[#333] text-center">
+              {isAuthenticated &&
+                userLevel &&
+                ["Manager", "Editor", "Ghost"].includes(userLevel) && (
+                  <ILink
+                    href="/admin/events/create"
+                    locale={locale}
+                    className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-[#FF007A] rounded-lg hover:bg-[#ff339c] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF007A] mb-3"
+                    onClick={() => setShowEventsPanel(false)}
+                  >
+                    {t("Events.createEvent")}
+                  </ILink>
+                )}
               <ILink
-                href="/events/create"
+                href="/events"
                 locale={locale}
-                className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-[#FF007A] rounded-lg hover:bg-[#ff339c] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF007A]"
+                className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-[#333] rounded-lg hover:bg-[#444] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF007A]"
                 onClick={() => setShowEventsPanel(false)}
               >
-                {t("Events.createEvent")}
+                {t("Events.viewAllEvents")}
               </ILink>
             </div>
           </motion.div>
