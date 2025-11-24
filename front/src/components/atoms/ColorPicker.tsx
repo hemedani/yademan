@@ -25,7 +25,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
       render={({ field: { onChange, value } }) => (
         <div className="flex flex-col gap-2">
           {label && (
-            <label className="block text-sm font-medium text-gray-700 mb-1 text-right">
+            <label className="block text-sm font-medium text-gray-300 mb-1 text-right">
               {label}
             </label>
           )}
