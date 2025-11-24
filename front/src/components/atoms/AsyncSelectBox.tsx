@@ -19,7 +19,6 @@ interface InputProps<
   T extends FieldValues = FieldValues,
 > {
   name: FieldPath<T>;
-  control: any; // Use any type for control to handle react-hook-form's control prop
   label: string;
   setValue: UseFormSetValue<T>;
   labelAsValue?: boolean;
@@ -32,6 +31,8 @@ interface InputProps<
   ) => Promise<OptionsOrGroups<Option, Group>> | void;
   defaultOptions?: OptionsOrGroups<Option, Group> | boolean;
   className?: string;
+  onSelectChange?: (newValue: any, actionMeta: any) => void;
+  cacheOptions?: boolean;
 }
 
 const AsyncSelectBox = <
@@ -41,7 +42,6 @@ const AsyncSelectBox = <
 >({
   errMsg,
   name,
-  control,
   label,
   loadOptions,
   setValue,
@@ -50,6 +50,8 @@ const AsyncSelectBox = <
   defaultOptions,
   className,
   placeholder,
+  cacheOptions,
+  ...props
 }: InputProps<Option, Group, T>) => {
   const customStyles: StylesConfig<unknown, false> = {
     control: (provided, state) => ({
@@ -221,56 +223,50 @@ const AsyncSelectBox = <
       </label>
 
       <div className="relative">
-        <Controller
+        <AsyncSelect
+          cacheOptions
+          defaultOptions={defaultOptions}
+          loadOptions={loadOptions}
+          onChange={(newVal: any, actionMeta: any) => {
+            if (isMulti) {
+              // Handle multi-select
+              if (newVal && Array.isArray(newVal)) {
+                const selectedValues = newVal.map((option: any) =>
+                  labelAsValue ? option.label : option.value,
+                );
+                // Also call setValue to ensure form is updated properly
+                setValue(name, selectedValues as PathValue<T, Path<T>>);
+              } else {
+                setValue(name, [] as PathValue<T, Path<T>>);
+              }
+            } else {
+              // Handle single select
+              if (newVal) {
+                const selectedValue = labelAsValue
+                  ? newVal.label
+                  : newVal.value;
+                // Also call setValue to ensure form is updated properly
+                setValue(name, selectedValue as PathValue<T, Path<T>>);
+              } else {
+                setValue(name, null as PathValue<T, Path<T>>);
+              }
+            }
+
+            // Call the optional onSelectChange prop if provided
+            if (props.onSelectChange) {
+              props.onSelectChange(newVal, actionMeta);
+            }
+          }}
           name={name}
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <AsyncSelect
-              cacheOptions
-              defaultOptions={defaultOptions}
-              loadOptions={loadOptions}
-              value={value}
-              onChange={(newVal: any, actionMeta: any) => {
-                if (isMulti) {
-                  // Handle multi-select
-                  if (newVal && Array.isArray(newVal)) {
-                    const selectedValues = newVal.map((option: any) =>
-                      labelAsValue ? option.label : option.value,
-                    );
-                    onChange(selectedValues as PathValue<T, Path<T>>);
-                    // Also call setValue to ensure form is updated properly
-                    setValue(name, selectedValues as PathValue<T, Path<T>>);
-                  } else {
-                    onChange([] as PathValue<T, Path<T>>);
-                    setValue(name, [] as PathValue<T, Path<T>>);
-                  }
-                } else {
-                  // Handle single select
-                  if (newVal) {
-                    const selectedValue = labelAsValue
-                      ? newVal.label
-                      : newVal.value;
-                    onChange(selectedValue as PathValue<T, Path<T>>);
-                    // Also call setValue to ensure form is updated properly
-                    setValue(name, selectedValue as PathValue<T, Path<T>>);
-                  } else {
-                    onChange(null as PathValue<T, Path<T>>);
-                    setValue(name, null as PathValue<T, Path<T>>);
-                  }
-                }
-              }}
-              name={name}
-              placeholder={placeholder || `${label} را انتخاب کنید`}
-              styles={customStyles}
-              noOptionsMessage={() => "گزینه‌ای یافت نشد"}
-              loadingMessage={() => "در حال بارگذاری..."}
-              isClearable
-              isRtl={true}
-              isMulti={isMulti}
-              className="react-select-container"
-              classNamePrefix="react-select"
-            />
-          )}
+          placeholder={placeholder || `${label} را انتخاب کنید`}
+          styles={customStyles}
+          noOptionsMessage={() => "گزینه‌ای یافت نشد"}
+          loadingMessage={() => "در حال بارگذاری..."}
+          isClearable
+          isRtl={true}
+          isMulti={isMulti}
+          className="react-select-container"
+          classNamePrefix="react-select"
         />
       </div>
 
