@@ -12,7 +12,6 @@ import { useFilterPanel } from "@/hooks/useFilterPanel";
 import { useMapStore } from "@/stores/mapStore";
 import toast from "react-hot-toast";
 import PlaceDetailsModal from "@/components/organisms/PlaceDetailsModal";
-import { PlaceData } from "@/components/atoms/PlaceMarker";
 import {
   placeSchema,
   virtual_tourSchema,
