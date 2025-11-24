@@ -779,8 +779,202 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     // Wait for the style to load before adding markers
     map.current.once("styledata", () => {
       addMarkers(filteredPlaces);
+      // Re-add path if it exists
+      if (routeGeometry.length > 0) {
+        addPathToMap(routeGeometry);
+      }
     });
   };
+
+  // Pathfinding state
+  const isPathfindingActive = useMapStore((state) => state.isPathfindingActive);
+  const pathfindingStartLocation = useMapStore(
+    (state) => state.pathfindingStartLocation,
+  );
+  const pathfindingPlaces = useMapStore((state) => state.pathfindingPlaces);
+  const pathfindingPath = useMapStore((state) => state.pathfindingPath);
+  const pathfindingTotalDistance = useMapStore(
+    (state) => state.pathfindingTotalDistance,
+  );
+  const pathfindingRouteGeometry = useMapStore(
+    (state) => state.pathfindingRouteGeometry,
+  );
+  const [routeGeometry, setRouteGeometry] = useState<[number, number][]>([]);
+
+  // Add the path to the map
+  const addPathToMap = (path: [number, number][]) => {
+    if (!map.current) return;
+
+    // Remove existing route if it exists
+    if (map.current.getLayer("route")) {
+      map.current.removeLayer("route");
+    }
+    if (map.current.getSource("route")) {
+      map.current.removeSource("route");
+    }
+
+    // Add path if there's more than one point
+    if (path.length > 1) {
+      const route = {
+        type: "Feature",
+        geometry: {
+          type: "LineString",
+          coordinates: path,
+        },
+      };
+
+      // Add route source
+      map.current.addSource("route", {
+        type: "geojson",
+        data: route as any,
+      });
+
+      // Add route layer
+      map.current.addLayer({
+        id: "route",
+        type: "line",
+        source: "route",
+        layout: {
+          "line-join": "round",
+          "line-cap": "round",
+        },
+        paint: {
+          "line-color": "#3b82f6",
+          "line-width": 5,
+          "line-opacity": 0.75,
+        },
+      });
+
+      // Add start marker
+      if (pathfindingStartLocation) {
+        // Remove existing start marker if it exists
+        if (map.current.getLayer("start-marker")) {
+          map.current.removeLayer("start-marker");
+        }
+        if (map.current.getSource("start-marker")) {
+          map.current.removeSource("start-marker");
+        }
+
+        const startMarker = {
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: pathfindingStartLocation,
+          },
+          properties: {
+            title: "شما",
+          },
+        };
+
+        map.current.addSource("start-marker", {
+          type: "geojson",
+          data: startMarker,
+        });
+
+        map.current.addLayer({
+          id: "start-marker",
+          type: "circle",
+          source: "start-marker",
+          paint: {
+            "circle-radius": 10,
+            "circle-color": "#10B981", // Green for start
+            "circle-stroke-width": 2,
+            "circle-stroke-color": "#FFFFFF",
+          },
+        });
+      }
+
+      // Add place markers for each stop
+      pathfindingPath.forEach((place, index) => {
+        const markerId = `place-marker-${index}`;
+        const sourceId = `place-source-${index}`;
+
+        // Remove existing marker if it exists
+        if (map.current.getLayer(markerId)) {
+          map.current.removeLayer(markerId);
+        }
+        if (map.current.getSource(sourceId)) {
+          map.current.removeSource(sourceId);
+        }
+
+        const placeMarker = {
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: place.coordinates,
+          },
+          properties: {
+            title: place.name,
+            index: index + 1,
+          },
+        };
+
+        map.current.addSource(sourceId, {
+          type: "geojson",
+          data: placeMarker,
+        });
+
+        map.current.addLayer({
+          id: markerId,
+          type: "circle",
+          source: sourceId,
+          paint: {
+            "circle-radius": index === 0 ? 10 : 8, // Make first place slightly larger
+            "circle-color": index === 0 ? "#F59E0B" : "#EF4444", // Yellow for first, red for others
+            "circle-stroke-width": 2,
+            "circle-stroke-color": "#FFFFFF",
+          },
+        });
+      });
+    }
+  };
+
+  // Effect to handle path updates
+  useEffect(() => {
+    if (isPathfindingActive && pathfindingRouteGeometry.length > 0) {
+      setRouteGeometry(pathfindingRouteGeometry);
+
+      // Wait for map to be loaded before adding path
+      if (map.current) {
+        addPathToMap(pathfindingRouteGeometry);
+
+        // Fit map to show the entire route
+        const bounds = new maplibregl.LngLatBounds();
+        pathfindingRouteGeometry.forEach((coord) => bounds.extend(coord));
+        map.current.fitBounds(bounds, { padding: 100 });
+      }
+    } else if (!isPathfindingActive) {
+      // Remove path if pathfinding is not active
+      if (map.current) {
+        if (map.current.getLayer("route")) {
+          map.current.removeLayer("route");
+        }
+        if (map.current.getSource("route")) {
+          map.current.removeSource("route");
+        }
+        if (map.current.getLayer("start-marker")) {
+          map.current.removeLayer("start-marker");
+        }
+        if (map.current.getSource("start-marker")) {
+          map.current.removeSource("start-marker");
+        }
+
+        // Remove all place markers
+        pathfindingPath.forEach((_, index) => {
+          const markerId = `place-marker-${index}`;
+          const sourceId = `place-source-${index}`;
+
+          if (map.current && map.current.getLayer(markerId)) {
+            map.current.removeLayer(markerId);
+          }
+          if (map.current && map.current.getSource(sourceId)) {
+            map.current.removeSource(sourceId);
+          }
+        });
+      }
+      setRouteGeometry([]);
+    }
+  }, [isPathfindingActive, pathfindingRouteGeometry, pathfindingPath]);
 
   // Handle route calculation
   const calculateRoute = async (
