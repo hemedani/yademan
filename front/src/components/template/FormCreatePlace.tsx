@@ -10,12 +10,12 @@ import { gets as getCategoriesAction } from "@/app/actions/category/gets";
 import { gets as getProvincesAction } from "@/app/actions/province/gets";
 import { gets as getCitiesAction } from "@/app/actions/city/gets";
 import { gets as getCityZonesAction } from "@/app/actions/city_zone/gets";
+import { get as getCityZoneAction } from "@/app/actions/city_zone/get";
 import { gets as getTagsAction } from "@/app/actions/tag/gets";
 import dynamic from "next/dynamic";
 import L from "leaflet";
 import { useEffect, useState, useCallback } from "react";
 import React from "react";
-import SelectBox from "../atoms/Select";
 import AsyncSelectBox from "../atoms/AsyncSelectBox";
 import { UploadImage } from "@/components/molecules/UploadFile";
 import MapClickHandler from "@/components/MapClickHandler";
@@ -146,11 +146,6 @@ const FormCreatePlace = ({
   const [mapKey, setMapKey] = useState(0);
   const [isMapReady, setIsMapReady] = useState(false);
 
-  // Categories, tags lists
-  const [categories, setCategories] = useState<{ _id: string; name: string }[]>(
-    [],
-  );
-
   // Form setup with Zod validation
   const {
     register,
@@ -158,7 +153,6 @@ const FormCreatePlace = ({
     setValue,
     watch,
     trigger,
-    control,
     formState: { errors },
   } = useForm<PlaceFormValues>({
     resolver: zodResolver(placeSchema),
@@ -211,260 +205,252 @@ const FormCreatePlace = ({
   }, []);
 
   // Load provinces options
-  const loadProvincesOptions = async (
-    inputValue?: string,
-  ): Promise<SelectOption[]> => {
-    const setParams: { limit: number; page: number; name?: string } = {
-      limit: 20,
-      page: 1,
-    };
-    if (inputValue) {
-      setParams.name = inputValue;
-    }
-
-    console.log("Fetching provinces with params:", setParams);
-    try {
-      const response = await getProvincesAction({
-        set: setParams,
-        get: { _id: 1, name: 1 },
-      });
-      console.log("Provinces API response:", response);
-
-      if (response && response.success) {
-        const provinces = response.body.map(
-          (item: { _id: string; name: string }) => ({
-            value: item._id,
-            label: item.name,
-          }),
-        );
-        console.log("Parsed provinces:", provinces);
-        return provinces;
+  const loadProvincesOptions = useCallback(
+    async (inputValue?: string): Promise<SelectOption[]> => {
+      const setParams: { limit: number; page: number; name?: string } = {
+        limit: 20,
+        page: 1,
+      };
+      if (inputValue) {
+        setParams.name = inputValue;
       }
-      console.log("No successful response from provinces API");
-      return [];
-    } catch (error) {
-      console.error("Error loading provinces:", error);
-      return [];
-    }
-  };
+
+      console.log("Fetching provinces with params:", setParams);
+      try {
+        const response = await getProvincesAction({
+          set: setParams,
+          get: { _id: 1, name: 1 },
+        });
+        console.log("Provinces API response:", response);
+
+        if (response && response.success) {
+          const provinces = response.body.map(
+            (item: { _id: string; name: string }) => ({
+              value: item._id,
+              label: item.name,
+            }),
+          );
+          console.log("Parsed provinces:", provinces);
+          return provinces;
+        }
+        console.log("No successful response from provinces API");
+        return [];
+      } catch (error) {
+        console.error("Error loading provinces:", error);
+        return [];
+      }
+    },
+    [],
+  );
 
   // Load cities options based on selected province
-  const loadCitiesOptions = async (
-    inputValue?: string,
-  ): Promise<SelectOption[]> => {
-    const selectedProvinceValue = watch("province");
-    if (!selectedProvinceValue) {
-      console.log("No province selected, returning empty array");
-      return [];
-    }
-
-    const setParams: {
-      limit: number;
-      page: number;
-      name?: string;
-      provinceId?: string;
-    } = {
-      limit: 20,
-      page: 1,
-      provinceId: selectedProvinceValue,
-    };
-    if (inputValue) {
-      setParams.name = inputValue;
-    }
-
-    try {
-      console.log("Fetching cities with params:", setParams);
-      const response = await getCitiesAction({
-        set: setParams,
-        get: { _id: 1, name: 1 },
-      });
-      console.log("Cities API response:", response);
-
-      if (response && response.success) {
-        const cities = response.body.map(
-          (item: { _id: string; name: string }) => ({
-            value: item._id,
-            label: item.name,
-          }),
-        );
-        console.log("Parsed cities:", cities);
-        return cities;
+  const loadCitiesOptions = useCallback(
+    async (inputValue?: string): Promise<SelectOption[]> => {
+      const selectedProvince = watch("province");
+      if (!selectedProvince) {
+        console.log("No province selected, returning empty array");
+        return [];
       }
-      console.log("No successful response from cities API");
-      return [];
-    } catch (error) {
-      console.error("Error loading cities:", error);
-      return [];
-    }
-  };
+
+      const setParams: {
+        limit: number;
+        page: number;
+        name?: string;
+        provinceId?: string;
+      } = {
+        limit: 20,
+        page: 1,
+        provinceId: selectedProvince,
+      };
+      if (inputValue) {
+        setParams.name = inputValue;
+      }
+
+      try {
+        console.log("Fetching cities with params:", setParams);
+        const response = await getCitiesAction({
+          set: setParams,
+          get: { _id: 1, name: 1 },
+        });
+        console.log("Cities API response:", response);
+
+        if (response && response.success) {
+          const cities = response.body.map(
+            (item: { _id: string; name: string }) => ({
+              value: item._id,
+              label: item.name,
+            }),
+          );
+          console.log("Parsed cities:", cities);
+          return cities;
+        }
+        console.log("No successful response from cities API");
+        return [];
+      } catch (error) {
+        console.error("Error loading cities:", error);
+        return [];
+      }
+    },
+    [watch],
+  );
 
   // Load city zones options based on selected city
-  const loadCityZonesOptions = async (
-    inputValue?: string,
-  ): Promise<SelectOption[]> => {
-    const selectedCityValue = watch("city");
-    if (!selectedCityValue) {
-      console.log("No city selected, returning empty array");
-      return [];
-    }
-
-    const setParams: {
-      limit: number;
-      page: number;
-      name?: string;
-      cityId?: string;
-    } = {
-      limit: 20,
-      page: 1,
-      cityId: selectedCityValue,
-    };
-    if (inputValue) {
-      setParams.name = inputValue;
-    }
-
-    try {
-      console.log("Fetching city zones with params:", setParams);
-      const response = await getCityZonesAction({
-        set: setParams,
-        get: { _id: 1, name: 1 },
-      });
-      console.log("City zones API response:", response);
-
-      if (response && response.success) {
-        const cityZones = response.body.map(
-          (item: { _id: string; name: string }) => ({
-            value: item._id,
-            label: item.name,
-          }),
-        );
-        console.log("Parsed city zones:", cityZones);
-        return cityZones;
+  const loadCityZonesOptions = useCallback(
+    async (inputValue: string): Promise<SelectOption[]> => {
+      const selectedCityValue = watch("city");
+      if (!selectedCityValue) {
+        console.log("No city selected, returning empty array");
+        return [];
       }
-      console.log("No successful response from city zones API");
-      return [];
-    } catch (error) {
-      console.error("Error loading city zones:", error);
-      return [];
-    }
-  };
+
+      const setParams: {
+        limit: number;
+        page: number;
+        name?: string;
+        cityId?: string;
+      } = {
+        limit: 20,
+        page: 1,
+        cityId: selectedCityValue,
+      };
+      if (inputValue) {
+        setParams.name = inputValue;
+      }
+
+      try {
+        console.log("Fetching city zones with params:", setParams);
+        const response = await getCityZonesAction({
+          set: setParams,
+          get: { _id: 1, name: 1 },
+        });
+        console.log("City zones API response:", response);
+
+        if (response && response.success) {
+          const cityZones = response.body.map(
+            (item: { _id: string; name: string }) => ({
+              value: item._id,
+              label: item.name,
+            }),
+          );
+          console.log("Parsed city zones:", cityZones);
+          return cityZones;
+        }
+        console.log("No successful response from city zones API");
+        return [];
+      } catch (error) {
+        console.error("Error loading city zones:", error);
+        return [];
+      }
+    },
+    [watch],
+  );
 
   // Load categories options
-  const loadCategoriesOptions = async (
-    inputValue?: string,
-  ): Promise<SelectOption[]> => {
-    const setParams: { limit: number; page: number; name?: string } = {
-      limit: 20,
-      page: 1,
-    };
-    if (inputValue) {
-      setParams.name = inputValue;
-    }
-    try {
-      const response = await getCategoriesAction({
-        set: setParams,
-        get: { _id: 1, name: 1 },
-      });
-      if (response && response.success) {
-        return response.body.map((item: { _id: string; name: string }) => ({
-          value: item._id,
-          label: item.name,
-        }));
+  const loadCategoriesOptions = useCallback(
+    async (inputValue: string): Promise<SelectOption[]> => {
+      const setParams: { limit: number; page: number; name?: string } = {
+        limit: 20,
+        page: 1,
+      };
+      if (inputValue) {
+        setParams.name = inputValue;
       }
-      return [];
-    } catch (error) {
-      console.error("Error loading categories:", error);
-      return [];
-    }
-  };
+      try {
+        const response = await getCategoriesAction({
+          set: setParams,
+          get: { _id: 1, name: 1 },
+        });
+        if (response && response.success) {
+          return response.body.map((item: { _id: string; name: string }) => ({
+            value: item._id,
+            label: item.name,
+          }));
+        }
+        return [];
+      } catch (error) {
+        console.error("Error loading categories:", error);
+        return [];
+      }
+    },
+    [],
+  );
 
   // Load tags options
-  const loadTagsOptions = async (
-    inputValue?: string,
-  ): Promise<SelectOption[]> => {
-    const setParams: { limit: number; page: number; name?: string } = {
-      limit: 20,
-      page: 1,
-    };
-    if (inputValue) {
-      setParams.name = inputValue;
-    }
-    try {
-      const response = await getTagsAction({
-        set: setParams,
-        get: { _id: 1, name: 1 },
-      });
-      if (response && response.success) {
-        return response.body.map((item: { _id: string; name: string }) => ({
-          value: item._id,
-          label: item.name,
-        }));
+  const loadTagsOptions = useCallback(
+    async (inputValue: string): Promise<SelectOption[]> => {
+      const setParams: { limit: number; page: number; name?: string } = {
+        limit: 20,
+        page: 1,
+      };
+      if (inputValue) {
+        setParams.name = inputValue;
       }
-      return [];
-    } catch (error) {
-      console.error("Error loading tags:", error);
-      return [];
-    }
-  };
+      try {
+        const response = await getTagsAction({
+          set: setParams,
+          get: { _id: 1, name: 1 },
+        });
+        if (response && response.success) {
+          return response.body.map((item: { _id: string; name: string }) => ({
+            value: item._id,
+            label: item.name,
+          }));
+        }
+        return [];
+      } catch (error) {
+        console.error("Error loading tags:", error);
+        return [];
+      }
+    },
+    [],
+  );
 
-  // Handle province selection (now handled by the AsyncSelectBox)
+  // Handle province selection
   // When province changes, city and city_zone should be cleared
-  useEffect(() => {
-    const subscription = watch((value, { name }) => {
-      if (name === "province" && !value.province) {
-        setValue("city", "", { shouldValidate: true });
-        setValue("city_zone", "", { shouldValidate: true });
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, [watch, setValue]);
+  const handleProvinceSelect = async (option: SelectOption | null) => {
+    setValue("city", "");
+    setValue("city_zone", "");
+  };
 
   // Handle city selection
   const handleCitySelect = async (option: SelectOption | null) => {
-    setSelectedCity(option);
-    setValue("city", option?.value || "", { shouldValidate: true });
-    setValue("city_zone", "", { shouldValidate: true });
-    setSelectedCityZone(null);
-
-    // If a city is selected, load city zones and try to center the map on it
-    if (option) {
-      // Load city zones for the newly selected city
-      await loadCityZonesOptions();
-
-      // In a real app, you would get the city's center point from the database
-      // For now, we'll just zoom in a bit
-      setMapZoom(10);
-      setMapKey((prev) => prev + 1);
-    }
+    setValue("city_zone", "");
   };
 
   // Handle city zone selection
-  const handleCityZoneSelect = (option: SelectOption | null) => {
-    setSelectedCityZone(option);
-    setValue("city_zone", option?.value || "", { shouldValidate: true });
-
-    // If a city zone is selected, try to center the map on it
+  const handleCityZoneSelect = async (option: SelectOption | null) => {
+    // If a city zone is selected, get its details and center the map on it
     if (option) {
-      // In a real app, you would get the city zone's center point from the database
-      // For now, we'll just zoom in a bit more
-      setMapZoom(12);
-      setMapKey((prev) => prev + 1);
+      try {
+        const response = await getCityZoneAction(option.value, {
+          _id: 1,
+          name: 1,
+          center: 1,
+          area: 1,
+        });
+
+        if (response && response.success && response.body) {
+          const cityZone = response.body[0];
+          if (cityZone.center && cityZone.center.coordinates) {
+            // Coordinates format is [longitude, latitude] from the schema
+            const [lng, lat] = cityZone.center.coordinates;
+            setMapCenter([lat, lng]); // Leaflet format is [latitude, longitude]
+            setMapZoom(12); // Appropriate zoom for city zone level
+            setMapKey((prev) => prev + 1); // Force map re-render to reflect new center
+          }
+        } else {
+          console.error(
+            "Failed to fetch city zone:",
+            response?.body?.message || "Unknown error",
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching city zone:", error);
+        // Fallback: just zoom in a bit more without centering
+        setMapZoom(12);
+        setMapKey((prev) => prev + 1);
+      }
     }
-  };
-
-  // Handle category selection
-  const handleCategorySelect = (option: SelectOption | null) => {
-    setSelectedCategory(option);
-    setValue("category", option?.value || "", { shouldValidate: true });
-  };
-
-  // Handle tags selection
-  const handleTagsSelect = (options: readonly SelectOption[]) => {
-    setSelectedTags(options as SelectOption[]);
-    setValue(
-      "tags",
-      options.map((opt) => opt.value),
-      { shouldValidate: true },
-    );
   };
 
   // Handle polygon creation from drawing tool
@@ -577,26 +563,6 @@ const FormCreatePlace = ({
     );
     trigger();
   };
-
-  // Fetch categories on component mount
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const result = await getCategoriesAction({
-          set: { page: 1, limit: 50 },
-          get: { _id: 1, name: 1 },
-        });
-        if (result.success) {
-          setCategories(result.body);
-        }
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-        ToastNotify("error", "خطا در دریافت دسته‌بندی‌ها");
-      }
-    };
-
-    fetchCategories();
-  }, []);
 
   // Form submission handler
   const onSubmit: SubmitHandler<PlaceFormValues> = async (data) => {
@@ -745,37 +711,39 @@ const FormCreatePlace = ({
           {/* Province Selection */}
           <AsyncSelectBox
             name="province"
-            control={control}
             label="انتخاب استان *"
             setValue={setValue}
             loadOptions={loadProvincesOptions}
             defaultOptions
             placeholder="استان را انتخاب کنید"
             errMsg={errors.province?.message}
+            onSelectChange={handleProvinceSelect}
           />
 
           {/* City Selection */}
           <AsyncSelectBox
+            key={watch("province") || "no-province"}
             name="city"
-            control={control}
             label="انتخاب شهر *"
             setValue={setValue}
+            defaultOptions
             loadOptions={loadCitiesOptions}
-            defaultOptions={false}
-            placeholder="شهر را انتخاب کنید"
+            placeholder=" شهر را انتخاب کنید"
             errMsg={errors.city?.message}
+            onSelectChange={handleCitySelect}
           />
 
           {/* City Zone Selection */}
           <AsyncSelectBox
+            key={watch("city") || "no-city"}
             name="city_zone"
-            control={control}
             label="انتخاب منطقه"
             setValue={setValue}
+            defaultOptions
             loadOptions={loadCityZonesOptions}
-            defaultOptions={false}
             placeholder="منطقه را انتخاب کنید"
             errMsg={errors.city_zone?.message}
+            onSelectChange={handleCityZoneSelect}
           />
         </div>
       </div>
@@ -1021,7 +989,6 @@ const FormCreatePlace = ({
           {/* Category Selection */}
           <AsyncSelectBox
             name="category"
-            control={control}
             label="دسته‌بندی *"
             setValue={setValue}
             loadOptions={loadCategoriesOptions}
@@ -1033,7 +1000,6 @@ const FormCreatePlace = ({
           {/* Tags Selection */}
           <AsyncSelectBox
             name="tags"
-            control={control}
             label="برچسب‌ها"
             setValue={setValue}
             loadOptions={loadTagsOptions}
@@ -1041,7 +1007,6 @@ const FormCreatePlace = ({
             placeholder="برچسب‌ها را انتخاب کنید"
             errMsg={errors.tags?.message}
             isMulti={true}
-            labelAsValue={true} // This is for multi-select
           />
         </div>
       </div>
