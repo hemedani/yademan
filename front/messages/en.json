@@ -64,7 +64,10 @@
     "back": "Back",
     "next": "Next",
     "previous": "Previous",
-    "close": "Close"
+    "close": "Close",
+    "active": "Active",
+    "draft": "Draft",
+    "archived": "Archived"
   },
   "Auth": {
     "login": "Login",
@@ -122,6 +125,7 @@
   },
   "place": {
     "virtualTour": "Virtual Tour",
+    "virtualTours": "Virtual Tours",
     "directions": "Directions",
     "tags": "Tags",
     "address": "Address",
@@ -131,7 +135,10 @@
     "lastUpdated": "Last updated",
     "details": "Place Details",
     "noDescription": "No description available",
-    "notFound": "Place not found"
+    "notFound": "Place not found",
+    "noVirtualToursAvailable": "No Virtual Tours Available",
+    "noVirtualToursDescription": "There are no virtual tours available for this location at the moment.",
+    "launchVirtualTour": "Launch Virtual Tour"
   },
   "virtualTour": {
     "loading": "Loading virtual tour",

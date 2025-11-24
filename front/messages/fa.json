@@ -65,7 +65,10 @@
     "next": "بعدی",
     "previous": "قبلی",
     "close": "بستن",
-    "moreInfo": "اطلاعات بیشتر"
+    "moreInfo": "اطلاعات بیشتر",
+    "active": "فعال",
+    "draft": "پیش نویس",
+    "archived": "بایگانی شده"
   },
   "Auth": {
     "login": "ورود",
@@ -130,6 +133,7 @@
   },
   "place": {
     "virtualTour": "تور مجازی",
+    "virtualTours": "تورهای مجازی",
     "directions": "مسیریابی",
     "tags": "برچسب‌ها",
     "address": "آدرس",
@@ -139,7 +143,10 @@
     "lastUpdated": "آخرین بروزرسانی",
     "details": "جزئیات مکان",
     "noDescription": "توضیحاتی موجود نیست",
-    "notFound": "مکان یافت نشد"
+    "notFound": "مکان یافت نشد",
+    "noVirtualToursAvailable": "تور مجازی موجود نیست",
+    "noVirtualToursDescription": "در حال حاضر برای این مکان هیچ تور مجازی در دسترسی وجود ندارد.",
+    "launchVirtualTour": "اجرای تور مجازی"
   },
   "virtualTour": {
     "loading": "در حال بارگذاری تور مجازی",
