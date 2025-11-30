@@ -45,6 +45,7 @@ interface MapState {
     tags?: string[];
     rating?: number;
     distance?: number;
+    antiquity?: number;
   };
 
   // Pathfinding
@@ -78,6 +79,7 @@ interface MapState {
   setIsDrawingPolygon: (isDrawing: boolean) => void;
   setSelectedLocationId: (id: string | null) => void;
   setSearchQuery: (query: string) => void;
+  setAntiquityFilter: (antiquity: number) => void;
   setFilters: (filters: Partial<MapState["filters"]>) => void;
 
   // Pathfinding actions
@@ -153,6 +155,10 @@ export const useMapStore = create<MapState>()(
         setSelectedLocationId: (selectedLocationId) =>
           set({ selectedLocationId }),
         setSearchQuery: (searchQuery) => set({ searchQuery }),
+        setAntiquityFilter: (antiquity) =>
+          set((state) => ({
+            filters: { ...state.filters, antiquity },
+          })),
         setFilters: (newFilters) =>
           set((state) => ({
             filters: { ...state.filters, ...newFilters },
