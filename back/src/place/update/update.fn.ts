@@ -7,6 +7,7 @@ export const updateFn: ActFn = async (body) => {
 		set: {
 			_id,
 			name,
+			antiquity,
 			description,
 			address,
 			contact,
@@ -24,6 +25,7 @@ export const updateFn: ActFn = async (body) => {
 	};
 
 	name && (updateObj.name = name);
+	antiquity && (updateObj.antiquity = antiquity);
 	description && (updateObj.description = description);
 	address && (updateObj.address = address);
 	contact && (updateObj.contact = contact);
