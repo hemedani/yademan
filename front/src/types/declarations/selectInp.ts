@@ -6643,13 +6643,7 @@ export type ReqType = {
           name?: string;
           antiquity?: number;
           description?: string;
-          address?: string;
-          contact?: {
-            phone?: string;
-            website?: string;
-          };
-          hoursOfOperation?: string;
-          meta?: Record<string, any>;
+          slug?: string;
           center?: {
             type: "Point";
             coordinates: any[];
@@ -6658,6 +6652,16 @@ export type ReqType = {
             type: "MultiPolygon";
             coordinates: any[];
           };
+          address?: string;
+          contact?: {
+            phone?: string;
+            email?: string;
+            website?: string;
+            social?: string[];
+          };
+          hoursOfOperation?: string;
+          meta?: Record<string, any>;
+          status?: ("draft" | "active" | "archived");
         };
         get: {
           _id?: (0 | 1);
@@ -10054,6 +10058,7 @@ export type ReqType = {
           };
           maxDistance?: number;
           minDistance?: number;
+          antiquity?: number;
         };
         get: {
           data: {
