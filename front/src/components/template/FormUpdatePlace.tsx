@@ -13,6 +13,13 @@ import { useEffect, useState } from "react";
 import React from "react";
 import { ReqType } from "@/types/declarations/selectInp";
 import AsyncSelectBox from "../atoms/AsyncSelectBox";
+import { useMapEvents } from "react-leaflet";
+import L from "leaflet";
+
+interface LatLng {
+  lat: number;
+  lng: number;
+}
 
 // Dynamically import map components to avoid SSR issues
 const MapContainer = dynamic(
@@ -27,10 +34,13 @@ const Marker = dynamic(
   () => import("react-leaflet").then((mod) => mod.Marker),
   { ssr: false },
 );
-const useMapEvents = dynamic(
-  () => import("react-leaflet").then((mod) => mod.useMapEvents),
+const Polygon = dynamic(
+  () => import("react-leaflet").then((mod) => mod.Polygon),
   { ssr: false },
 );
+const SimpleDrawing = dynamic(() => import("@/components/SimpleDrawing"), {
+  ssr: false,
+});
 
 // Define Zod schema for form validation
 const placeSchema = z.object({
@@ -51,6 +61,13 @@ const placeSchema = z.object({
     .max(100, { message: "نامک نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد" })
     .optional()
     .or(z.literal("")),
+  antiquity: z.coerce
+    .number({
+      invalid_type_error: "عمر آثار باید یک عدد معتبر باشد",
+    })
+    .min(0, { message: "عمر آثار باید عدد مثبت یا صفر باشد" })
+    .max(10000, { message: "عمر آثار باید کمتر از ۱۰۰۰۰ سال باشد" })
+    .optional(),
   address: z
     .string()
     .max(200, { message: "آدرس نمی‌تواند بیشتر از ۲۰۰ کاراکتر باشد" })
@@ -79,19 +96,20 @@ const placeSchema = z.object({
   status: z.enum(["draft", "active", "archived"], {
     errorMap: () => ({ message: "لطفاً یک وضعیت معتبر انتخاب کنید" }),
   }),
-  category: z
-    .string()
-    .min(1, { message: "لطفاً یک دسته‌بندی انتخاب کنید" })
-    .optional()
-    .or(z.literal("")),
-  latitude: z
+  latitude: z.coerce
     .number()
     .min(-90, { message: "عرض جغرافیایی باید بین -۹۰ تا ۹۰ باشد" })
     .max(90, { message: "عرض جغرافیایی باید بین -۹۰ تا ۹۰ باشد" }),
-  longitude: z
+  longitude: z.coerce
     .number()
     .min(-180, { message: "طول جغرافیایی باید بین -۱۸۰ تا ۱۸۰ باشد" })
     .max(180, { message: "طول جغرافیایی باید بین -۱۸۰ تا ۱۸۰ باشد" }),
+  area: z
+    .object({
+      type: z.literal("MultiPolygon"),
+      coordinates: z.array(z.array(z.array(z.array(z.coerce.number())))),
+    })
+    .optional(),
 });
 
 // Define the form type based on the schema
@@ -100,12 +118,16 @@ type PlaceFormValues = z.infer<typeof placeSchema>;
 // MapClickHandler component for handling map clicks
 const MapClickHandler = ({
   onClick,
+  isActive,
 }: {
   onClick: (latlng: L.LatLng) => void;
+  isActive?: boolean;
 }) => {
   const map = useMapEvents({
     click(e) {
-      onClick(e.latlng);
+      if (isActive) {
+        onClick(e.latlng);
+      }
     },
   });
   return null;
@@ -125,6 +147,12 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
   const [markerPosition, setMarkerPosition] = useState<[number, number]>([
     35.6892, 51.389,
   ]); // Default to Tehran, Iran
+  const [mapZoom, setMapZoom] = useState(6);
+  const [mapKey, setMapKey] = useState(0);
+  const [drawnPolygon, setDrawnPolygon] = useState<[number, number][] | null>(
+    null,
+  );
+  const [isDrawingMode, setIsDrawingMode] = useState(false);
 
   // Form setup with Zod validation
   const {
@@ -141,6 +169,7 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
       name: "",
       description: "",
       slug: "",
+      antiquity: undefined,
       address: "",
       phone: "",
       email: "",
@@ -150,6 +179,7 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
       category: "",
       latitude: 35.6892,
       longitude: 51.389,
+      area: { type: "MultiPolygon", coordinates: [] },
     },
   });
 
@@ -164,15 +194,13 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
           get: {
             _id: 1,
             name: 1,
+            antiquity: 1,
             description: 1,
             slug: 1,
             center: 1,
+            area: 1, // Add area field
             address: 1,
-            contact: {
-              phone: 1,
-              email: 1,
-              website: 1,
-            },
+            contact: 1,
             hoursOfOperation: 1,
             category: {
               _id: 1,
@@ -183,30 +211,54 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
         });
 
         if (placeResult.success && placeResult.body) {
-          const place = placeResult.body;
+          const place = placeResult.body[0];
 
           // Set form values from place data
           reset({
             name: place.name,
             description: place.description || "",
             slug: place.slug || "",
+            antiquity: place.antiquity,
             address: place.address || "",
             phone: place.contact?.phone || "",
             email: place.contact?.email || "",
             website: place.contact?.website || "",
             hoursOfOperation: place.hoursOfOperation || "",
             status: place.status as "draft" | "active" | "archived",
-            category: place.category?._id || "",
-            latitude: place.center?.coordinates[1] || 35.6892, // Latitude is Y coordinate
-            longitude: place.center?.coordinates[0] || 51.389, // Longitude is X coordinate
+            latitude: place.center?.coordinates[1]
+              ? Number(place.center.coordinates[1].toFixed(6))
+              : 35.6892, // Latitude is Y coordinate, rounded to 6 decimal places
+            longitude: place.center?.coordinates[0]
+              ? Number(place.center.coordinates[0].toFixed(6))
+              : 51.389, // Longitude is X coordinate, rounded to 6 decimal places
+            area: place.area || { type: "MultiPolygon", coordinates: [] },
           });
 
           // Set marker position for map
           if (place.center?.coordinates) {
-            setMarkerPosition([
-              place.center.coordinates[1], // Latitude
-              place.center.coordinates[0], // Longitude
-            ]);
+            const [lng, lat] = place.center.coordinates;
+            setMarkerPosition([lat, lng]);
+            setMapZoom(15); // Appropriate zoom for place location
+            setMapKey((prev) => prev + 1); // Force map re-render to reflect new position and zoom
+          }
+
+          // Set polygon data if available (using first polygon of MultiPolygon)
+          if (
+            place.area?.coordinates &&
+            place.area.coordinates.length > 0 &&
+            place.area.coordinates[0].length > 0
+          ) {
+            // Convert first polygon of MultiPolygon coordinates to the format expected by Leaflet
+            const firstPolygon = (
+              place.area.coordinates[0][0] as [number, number][]
+            ).map(
+              ([lng, lat]: [number, number]) =>
+                [Number(lat.toFixed(6)), Number(lng.toFixed(6))] as [
+                  number,
+                  number,
+                ],
+            );
+            setDrawnPolygon(firstPolygon);
           }
         } else {
           ToastNotify("error", "خطا در دریافت اطلاعات مکان");
@@ -215,7 +267,7 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
 
         // Fetch categories
         const categoriesResult = await getCategoriesAction({
-          set: {},
+          set: { page: 1, limit: 50 },
           get: { _id: 1, name: 1 },
         });
 
@@ -241,9 +293,17 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
   // Handle map marker position change
   const handleMapClick = (latlng: L.LatLng) => {
     const { lat, lng } = latlng;
-    setMarkerPosition([lat, lng]);
-    setValue("latitude", lat);
-    setValue("longitude", lng);
+    const roundedLat = Number(lat.toFixed(6));
+    const roundedLng = Number(lng.toFixed(6));
+    setMarkerPosition([roundedLat, roundedLng]);
+    setValue("latitude", roundedLat);
+    setValue("longitude", roundedLng);
+  };
+
+  // Handle polygon deletion
+  const handlePolygonDeleted = () => {
+    setDrawnPolygon(null);
+    setValue("area", { type: "MultiPolygon", coordinates: [] });
   };
 
   // Form submission handler
@@ -255,10 +315,15 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
         name: data.name,
         description: data.description,
         slug: data.slug || undefined,
+        antiquity: data.antiquity ?? 0,
         center: {
           type: "Point" as const,
-          coordinates: [data.longitude, data.latitude],
+          coordinates: [
+            Number(data.longitude.toFixed(6)),
+            Number(data.latitude.toFixed(6)),
+          ] as [number, number],
         },
+        area: data.area!,
         address: data.address || undefined,
         contact: {
           phone: data.phone || undefined,
@@ -285,6 +350,51 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Toggle drawing mode
+  const toggleDrawingMode = () => {
+    if (isDrawingMode) {
+      setIsDrawingMode(false);
+    } else {
+      setIsDrawingMode(true);
+    }
+  };
+
+  // Handle polygon creation from drawing tool
+  const handlePolygonCreated = (polygons: LatLng[][]) => {
+    // Only handle the first polygon (SimpleDrawing typically returns one polygon)
+    if (polygons.length > 0) {
+      // Convert LatLng objects to [number, number] format for the state
+      const firstPolygon = polygons[0].map(
+        (point) => [point.lat, point.lng] as [number, number],
+      );
+      setDrawnPolygon(firstPolygon);
+
+      // Convert the polygon to the format expected by the form
+      const coordinates = polygons[0].map((point) => [
+        Number(point.lng.toFixed(6)),
+        Number(point.lat.toFixed(6)),
+      ]);
+
+      // Add the closing point if it's not already closed
+      const firstPoint = coordinates[0];
+      const lastPoint = coordinates[coordinates.length - 1];
+
+      if (firstPoint[0] !== lastPoint[0] || firstPoint[1] !== lastPoint[1]) {
+        coordinates.push(firstPoint); // Close the polygon
+      }
+
+      setValue("area", { type: "MultiPolygon", coordinates: [[coordinates]] });
+    } else {
+      setValue("area", { type: "MultiPolygon", coordinates: [] });
+    }
+  };
+
+  // Clear drawn polygon
+  const clearDrawnPolygon = () => {
+    setDrawnPolygon(null);
+    setValue("area", { type: "MultiPolygon", coordinates: [] });
   };
 
   // Watch form values for conditional rendering
@@ -315,10 +425,11 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <MyInput
             name="name"
-            label="نام مکان *"
+            label="نام مکان"
             register={register}
             errMsg={errors.name?.message}
             placeholder="مانند: موزه ملی ایران"
+            isRequired={true}
           />
 
           <MyInput
@@ -328,15 +439,26 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
             errMsg={errors.slug?.message}
             placeholder="مانند: national-museum"
           />
+
+          <MyInput
+            name="antiquity"
+            label="عمر آثار (سال)"
+            register={register}
+            errMsg={errors.antiquity?.message}
+            placeholder="مثال: 2000"
+            type="number"
+            isRequired={true}
+          />
         </div>
 
         <MyInput
           name="description"
-          label="توضیحات *"
+          label="توضیحات"
           register={register}
           errMsg={errors.description?.message}
           placeholder="توضیحاتی درباره این مکان"
           type="textarea"
+          isRequired={true}
         />
       </div>
 
@@ -357,6 +479,7 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
         <div className="mt-6 rounded-xl overflow-hidden border border-gray-600 h-[400px] relative">
           {typeof window !== "undefined" && (
             <MapContainer
+              key={`${markerPosition[0]}-${markerPosition[1]}`} // Force re-render when position changes
               center={markerPosition}
               zoom={13}
               style={{ height: "100%", width: "100%" }}
@@ -365,10 +488,84 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               />
-              <Marker position={markerPosition} />
-              <MapClickHandler onClick={handleMapClick} />
+              {/* Show polygon if available */}
+              {drawnPolygon && (
+                <Polygon
+                  positions={drawnPolygon}
+                  pathOptions={{
+                    color: "#FF007A", // Pink
+                    weight: 3,
+                    opacity: 0.8,
+                    fillOpacity: 0.2,
+                    fillColor: "#FF007A", // Pink
+                  }}
+                />
+              )}
+              {markerPosition && <Marker position={markerPosition} />}
+              <MapClickHandler
+                onClick={handleMapClick}
+                isActive={isDrawingMode}
+              />
+              <SimpleDrawing
+                isActive={isDrawingMode}
+                onPolygonCreated={handlePolygonCreated}
+                onPolygonDeleted={handlePolygonDeleted}
+              />
             </MapContainer>
           )}
+        </div>
+
+        {/* Map Controls */}
+        <div className="flex items-center justify-between mt-4">
+          <div className="flex gap-2">
+            {drawnPolygon && drawnPolygon.length > 0 && (
+              <button
+                type="button"
+                onClick={clearDrawnPolygon}
+                className="bg-red-900/30 text-red-400 px-3 py-1.5 rounded-lg text-sm flex items-center gap-1 hover:bg-red-900/50 transition-colors border border-red-800"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+                <span>حذف منطقه</span>
+              </button>
+            )}
+          </div>
+
+          <button
+            type="button"
+            onClick={toggleDrawingMode}
+            className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
+              isDrawingMode
+                ? "bg-pink-600 text-white"
+                : "bg-gray-700 text-white border border-gray-600 hover:bg-gray-600"
+            }`}
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+              />
+            </svg>
+            {isDrawingMode ? "در حال ترسیم..." : "ترسیم محدوده"}
+          </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
@@ -441,25 +638,6 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <AsyncSelectBox
-            name="category"
-            label="دسته‌بندی"
-            setValue={setValue}
-            loadOptions={async () =>
-              categories.map((category) => ({
-                value: category._id,
-                label: category.name,
-              }))
-            }
-            defaultOptions={categories.map((category) => ({
-              value: category._id,
-              label: category.name,
-            }))}
-            placeholder="دسته‌بندی را انتخاب کنید"
-            errMsg={errors.category?.message}
-            labelAsValue={false}
-          />
-
           <div>
             <label
               htmlFor="status"

@@ -72,6 +72,13 @@ const placeSchema = z.object({
     .max(100, { message: "نامک نمی‌تواند بیشتر از ۱۰۰ کاراکتر باشد" })
     .optional()
     .or(z.literal("")),
+  antiquity: z.coerce
+    .number({
+      invalid_type_error: "عمر آثار باید یک عدد معتبر باشد",
+    })
+    .min(0, { message: "عمر آثار باید عدد مثبت یا صفر باشد" })
+    .max(10000, { message: "عمر آثار باید کمتر از ۱۰۰۰۰ سال باشد" })
+    .optional(),
   thumbnail: z.string().optional().or(z.literal("")),
   gallery: z.array(z.string()).optional(),
   address: z
@@ -110,13 +117,13 @@ const placeSchema = z.object({
   center: z.object({
     type: z.literal("Point"),
     coordinates: z
-      .array(z.number())
+      .array(z.coerce.number())
       .length(2, { message: "مختصات مرکز باید شامل طول و عرض جغرافیایی باشد" }),
   }),
   area: z
     .object({
       type: z.literal("MultiPolygon"),
-      coordinates: z.array(z.array(z.array(z.array(z.number())))),
+      coordinates: z.array(z.array(z.array(z.array(z.coerce.number())))),
     })
     .optional(),
 });
@@ -161,6 +168,7 @@ const FormCreatePlace = ({
       name: "",
       description: "",
       slug: "",
+      antiquity: undefined,
       address: "",
       phone: "",
       email: "",
@@ -460,7 +468,10 @@ const FormCreatePlace = ({
       setDrawnPolygon(polygons);
       // Convert the polygon to the format expected by the schema
       const coordinates = polygons.map((polygon) =>
-        polygon.map((point) => [point.lng, point.lat]),
+        polygon.map((point) => [
+          Number(point.lng.toFixed(6)),
+          Number(point.lat.toFixed(6)),
+        ]),
       );
 
       if (coordinates.length > 0) {
@@ -506,10 +517,12 @@ const FormCreatePlace = ({
     (e: LatLng) => {
       if (isCenterMode) {
         const { lat, lng } = e;
-        setCenterPoint({ lat, lng });
+        const roundedLat = Number(lat.toFixed(6));
+        const roundedLng = Number(lng.toFixed(6));
+        setCenterPoint({ lat: roundedLat, lng: roundedLng });
         setValue(
           "center",
-          { type: "Point", coordinates: [lng, lat] },
+          { type: "Point", coordinates: [roundedLng, roundedLat] },
           { shouldValidate: true },
         );
         setIsCenterMode(false);
@@ -573,11 +586,15 @@ const FormCreatePlace = ({
         name: data.name,
         description: data.description,
         slug: data.slug || undefined,
+        antiquity: data.antiquity ?? 0,
         center: {
           type: "Point",
-          coordinates: centerPoint
-            ? [centerPoint.lng, centerPoint.lat]
-            : [51.389, 35.6892], // Default to Tehran if no center point selected
+          coordinates: (centerPoint
+            ? [
+                Number(centerPoint.lng.toFixed(6)),
+                Number(centerPoint.lat.toFixed(6)),
+              ]
+            : [51.389, 35.6892]) as [number, number], // Default to Tehran if no center point selected
         },
         area: data.area!,
         address: data.address || undefined,
@@ -637,6 +654,7 @@ const FormCreatePlace = ({
             register={register}
             errMsg={errors.name?.message}
             placeholder="مثال: موزه هنرهای معاصر"
+            isRequired={true}
           />
 
           <MyInput
@@ -645,6 +663,16 @@ const FormCreatePlace = ({
             register={register}
             errMsg={errors.slug?.message}
             placeholder="مثال: museum-of-contemporary-art"
+          />
+
+          <MyInput
+            name="antiquity"
+            label="عمر آثار (سال)"
+            register={register}
+            errMsg={errors.antiquity?.message}
+            placeholder="مثال: 2000"
+            type="number"
+            isRequired={true}
           />
 
           <div className="col-span-1">
@@ -696,11 +724,12 @@ const FormCreatePlace = ({
 
         <MyInput
           name="description"
-          label="توضیحات *"
+          label="توضیحات"
           register={register}
           errMsg={errors.description?.message}
           placeholder="توضیحاتی درباره این مکان"
           type="textarea"
+          isRequired={true}
         />
       </div>
 
@@ -714,26 +743,28 @@ const FormCreatePlace = ({
           {/* Province Selection */}
           <AsyncSelectBox
             name="province"
-            label="انتخاب استان *"
+            label="انتخاب استان"
             setValue={setValue}
             loadOptions={loadProvincesOptions}
             defaultOptions
             placeholder="استان را انتخاب کنید"
             errMsg={errors.province?.message}
             onSelectChange={handleProvinceSelect}
+            isRequired={true}
           />
 
           {/* City Selection */}
           <AsyncSelectBox
             key={watch("province") || "no-province"}
             name="city"
-            label="انتخاب شهر *"
+            label="انتخاب شهر"
             setValue={setValue}
             defaultOptions
             loadOptions={loadCitiesOptions}
             placeholder=" شهر را انتخاب کنید"
             errMsg={errors.city?.message}
             onSelectChange={handleCitySelect}
+            isRequired={true}
           />
 
           {/* City Zone Selection */}
@@ -992,12 +1023,13 @@ const FormCreatePlace = ({
           {/* Category Selection */}
           <AsyncSelectBox
             name="category"
-            label="دسته‌بندی *"
+            label="دسته‌بندی"
             setValue={setValue}
             loadOptions={loadCategoriesOptions}
             defaultOptions
             placeholder="دسته‌بندی را انتخاب کنید"
             errMsg={errors.category?.message}
+            isRequired={true}
           />
 
           {/* Tags Selection */}
