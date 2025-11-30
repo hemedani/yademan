@@ -72,6 +72,7 @@ export type provinceSchema = {
   places: {
     _id?: string;
     name: string;
+    antiquity: number;
     description: string;
     slug?: string;
     center: {
@@ -168,6 +169,7 @@ export type citySchema = {
   places: {
     _id?: string;
     name: string;
+    antiquity: number;
     description: string;
     slug?: string;
     center: {
@@ -279,6 +281,7 @@ export type userSchema = {
   registered_places: {
     _id?: string;
     name: string;
+    antiquity: number;
     description: string;
     slug?: string;
     center: {
@@ -436,6 +439,7 @@ export type city_zoneSchema = {
   places: {
     _id?: string;
     name: string;
+    antiquity: number;
     description: string;
     slug?: string;
     center: {
@@ -566,6 +570,7 @@ export type placeInp = {
 export type placeSchema = {
   _id?: string;
   name: string;
+  antiquity: number;
   description: string;
   slug?: string;
   center: {
@@ -762,6 +767,7 @@ export type commentSchema = {
   place: {
     _id?: string;
     name: string;
+    antiquity: number;
     description: string;
     slug?: string;
     center: {
@@ -813,6 +819,7 @@ export type virtual_tourSchema = {
   place: {
     _id?: string;
     name: string;
+    antiquity: number;
     description: string;
     slug?: string;
     center: {
@@ -911,6 +918,7 @@ export type eventSchema = {
   places?: {
     _id?: string;
     name: string;
+    antiquity: number;
     description: string;
     slug?: string;
     center: {
@@ -1049,6 +1057,7 @@ export type ReqType = {
           places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -1122,6 +1131,7 @@ export type ReqType = {
           places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -1209,6 +1219,7 @@ export type ReqType = {
             registered_places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -1313,6 +1324,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -1360,6 +1372,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -1376,6 +1389,7 @@ export type ReqType = {
           places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -1580,6 +1594,7 @@ export type ReqType = {
             registered_places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -1684,6 +1699,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -1731,6 +1747,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -1747,6 +1764,7 @@ export type ReqType = {
           places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -1953,6 +1971,7 @@ export type ReqType = {
           places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -2012,6 +2031,7 @@ export type ReqType = {
           places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -2098,6 +2118,7 @@ export type ReqType = {
             registered_places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -2201,6 +2222,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -2217,6 +2239,7 @@ export type ReqType = {
           places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -2421,6 +2444,7 @@ export type ReqType = {
             registered_places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -2524,6 +2548,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -2540,6 +2565,7 @@ export type ReqType = {
           places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -2768,6 +2794,7 @@ export type ReqType = {
             registered_places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -2927,6 +2954,7 @@ export type ReqType = {
           places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -3001,6 +3029,7 @@ export type ReqType = {
           places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -3088,6 +3117,7 @@ export type ReqType = {
             registered_places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -3191,6 +3221,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -3247,6 +3278,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -3263,6 +3295,7 @@ export type ReqType = {
           places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -3466,6 +3499,7 @@ export type ReqType = {
             registered_places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -3569,6 +3603,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -3625,6 +3660,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -3641,6 +3677,7 @@ export type ReqType = {
           places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -3875,6 +3912,7 @@ export type ReqType = {
           registered_places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -4041,6 +4079,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -4097,6 +4136,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -4131,6 +4171,7 @@ export type ReqType = {
           registered_places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -4283,6 +4324,7 @@ export type ReqType = {
             place?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -4332,6 +4374,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -4423,6 +4466,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -4586,6 +4630,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -4642,6 +4687,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -4676,6 +4722,7 @@ export type ReqType = {
           registered_places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -4828,6 +4875,7 @@ export type ReqType = {
             place?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -4877,6 +4925,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -4968,6 +5017,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -5093,6 +5143,7 @@ export type ReqType = {
             registered_places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -5230,6 +5281,7 @@ export type ReqType = {
           registered_places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -5363,6 +5415,7 @@ export type ReqType = {
           registered_places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -5499,6 +5552,7 @@ export type ReqType = {
           registered_places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -5668,6 +5722,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -5724,6 +5779,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -5758,6 +5814,7 @@ export type ReqType = {
           registered_places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -5910,6 +5967,7 @@ export type ReqType = {
             place?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -5959,6 +6017,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -6050,6 +6109,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -6193,6 +6253,7 @@ export type ReqType = {
           registered_places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -6323,6 +6384,7 @@ export type ReqType = {
           registered_places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -6411,6 +6473,7 @@ export type ReqType = {
         set: {
           _id?: string;
           name: string;
+          antiquity: number;
           description: string;
           slug?: string;
           center: {
@@ -6444,6 +6507,7 @@ export type ReqType = {
         get: {
           _id?: (0 | 1);
           name?: (0 | 1);
+          antiquity?: (0 | 1);
           description?: (0 | 1);
           slug?: (0 | 1);
           center?: (0 | 1);
@@ -6577,6 +6641,7 @@ export type ReqType = {
         set: {
           _id: string;
           name?: string;
+          antiquity?: number;
           description?: string;
           address?: string;
           contact?: {
@@ -6597,6 +6662,7 @@ export type ReqType = {
         get: {
           _id?: (0 | 1);
           name?: (0 | 1);
+          antiquity?: (0 | 1);
           description?: (0 | 1);
           slug?: (0 | 1);
           center?: (0 | 1);
@@ -6733,6 +6799,7 @@ export type ReqType = {
         get: {
           _id?: (0 | 1);
           name?: (0 | 1);
+          antiquity?: (0 | 1);
           description?: (0 | 1);
           slug?: (0 | 1);
           center?: (0 | 1);
@@ -6844,6 +6911,7 @@ export type ReqType = {
               places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -6900,6 +6968,7 @@ export type ReqType = {
               places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -6934,6 +7003,7 @@ export type ReqType = {
             registered_places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -7086,6 +7156,7 @@ export type ReqType = {
               place?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -7135,6 +7206,7 @@ export type ReqType = {
               places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -7226,6 +7298,7 @@ export type ReqType = {
               places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -7349,6 +7422,7 @@ export type ReqType = {
               registered_places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -7452,6 +7526,7 @@ export type ReqType = {
               places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -7508,6 +7583,7 @@ export type ReqType = {
               places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -7524,6 +7600,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -7718,6 +7795,7 @@ export type ReqType = {
               registered_places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -7822,6 +7900,7 @@ export type ReqType = {
               places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -7869,6 +7948,7 @@ export type ReqType = {
               places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -7885,6 +7965,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -8078,6 +8159,7 @@ export type ReqType = {
               registered_places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -8181,6 +8263,7 @@ export type ReqType = {
               places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -8197,6 +8280,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -8391,6 +8475,7 @@ export type ReqType = {
               registered_places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -8519,6 +8604,7 @@ export type ReqType = {
               registered_places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -8615,6 +8701,7 @@ export type ReqType = {
               places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -8735,6 +8822,7 @@ export type ReqType = {
               registered_places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -8860,6 +8948,7 @@ export type ReqType = {
               registered_places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -8988,6 +9077,7 @@ export type ReqType = {
               registered_places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -9051,6 +9141,7 @@ export type ReqType = {
             place?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -9189,6 +9280,7 @@ export type ReqType = {
             place?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -9395,6 +9487,7 @@ export type ReqType = {
               registered_places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -9533,6 +9626,7 @@ export type ReqType = {
               registered_places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -9596,6 +9690,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -9781,6 +9876,7 @@ export type ReqType = {
               registered_places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -9963,6 +10059,7 @@ export type ReqType = {
           data: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -10033,6 +10130,7 @@ export type ReqType = {
               registered_places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -10137,6 +10235,7 @@ export type ReqType = {
               places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -10193,6 +10292,7 @@ export type ReqType = {
               places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -10240,6 +10340,7 @@ export type ReqType = {
               places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -10388,6 +10489,7 @@ export type ReqType = {
               place?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -10412,6 +10514,7 @@ export type ReqType = {
               place?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -10485,6 +10588,7 @@ export type ReqType = {
               places?: {
                 _id?: (0 | 1);
                 name?: (0 | 1);
+                antiquity?: (0 | 1);
                 description?: (0 | 1);
                 slug?: (0 | 1);
                 center?: (0 | 1);
@@ -10622,6 +10726,7 @@ export type ReqType = {
           place?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -10672,6 +10777,7 @@ export type ReqType = {
           place?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -10759,6 +10865,7 @@ export type ReqType = {
             registered_places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -10822,6 +10929,7 @@ export type ReqType = {
           place?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -11030,6 +11138,7 @@ export type ReqType = {
             registered_places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -11093,6 +11202,7 @@ export type ReqType = {
           place?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -11434,6 +11544,7 @@ export type ReqType = {
             registered_places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -11530,6 +11641,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -11662,6 +11774,7 @@ export type ReqType = {
             registered_places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -11758,6 +11871,7 @@ export type ReqType = {
             places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -11984,6 +12098,7 @@ export type ReqType = {
             registered_places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -12121,6 +12236,7 @@ export type ReqType = {
             registered_places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -12239,6 +12355,7 @@ export type ReqType = {
           place?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -12303,6 +12420,7 @@ export type ReqType = {
           place?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -12358,6 +12476,7 @@ export type ReqType = {
           place?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -12564,6 +12683,7 @@ export type ReqType = {
             registered_places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -12646,6 +12766,7 @@ export type ReqType = {
           place?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -12852,6 +12973,7 @@ export type ReqType = {
             registered_places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -13004,6 +13126,7 @@ export type ReqType = {
           places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -13118,6 +13241,7 @@ export type ReqType = {
           places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -13223,6 +13347,7 @@ export type ReqType = {
           places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -13362,6 +13487,7 @@ export type ReqType = {
             registered_places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -13425,6 +13551,7 @@ export type ReqType = {
           places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -13610,6 +13737,7 @@ export type ReqType = {
             registered_places?: {
               _id?: (0 | 1);
               name?: (0 | 1);
+              antiquity?: (0 | 1);
               description?: (0 | 1);
               slug?: (0 | 1);
               center?: (0 | 1);
@@ -13810,6 +13938,7 @@ export type ReqType = {
           places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);
@@ -13908,6 +14037,7 @@ export type ReqType = {
           places?: {
             _id?: (0 | 1);
             name?: (0 | 1);
+            antiquity?: (0 | 1);
             description?: (0 | 1);
             slug?: (0 | 1);
             center?: (0 | 1);

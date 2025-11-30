@@ -72,6 +72,7 @@ updatedAt: Date;
 places: {
 _id?: string;
 name: string;
+antiquity: number;
 description: string;
 slug?: string;
 center: {
@@ -168,6 +169,7 @@ updatedAt: Date;
 places: {
 _id?: string;
 name: string;
+antiquity: number;
 description: string;
 slug?: string;
 center: {
@@ -279,6 +281,7 @@ size: number;
 registered_places: {
 _id?: string;
 name: string;
+antiquity: number;
 description: string;
 slug?: string;
 center: {
@@ -436,6 +439,7 @@ updatedAt: Date;
 places: {
 _id?: string;
 name: string;
+antiquity: number;
 description: string;
 slug?: string;
 center: {
@@ -566,6 +570,7 @@ events?: number | eventInp
     export type placeSchema = {
 _id?: string;
 name: string;
+antiquity: number;
 description: string;
 slug?: string;
 center: {
@@ -762,6 +767,7 @@ updatedAt: Date;
 place: {
 _id?: string;
 name: string;
+antiquity: number;
 description: string;
 slug?: string;
 center: {
@@ -813,6 +819,7 @@ updatedAt: Date;
 place: {
 _id?: string;
 name: string;
+antiquity: number;
 description: string;
 slug?: string;
 center: {
@@ -911,6 +918,7 @@ updatedAt: Date;
 places?: {
 _id?: string;
 name: string;
+antiquity: number;
 description: string;
 slug?: string;
 center: {
@@ -1049,6 +1057,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -1122,6 +1131,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -1209,6 +1219,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -1313,6 +1324,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -1360,6 +1372,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -1376,6 +1389,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -1580,6 +1594,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -1684,6 +1699,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -1731,6 +1747,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -1747,6 +1764,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -1953,6 +1971,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -2012,6 +2031,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -2098,6 +2118,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -2201,6 +2222,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -2217,6 +2239,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -2421,6 +2444,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -2524,6 +2548,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -2540,6 +2565,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -2768,6 +2794,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -2927,6 +2954,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -3001,6 +3029,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -3088,6 +3117,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -3191,6 +3221,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -3247,6 +3278,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -3263,6 +3295,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -3466,6 +3499,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -3569,6 +3603,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -3625,6 +3660,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -3641,6 +3677,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -3875,6 +3912,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -4041,6 +4079,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -4097,6 +4136,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -4131,6 +4171,7 @@ is_verified?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -4283,6 +4324,7 @@ updatedAt?: (0 | 1 );
 place?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -4332,6 +4374,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -4423,6 +4466,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -4586,6 +4630,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -4642,6 +4687,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -4676,6 +4722,7 @@ is_verified?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -4828,6 +4875,7 @@ updatedAt?: (0 | 1 );
 place?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -4877,6 +4925,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -4968,6 +5017,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -5093,6 +5143,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -5230,6 +5281,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -5363,6 +5415,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -5499,6 +5552,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -5668,6 +5722,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -5724,6 +5779,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -5758,6 +5814,7 @@ is_verified?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -5910,6 +5967,7 @@ updatedAt?: (0 | 1 );
 place?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -5959,6 +6017,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -6050,6 +6109,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -6193,6 +6253,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -6323,6 +6384,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -6411,6 +6473,7 @@ tags?: (0 | 1 );
 set: {
 _id?: string;
 name: string;
+antiquity: number;
 description: string;
 slug?: string;
 center: {
@@ -6444,6 +6507,7 @@ thumbnail?: string;
 get: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -6577,14 +6641,9 @@ updatedAt?: (0 | 1 );
 set: {
 _id: string;
 name?: string;
+antiquity?: number;
 description?: string;
-address?: string;
-contact?: {
-phone?: string;
-website?: string;
-};
-hoursOfOperation?: string;
-meta?: Record<string, any>;
+slug?: string;
 center?: {
 type: "Point";
 coordinates: any[];
@@ -6593,10 +6652,21 @@ area?: {
 type: "MultiPolygon";
 coordinates: any[];
 };
+address?: string;
+contact?: {
+phone?: string;
+email?: string;
+website?: string;
+social?: string[];
+};
+hoursOfOperation?: string;
+meta?: Record<string, any>;
+status?: ("draft" | "active" | "archived" );
 };
 get: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -6733,6 +6803,7 @@ _id: string;
 get: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -6844,6 +6915,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -6900,6 +6972,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -6934,6 +7007,7 @@ is_verified?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -7086,6 +7160,7 @@ updatedAt?: (0 | 1 );
 place?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -7135,6 +7210,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -7226,6 +7302,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -7349,6 +7426,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -7452,6 +7530,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -7508,6 +7587,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -7524,6 +7604,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -7718,6 +7799,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -7822,6 +7904,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -7869,6 +7952,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -7885,6 +7969,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -8078,6 +8163,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -8181,6 +8267,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -8197,6 +8284,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -8391,6 +8479,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -8519,6 +8608,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -8615,6 +8705,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -8735,6 +8826,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -8860,6 +8952,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -8988,6 +9081,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -9051,6 +9145,7 @@ updatedAt?: (0 | 1 );
 place?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -9189,6 +9284,7 @@ updatedAt?: (0 | 1 );
 place?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -9395,6 +9491,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -9533,6 +9630,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -9596,6 +9694,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -9781,6 +9880,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -9963,6 +10063,7 @@ get: {
 data: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -10033,6 +10134,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -10137,6 +10239,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -10193,6 +10296,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -10240,6 +10344,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -10388,6 +10493,7 @@ updatedAt?: (0 | 1 );
 place?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -10412,6 +10518,7 @@ updatedAt?: (0 | 1 );
 place?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -10485,6 +10592,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -10622,6 +10730,7 @@ updatedAt?: (0 | 1 );
 place?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -10672,6 +10781,7 @@ updatedAt?: (0 | 1 );
 place?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -10759,6 +10869,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -10822,6 +10933,7 @@ updatedAt?: (0 | 1 );
 place?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -11030,6 +11142,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -11093,6 +11206,7 @@ updatedAt?: (0 | 1 );
 place?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -11434,6 +11548,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -11530,6 +11645,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -11662,6 +11778,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -11758,6 +11875,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -11984,6 +12102,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -12121,6 +12240,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -12239,6 +12359,7 @@ updatedAt?: (0 | 1 );
 place?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -12303,6 +12424,7 @@ updatedAt?: (0 | 1 );
 place?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -12358,6 +12480,7 @@ updatedAt?: (0 | 1 );
 place?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -12564,6 +12687,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -12646,6 +12770,7 @@ updatedAt?: (0 | 1 );
 place?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -12852,6 +12977,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -13004,6 +13130,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -13118,6 +13245,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -13223,6 +13351,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -13362,6 +13491,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -13425,6 +13555,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -13610,6 +13741,7 @@ size?: (0 | 1 );
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -13810,6 +13942,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
@@ -13908,6 +14041,7 @@ updatedAt?: (0 | 1 );
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
+antiquity?: (0 | 1 );
 description?: (0 | 1 );
 slug?: (0 | 1 );
 center?: (0 | 1 );
