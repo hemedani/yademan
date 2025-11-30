@@ -71,19 +71,5 @@ export const getsFn: ActFn = async (body) => {
 		})
 		.toArray();
 
-	/*
-	 * 	@LOG @DEBUG @INFO
-	 * 	This log written by ::==> {{ `` }}
-	 *
-	 * 	Please remove your log after debugging
-	 */
-	console.log(" ============= ");
-	console.group("pipeline ------ ");
-	console.log();
-	console.info({ pipeline, foundedComments }, " ------ ");
-	console.log();
-	console.groupEnd();
-	console.log(" ============= ");
-
 	return foundedComments;
 };
