@@ -215,5 +215,38 @@
     "likeSuccess": "نظر با موفقیت لایک شد!",
     "replyNotSupported": "پاسخ به نظرات در حال حاضر پشتیبانی نمی شود.",
     "commentAdded": "نظر با موفقیت ارسال شد!"
+  },
+  "AntiquitySlider": {
+    "antiquityFilter": "فیلتر قدیمی بودن",
+    "min": "حداقل",
+    "max": "حداکثر",
+    "years": "سال",
+    "antiquityInputLabel": "مقدار قدیمی بودن را به سال وارد کنید",
+    "play": "پخش",
+    "pause": "مکث",
+    "reset": "بازنشانی",
+    "playAnimation": "پخش انیمیشن خط زمان",
+    "pauseAnimation": "مکث انیمیشن خط زمان",
+    "resetFilter": "بازنشانی فیلتر قدیمی بودن",
+    "antiquitySlider": "اسلایدر خط زمان قدیمی بودن",
+    "showSitesOlderThan": "نمایش مکان‌های قدیمی‌تر از"
+  },
+  "TimelineSlider": {
+    "timelineFilter": "فیلتر خط زمان",
+    "min": "حداقل",
+    "max": "حداکثر",
+    "years": "سال",
+    "timelineInputLabel": "مقدار خط زمان را به سال وارد کنید",
+    "play": "پخش",
+    "pause": "مکث",
+    "reset": "بازنشانی",
+    "playAnimation": "پخش انیمیشن خط زمان",
+    "pauseAnimation": "مکث انیمیشن خط زمان",
+    "resetFilter": "بازنشانی فیلتر خط زمان",
+    "timelineSlider": "اسلایدر خط زمان",
+    "showSitesOlderThan": "نمایش مکان‌های قدیمی‌تر از",
+    "settings": "تنظیمات",
+    "animationSpeed": "سرعت انیمیشن",
+    "removeAds": "حذف تبلیغات"
   }
 }

@@ -207,5 +207,38 @@
     "likeSuccess": "Comment liked successfully!",
     "replyNotSupported": "Replying to comments is not currently supported.",
     "commentAdded": "Comment added successfully!"
+  },
+  "AntiquitySlider": {
+    "antiquityFilter": "Antiquity Filter",
+    "min": "Min",
+    "max": "Max",
+    "years": "years",
+    "antiquityInputLabel": "Enter antiquity value in years",
+    "play": "Play",
+    "pause": "Pause",
+    "reset": "Reset",
+    "playAnimation": "Play timeline animation",
+    "pauseAnimation": "Pause timeline animation",
+    "resetFilter": "Reset antiquity filter",
+    "antiquitySlider": "Antiquity timeline slider",
+    "showSitesOlderThan": "Showing sites older than"
+  },
+  "TimelineSlider": {
+    "timelineFilter": "Timeline Filter",
+    "min": "Min",
+    "max": "Max",
+    "years": "years",
+    "timelineInputLabel": "Enter timeline value in years",
+    "play": "Play",
+    "pause": "Pause",
+    "reset": "Reset",
+    "playAnimation": "Play timeline animation",
+    "pauseAnimation": "Pause timeline animation",
+    "resetFilter": "Reset timeline filter",
+    "timelineSlider": "Timeline slider",
+    "showSitesOlderThan": "Showing sites older than",
+    "settings": "Settings",
+    "animationSpeed": "Animation Speed",
+    "removeAds": "Remove Ads"
   }
 }
