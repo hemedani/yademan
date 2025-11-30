@@ -16,6 +16,7 @@ interface IUploadImage {
   type?: "video" | "image" | "doc" | "geo" | "json";
   filePath?: string;
   label?: string;
+  isRequired?: boolean;
 }
 
 export const UploadImage = ({
@@ -25,6 +26,7 @@ export const UploadImage = ({
   type,
   filePath,
   label,
+  isRequired,
 }: IUploadImage) => {
   const [isUploaded, setIsUploaded] = useState<"uploading" | boolean>(false);
   const [file, setFile] = useState<File | null>(null);
@@ -87,6 +89,7 @@ export const UploadImage = ({
           className="text-sm font-medium text-gray-300 text-right"
         >
           {label}
+          {isRequired && <span className="text-red-500 mr-1">*</span>}
         </label>
       )}
       <div className="p-4 bg-gray-800/80 backdrop-blur-xl border border-gray-700 rounded-xl shadow-lg flex flex-col items-center">

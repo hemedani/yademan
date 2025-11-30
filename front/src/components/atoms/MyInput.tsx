@@ -11,6 +11,7 @@ interface InputProps<T extends FieldValues = FieldValues> {
   type?: string;
   placeholder?: string;
   step?: string;
+  isRequired?: boolean;
 }
 
 const MyInput = <T extends FieldValues = FieldValues>({
@@ -22,6 +23,7 @@ const MyInput = <T extends FieldValues = FieldValues>({
   placeholder,
   register,
   step,
+  isRequired,
 }: InputProps<T>) => {
   return (
     <div className={`flex flex-col gap-2 ${className || ""}`}>
@@ -30,6 +32,7 @@ const MyInput = <T extends FieldValues = FieldValues>({
         className="text-sm font-medium text-gray-300 text-right"
       >
         {label}
+        {isRequired && <span className="text-red-500 mr-1">*</span>}
       </label>
 
       {type === "textarea" ? (

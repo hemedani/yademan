@@ -33,6 +33,7 @@ interface InputProps<
   className?: string;
   onSelectChange?: (newValue: any, actionMeta: any) => void;
   cacheOptions?: boolean;
+  isRequired?: boolean;
 }
 
 const AsyncSelectBox = <
@@ -220,6 +221,7 @@ const AsyncSelectBox = <
         className="text-sm font-medium text-gray-300 text-right"
       >
         {label}
+        {props.isRequired && <span className="text-red-500 mr-1">*</span>}
       </label>
 
       <div className="relative">
