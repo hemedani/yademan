@@ -41,6 +41,9 @@ export const getsValidator = () => {
 			near: optional(geoJSONStruct("Point")),
 			maxDistance: optional(number()), // in meters
 			minDistance: optional(number()), // in meters
+
+			// --- Antiquity Filter ---
+			antiquity: optional(number()), // Minimum antiquity in years
 		}),
 		get: object({
 			data: selectStruct("place", 2),

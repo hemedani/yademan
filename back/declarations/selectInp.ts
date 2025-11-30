@@ -10058,6 +10058,7 @@ coordinates: any[];
 };
 maxDistance?: number;
 minDistance?: number;
+antiquity?: number;
 };
 get: {
 data: {

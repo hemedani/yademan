@@ -33,10 +33,13 @@ export const getsFn: ActFn = async (body) => {
 		near,
 		maxDistance,
 		minDistance,
+
+		// Antiquity filter
+		antiquity,
 	} = set;
 
-	const pipeline: any[] = [];
-	const matchConditions: any = {};
+	const pipeline: { [key: string]: any }[] = [];
+	const matchConditions: { [key: string]: any } = {};
 
 	// --- Basic Filters ---
 	if (name) matchConditions.name = { $regex: new RegExp(name, "i") };
@@ -80,10 +83,16 @@ export const getsFn: ActFn = async (body) => {
 		};
 	}
 
+	// --- Antiquity Filter ---
+	// Filter places that have antiquity greater than or equal to the specified value
+	if (antiquity !== undefined && antiquity >= 0) {
+		matchConditions.antiquity = { $gte: antiquity };
+	}
+
 	// $geoNear for proximity search (using near point)
 	if (near) {
 		// Need to handle $geoNear as a separate pipeline stage since it must be the first stage
-		const geoNearStage = {
+		const geoNearStage: { [key: string]: any } = {
 			$geoNear: {
 				near: near,
 				distanceField: "distance", // This will add a 'distance' field to the results
@@ -92,8 +101,12 @@ export const getsFn: ActFn = async (body) => {
 		};
 
 		// Add optional max and min distance if provided (in meters)
-		if (maxDistance) geoNearStage.$geoNear.maxDistance = maxDistance;
-		if (minDistance) geoNearStage.$geoNear.minDistance = minDistance;
+		if (maxDistance) {
+			geoNearStage.$geoNear.maxDistance = maxDistance;
+		}
+		if (minDistance) {
+			geoNearStage.$geoNear.minDistance = minDistance;
+		}
 
 		// Add the $geoNear stage as the first in the pipeline
 		pipeline.push(geoNearStage);
@@ -116,7 +129,7 @@ export const getsFn: ActFn = async (body) => {
 	pipeline.push({ $limit: limit });
 
 	// Add a count of total results
-	const countPipeline = [...pipeline];
+	const countPipeline: { [key: string]: any }[] = [...pipeline];
 
 	// Remove pagination from count pipeline
 	countPipeline.pop(); // Remove $limit
