@@ -12,6 +12,7 @@ import { useFilterPanel } from "@/hooks/useFilterPanel";
 import { useMapStore } from "@/stores/mapStore";
 import toast from "react-hot-toast";
 import { useParams } from "next/navigation";
+import TimelineSlider from "@/components/organisms/TimelineSlider";
 
 // Dynamic imports for heavy components
 const SearchPanel = dynamic(() => import("@/components/search/SearchPanel"), {
@@ -154,7 +155,7 @@ export default function HomePage() {
       />
 
       {/* Main Content */}
-      <main className="relative pb-14 md:pb-0 h-full w-full">
+      <main className="relative h-screen w-screen overflow-hidden">
         {/* Welcome Animation for First Visit */}
         <AnimatePresence>
           {!isMapLoaded && (
@@ -279,7 +280,7 @@ export default function HomePage() {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setShowSearch(!showSearch)}
-            className="md:hidden fixed bottom-20 right-4 w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-full shadow-2xl flex items-center justify-center z-30"
+            className="md:hidden fixed bottom-32 right-4 w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-full shadow-2xl flex items-center justify-center z-30"
             aria-label="Search"
           >
             <svg
@@ -464,6 +465,9 @@ export default function HomePage() {
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* Timeline Slider - Now uses fixed positioning from the component itself */}
+          <TimelineSlider />
         </motion.div>
       </main>
     </div>
