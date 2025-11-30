@@ -9,7 +9,9 @@ interface PageProps {
 /**
  * Edit Place page component
  */
-export default function EditPlace({ params }: PageProps) {
+export default async function EditPlace({ params }: PageProps) {
+  const placeId = await params.id;
+
   return (
     <div className="relative min-h-full">
       <div className="mb-8">
@@ -26,7 +28,7 @@ export default function EditPlace({ params }: PageProps) {
         </div>
       </div>
 
-      <FormUpdatePlace placeId={params.id} />
+      <FormUpdatePlace placeId={placeId} />
     </div>
   );
 }
@@ -34,7 +36,7 @@ export default function EditPlace({ params }: PageProps) {
 /**
  * Generate metadata for the page
  */
-export function generateMetadata({ params }: PageProps): Metadata {
+export function generateMetadata({}: PageProps): Metadata {
   return {
     title: `ویرایش ${translateModelNameToPersian("place")} | نقشه شهر`,
   };
