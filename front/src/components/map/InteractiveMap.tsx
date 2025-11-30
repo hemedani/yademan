@@ -662,6 +662,15 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       );
     }
 
+    // Apply antiquity filter
+    if (filters.antiquity !== undefined && filters.antiquity >= 0) {
+      filtered = filtered.filter((place) => {
+        // Assuming place.antiquity represents the age of the place in years
+        // We want to show places that are at least as old as the selected antiquity value
+        return place.antiquity >= filters.antiquity!;
+      });
+    }
+
     setFilteredPlaces(filtered);
     addMarkers(filtered);
   }, [searchQuery, filters, places, addMarkers]);
