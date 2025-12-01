@@ -12,6 +12,7 @@ interface InputProps<T extends FieldValues = FieldValues> {
   placeholder?: string;
   step?: string;
   isRequired?: boolean;
+  min?: string;
 }
 
 const MyInput = <T extends FieldValues = FieldValues>({
@@ -24,6 +25,7 @@ const MyInput = <T extends FieldValues = FieldValues>({
   register,
   step,
   isRequired,
+  min,
 }: InputProps<T>) => {
   return (
     <div className={`flex flex-col gap-2 ${className || ""}`}>
@@ -53,6 +55,7 @@ const MyInput = <T extends FieldValues = FieldValues>({
             }
           `}
           rows={4}
+          minLength={Number(min)}
         />
       ) : (
         <input
@@ -74,6 +77,7 @@ const MyInput = <T extends FieldValues = FieldValues>({
             }
             ${type === "date" ? "text-left" : ""}
           `}
+          min={min}
         />
       )}
 
