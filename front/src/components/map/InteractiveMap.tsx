@@ -671,6 +671,82 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       });
     }
 
+    // Apply name filter (if using client-side filtering)
+    if (filters.name) {
+      filtered = filtered.filter((place) =>
+        place.name.toLowerCase().includes(filters.name!.toLowerCase()),
+      );
+    }
+
+    // Apply slug filter (if using client-side filtering)
+    if (filters.slug) {
+      filtered = filtered.filter((place) =>
+        place.slug?.toLowerCase().includes(filters.slug!.toLowerCase()),
+      );
+    }
+
+    // Apply status filter
+    if (filters.status) {
+      filtered = filtered.filter((place) => place.status === filters.status);
+    }
+
+    // Apply province filter
+    if (filters.province) {
+      filtered = filtered.filter((place) => {
+        const provinceName =
+          typeof place.province === "object"
+            ? place.province?.name
+            : place.province;
+        return provinceName
+          ?.toLowerCase()
+          .includes(filters.province!.toLowerCase());
+      });
+    }
+
+    // Apply city filter
+    if (filters.city) {
+      filtered = filtered.filter((place) => {
+        const cityName =
+          typeof place.city === "object" ? place.city?.name : place.city;
+        return cityName?.toLowerCase().includes(filters.city!.toLowerCase());
+      });
+    }
+
+    // Apply city zone filter
+    if (filters.city_zone) {
+      filtered = filtered.filter((place) => {
+        const cityZoneName =
+          typeof place.city_zone === "object"
+            ? place.city_zone?.name
+            : place.city_zone;
+        return cityZoneName
+          ?.toLowerCase()
+          .includes(filters.city_zone!.toLowerCase());
+      });
+    }
+
+    // Apply category IDs filter
+    if (filters.categoryIds && filters.categoryIds.length > 0) {
+      filtered = filtered.filter((place) => {
+        const categoryId =
+          typeof place.category === "object"
+            ? place.category._id
+            : place.category;
+        return filters.categoryIds?.includes(categoryId);
+      });
+    }
+
+    // Apply tag IDs filter
+    if (filters.tagIds && filters.tagIds.length > 0) {
+      filtered = filtered.filter((place) => {
+        if (!place.tags) return false;
+        return place.tags.some((tag) => {
+          const tagId = typeof tag === "object" ? tag._id : tag;
+          return filters.tagIds?.includes(tagId);
+        });
+      });
+    }
+
     setFilteredPlaces(filtered);
     addMarkers(filtered);
   }, [searchQuery, filters, places, addMarkers]);

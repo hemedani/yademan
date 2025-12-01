@@ -46,6 +46,17 @@ interface MapState {
     rating?: number;
     distance?: number;
     antiquity?: number;
+    name?: string;
+    slug?: string;
+    status?: string;
+    province?: string;
+    city?: string;
+    city_zone?: string;
+    registrarId?: string;
+    categoryIds?: string[];
+    tagIds?: string[];
+    maxDistance?: number;
+    minDistance?: number;
   };
 
   // Pathfinding
@@ -81,6 +92,7 @@ interface MapState {
   setSearchQuery: (query: string) => void;
   setAntiquityFilter: (antiquity: number) => void;
   setFilters: (filters: Partial<MapState["filters"]>) => void;
+  setPlaceFilters: (filters: Partial<MapState["filters"]>) => void;
 
   // Pathfinding actions
   setIsPathfindingActive: (active: boolean) => void;
@@ -162,6 +174,10 @@ export const useMapStore = create<MapState>()(
         setFilters: (newFilters) =>
           set((state) => ({
             filters: { ...state.filters, ...newFilters },
+          })),
+        setPlaceFilters: (newPlaceFilters) =>
+          set((state) => ({
+            filters: { ...state.filters, ...newPlaceFilters },
           })),
 
         // Pathfinding setters
