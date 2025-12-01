@@ -283,3 +283,58 @@ Note: When handling API responses, the backend typically returns the actual data
 
 10. **Development Workflow**:
     - When I give a new prompt during development, I usually run the project myself. You don't need to run the project again to find errors. In fact, I usually check the project myself after the changes you make and if there are any errors, I will give you the new prompt again.
+
+11. **Form Creation and Management Tips**:
+    - When creating forms that need to work with react-hook-form:
+      - Use the `register` function for simple inputs like text, number, etc.
+      - Use `setValue` from react-hook-form for dynamic components like AsyncSelectBox
+      - For dependent fields (e.g., province -> city -> city_zone), use the `watch` function to track parent field changes
+      - When using dependent fields, add a `key` prop that changes when the parent field changes: `key={watch("parentField") || "default-key"}`
+      - For multi-select fields, use the `isMulti` prop in AsyncSelectBox
+      - Always define the proper TypeScript types in the defaultValues to prevent type errors
+      - For array fields, specify the type explicitly: `fieldName: [] as string[]`
+      - For optional number fields, specify the union type: `fieldName: undefined as number | undefined`
+
+    - Example of dependent fields pattern:
+
+    ```tsx
+    {
+      /* Province field (independent) */
+    }
+    <AsyncSelectBox
+      name="province"
+      setValue={setValue}
+      // ... other props
+    />;
+
+    {
+      /* City field (depends on province) */
+    }
+    <AsyncSelectBox
+      key={watch("province") || "no-province"} // This triggers re-render when province changes
+      name="city"
+      setValue={setValue}
+      loadOptions={async () => {
+        const selectedProvince = watch("province"); // Get current province value
+        if (!selectedProvince) return []; // Don't load cities if no province selected
+
+        // Load cities based on selected province
+        // ... API call logic
+      }}
+      // ... other props
+    />;
+    ```
+
+    - When using MyInput with react-hook-form:
+
+    ```tsx
+    <MyInput
+      name="fieldName"
+      label="Field Label"
+      register={register} // Pass the register function from react-hook-form
+      placeholder="Placeholder text"
+    />
+    ```
+
+    - When using dynamic values in loadOptions functions, always watch for changes and provide fallbacks to prevent errors
+    - Consider the UX implications when implementing cascading dropdowns and provide proper loading states and error handling
