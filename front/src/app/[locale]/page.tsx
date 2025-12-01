@@ -4,36 +4,25 @@ import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import dynamic from "next/dynamic";
 import TopBar from "@/components/layout/TopBar";
 import MapView from "@/components/map/MapView";
-import FilterPanel from "@/components/filters/FilterPanel";
 import { useFilterPanel } from "@/hooks/useFilterPanel";
 import { useMapStore } from "@/stores/mapStore";
 import toast from "react-hot-toast";
 import { useParams } from "next/navigation";
 import TimelineSlider from "@/components/organisms/TimelineSlider";
 
-// Dynamic imports for heavy components
-const SearchPanel = dynamic(() => import("@/components/search/SearchPanel"), {
-  ssr: false,
-});
-
 export default function HomePage() {
   const t = useTranslations("HomePage");
   const params = useParams();
   const locale = params.locale as string;
-  const { isAuthenticated, displayName, loading } = useAuth();
   const [searchValue, setSearchValue] = useState("");
   const [showWelcome, setShowWelcome] = useState(true);
-  const [showSearch, setShowSearch] = useState(false);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
   const { isFilterOpen, toggleFilter, closeFilter } = useFilterPanel();
   const { searchQuery, setSearchQuery, getCurrentBounds, filters } =
     useMapStore();
-  const [showTourDemo, setShowTourDemo] = useState(false);
-  const [tourDemoDismissed, setTourDemoDismissed] = useState(false);
 
   // PWA Install Prompt
   useEffect(() => {
@@ -151,7 +140,6 @@ export default function HomePage() {
           setShowSearch(false);
         }}
         locale={locale}
-        _filterOpen={isFilterOpen}
       />
 
       {/* Main Content */}
@@ -271,138 +259,6 @@ export default function HomePage() {
         >
           {/* Map View - InteractiveMap handles fetching and displaying places */}
           {isMapLoaded && <MapView className="h-full" />}
-
-          {/* Floating Action Button for Mobile */}
-          <motion.button
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", delay: 0.5 }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setShowSearch(!showSearch)}
-            className="md:hidden fixed bottom-32 right-4 w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-full shadow-2xl flex items-center justify-center z-30"
-            aria-label="Search"
-          >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </motion.button>
-
-          {/* Advanced Search Panel */}
-          <AnimatePresence>
-            {showSearch && (
-              <>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
-                  onClick={() => setShowSearch(false)}
-                />
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                  animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                  transition={{ type: "spring", damping: 25 }}
-                  className="fixed inset-x-4 top-1/2 -translate-y-1/2 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-2xl z-50"
-                >
-                  <SearchPanel
-                    onClose={() => setShowSearch(false)}
-                    onSearch={handleSearchChange}
-                  />
-                </motion.div>
-              </>
-            )}
-          </AnimatePresence>
-
-          {/* Filter Panel Overlay */}
-          <AnimatePresence>
-            {isFilterOpen && (
-              <>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 pt-16 pb-14"
-                  onClick={closeFilter}
-                />
-
-                <motion.div
-                  initial={{ y: -50, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -50, opacity: 0 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 30,
-                    bounce: 0.2,
-                  }}
-                  className="fixed top-20 left-1/2 transform -translate-x-1/2 w-[95%] max-w-xl max-h-[85vh] bg-[#121212] shadow-2xl rounded-2xl z-50 overflow-hidden flex flex-col border border-[#333]"
-                >
-                  <div className="sticky top-0 bg-gradient-to-r from-[#FF007A] to-[#A020F0] text-white px-6 py-4 flex items-center justify-between rounded-t-2xl">
-                    <h2 className="text-xl font-bold flex items-center gap-2">
-                      <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                        />
-                      </svg>
-                      {t("filters")}
-                    </h2>
-                    <motion.button
-                      whileHover={{ scale: 1.1, rotate: 90 }}
-                      whileTap={{ scale: 0.9 }}
-                      onClick={closeFilter}
-                      className="p-2 bg-white/20 hover:bg-white/30 rounded-xl transition-colors"
-                      aria-label="Close filters"
-                    >
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </motion.button>
-                  </div>
-                  <div className="p-5 overflow-y-auto bg-[#121212] text-white">
-                    <FilterPanel />
-                  </div>
-                  <div className="sticky bottom-0 bg-gradient-to-b from-transparent to-[#121212] pt-6 pb-4 px-6 border-t border-[#333]">
-                    <button
-                      onClick={closeFilter}
-                      className="w-full bg-gradient-to-r from-[#FF007A] to-[#A020F0] text-white py-3 rounded-lg font-medium transition-all hover:shadow-lg active:scale-98 focus:outline-none focus:ring-2 focus:ring-[#FF007A] focus:ring-offset-2"
-                    >
-                      {t("applyFilters")}
-                    </button>
-                  </div>
-                </motion.div>
-              </>
-            )}
-          </AnimatePresence>
 
           {/* PWA Install Prompt */}
           <AnimatePresence>

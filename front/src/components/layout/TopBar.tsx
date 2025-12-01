@@ -10,20 +10,17 @@ import EventsList from "../EventsList";
 
 // Icons
 import MagnifyingGlassIcon from "@heroicons/react/24/outline/MagnifyingGlassIcon";
-import AdjustmentsHorizontalIcon from "@heroicons/react/24/outline/AdjustmentsHorizontalIcon";
 import UserIcon from "@heroicons/react/24/outline/UserIcon";
 import CalendarDaysIcon from "@heroicons/react/24/outline/CalendarDaysIcon";
 import ArrowRightOnRectangleIcon from "@heroicons/react/24/outline/ArrowRightOnRectangleIcon";
 import Cog6ToothIcon from "@heroicons/react/24/outline/Cog6ToothIcon";
 
 interface TopBarProps {
-  onFilterClickAction?: () => Promise<void>;
   searchValue: string;
   onSearchChangeAction?: (value: string) => Promise<void>;
   onSearchSubmitAction?: (value: string) => Promise<void>;
   locale?: string;
   // Client-side state flags
-  _filterOpen?: boolean;
   _searchOpen?: boolean;
   _eventsOpen?: boolean;
 }
@@ -71,13 +68,6 @@ export default function TopBar({
     e.preventDefault();
     if (onSearchSubmitAction) {
       onSearchSubmitAction(localSearchValue).catch(console.error);
-    }
-  };
-
-  // Handle filter click
-  const handleFilterClick = () => {
-    if (onFilterClickAction) {
-      onFilterClickAction().catch(console.error);
     }
   };
 
@@ -141,19 +131,6 @@ export default function TopBar({
       >
         {/* Icons Row */}
         <div className="flex items-center space-x-1 ">
-          {/* Filter Button */}
-          <motion.button
-            onClick={handleFilterClick}
-            className="p-3 text-white hover:text-[#FF007A] hover:bg-[#1e1e1e] rounded-full transition-all duration-300 touch-manipulation focus:outline-none focus:ring-2 focus:ring-[#FF007A] focus-visible:ring-2 focus-visible:ring-[#FF007A] active:scale-95"
-            title={t("Navigation.filterTooltip")}
-            aria-label={t("Navigation.filterButtonAriaLabel")}
-            type="button"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <AdjustmentsHorizontalIcon className="h-5 w-5" aria-hidden="true" />
-          </motion.button>
-
           {/* Search Button */}
           <button
             onClick={() => {
