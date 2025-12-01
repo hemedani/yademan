@@ -207,7 +207,16 @@ const response = await getEvents({
     // ... other fields you want to fetch
   },
 });
+
+// When using the response, note that backend returns data directly in response.body
+// rather than response.body.data as in some other systems
+if (response.success && response.body) {
+  const events = response.body; // This contains the actual data
+  // ... process the events
+}
 ```
+
+Note: When handling API responses, the backend typically returns the actual data directly in the `response.body` property, rather than nesting it inside `response.body.data`. Always check `response.body` directly for the data you requested.
 
 ## Important Backend Integration Notes
 
