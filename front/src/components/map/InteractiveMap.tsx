@@ -6,7 +6,7 @@ import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 import { useTranslations } from "next-intl";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useMapStore } from "@/stores/mapStore";
 import { useAuth } from "@/context/AuthContext";
 import MapControls from "./MapControls";
@@ -97,6 +97,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
   const [isFetchingPlaces, setIsFetchingPlaces] = useState(false);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [showTopLoader, setShowTopLoader] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   // Refs for debouncing, request cancellation, and bounds tracking
   const mapMoveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -576,7 +577,14 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       // Only fit bounds if we added coordinates
       if (!bounds.isEmpty()) {
         map.current.fitBounds(bounds, {
-          padding: 50,
+          // Add extra padding at the bottom to account for the timeline slider
+          // 50px on other sides, 150px on bottom to clear the timeline
+          padding: {
+            top: 90,
+            bottom: 205, // Increased padding for bottom to account for timeline
+            left: 60,
+            right: 60,
+          },
           maxZoom: 15,
         });
       }
@@ -973,7 +981,14 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         // Fit map to show the entire route
         const bounds = new maplibregl.LngLatBounds();
         pathfindingRouteGeometry.forEach((coord) => bounds.extend(coord));
-        map.current.fitBounds(bounds, { padding: 100 });
+        map.current.fitBounds(bounds, {
+          padding: {
+            top: 100,
+            bottom: 190, // Increased padding for bottom to account for timeline
+            left: 100,
+            right: 100,
+          },
+        });
       }
     } else if (!isPathfindingActive) {
       // Remove path if pathfinding is not active
@@ -1058,7 +1073,14 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       const bounds = new maplibregl.LngLatBounds();
       bounds.extend(start);
       bounds.extend(end);
-      map.current.fitBounds(bounds, { padding: 100 });
+      map.current.fitBounds(bounds, {
+        padding: {
+          top: 100,
+          bottom: 190, // Increased padding for bottom to account for timeline
+          left: 100,
+          right: 100,
+        },
+      });
     } catch (error) {
       // Error handling for calculateRoute can be added if needed
     }
@@ -1194,31 +1216,52 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           )}
         </AnimatePresence>
 
-        {/* Stats overlay */}
-        <div className="absolute bottom-20 left-4 bg-[#121212]/90 backdrop-blur-sm rounded-lg shadow-lg p-3 text-sm border border-[#333]">
-          <div className="flex items-center gap-2 text-[#a0a0a0]">
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+        {/* Stats indicator positioned just below MapLayerSwitcher - stretches on hover */}
+        <div className="absolute top-[150px] right-4 z-10">
+          <div
+            className="p-2 rounded-lg bg-[#121212]/90 backdrop-blur-sm border border-[#333] shadow-lg flex items-center gap-1.5 overflow-hidden min-w-fit"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            <div className="flex items-center gap-1.5">
+              <svg
+                className={`w-4 h-4 transition-colors duration-300 ${
+                  isHovered ? "text-[#FF007A]" : "text-[#a0a0a0]"
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+              <span
+                className={`text-white text-sm font-medium transition-colors duration-300 ${
+                  isHovered ? "text-[#FF007A]" : "text-white"
+                }`}
+              >
+                {filteredPlaces.length}
+              </span>
+            </div>
+            <div
+              className={`whitespace-nowrap transition-all duration-300 origin-left ${
+                isHovered ? "opacity-100 w-auto pl-2" : "opacity-0 w-0 pl-0"
+              }`}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-            </svg>
-            <span className="text-white">
-              {filteredPlaces.length} {t("Location.locationsFound")}
-            </span>
+              <span className="text-white text-sm font-medium border-l border-[#333] ml-2">
+                {t("Location.locationsFound")}
+              </span>
+            </div>
           </div>
         </div>
 
