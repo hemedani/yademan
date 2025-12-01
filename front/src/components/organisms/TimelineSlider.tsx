@@ -56,7 +56,7 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({ className = "" }) => {
 
   return (
     <div
-      className={`fixed bottom-8 left-0 right-0 z-50 bg-gradient-to-t from-[#121212] to-[#2a2a2a]/30 backdrop-blur-lg p-4 ${className}`}
+      className={`fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-t from-[#121212] to-[#2a2a2a]/30 backdrop-blur-lg p-4 ${className}`}
     >
       <div className="w-full relative">
         {/* Gradient overlays on sides */}
@@ -71,20 +71,17 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({ className = "" }) => {
           </div>
         </div>
 
-        <div className="mt-4 relative h-24 overflow-hidden">
+        <div className="mt-4 relative overflow-hidden">
           {/* Fixed center indicator */}
           <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-0.5 h-full bg-white z-20 flex flex-col items-center">
             <div className="w-3 h-3 -mt-1.5 rounded-full bg-white"></div>
           </div>
 
           {/* Track container with hidden scrollbar */}
-          <div
-            className="overflow-x-auto hide-scrollbar pb-2 relative h-full"
-            style={{ height: "6rem" }}
-          >
+          <div className="overflow-x-auto hide-scrollbar pb-2 relative h-20">
             {/* Main track that gets dragged */}
             <motion.div
-              className="absolute top-1/2 h-24 cursor-grab active:cursor-grabbing"
+              className="absolute h-15 cursor-grab active:cursor-grabbing"
               style={{
                 left: "50%",
                 x: trackPosition, // Position based on the track position state
