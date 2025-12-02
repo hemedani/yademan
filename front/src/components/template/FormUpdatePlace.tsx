@@ -11,8 +11,6 @@ import { gets as getCategoriesAction } from "@/app/actions/category/gets";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import React from "react";
-import { ReqType } from "@/types/declarations/selectInp";
-import AsyncSelectBox from "../atoms/AsyncSelectBox";
 import { useMapEvents } from "react-leaflet";
 import L from "leaflet";
 
@@ -141,9 +139,6 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [loadingInitial, setLoadingInitial] = useState(true);
-  const [categories, setCategories] = useState<{ _id: string; name: string }[]>(
-    [],
-  );
   const [markerPosition, setMarkerPosition] = useState<[number, number]>([
     35.6892, 51.389,
   ]); // Default to Tehran, Iran
@@ -161,7 +156,6 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
     setValue,
     watch,
     reset,
-    control,
     formState: { errors },
   } = useForm<PlaceFormValues>({
     resolver: zodResolver(placeSchema),
@@ -176,7 +170,6 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
       website: "",
       hoursOfOperation: "",
       status: "draft",
-      category: "",
       latitude: 35.6892,
       longitude: 51.389,
       area: { type: "MultiPolygon", coordinates: [] },
@@ -202,10 +195,6 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
             address: 1,
             contact: 1,
             hoursOfOperation: 1,
-            category: {
-              _id: 1,
-              name: 1,
-            },
             status: 1,
           },
         });
@@ -265,17 +254,6 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
           router.push("/admin/places");
         }
 
-        // Fetch categories
-        const categoriesResult = await getCategoriesAction({
-          set: { page: 1, limit: 50 },
-          get: { _id: 1, name: 1 },
-        });
-
-        if (categoriesResult.success) {
-          setCategories(categoriesResult.body);
-        } else {
-          ToastNotify("error", "خطا در دریافت دسته‌بندی‌ها");
-        }
       } catch (error) {
         console.error("Error fetching data:", error);
         ToastNotify("error", "خطا در بارگذاری اطلاعات");
@@ -330,7 +308,6 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
           email: data.email || undefined,
           website: data.website || undefined,
         },
-        category: data.category || undefined,
         hoursOfOperation: data.hoursOfOperation || undefined,
         status: data.status,
       };
@@ -396,9 +373,6 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
     setDrawnPolygon(null);
     setValue("area", { type: "MultiPolygon", coordinates: [] });
   };
-
-  // Watch form values for conditional rendering
-  const watchedValues = watch();
 
   // Show loading state while fetching initial data
   if (loadingInitial) {
@@ -545,11 +519,10 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
           <button
             type="button"
             onClick={toggleDrawingMode}
-            className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
-              isDrawingMode
-                ? "bg-pink-600 text-white"
-                : "bg-gray-700 text-white border border-gray-600 hover:bg-gray-600"
-            }`}
+            className={`px-4 py-2 rounded-lg flex items-center gap-2 ${isDrawingMode
+              ? "bg-pink-600 text-white"
+              : "bg-gray-700 text-white border border-gray-600 hover:bg-gray-600"
+              }`}
           >
             <svg
               className="w-4 h-4"
@@ -653,10 +626,9 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
                 text-right transition-all duration-200 ease-in-out
                 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-0 focus:border-pink-500
                 hover:border-gray-500
-                ${
-                  errors.status
-                    ? "border-red-500 bg-red-900/30 focus:ring-red-500 focus:border-red-500"
-                    : "border-gray-600 hover:bg-gray-600/50"
+                ${errors.status
+                  ? "border-red-500 bg-red-900/30 focus:ring-red-500 focus:border-red-500"
+                  : "border-gray-600 hover:bg-gray-600/50"
                 }
               `}
             >
