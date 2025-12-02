@@ -14,11 +14,9 @@ import { gets } from "@/app/actions/place/gets";
 import PlaceMarker from "@/components/atoms/PlaceMarker";
 import PlaceDetailsModal from "@/components/organisms/PlaceDetailsModal";
 import { toast } from "react-hot-toast";
-import PlaceSidebar from "@/components/map/PlaceSidebar";
 import RoutePanel from "@/components/map/RoutePanel";
 import MapLayerSwitcher from "@/components/map/MapLayerSwitcher";
 import { placeSchema } from "@/types/declarations/selectInp";
-import { getLesanBaseUrl } from "@/services/api";
 
 // Use placeSchema from selectInp as the base type
 type Place = placeSchema;
@@ -390,6 +388,51 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           };
         }
 
+        // Add all filters from the store to the API request
+        // Note: Using the field names as expected by the backend API
+        // antiquity will be sent to the backend as a number
+        if (filters.categoryIds && filters.categoryIds.length > 0) {
+          setParams = { ...setParams, categoryIds: filters.categoryIds };
+        }
+
+        if (filters.tagIds && filters.tagIds.length > 0) {
+          setParams = { ...setParams, tagIds: filters.tagIds };
+        }
+
+        if (filters.name) {
+          setParams = { ...setParams, name: filters.name };
+        }
+
+        if (filters.slug) {
+          setParams = { ...setParams, slug: filters.slug };
+        }
+
+        if (filters.status) {
+          setParams = { ...setParams, status: filters.status };
+        }
+
+        if (filters.province) {
+          setParams = { ...setParams, province: filters.province };
+        }
+
+        if (filters.city) {
+          setParams = { ...setParams, city: filters.city };
+        }
+
+        if (filters.city_zone) {
+          setParams = { ...setParams, cityZone: filters.city_zone };
+        }
+
+        console.log("before antiquity ", { antiquity: filters.antiquity });
+        // Add antiquity filter to be sent to backend, rounded to integer
+        if (filters.antiquity !== undefined && filters.antiquity >= 0) {
+          setParams = {
+            ...setParams,
+            antiquity: Math.floor(filters.antiquity),
+          };
+        }
+
+        console.log("antiquity ", { antiquity: filters.antiquity });
         // Call the backend API to fetch places
         const response = await gets({
           set: setParams,
@@ -506,6 +549,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       setPlaces,
       addMarkers,
       places.length, // Add places.length to the dependency array for the conditional logic
+      filters,
+      map,
     ],
   );
 
@@ -740,7 +785,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           typeof place.category === "object"
             ? place.category._id
             : place.category;
-        return filters.categoryIds?.includes(categoryId);
+        return filters.categoryIds?.includes(categoryId!);
       });
     }
 
@@ -750,7 +795,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         if (!place.tags) return false;
         return place.tags.some((tag) => {
           const tagId = typeof tag === "object" ? tag._id : tag;
-          return filters.tagIds?.includes(tagId);
+          return filters.tagIds?.includes(tagId!);
         });
       });
     }
@@ -758,6 +803,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     setFilteredPlaces(filtered);
     addMarkers(filtered);
   }, [searchQuery, filters, places, addMarkers]);
+
+  // Reload places when any filter changes - watch the entire filters object
+  useEffect(() => {
+    loadPlaces(false); // Reload places with current bounds and new filter values
+  }, [filters, loadPlaces]);
 
   // Close place details when ESC is pressed
   useEffect(() => {
@@ -1157,50 +1207,6 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           currentLayer={currentLayer}
           onLayerChange={handleLayerChange}
         />
-
-        {/* Place sidebar */}
-        <AnimatePresence>
-          {showSidebar && selectedPlace && (
-            <PlaceSidebar
-              place={{
-                ...selectedPlace,
-                _id: selectedPlace._id || "",
-                name: selectedPlace.name || "",
-                description: selectedPlace.description || "",
-                center: (selectedPlace.center as {
-                  type: "Point";
-                  coordinates: [number, number];
-                }) || {
-                  type: "Point",
-                  coordinates: [0, 0],
-                },
-                category:
-                  typeof selectedPlace.category === "object"
-                    ? selectedPlace.category.name
-                    : selectedPlace.category || "",
-                tags: Array.isArray(selectedPlace.tags)
-                  ? selectedPlace.tags.map((tag) =>
-                      typeof tag === "object" ? tag.name : tag,
-                    )
-                  : selectedPlace.tags || [],
-                images:
-                  selectedPlace.gallery?.map(
-                    (img) =>
-                      `${getLesanBaseUrl()}/uploads/images/${typeof img === "object" ? img.name : img || ""}`,
-                  ) || [],
-              }}
-              onClose={() => {
-                setShowSidebar(false);
-                setSelectedPlace(null);
-              }}
-              onNavigate={(coords: [number, number]) => {
-                setRouteEnd(coords);
-                setShowRoutePanel(true);
-              }}
-              isAuthenticated={isAuthenticated}
-            />
-          )}
-        </AnimatePresence>
 
         {/* Route panel */}
         <AnimatePresence>
