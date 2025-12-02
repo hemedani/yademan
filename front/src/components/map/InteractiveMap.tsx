@@ -8,7 +8,6 @@ import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 import { useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMapStore } from "@/stores/mapStore";
-import { useAuth } from "@/context/AuthContext";
 import MapControls from "./MapControls";
 import { gets } from "@/app/actions/place/gets";
 import PlaceMarker from "@/components/atoms/PlaceMarker";
@@ -16,6 +15,7 @@ import PlaceDetailsModal from "@/components/organisms/PlaceDetailsModal";
 import { toast } from "react-hot-toast";
 import RoutePanel from "@/components/map/RoutePanel";
 import MapLayerSwitcher from "@/components/map/MapLayerSwitcher";
+import MapStatsIndicator from "@/components/map/MapStatsIndicator";
 import { placeSchema } from "@/types/declarations/selectInp";
 
 // Use placeSchema from selectInp as the base type
@@ -95,7 +95,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
   const [isFetchingPlaces, setIsFetchingPlaces] = useState(false);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [showTopLoader, setShowTopLoader] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+  const hasInitialized = useRef(false);
 
   // Refs for debouncing, request cancellation, and bounds tracking
   const mapMoveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -105,8 +105,10 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     ne: { lat: number; lng: number };
   } | null>(null);
 
+  // Cache for API responses to prevent duplicate requests
+  const apiResponseCache = useRef<Map<string, Place[]>>(new Map());
+
   const t = useTranslations();
-  const { isAuthenticated } = useAuth();
   const {
     filters,
     searchQuery,
@@ -117,6 +119,503 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     getCurrentBounds,
     setBounds,
   } = useMapStore();
+
+  const setMapStoreAreaFilter = useMapStore((state) => state.setAreaFilter);
+
+  // Create a cache key from the request parameters
+  const createCacheKey = useCallback((): string => {
+    const params = [
+      filters.categoryIds?.join(",") || "nocat",
+      filters.tagIds?.join(",") || "notag",
+      filters.name || "noname",
+      filters.slug || "noslug",
+      filters.status || "nostatus",
+      filters.province || "noprovince",
+      filters.city || "nocity",
+      filters.city_zone || "nocityzone",
+      filters.antiquity?.toString() || "noantiquity",
+      // Include area in cache key if present
+      filters.area ? JSON.stringify(filters.area) : "noarea",
+    ].join("|");
+
+    return params;
+  }, [filters]);
+
+  // Efficiently update markers based on selection changes
+  const updateMarkerSelection = useCallback(() => {
+    if (!map.current) return;
+
+    filteredPlaces.forEach((place) => {
+      const markerElement = markerElementsRef.current.get(place._id!);
+      if (markerElement) {
+        // Reuse existing root instead of creating a new one
+        const root = markerRootsRef.current.get(place._id!);
+        if (root) {
+          root.render(
+            <PlaceMarker
+              place={place}
+              isSelected={selectedPlace?._id === place._id}
+              onClick={(clickedPlace) => {
+                setSelectedPlace(clickedPlace);
+                setShowPlaceDetails(true);
+
+                // Fly to location
+                map.current?.flyTo({
+                  center: clickedPlace.center.coordinates as [number, number],
+                  zoom: 14,
+                  essential: true,
+                });
+              }}
+            />,
+          );
+        }
+      }
+    });
+  }, [selectedPlace?._id, filteredPlaces, map]);
+
+  // Efficiently add or update markers
+  const updateMarkers = useCallback(
+    (placesToUpdate: Place[]) => {
+      if (!map.current) return;
+
+      // If no places to show, clear all markers
+      if (!placesToUpdate || placesToUpdate.length === 0) {
+        markersRef.current.forEach((marker) => marker.remove());
+        markersRef.current.clear();
+        markerElementsRef.current.forEach((el, id) => {
+          if (el && el.parentElement) {
+            // Unmount the React component properly
+            const root = markerRootsRef.current.get(id);
+            if (root) {
+              root.unmount();
+            }
+
+            while (el.firstChild) {
+              el.removeChild(el.firstChild);
+            }
+          }
+        });
+        markerElementsRef.current.clear();
+        markerRootsRef.current.clear();
+        return;
+      }
+
+      // Create a set of IDs for the new places for quick lookup
+      const newPlaceIds = new Set(placesToUpdate.map((place) => place._id));
+
+      // Remove markers for places that are no longer in the list
+      for (const [id, marker] of markersRef.current) {
+        if (!newPlaceIds.has(id)) {
+          marker.remove();
+          markersRef.current.delete(id);
+
+          const markerElement = markerElementsRef.current.get(id);
+          if (markerElement) {
+            const root = markerRootsRef.current.get(id);
+            if (root) {
+              root.unmount();
+            }
+
+            while (markerElement.firstChild) {
+              markerElement.removeChild(markerElement.firstChild);
+            }
+
+            markerElementsRef.current.delete(id);
+            markerRootsRef.current.delete(id);
+          }
+        }
+      }
+
+      // Add or update markers for the current places
+      placesToUpdate.forEach((place) => {
+        // Check if marker already exists
+        if (!markersRef.current.has(place._id!)) {
+          // Create div element for the new marker
+          const markerElement = document.createElement("div");
+          markerElement.className = "marker-container";
+          markerElementsRef.current.set(place._id!, markerElement);
+
+          // Create a React root and render PlaceMarker
+          const root = createRoot(markerElement);
+          markerRootsRef.current.set(place._id!, root);
+          root.render(
+            <PlaceMarker
+              place={place}
+              isSelected={selectedPlace?._id === place._id}
+              onClick={(clickedPlace) => {
+                setSelectedPlace(clickedPlace);
+                setShowPlaceDetails(true);
+
+                // Fly to location
+                map.current?.flyTo({
+                  center: clickedPlace.center.coordinates as [number, number],
+                  zoom: 14,
+                  essential: true,
+                });
+              }}
+            />,
+          );
+
+          // Create maplibre marker
+          const marker = new maplibregl.Marker({
+            element: markerElement,
+            anchor: "bottom",
+          })
+            .setLngLat(place.center.coordinates as [number, number])
+            .addTo(map.current!);
+
+          markersRef.current.set(place._id!, marker);
+        } else {
+          // Update the existing marker's content
+          const markerElement = markerElementsRef.current.get(place._id!);
+          if (markerElement) {
+            const root = markerRootsRef.current.get(place._id!);
+            if (root) {
+              root.render(
+                <PlaceMarker
+                  place={place}
+                  isSelected={selectedPlace?._id === place._id}
+                  onClick={(clickedPlace) => {
+                    setSelectedPlace(clickedPlace);
+                    setShowPlaceDetails(true);
+
+                    // Fly to location
+                    map.current?.flyTo({
+                      center: clickedPlace.center.coordinates as [
+                        number,
+                        number,
+                      ],
+                      zoom: 14,
+                      essential: true,
+                    });
+                  }}
+                />,
+              );
+            }
+          }
+        }
+      });
+    },
+    [map, selectedPlace?._id],
+  );
+
+  // Load places from backend with AbortController for request cancellation
+  const loadPlaces = useCallback(async () => {
+    // Create cache key to check if we've already loaded this view
+    const cacheKey = createCacheKey(); // Use the updated cache key function
+
+    // Check if we have cached results
+    if (apiResponseCache.current.has(cacheKey)) {
+      const cachedPlaces = apiResponseCache.current.get(cacheKey)!;
+      setPlaces(cachedPlaces);
+      // setFilteredPlaces will be updated by the search effect
+      updateMarkers(cachedPlaces);
+
+      // If first load, zoom to fit all places
+      if (isFirstLoad) {
+        fitMapToPlaces(cachedPlaces);
+        setIsFirstLoad(false);
+      }
+      return;
+    }
+
+    // Cancel any in-flight request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    // Create new abort controller for this request
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
+    // Always show loading indicator
+    setIsLoading(true);
+
+    setIsFetchingPlaces(true);
+
+    try {
+      // Prepare the base request parameters
+      let setParams: any = {
+        page: 1,
+        limit: 50,
+        status: "active",
+      };
+
+      // Add all filters from the store to the API request
+      if (filters.categoryIds && filters.categoryIds.length > 0) {
+        setParams = { ...setParams, categoryIds: filters.categoryIds };
+      }
+
+      if (filters.tagIds && filters.tagIds.length > 0) {
+        setParams = { ...setParams, tagIds: filters.tagIds };
+      }
+
+      if (filters.name) {
+        setParams = { ...setParams, name: filters.name };
+      }
+
+      if (filters.slug) {
+        setParams = { ...setParams, slug: filters.slug };
+      }
+
+      if (filters.status) {
+        setParams = { ...setParams, status: filters.status };
+      }
+
+      if (filters.province) {
+        setParams = { ...setParams, province: filters.province };
+      }
+
+      if (filters.city) {
+        setParams = { ...setParams, city: filters.city };
+      }
+
+      if (filters.city_zone) {
+        setParams = { ...setParams, cityZone: filters.city_zone };
+      }
+
+      // Add antiquity filter to be sent to backend, rounded to integer
+      if (filters.antiquity !== undefined && filters.antiquity >= 0) {
+        setParams = {
+          ...setParams,
+          antiquity: Math.floor(filters.antiquity),
+        };
+      }
+
+      // Add area filter if available
+      if (filters.area) {
+        setParams = { ...setParams, area: filters.area };
+      }
+
+      // Add search query to the API request if available
+      if (searchQuery) {
+        setParams = { ...setParams, name: searchQuery };
+      }
+
+      // Call the backend API to fetch places
+      const response = await gets({
+        set: setParams,
+        get: {
+          data: {
+            _id: 1,
+            name: 1,
+            center: 1,
+            category: {
+              _id: 1,
+              name: 1,
+              color: 1,
+              icon: 1,
+            },
+            thumbnail: {
+              _id: 1,
+              name: 1,
+            },
+          },
+          metadata: {
+            total: 1,
+            page: 1,
+            limit: 1,
+            pageCount: 1,
+          },
+        },
+      });
+
+      // For server actions, we can't truly cancel the request
+      // but we can still check if the component is still mounted before updating state
+      if (abortController.signal.aborted) {
+        // Request was cancelled, don't update state
+        return;
+      }
+
+      if (response.success) {
+        // Extract place data from response
+        const placesData = Array.isArray(response.body)
+          ? response.body
+          : response.body?.data || [];
+
+        // Convert string dates to Date objects for compatibility
+        const convertedPlacesData = placesData.map((place: any) => ({
+          ...place,
+          updatedAt:
+            typeof place.updatedAt === "string"
+              ? new Date(place.updatedAt)
+              : place.updatedAt,
+          createdAt:
+            typeof place.createdAt === "string"
+              ? new Date(place.createdAt)
+              : place.createdAt,
+        }));
+
+        if (convertedPlacesData.length > 0) {
+          setPlaces(convertedPlacesData);
+          // setFilteredPlaces will be updated by the search effect
+          updateMarkers(convertedPlacesData);
+
+          // Cache the response
+          apiResponseCache.current.set(cacheKey, convertedPlacesData);
+
+          // If first load, zoom to fit all places
+          if (isFirstLoad) {
+            fitMapToPlaces(convertedPlacesData);
+            setIsFirstLoad(false);
+          }
+        } else {
+          setPlaces([]);
+          // setFilteredPlaces will be updated by the search effect
+          // Only show toast if we have a cache miss to avoid duplicate toasts when cached results are empty
+          if (!apiResponseCache.current.has(cacheKey)) {
+            toast(t("map.noPlacesFound") || "No places found");
+          }
+
+          // Still cache the empty result to prevent re-fetching with same parameters
+          apiResponseCache.current.set(cacheKey, []);
+        }
+      } else {
+        setPlaces([]);
+        // setFilteredPlaces will be updated by the search effect
+        // Only show toast if we have a cache miss to avoid duplicate toasts when cached results are empty
+        if (!apiResponseCache.current.has(cacheKey)) {
+          toast.error(
+            t("errors.failedToFetchPlaces") || "Failed to fetch places",
+          );
+        }
+
+        // Still cache the failure to prevent re-fetching with same parameters
+        apiResponseCache.current.set(cacheKey, []);
+      }
+    } catch (error: any) {
+      if (error.name === "AbortError") {
+        // Request was cancelled, don't show error
+      } else {
+        // Only show toast if we have a cache miss to avoid duplicate toasts when cached results are empty
+        if (!apiResponseCache.current.has(cacheKey)) {
+          toast.error(t("map.errorLoadingPlaces") || "Error loading places");
+        }
+        setPlaces([]);
+        // setFilteredPlaces will be updated by the search effect
+
+        // Still cache the failure to prevent re-fetching with same parameters
+        apiResponseCache.current.set(cacheKey, []);
+      }
+    } finally {
+      if (!abortController.signal.aborted) {
+        setIsLoading(false);
+        setIsFetchingPlaces(false);
+      }
+    }
+  }, [
+    t,
+    isFirstLoad,
+    setIsFirstLoad,
+    setIsFetchingPlaces,
+    setPlaces,
+    updateMarkers,
+    places.length, // Add places.length to the dependency array for the conditional logic
+    filters,
+    map,
+    createCacheKey,
+    searchQuery,
+  ]);
+
+  // Debounced handler for map movement events with bounds comparison
+  const handleMapMove = useCallback(() => {
+    if (!map.current) return;
+
+    // Get current bounds
+    const currentBounds = map.current.getBounds();
+    const currentBoundsObj = {
+      sw: { lat: currentBounds.getSouth(), lng: currentBounds.getWest() },
+      ne: { lat: currentBounds.getNorth(), lng: currentBounds.getEast() },
+    };
+
+    // Check if bounds have changed significantly (threshold: 0.001 degrees ~ 111 meters)
+    if (previousBoundsRef.current) {
+      const latDiff =
+        Math.abs(currentBoundsObj.sw.lat - previousBoundsRef.current.sw.lat) +
+        Math.abs(currentBoundsObj.ne.lat - previousBoundsRef.current.ne.lat);
+      const lngDiff =
+        Math.abs(currentBoundsObj.sw.lng - previousBoundsRef.current.sw.lng) +
+        Math.abs(currentBoundsObj.ne.lng - previousBoundsRef.current.ne.lng);
+
+      // If bounds haven't changed significantly, don't fetch again
+      if (latDiff < 0.002 && lngDiff < 0.002) {
+        return;
+      }
+    }
+
+    // Update previous bounds
+    previousBoundsRef.current = currentBoundsObj;
+
+    // Clear any existing timeout
+    if (mapMoveTimeoutRef.current) {
+      clearTimeout(mapMoveTimeoutRef.current);
+    }
+
+    // Set a new timeout to wait for 200ms after the last movement
+    mapMoveTimeoutRef.current = setTimeout(() => {
+      // Update area filter in store
+      const polygon = {
+        type: "Polygon" as const,
+        coordinates: [
+          [
+            [currentBoundsObj.sw.lng, currentBoundsObj.sw.lat],
+            [currentBoundsObj.ne.lng, currentBoundsObj.sw.lat],
+            [currentBoundsObj.ne.lng, currentBoundsObj.ne.lat],
+            [currentBoundsObj.sw.lng, currentBoundsObj.ne.lat],
+            [currentBoundsObj.sw.lng, currentBoundsObj.sw.lat], // Close the polygon
+          ],
+        ] as number[][][],
+      };
+
+      setBounds(currentBoundsObj);
+      setMapStoreAreaFilter(polygon);
+    }, 200);
+  }, [setBounds, setMapStoreAreaFilter]);
+
+  // Fit map to show all places
+  const fitMapToPlaces = (places: Place[]) => {
+    if (!map.current || !places || places.length === 0) return;
+
+    try {
+      // Create a bounds object and extend it with all place coordinates
+      const bounds = new maplibregl.LngLatBounds();
+
+      places.forEach((place) => {
+        if (
+          place.center &&
+          place.center.coordinates &&
+          Array.isArray(place.center.coordinates) &&
+          place.center.coordinates.length >= 2
+        ) {
+          bounds.extend([
+            place.center.coordinates[0],
+            place.center.coordinates[1],
+          ] as [number, number]);
+        }
+      });
+
+      // Only fit bounds if we added coordinates
+      if (!bounds.isEmpty()) {
+        map.current.fitBounds(bounds, {
+          // Add extra padding at the bottom to account for the timeline slider
+          padding: {
+            top: 90,
+            bottom: 205, // Increased padding for bottom to account for timeline
+            left: 60,
+            right: 60,
+          },
+          maxZoom: 15,
+        });
+      }
+    } catch (error) {
+      // Error handling for fitMapToPlaces can be added if needed
+    }
+  };
+
+  // Update markers when selected place changes
+  useEffect(() => {
+    updateMarkerSelection();
+  }, [selectedPlace?._id, updateMarkerSelection]);
 
   // Initialize map
   useEffect(() => {
@@ -162,18 +661,6 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       attributionControl: false,
     });
 
-    // // Add navigation controls
-    // map.current.addControl(new maplibregl.NavigationControl(), "top-right");
-
-    // // Add geolocate control
-    // const geolocateControl = new maplibregl.GeolocateControl({
-    //   positionOptions: {
-    //     enableHighAccuracy: true,
-    //   },
-    //   trackUserLocation: true,
-    // });
-    // map.current.addControl(geolocateControl, "top-right");
-
     // Add scale control
     map.current.addControl(
       new maplibregl.ScaleControl({ maxWidth: 200 }),
@@ -212,10 +699,13 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       if (onLoad) {
         onLoad();
       }
-    });
 
-    // Load places data for initial view (without bounds)
-    loadPlaces(false);
+      // Load places data for initial view only once
+      if (!hasInitialized.current) {
+        hasInitialized.current = true;
+        loadPlaces();
+      }
+    });
 
     // Cleanup
     return () => {
@@ -229,27 +719,9 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         abortControllerRef.current.abort();
       }
 
-      map.current?.remove();
-    };
-    // We intentionally limit dependencies to avoid unnecessary re-initializations
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Add markers to the map
-  const addMarkers = useCallback(
-    (placesToAdd: Place[]) => {
-      if (!map.current) return;
-
-      // If there are no places, don't proceed with marker creation
-      if (!placesToAdd || placesToAdd.length === 0) {
-        return;
-      }
-
-      // Clear existing markers
+      // Remove all markers
       markersRef.current.forEach((marker) => marker.remove());
       markersRef.current.clear();
-
-      // Clear existing marker element references and their roots
       markerElementsRef.current.forEach((el, id) => {
         if (el && el.parentElement) {
           // Unmount the React component properly
@@ -266,418 +738,21 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       markerElementsRef.current.clear();
       markerRootsRef.current.clear();
 
-      // Add new markers
-      placesToAdd.forEach((place) => {
-        // Create div element for the marker
-        const markerElement = document.createElement("div");
-        markerElement.className = "marker-container";
-        markerElementsRef.current.set(place._id!, markerElement);
-
-        // Create a React root and render PlaceMarker
-        const root = createRoot(markerElement);
-        markerRootsRef.current.set(place._id!, root);
-        root.render(
-          <PlaceMarker
-            place={place}
-            isSelected={selectedPlace?._id === place._id}
-            onClick={(clickedPlace) => {
-              setSelectedPlace(clickedPlace);
-              setShowPlaceDetails(true);
-
-              // Fly to location
-              map.current?.flyTo({
-                center: clickedPlace.center.coordinates as [number, number],
-                zoom: 14,
-                essential: true,
-              });
-            }}
-          />,
-        );
-
-        // Create maplibre marker
-        const marker = new maplibregl.Marker({
-          element: markerElement,
-          anchor: "bottom",
-        })
-          .setLngLat(place.center.coordinates as [number, number])
-          .addTo(map.current!);
-
-        markersRef.current.set(place._id!, marker);
-      });
-    },
-    [
-      map,
-      markersRef,
-      markerElementsRef,
-      markerRootsRef,
-      setShowPlaceDetails,
-      setSelectedPlace,
-      selectedPlace?._id,
-    ],
-  );
-
-  // Load places from backend with AbortController for request cancellation
-  const loadPlaces = useCallback(
-    async (useBounds = false) => {
-      // Cancel any in-flight request
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-
-      // Create new abort controller for this request
-      const abortController = new AbortController();
-      abortControllerRef.current = abortController;
-
-      // Only show top loader for map-driven requests (not initial load)
-      if (useBounds) {
-        setShowTopLoader(true);
-      } else {
-        setIsLoading(true);
-      }
-
-      setIsFetchingPlaces(true);
-
-      try {
-        // Prepare the base request parameters
-        let setParams: any = {
-          page: 1,
-          limit: 50,
-          status: "active",
-        };
-
-        // If we're using bounds for the request, add geospatial filters
-        if (useBounds && map.current) {
-          const bounds = map.current.getBounds();
-          const center = map.current.getCenter();
-          const zoom = map.current.getZoom();
-
-          // Calculate approximate distance from zoom level (meters)
-          // This is a rough estimation: distance decreases as zoom increases
-          const approxDistance =
-            (40075000 * Math.cos((center.lat * Math.PI) / 180)) /
-            Math.pow(2, zoom + 8);
-
-          // Use the bounds to create a polygon for the area filter
-          const sw = bounds.getSouthWest();
-          const ne = bounds.getNorthEast();
-
-          // Create a polygon from the bounds
-          const polygon = {
-            type: "Polygon" as const,
-            coordinates: [
-              [
-                [sw.lng, sw.lat],
-                [ne.lng, sw.lat],
-                [ne.lng, ne.lat],
-                [sw.lng, ne.lat],
-                [sw.lng, sw.lat], // Close the polygon
-              ],
-            ] as any[][],
-          };
-
-          // Add the area filter to the request
-          setParams = {
-            ...setParams,
-            area: polygon,
-            // Alternative: use near + maxDistance if area doesn't work
-            // near: {
-            //   type: "Point" as const,
-            //   coordinates: [center.lng, center.lat]
-            // },
-            // maxDistance: approxDistance
-          };
-        }
-
-        // Add all filters from the store to the API request
-        // Note: Using the field names as expected by the backend API
-        // antiquity will be sent to the backend as a number
-        if (filters.categoryIds && filters.categoryIds.length > 0) {
-          setParams = { ...setParams, categoryIds: filters.categoryIds };
-        }
-
-        if (filters.tagIds && filters.tagIds.length > 0) {
-          setParams = { ...setParams, tagIds: filters.tagIds };
-        }
-
-        if (filters.name) {
-          setParams = { ...setParams, name: filters.name };
-        }
-
-        if (filters.slug) {
-          setParams = { ...setParams, slug: filters.slug };
-        }
-
-        if (filters.status) {
-          setParams = { ...setParams, status: filters.status };
-        }
-
-        if (filters.province) {
-          setParams = { ...setParams, province: filters.province };
-        }
-
-        if (filters.city) {
-          setParams = { ...setParams, city: filters.city };
-        }
-
-        if (filters.city_zone) {
-          setParams = { ...setParams, cityZone: filters.city_zone };
-        }
-
-        console.log("before antiquity ", { antiquity: filters.antiquity });
-        // Add antiquity filter to be sent to backend, rounded to integer
-        if (filters.antiquity !== undefined && filters.antiquity >= 0) {
-          setParams = {
-            ...setParams,
-            antiquity: Math.floor(filters.antiquity),
-          };
-        }
-
-        console.log("antiquity ", { antiquity: filters.antiquity });
-        // Call the backend API to fetch places
-        const response = await gets({
-          set: setParams,
-          get: {
-            data: {
-              _id: 1,
-              name: 1,
-              center: 1,
-              category: {
-                _id: 1,
-                name: 1,
-                color: 1,
-                icon: 1,
-              },
-              thumbnail: {
-                _id: 1,
-                name: 1,
-              },
-            },
-            metadata: {
-              total: 1,
-              page: 1,
-              limit: 1,
-              pageCount: 1,
-            },
-          },
-        });
-
-        // For server actions, we can't truly cancel the request
-        // but we can still check if the component is still mounted before updating state
-        if (abortController.signal.aborted) {
-          // Request was cancelled, don't update state
-          return;
-        }
-
-        if (response.success) {
-          // Extract place data from response
-          const placesData = Array.isArray(response.body)
-            ? response.body
-            : response.body?.data || [];
-
-          // Convert string dates to Date objects for compatibility
-          const convertedPlacesData = placesData.map((place: any) => ({
-            ...place,
-            updatedAt:
-              typeof place.updatedAt === "string"
-                ? new Date(place.updatedAt)
-                : place.updatedAt,
-            createdAt:
-              typeof place.createdAt === "string"
-                ? new Date(place.createdAt)
-                : place.createdAt,
-          }));
-
-          if (convertedPlacesData.length > 0) {
-            setPlaces(convertedPlacesData);
-            setFilteredPlaces(convertedPlacesData);
-            addMarkers(convertedPlacesData);
-
-            // If first load, zoom to fit all places
-            if (isFirstLoad && !useBounds) {
-              fitMapToPlaces(convertedPlacesData);
-              setIsFirstLoad(false);
-            }
-          } else {
-            // Don't clear places if it's a bounds update and we already have places
-            if (!useBounds || places.length === 0) {
-              setPlaces([]);
-              setFilteredPlaces([]);
-              if (!useBounds) {
-                toast(t("map.noPlacesFound") || "No places found");
-              }
-            }
-          }
-        } else {
-          // Don't clear places if it's a bounds update and we already have places
-          if (!useBounds || places.length === 0) {
-            setPlaces([]);
-            setFilteredPlaces([]);
-            if (!useBounds) {
-              toast.error(
-                t("errors.failedToFetchPlaces") || "Failed to fetch places",
-              );
-            }
-          }
-        }
-      } catch (error: any) {
-        if (error.name === "AbortError") {
-          // Request was cancelled, don't show error
-        } else {
-          if (!useBounds) {
-            toast.error(t("map.errorLoadingPlaces") || "Error loading places");
-            setPlaces([]);
-            setFilteredPlaces([]);
-          }
-        }
-      } finally {
-        if (!abortController.signal.aborted) {
-          if (useBounds) {
-            setShowTopLoader(false);
-          } else {
-            setIsLoading(false);
-          }
-          setIsFetchingPlaces(false);
-        }
-      }
-    },
-    [
-      t,
-      isFirstLoad,
-      setFilteredPlaces,
-      setIsFirstLoad,
-      setIsFetchingPlaces,
-      setPlaces,
-      addMarkers,
-      places.length, // Add places.length to the dependency array for the conditional logic
-      filters,
-      map,
-    ],
-  );
-
-  // Debounced handler for map movement events with bounds comparison
-  const handleMapMove = useCallback(() => {
-    if (!map.current) return;
-
-    // Get current bounds
-    const currentBounds = map.current.getBounds();
-    const currentBoundsObj = {
-      sw: { lat: currentBounds.getSouth(), lng: currentBounds.getWest() },
-      ne: { lat: currentBounds.getNorth(), lng: currentBounds.getEast() },
+      map.current?.remove();
     };
+    // We intentionally limit dependencies to avoid unnecessary re-initializations
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    // Check if bounds have changed significantly (threshold: 0.001 degrees ~ 111 meters)
-    if (previousBoundsRef.current) {
-      const latDiff =
-        Math.abs(currentBoundsObj.sw.lat - previousBoundsRef.current.sw.lat) +
-        Math.abs(currentBoundsObj.ne.lat - previousBoundsRef.current.ne.lat);
-      const lngDiff =
-        Math.abs(currentBoundsObj.sw.lng - previousBoundsRef.current.sw.lng) +
-        Math.abs(currentBoundsObj.ne.lng - previousBoundsRef.current.ne.lng);
-
-      // If bounds haven't changed significantly, don't fetch again
-      if (latDiff < 0.002 && lngDiff < 0.002) {
-        return;
-      }
-    }
-
-    // Update previous bounds
-    previousBoundsRef.current = currentBoundsObj;
-
-    // Clear any existing timeout
-    if (mapMoveTimeoutRef.current) {
-      clearTimeout(mapMoveTimeoutRef.current);
-    }
-
-    // Set a new timeout to wait for 200ms after the last movement
-    mapMoveTimeoutRef.current = setTimeout(() => {
-      // Fetch places using the current map bounds
-      loadPlaces(true); // Use bounds for this request
-    }, 200);
-  }, [loadPlaces]);
-
-  // The addMarkers function has been moved up before loadPlaces
-
-  // Fit map to show all places
-  const fitMapToPlaces = (places: Place[]) => {
-    if (!map.current || !places || places.length === 0) return;
-
-    try {
-      // Create a bounds object and extend it with all place coordinates
-      const bounds = new maplibregl.LngLatBounds();
-
-      places.forEach((place) => {
-        if (
-          place.center &&
-          place.center.coordinates &&
-          Array.isArray(place.center.coordinates) &&
-          place.center.coordinates.length >= 2
-        ) {
-          bounds.extend([
-            place.center.coordinates[0],
-            place.center.coordinates[1],
-          ] as [number, number]);
-        }
-      });
-
-      // Only fit bounds if we added coordinates
-      if (!bounds.isEmpty()) {
-        map.current.fitBounds(bounds, {
-          // Add extra padding at the bottom to account for the timeline slider
-          // 50px on other sides, 150px on bottom to clear the timeline
-          padding: {
-            top: 90,
-            bottom: 205, // Increased padding for bottom to account for timeline
-            left: 60,
-            right: 60,
-          },
-          maxZoom: 15,
-        });
-      }
-    } catch (error) {
-      // Error handling for fitMapToPlaces can be added if needed
-    }
-  };
-
-  // Update markers when selected place changes
+  // Reload places when any filter changes - watch the entire filters object
   useEffect(() => {
-    if (!map.current) return;
+    // Only load places after the map has been initialized to prevent duplicate calls
+    if (hasInitialized.current) {
+      loadPlaces(); // Reload places with all current filters
+    }
+  }, [filters, loadPlaces]);
 
-    // Wait a bit to ensure map is loaded, then re-render markers to update selected state
-    const timer = setTimeout(() => {
-      if (!map.current) return;
-
-      filteredPlaces.forEach((place) => {
-        const markerElement = markerElementsRef.current.get(place._id!);
-        if (markerElement) {
-          // Reuse existing root instead of creating a new one
-          const root = markerRootsRef.current.get(place._id!);
-          if (root) {
-            root.render(
-              <PlaceMarker
-                place={place}
-                isSelected={selectedPlace?._id === place._id}
-                onClick={(clickedPlace) => {
-                  setSelectedPlace(clickedPlace);
-                  setShowPlaceDetails(true);
-
-                  // Fly to location
-                  map.current?.flyTo({
-                    center: clickedPlace.center.coordinates as [number, number],
-                    zoom: 14,
-                    essential: true,
-                  });
-                }}
-              />,
-            );
-          }
-        }
-      });
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [selectedPlace?._id, filteredPlaces, map]);
-
-  // Filter places based on search and filters
+  // Apply client-side filtering when places or search query changes
   useEffect(() => {
     let filtered = [...places];
 
@@ -686,7 +761,9 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       filtered = filtered.filter(
         (place) =>
           place.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          place.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          place.description
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
           place.tags?.some((tag) => {
             const tagName = typeof tag === "object" ? tag.name : tag;
             return tagName.toLowerCase().includes(searchQuery.toLowerCase());
@@ -694,120 +771,9 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       );
     }
 
-    // Apply category filter
-    if (filters.categories && filters.categories.length > 0) {
-      filtered = filtered.filter((place) => {
-        const categoryName =
-          typeof place.category === "object"
-            ? place.category.name
-            : place.category;
-        return categoryName && filters.categories?.includes(categoryName);
-      });
-    }
-
-    // Apply tag filter
-    if (filters.tags && filters.tags.length > 0) {
-      filtered = filtered.filter((place) =>
-        place.tags?.some((tag) => {
-          const tagName = typeof tag === "object" ? tag.name : tag;
-          return filters.tags?.includes(tagName);
-        }),
-      );
-    }
-
-    // Apply antiquity filter
-    if (filters.antiquity !== undefined && filters.antiquity >= 0) {
-      filtered = filtered.filter((place) => {
-        // Assuming place.antiquity represents the age of the place in years
-        // We want to show places that are at least as old as the selected antiquity value
-        return place.antiquity >= filters.antiquity!;
-      });
-    }
-
-    // Apply name filter (if using client-side filtering)
-    if (filters.name) {
-      filtered = filtered.filter((place) =>
-        place.name.toLowerCase().includes(filters.name!.toLowerCase()),
-      );
-    }
-
-    // Apply slug filter (if using client-side filtering)
-    if (filters.slug) {
-      filtered = filtered.filter((place) =>
-        place.slug?.toLowerCase().includes(filters.slug!.toLowerCase()),
-      );
-    }
-
-    // Apply status filter
-    if (filters.status) {
-      filtered = filtered.filter((place) => place.status === filters.status);
-    }
-
-    // Apply province filter
-    if (filters.province) {
-      filtered = filtered.filter((place) => {
-        const provinceName =
-          typeof place.province === "object"
-            ? place.province?.name
-            : place.province;
-        return provinceName
-          ?.toLowerCase()
-          .includes(filters.province!.toLowerCase());
-      });
-    }
-
-    // Apply city filter
-    if (filters.city) {
-      filtered = filtered.filter((place) => {
-        const cityName =
-          typeof place.city === "object" ? place.city?.name : place.city;
-        return cityName?.toLowerCase().includes(filters.city!.toLowerCase());
-      });
-    }
-
-    // Apply city zone filter
-    if (filters.city_zone) {
-      filtered = filtered.filter((place) => {
-        const cityZoneName =
-          typeof place.city_zone === "object"
-            ? place.city_zone?.name
-            : place.city_zone;
-        return cityZoneName
-          ?.toLowerCase()
-          .includes(filters.city_zone!.toLowerCase());
-      });
-    }
-
-    // Apply category IDs filter
-    if (filters.categoryIds && filters.categoryIds.length > 0) {
-      filtered = filtered.filter((place) => {
-        const categoryId =
-          typeof place.category === "object"
-            ? place.category._id
-            : place.category;
-        return filters.categoryIds?.includes(categoryId!);
-      });
-    }
-
-    // Apply tag IDs filter
-    if (filters.tagIds && filters.tagIds.length > 0) {
-      filtered = filtered.filter((place) => {
-        if (!place.tags) return false;
-        return place.tags.some((tag) => {
-          const tagId = typeof tag === "object" ? tag._id : tag;
-          return filters.tagIds?.includes(tagId!);
-        });
-      });
-    }
-
     setFilteredPlaces(filtered);
-    addMarkers(filtered);
-  }, [searchQuery, filters, places, addMarkers]);
-
-  // Reload places when any filter changes - watch the entire filters object
-  useEffect(() => {
-    loadPlaces(false); // Reload places with current bounds and new filter values
-  }, [filters, loadPlaces]);
+    updateMarkers(filtered);
+  }, [places, searchQuery, updateMarkers]);
 
   // Close place details when ESC is pressed
   useEffect(() => {
@@ -868,11 +834,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     // Re-add markers after style change
     // Wait for the style to load before adding markers
     map.current.once("styledata", () => {
-      addMarkers(filteredPlaces);
-      // Re-add path if it exists
-      if (routeGeometry.length > 0) {
-        addPathToMap(routeGeometry);
-      }
+      updateMarkers(filteredPlaces);
     });
   };
 
@@ -1223,53 +1185,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         </AnimatePresence>
 
         {/* Stats indicator positioned just below MapLayerSwitcher - stretches on hover */}
-        <div className="absolute top-[150px] right-4 z-10">
-          <div
-            className="p-2 rounded-lg bg-[#121212]/90 backdrop-blur-sm border border-[#333] shadow-lg flex items-center gap-1.5 overflow-hidden min-w-fit"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-          >
-            <div className="flex items-center gap-1.5">
-              <svg
-                className={`w-4 h-4 transition-colors duration-300 ${
-                  isHovered ? "text-[#FF007A]" : "text-[#a0a0a0]"
-                }`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
-              <span
-                className={`text-white text-sm font-medium transition-colors duration-300 ${
-                  isHovered ? "text-[#FF007A]" : "text-white"
-                }`}
-              >
-                {filteredPlaces.length}
-              </span>
-            </div>
-            <div
-              className={`whitespace-nowrap transition-all duration-300 origin-left ${
-                isHovered ? "opacity-100 w-auto pl-2" : "opacity-0 w-0 pl-0"
-              }`}
-            >
-              <span className="text-white text-sm font-medium border-l border-[#333] ml-2">
-                {t("Location.locationsFound")}
-              </span>
-            </div>
-          </div>
-        </div>
+        <MapStatsIndicator count={filteredPlaces.length} />
 
         {/* Place Details Modal */}
         {selectedPlace && showPlaceDetails && (
