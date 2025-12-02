@@ -42,11 +42,6 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({ className = "" }) => {
     setInputValue(Math.round(value).toString());
   }, [value]);
 
-  // Apply filter to map store
-  const applyFilter = () => {
-    setAntiquityFilter(value);
-  };
-
   // Track position state (in pixels relative to center)
   const [trackPosition, setTrackPosition] = useState<number>(0);
 
@@ -244,7 +239,8 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({ className = "" }) => {
                     }}
                     onDragEnd={() => {
                       setIsDragging(false);
-                      applyFilter();
+                      console.log({ value });
+                      setAntiquityFilter(value);
                     }}
                   >
                     {/* Base track line - thinner */}
@@ -269,14 +265,15 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({ className = "" }) => {
                             }}
                           >
                             <motion.div
-                              className={`origin-bottom ${value >= tickValue ? "bg-white" : "bg-[#a0a0a0]"}`}
+                              className={`origin-bottom ${value >= tickValue ? "bg-white" : "bg-[#a0a0a0]"} firefox-visible`}
                               style={{
                                 height: isVeryMajor
                                   ? "32px"
                                   : isMajor
                                     ? "24px"
-                                    : "14px", // Taller marks
-                                width: isMajor ? "1.5px" : "0.75px", // Slightly thicker
+                                    : "14px", // Taller marks for 10-year intervals
+                                width: isMajor ? "1.5px" : "1px", // Standard width for 10-year ticks
+                                minWidth: "1px", // Ensures a minimum width for consistent rendering across browsers
                               }}
                               whileHover={{
                                 height: isVeryMajor
@@ -357,6 +354,14 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({ className = "" }) => {
                 .hide-scrollbar {
                   -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
                   scrollbar-width: none; /* Hide scrollbar for Firefox */
+                }
+
+                /* Firefox-specific styles to ensure thin lines are visible */
+                @-moz-document url-prefix() {
+                  .firefox-visible {
+                    border-left: 1px solid currentColor;
+                    background: transparent;
+                  }
                 }
               `}</style>
 
