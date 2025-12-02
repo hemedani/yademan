@@ -57,6 +57,10 @@ interface MapState {
     tagIds?: string[];
     maxDistance?: number;
     minDistance?: number;
+    area?: {
+      type: "Polygon";
+      coordinates: number[][][];
+    };
   };
 
   // Pathfinding
@@ -93,6 +97,9 @@ interface MapState {
   setAntiquityFilter: (antiquity: number) => void;
   setFilters: (filters: Partial<MapState["filters"]>) => void;
   setPlaceFilters: (filters: Partial<MapState["filters"]>) => void;
+  setAreaFilter: (
+    area: { type: "Polygon"; coordinates: number[][][] } | null,
+  ) => void;
 
   // Pathfinding actions
   setIsPathfindingActive: (active: boolean) => void;
@@ -178,6 +185,10 @@ export const useMapStore = create<MapState>()(
         setPlaceFilters: (newPlaceFilters) =>
           set((state) => ({
             filters: { ...state.filters, ...newPlaceFilters },
+          })),
+        setAreaFilter: (area) =>
+          set((state) => ({
+            filters: { ...state.filters, area },
           })),
 
         // Pathfinding setters
