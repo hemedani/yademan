@@ -217,7 +217,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
   // If no place and loading, show loading indicator
   if (!place && loading) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">
+      <div className="fixed inset-0 z-60 flex items-center justify-center p-4 sm:p-0">
         <div className="fixed inset-0 bg-black/50" />
         <div className="relative max-w-md rounded-2xl bg-[#0a0a00]/60 backdrop-blur-3xl shadow-2xl flex flex-col border border-[#333] shadow-[0_0_60px_rgba(255,0,122,0.2)] p-8 text-center">
           <p className="text-white">{t("Common.loading")}</p>
@@ -233,7 +233,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
     <AnimatePresence>
       <div
         key={`place-modal-${placeId}`}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0"
+        className="fixed inset-0 z-60 flex items-center justify-center p-4 sm:p-0"
       >
         <motion.div
           className="fixed inset-0 bg-black/50"
