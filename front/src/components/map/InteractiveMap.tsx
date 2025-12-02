@@ -328,8 +328,9 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     const abortController = new AbortController();
     abortControllerRef.current = abortController;
 
-    // Always show loading indicator
+    // Always show loading indicators
     setIsLoading(true);
+    setShowTopLoader(true);
 
     setIsFetchingPlaces(true);
 
@@ -501,6 +502,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       if (!abortController.signal.aborted) {
         setIsLoading(false);
         setIsFetchingPlaces(false);
+        setShowTopLoader(false);
       }
     }
   }, [
@@ -703,7 +705,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       // Load places data for initial view only once
       if (!hasInitialized.current) {
         hasInitialized.current = true;
-        loadPlaces();
+        loadPlaces(); // Initial load
       }
     });
 
