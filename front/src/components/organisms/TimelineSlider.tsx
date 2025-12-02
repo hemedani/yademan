@@ -132,7 +132,7 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({ className = "" }) => {
                       setValue(0);
                       setInputValue("0");
                       setTrackPosition(0); // This will move the track back to center
-                      setAntiquityFilter(0);
+                      setAntiquityFilter(undefined);
                       // Ensure dragging state is reset to avoid any visual issues
                       setIsDragging(false);
                     }}
@@ -239,7 +239,6 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({ className = "" }) => {
                     }}
                     onDragEnd={() => {
                       setIsDragging(false);
-                      console.log({ value });
                       setAntiquityFilter(value);
                     }}
                   >
