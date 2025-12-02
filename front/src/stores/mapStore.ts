@@ -94,7 +94,7 @@ interface MapState {
   setIsDrawingPolygon: (isDrawing: boolean) => void;
   setSelectedLocationId: (id: string | null) => void;
   setSearchQuery: (query: string) => void;
-  setAntiquityFilter: (antiquity: number) => void;
+  setAntiquityFilter: (antiquity: number | undefined) => void;
   setFilters: (filters: Partial<MapState["filters"]>) => void;
   setPlaceFilters: (filters: Partial<MapState["filters"]>) => void;
   setAreaFilter: (
