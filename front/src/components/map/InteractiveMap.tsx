@@ -12,6 +12,7 @@ import MapControls from "./MapControls";
 import { gets } from "@/app/actions/place/gets";
 import PlaceMarker from "@/components/atoms/PlaceMarker";
 import PlaceDetailsModal from "@/components/organisms/PlaceDetailsModal";
+import PlaceHoverTooltip from "./PlaceHoverTooltip";
 import { toast } from "react-hot-toast";
 import RoutePanel from "@/components/map/RoutePanel";
 import MapLayerSwitcher from "@/components/map/MapLayerSwitcher";
@@ -95,6 +96,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
   const [isFetchingPlaces, setIsFetchingPlaces] = useState(false);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [showTopLoader, setShowTopLoader] = useState(false);
+  const [hoveredPlace, setHoveredPlace] = useState<Place | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const hasInitialized = useRef(false);
 
   // Refs for debouncing, request cancellation, and bounds tracking
@@ -238,6 +241,26 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           // Create a React root and render PlaceMarker
           const root = createRoot(markerElement);
           markerRootsRef.current.set(place._id!, root);
+
+          // Add event listeners to the marker container for hover effects
+          markerElement.addEventListener("mouseenter", (e) => {
+            // Calculate position from the marker's coordinates relative to the map container
+            const screenCoords = map.current!.project(
+              place.center.coordinates as [number, number],
+            );
+            // Adjust coordinates to be relative to the screen (not map container)
+            const rect = mapContainer.current?.getBoundingClientRect();
+            setTooltipPosition({
+              x: screenCoords.x + (rect?.left || 0),
+              y: screenCoords.y + (rect?.top || 0),
+            });
+            setHoveredPlace(place);
+          });
+
+          markerElement.addEventListener("mouseleave", () => {
+            setHoveredPlace(null);
+          });
+
           root.render(
             <PlaceMarker
               place={place}
@@ -296,7 +319,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         }
       });
     },
-    [map, selectedPlace?._id],
+    [map, selectedPlace?._id, mapContainer],
   );
 
   // Load places from backend with AbortController for request cancellation
@@ -401,6 +424,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
             _id: 1,
             name: 1,
             center: 1,
+            description: 1,
             category: {
               _id: 1,
               name: 1,
@@ -410,6 +434,12 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
             thumbnail: {
               _id: 1,
               name: 1,
+            },
+            tags: {
+              _id: 1,
+              name: 1,
+              color: 1,
+              icon: 1,
             },
           },
           metadata: {
@@ -840,6 +870,35 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     });
   };
 
+  // Handle map move to update tooltip position when map moves
+  useEffect(() => {
+    if (!map.current || !hoveredPlace) return;
+
+    const handleMapMove = () => {
+      // If we have a hovered place, update its tooltip position when map moves
+      if (hoveredPlace) {
+        // Convert the place's coordinates to screen coordinates
+        const screenCoords = map.current!.project(
+          hoveredPlace.center.coordinates as [number, number],
+        );
+        // Adjust coordinates to be relative to the screen (not map container)
+        const mapRect = mapContainer.current?.getBoundingClientRect();
+        setTooltipPosition({
+          x: screenCoords.x + (mapRect?.left || 0),
+          y: screenCoords.y + (mapRect?.top || 0),
+        });
+      }
+    };
+
+    map.current.on("move", handleMapMove);
+
+    return () => {
+      if (map.current) {
+        map.current.off("move", handleMapMove);
+      }
+    };
+  }, [hoveredPlace]);
+
   // Pathfinding state
   const isPathfindingActive = useMapStore((state) => state.isPathfindingActive);
   const pathfindingStartLocation = useMapStore(
@@ -1195,6 +1254,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
             placeId={selectedPlace._id!}
             onClose={() => setShowPlaceDetails(false)}
           />
+        )}
+
+        {/* Place Hover Tooltip */}
+        {hoveredPlace && (
+          <PlaceHoverTooltip place={hoveredPlace} position={tooltipPosition} />
         )}
       </div>
     </>
