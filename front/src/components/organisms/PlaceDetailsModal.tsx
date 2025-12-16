@@ -384,7 +384,13 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                     }}
                   >
                     {place.category.icon && (
-                      <i className={`fa fa-${place.category.icon} text-xs`}></i>
+                      <span className="text-xs">
+                        {place.category.icon.startsWith("fa-") ? (
+                          <i className={`fa ${place.category.icon}`}></i>
+                        ) : (
+                          place.category.icon
+                        )}
+                      </span>
                     )}
                     {place.category.name}
                   </span>
@@ -423,13 +429,23 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                       initial={{ opacity: 0, scale: 0 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.4 + index * 0.05 }}
-                      className="px-3 py-1.5 bg-[#1e1e1e] text-[#a0a0a0] rounded-full text-sm border border-[#333] hover:bg-[#2a2a2a] hover:text-white transition-colors flex items-center gap-1"
+                      className="px-3 py-1.5 rounded-full text-sm flex items-center gap-1"
                       style={{
-                        backgroundColor: tag.color || "",
+                        backgroundColor: tag.color
+                          ? `${tag.color}20`
+                          : "rgba(30, 30, 30, 0.5)",
+                        color: tag.color || "#a0a0a0",
+                        border: `1px solid ${tag.color || "#333"}40`,
                       }}
                     >
                       {tag.icon && (
-                        <i className={`fa fa-${tag.icon} text-xs`}></i>
+                        <span className="text-xs">
+                          {tag.icon.startsWith("fa-") ? (
+                            <i className={`fa ${tag.icon}`}></i>
+                          ) : (
+                            tag.icon
+                          )}
+                        </span>
                       )}
                       {tag.name}
                     </motion.span>
