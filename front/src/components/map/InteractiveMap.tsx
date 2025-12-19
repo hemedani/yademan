@@ -1,4 +1,6 @@
 "use client";
+// File Address
+// src/components/map/InteractiveMap.tsx
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { createRoot } from "react-dom/client";
@@ -15,7 +17,7 @@ import PlaceDetailsModal from "@/components/organisms/PlaceDetailsModal";
 import PlaceHoverTooltip from "./PlaceHoverTooltip";
 import { toast } from "react-hot-toast";
 import RoutePanel from "@/components/map/RoutePanel";
-import MapLayerSwitcher from "@/components/map/MapLayerSwitcher";
+import LayerControl from "./LayerControl";
 import MapStatsIndicator from "@/components/map/MapStatsIndicator";
 import { placeSchema } from "@/types/declarations/selectInp";
 
@@ -34,36 +36,36 @@ const MAPTILER_KEY = "PWAcntNh2dhVx9XsqifY";
 
 const MAP_LAYERS: MapLayer[] = [
   {
-    id: "osm-dark",
-    name: "Dark",
-    url: "https://cartodb-basemaps-c.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png",
+    id: "darkmatter",
+    name: "Dark Matter",
+    url: "https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
     attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>',
+    maxZoom: 18,
+  },
+  {
+    id: "standard",
+    name: "Standard OSM",
+    url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 19,
   },
   {
-    id: "osm-dark-vector",
-    name: "Dark Vector",
-    url: `https://api.maptiler.com/maps/streets-v2-dark/style.json?key=${MAPTILER_KEY}`,
+    id: "humanitarian",
+    name: "Humanitarian",
+    url: "https://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
     attribution:
-      '© <a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
-    maxZoom: 22,
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/">Humanitarian OpenStreetMap Team</a>',
+    maxZoom: 18,
   },
   {
-    id: "satellite",
-    name: "Satellite",
-    url: `https://api.maptiler.com/maps/hybrid/style.json?key=${MAPTILER_KEY}`,
+    id: "cyclosm",
+    name: "CyclOSM",
+    url: "https://a.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png",
     attribution:
-      '© <a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a>',
-    maxZoom: 22,
-  },
-  {
-    id: "terrain",
-    name: "Terrain",
-    url: `https://api.maptiler.com/maps/outdoor-v2-dark/style.json?key=${MAPTILER_KEY}`,
-    attribution:
-      '© <a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
-    maxZoom: 22,
+      '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 18,
   },
 ];
 
@@ -82,11 +84,16 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
   const markersRef = useRef<Map<string, maplibregl.Marker>>(new Map());
   const markerElementsRef = useRef<Map<string, HTMLDivElement>>(new Map());
   const markerRootsRef = useRef<Map<string, any>>(new Map());
+  const attributionControlRef = useRef<maplibregl.AttributionControl | null>(
+    null,
+  );
 
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [showSidebar, setShowSidebar] = useState(false);
   const [showRoutePanel, setShowRoutePanel] = useState(false);
-  const [currentLayer, setCurrentLayer] = useState<MapLayer>(MAP_LAYERS[0]);
+  const [currentLayer, setCurrentLayer] = useState<MapLayer>(
+    MAP_LAYERS.find((layer) => layer.id === "darkmatter") || MAP_LAYERS[0],
+  );
   const [places, setPlaces] = useState<Place[]>([]);
   const [filteredPlaces, setFilteredPlaces] = useState<Place[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -699,13 +706,12 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       "bottom-left",
     );
 
-    // Add attribution control
-    map.current.addControl(
-      new maplibregl.AttributionControl({
-        compact: true,
-      }),
-      "bottom-right",
-    );
+    // Add attribution control and store reference
+    const attributionControl = new maplibregl.AttributionControl({
+      compact: true,
+    });
+    map.current.addControl(attributionControl, "bottom-right");
+    attributionControlRef.current = attributionControl;
 
     // Handle map events
     map.current.on("moveend", () => {
@@ -771,6 +777,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       markerRootsRef.current.clear();
 
       map.current?.remove();
+      attributionControlRef.current = null;
     };
     // We intentionally limit dependencies to avoid unnecessary re-initializations
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -827,6 +834,32 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
 
     setCurrentLayer(layer);
 
+    // Store existing route data before changing the layer
+    const existingRoute = map.current.getSource("route")
+      ? (map.current.getSource("route") as maplibregl.GeoJSONSource).getData()
+      : null;
+    const existingStartMarker = map.current.getSource("start-marker")
+      ? (
+          map.current.getSource("start-marker") as maplibregl.GeoJSONSource
+        ).getData()
+      : null;
+
+    // Store place markers data
+    const placeMarkersData: { [key: string]: any } = {};
+    pathfindingPath.forEach((_, index) => {
+      const sourceId = `place-source-${index}`;
+      if (map.current && map.current.getSource(sourceId)) {
+        placeMarkersData[sourceId] = (
+          map.current.getSource(sourceId) as maplibregl.GeoJSONSource
+        ).getData();
+      }
+    });
+
+    // Remove existing attribution control temporarily
+    if (attributionControlRef.current) {
+      map.current.removeControl(attributionControlRef.current);
+    }
+
     // Update map style
     if (layer.url.endsWith(".json")) {
       // Vector tile style - we need to load the style and ensure background
@@ -863,10 +896,88 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       });
     }
 
-    // Re-add markers after style change
+    // Re-add markers and attribution control after style change
     // Wait for the style to load before adding markers
     map.current.once("styledata", () => {
+      // Re-add markers
       updateMarkers(filteredPlaces);
+
+      // Re-add route if it existed
+      if (existingRoute && isPathfindingActive) {
+        // Add route source
+        map.current!.addSource("route", {
+          type: "geojson",
+          data: existingRoute as any,
+        });
+
+        // Add route layer
+        map.current!.addLayer({
+          id: "route",
+          type: "line",
+          source: "route",
+          layout: {
+            "line-join": "round",
+            "line-cap": "round",
+          },
+          paint: {
+            "line-color": "#3b82f6",
+            "line-width": 5,
+            "line-opacity": 0.75,
+          },
+        });
+
+        // Re-add start marker if it existed
+        if (existingStartMarker) {
+          map.current!.addSource("start-marker", {
+            type: "geojson",
+            data: existingStartMarker as any,
+          });
+
+          map.current!.addLayer({
+            id: "start-marker",
+            type: "circle",
+            source: "start-marker",
+            paint: {
+              "circle-radius": 10,
+              "circle-color": "#10B981", // Green for start
+              "circle-stroke-width": 2,
+              "circle-stroke-color": "#FFFFFF",
+            },
+          });
+        }
+
+        // Re-add place markers for each stop
+        pathfindingPath.forEach((place, index) => {
+          const markerId = `place-marker-${index}`;
+          const sourceId = `place-source-${index}`;
+
+          if (placeMarkersData[sourceId]) {
+            map.current!.addSource(sourceId, {
+              type: "geojson",
+              data: placeMarkersData[sourceId] as any,
+            });
+
+            map.current!.addLayer({
+              id: markerId,
+              type: "circle",
+              source: sourceId,
+              paint: {
+                "circle-radius": index === 0 ? 10 : 8, // Make first place slightly larger
+                "circle-color": index === 0 ? "#F59E0B" : "#EF4444", // Yellow for first, red for others
+                "circle-stroke-width": 2,
+                "circle-stroke-color": "#FFFFFF",
+              },
+            });
+          }
+        });
+      }
+
+      // Re-add the attribution control with updated attribution
+      const newAttributionControl = new maplibregl.AttributionControl({
+        compact: true,
+      });
+      map.current!.addControl(newAttributionControl, "bottom-right");
+      attributionControlRef.current = newAttributionControl;
     });
   };
 
@@ -1022,12 +1133,12 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           },
         };
 
-        map.current.addSource(sourceId, {
+        map.current!.addSource(sourceId, {
           type: "geojson",
           data: placeMarker,
         });
 
-        map.current.addLayer({
+        map.current!.addLayer({
           id: markerId,
           type: "circle",
           source: sourceId,
@@ -1224,8 +1335,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           }}
         />
 
-        {/* Layer switcher */}
-        <MapLayerSwitcher
+        {/* Layer control */}
+        <LayerControl
           layers={MAP_LAYERS}
           currentLayer={currentLayer}
           onLayerChange={handleLayerChange}
@@ -1245,7 +1356,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           )}
         </AnimatePresence>
 
-        {/* Stats indicator positioned just below MapLayerSwitcher - stretches on hover */}
+        {/* Stats indicator positioned just below LayerControl - stretches on hover */}
         <MapStatsIndicator count={filteredPlaces.length} />
 
         {/* Place Details Modal */}
