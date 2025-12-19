@@ -10,6 +10,7 @@ import { useMapStore } from "@/stores/mapStore";
 import toast from "react-hot-toast";
 import { useParams } from "next/navigation";
 import TimelineSlider from "@/components/organisms/TimelineSlider";
+import SearchFilterHub from "@/components/layout/SearchFilterHub";
 
 export default function HomePage() {
   const t = useTranslations("HomePage");
@@ -75,7 +76,6 @@ export default function HomePage() {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchValue.trim()) {
-      setShowSearch(false);
       // Trigger map search
       setSearchQuery(searchValue);
     }
@@ -84,14 +84,8 @@ export default function HomePage() {
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      // Ctrl/Cmd + K for search
-      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
-        e.preventDefault();
-        setShowSearch(true);
-      }
       // Escape to close panels
       if (e.key === "Escape") {
-        setShowSearch(false);
         closeFilter();
       }
     };
@@ -129,17 +123,15 @@ export default function HomePage() {
       </div>
 
       {/* Top Bar - Fixed */}
-      <TopBar
-        onFilterClickAction={async () => toggleFilter()}
-        searchValue={searchValue}
-        onSearchChangeAction={async (value) => handleSearchChange(value)}
-        onSearchSubmitAction={async (value) => {
-          setSearchQuery(value);
-          setSearchValue(value);
-          setShowSearch(false);
-        }}
-        locale={locale}
-      />
+      <TopBar locale={locale} />
+
+      {/* Search Filter Hub - Centered at the top */}
+      <div className="absolute top-6 left-1/2 transform -translate-x-1/2 z-40 w-full max-w-4xl">
+        <SearchFilterHub
+          searchValue={searchValue}
+          onSearchChange={handleSearchChange}
+        />
+      </div>
 
       {/* Main Content */}
       <main className="relative h-screen w-screen overflow-hidden">
