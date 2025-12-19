@@ -121,7 +121,16 @@
     "zoomIn": "Zoom in to see more places",
     "filters": "Map filters",
     "layers": "Map layers",
-    "loading": "Loading map"
+    "loading": "Loading map",
+    "layerControl": {
+      "toggleLabel": "Change map layer",
+      "layers": {
+        "standard": "Standard",
+        "humanitarian": "Humanitarian",
+        "cyclosm": "CyclOSM",
+        "darkmatter": "Dark Matter"
+      }
+    }
   },
   "place": {
     "virtualTour": "Virtual Tour",

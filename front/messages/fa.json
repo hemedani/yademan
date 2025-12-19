@@ -129,7 +129,16 @@
     "zoomIn": "برای دیدن مکان‌های بیشتر، بزرگنمایی کنید",
     "filters": "فیلترهای نقشه",
     "layers": "لایه‌های نقشه",
-    "loading": "در حال بارگذاری نقشه"
+    "loading": "در حال بارگذاری نقشه",
+    "layerControl": {
+      "toggleLabel": "تغییر لایه نقشه",
+      "layers": {
+        "standard": "استاندارد",
+        "humanitarian": "انسان دوستانه",
+        "cyclosm": "CyclOSM",
+        "darkmatter": "ماده تاریک"
+      }
+    }
   },
   "place": {
     "virtualTour": "تور مجازی",
