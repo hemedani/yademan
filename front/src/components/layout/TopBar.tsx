@@ -1,4 +1,6 @@
 "use client";
+// File Address
+// src/components/layout/TopBar.tsx
 
 import { useState, useRef, useEffect } from "react";
 import { useTranslations } from "next-intl";
@@ -9,67 +11,37 @@ import { motion, AnimatePresence } from "framer-motion";
 import EventsList from "../EventsList";
 
 // Icons
-import MagnifyingGlassIcon from "@heroicons/react/24/outline/MagnifyingGlassIcon";
 import UserIcon from "@heroicons/react/24/outline/UserIcon";
 import CalendarDaysIcon from "@heroicons/react/24/outline/CalendarDaysIcon";
 import ArrowRightOnRectangleIcon from "@heroicons/react/24/outline/ArrowRightOnRectangleIcon";
 import Cog6ToothIcon from "@heroicons/react/24/outline/Cog6ToothIcon";
 
 interface TopBarProps {
-  searchValue: string;
-  onSearchChangeAction?: (value: string) => Promise<void>;
-  onSearchSubmitAction?: (value: string) => Promise<void>;
   locale?: string;
   // Client-side state flags
-  _searchOpen?: boolean;
   _eventsOpen?: boolean;
 }
 
 export default function TopBar({
-  onFilterClickAction,
-  searchValue = "",
-  onSearchChangeAction,
-  onSearchSubmitAction,
   locale = "fa",
-  _filterOpen = false,
-  _searchOpen = false,
   _eventsOpen = false,
 }: TopBarProps) {
   const t = useTranslations();
   const { isAuthenticated, displayName, initials, userLevel, logout, user } =
     useAuth();
-  const [localSearchValue, setLocalSearchValue] = useState(searchValue);
 
   // States for panel visibility
-  const [showSearchPanel, setShowSearchPanel] = useState(_searchOpen);
   const [showUserPanel, setShowUserPanel] = useState(false);
   const [showEventsPanel, setShowEventsPanel] = useState(_eventsOpen);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // Refs for detecting outside clicks
   const topBarRef = useRef<HTMLDivElement>(null);
-  const searchPanelRef = useRef<HTMLDivElement>(null);
   const userPanelRef = useRef<HTMLDivElement>(null);
   const eventsPanelRef = useRef<HTMLDivElement>(null);
 
   const isAdmin =
     isAuthenticated && (userLevel === "Manager" || userLevel === "Ghost");
-
-  // Handle search input change
-  const handleSearchChange = (value: string) => {
-    setLocalSearchValue(value);
-    if (onSearchChangeAction) {
-      onSearchChangeAction(value).catch(console.error);
-    }
-  };
-
-  // Handle search form submission
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (onSearchSubmitAction) {
-      onSearchSubmitAction(localSearchValue).catch(console.error);
-    }
-  };
 
   // Handle logout
   const handleLogout = async () => {
@@ -92,7 +64,6 @@ export default function TopBar({
         topBarRef.current &&
         !topBarRef.current.contains(event.target as Node)
       ) {
-        setShowSearchPanel(false);
         setShowUserPanel(false);
         setShowEventsPanel(false);
       }
@@ -108,7 +79,6 @@ export default function TopBar({
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setShowSearchPanel(false);
         setShowUserPanel(false);
         setShowEventsPanel(false);
       }
@@ -131,30 +101,10 @@ export default function TopBar({
       >
         {/* Icons Row */}
         <div className="flex items-center space-x-1 ">
-          {/* Search Button */}
-          <button
-            onClick={() => {
-              setShowSearchPanel(!showSearchPanel);
-              setShowUserPanel(false);
-              setShowEventsPanel(false);
-            }}
-            className={`p-3 text-white hover:text-[#FF007A] hover:bg-[#1e1e1e] rounded-full transition-all duration-300 touch-manipulation focus:outline-none focus:ring-2 focus:ring-[#FF007A] focus-visible:ring-2 focus-visible:ring-[#FF007A] active:scale-95 ${
-              showSearchPanel
-                ? "bg-[#1e1e1e] text-[#FF007A] shadow-inner transform scale-105 border border-[#FF007A]"
-                : ""
-            }`}
-            title={t("Navigation.searchTooltip")}
-            aria-label={t("Navigation.searchButtonAriaLabel")}
-            type="button"
-          >
-            <MagnifyingGlassIcon className="h-5 w-5" aria-hidden="true" />
-          </button>
-
           {/* Events Button */}
           <button
             onClick={() => {
               setShowEventsPanel(!showEventsPanel);
-              setShowSearchPanel(false);
               setShowUserPanel(false);
             }}
             className={`p-3 text-white hover:text-[#FF007A] hover:bg-[#1e1e1e] rounded-full transition-all duration-300 touch-manipulation focus:outline-none focus:ring-2 focus:ring-[#FF007A] focus-visible:ring-2 focus-visible:ring-[#FF007A] active:scale-95 ${
@@ -174,7 +124,6 @@ export default function TopBar({
             <button
               onClick={() => {
                 setShowUserPanel(!showUserPanel);
-                setShowSearchPanel(false);
                 setShowEventsPanel(false);
               }}
               className={`p-2 text-white hover:text-[#FF007A] hover:bg-[#1e1e1e] rounded-full transition-all duration-300 touch-manipulation focus:outline-none focus:ring-2 focus:ring-[#FF007A] focus-visible:ring-2 focus-visible:ring-[#FF007A] active:scale-95 ${
@@ -221,61 +170,6 @@ export default function TopBar({
 
       {/* Sliding Panels */}
       <AnimatePresence>
-        {/* Search Panel */}
-        {showSearchPanel && (
-          <motion.div
-            ref={searchPanelRef}
-            initial={{ opacity: 0, y: -20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            transition={{
-              type: "spring",
-              stiffness: 400,
-              damping: 30,
-              mass: 0.8,
-            }}
-            className="absolute top-16 right-0 mt-2 w-80 bg-[#121212] rounded-2xl shadow-lg p-4 border border-[#333] z-50"
-          >
-            <form onSubmit={handleSearchSubmit} className="relative">
-              <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                <MagnifyingGlassIcon
-                  className="h-5 w-5 text-[#a0a0a0]"
-                  aria-hidden="true"
-                />
-              </div>
-              <input
-                type="text"
-                value={localSearchValue}
-                onChange={(e) => handleSearchChange(e.target.value)}
-                className="block w-full pr-10 py-3 bg-[#1e1e1e] border border-[#333] rounded-lg text-sm placeholder-[#a0a0a0] text-white transition-all duration-200 touch-manipulation min-h-[48px] focus:outline-none focus:ring-2 focus:ring-[#FF007A] focus:border-[#FF007A] hover:border-[#FF007A]"
-                placeholder={t("HomePage.searchPlaceholder")}
-                aria-label={t("Navigation.searchAriaLabel")}
-                autoFocus
-              />
-              <button
-                type="submit"
-                className="absolute inset-y-0 left-0 pl-3 flex items-center"
-                title={t("Navigation.searchSubmitTooltip")}
-              >
-                <svg
-                  className="h-5 w-5 text-[#FF007A] hover:text-[#ff339c]"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
-            </form>
-            <div className="mt-3 text-xs text-[#a0a0a0]">
-              {t("HomePage.searchTip")}
-            </div>
-          </motion.div>
-        )}
-
         {/* User Panel */}
         {showUserPanel && (
           <motion.div
