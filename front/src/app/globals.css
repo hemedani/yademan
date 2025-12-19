@@ -722,6 +722,20 @@ body {
     color: #ffffff !important;
 }
 
+/* Override global input styles for SearchFilterHub to enhance glass effect */
+input[type="text"].search-filter-input {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    backdrop-filter: blur(24px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+}
+
+input[type="text"].search-filter-input:focus {
+    border-color: #ff007a !important;
+    box-shadow: 0 0 15px rgba(255, 0, 122, 0.3) !important;
+    outline: none !important;
+}
+
 /* Pause video background on mobile devices to save performance and battery */
 @media (max-width: 768px) {
     .welcome-video {
