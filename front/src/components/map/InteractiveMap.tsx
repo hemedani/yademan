@@ -125,6 +125,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
   const [showTopLoader, setShowTopLoader] = useState(false);
   const [hoveredPlace, setHoveredPlace] = useState<Place | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const [is3DEnabled, setIs3DEnabled] = useState(false);
   const hasInitialized = useRef(false);
 
   // Refs for debouncing, request cancellation, and bounds tracking
@@ -703,6 +704,45 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       );
     }
 
+    // Initialize 3D terrain if enabled
+    if (is3DEnabled) {
+      // Add terrain source and enable 3D view
+      map.current.addSource("terrain", {
+        type: "raster-dem",
+        url: "https://demotiles.maplibre.org/terrain-tiles/tiles.json",
+        tileSize: 256,
+      });
+      map.current.setTerrain({
+        source: "terrain",
+        exaggeration: 1.5,
+      });
+
+      // Enable 3D buildings if current style supports it (vector styles)
+      if (currentLayer.url.endsWith(".json")) {
+        if (!map.current.getLayer("3d-buildings")) {
+          map.current.addLayer({
+            id: "3d-buildings",
+            type: "fill-extrusion",
+            source: "openmaptiles", // standard in OpenFreeMap and most vector styles
+            "source-layer": "building",
+            paint: {
+              "fill-extrusion-color": "#333",
+              "fill-extrusion-height": ["get", "render_height"],
+              "fill-extrusion-base": ["get", "render_min_height"],
+              "fill-extrusion-opacity": 0.8,
+            },
+          });
+        }
+      }
+
+      // Set initial 3D view
+      map.current.easeTo({
+        pitch: 60,
+        bearing: 0,
+        duration: 1500,
+      });
+    }
+
     // Add scale control
     map.current.addControl(
       new maplibregl.ScaleControl({ maxWidth: 200 }),
@@ -887,6 +927,49 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
             addPathToMap(pathfindingRouteGeometry);
           }
 
+          // Re-enable 3D if it was previously enabled
+          if (is3DEnabled) {
+            // Re-enable terrain
+            map.current!.addSource("terrain", {
+              type: "raster-dem",
+              url: "https://demotiles.maplibre.org/terrain-tiles/tiles.json",
+              tileSize: 256,
+            });
+            map.current!.setTerrain({
+              source: "terrain",
+              exaggeration: 1.5,
+            });
+
+            // Re-enable 3D buildings if current style supports it
+            if (
+              currentLayer.url.endsWith(".json") ||
+              currentLayer.id === "openfreemap_dark" ||
+              currentLayer.id === "openfreemap_liberty"
+            ) {
+              if (!map.current!.getLayer("3d-buildings")) {
+                map.current!.addLayer({
+                  id: "3d-buildings",
+                  type: "fill-extrusion",
+                  source: "openmaptiles", // standard in OpenFreeMap and most vector styles
+                  "source-layer": "building",
+                  paint: {
+                    "fill-extrusion-color": "#333",
+                    "fill-extrusion-height": ["get", "render_height"],
+                    "fill-extrusion-base": ["get", "render_min_height"],
+                    "fill-extrusion-opacity": 0.8,
+                  },
+                });
+              }
+            }
+
+            // Maintain 3D view
+            map.current!.easeTo({
+              pitch: 60,
+              bearing: 0,
+              duration: 1500,
+            });
+          }
+
           // Re-add the attribution control with updated attribution
           const newAttributionControl = new maplibregl.AttributionControl({
             compact: true,
@@ -950,6 +1033,29 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
             addPathToMap(pathfindingRouteGeometry);
           }
 
+          // Re-enable 3D if it was previously enabled (terrain only for raster layers)
+          if (is3DEnabled) {
+            // Re-enable terrain
+            map.current!.addSource("terrain", {
+              type: "raster-dem",
+              url: "https://demotiles.maplibre.org/terrain-tiles/tiles.json",
+              tileSize: 256,
+            });
+            map.current!.setTerrain({
+              source: "terrain",
+              exaggeration: 1.5,
+            });
+
+            // 3D buildings are only available for vector styles, so don't add them for raster
+
+            // Maintain 3D view
+            map.current!.easeTo({
+              pitch: 60,
+              bearing: 0,
+              duration: 1500,
+            });
+          }
+
           // Re-add the attribution control with updated attribution
           const newAttributionControl = new maplibregl.AttributionControl({
             compact: true,
@@ -968,6 +1074,71 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       if (fallbackLayer && fallbackLayer.id !== currentLayer.id) {
         handleLayerChange(fallbackLayer);
       }
+    }
+  };
+
+  // Toggle 3D terrain view
+  const toggle3D = () => {
+    if (!map.current) return;
+
+    const newState = !is3DEnabled;
+    setIs3DEnabled(newState);
+
+    if (newState) {
+      // Enable 3D terrain
+      map.current.addSource("terrain", {
+        type: "raster-dem",
+        url: "https://demotiles.maplibre.org/terrain-tiles/tiles.json",
+        tileSize: 256,
+      });
+      map.current.setTerrain({
+        source: "terrain",
+        exaggeration: 1.5,
+      });
+
+      // Enable 3D buildings if current style supports it (most vector styles do)
+      if (
+        currentLayer.url.endsWith(".json") ||
+        currentLayer.id === "openfreemap_dark" ||
+        currentLayer.id === "openfreemap_liberty"
+      ) {
+        if (!map.current.getLayer("3d-buildings")) {
+          map.current.addLayer({
+            id: "3d-buildings",
+            type: "fill-extrusion",
+            source: "openmaptiles", // standard in OpenFreeMap and most vector styles
+            "source-layer": "building",
+            paint: {
+              "fill-extrusion-color": "#333",
+              "fill-extrusion-height": ["get", "render_height"],
+              "fill-extrusion-base": ["get", "render_min_height"],
+              "fill-extrusion-opacity": 0.8,
+            },
+          });
+        }
+      }
+
+      // Smooth pitch and bearing for 3D view
+      map.current.easeTo({
+        pitch: 60,
+        bearing: 0,
+        duration: 1500,
+      });
+    } else {
+      // Disable 3D
+      map.current.setTerrain(null);
+      map.current.removeSource("terrain");
+
+      if (map.current.getLayer("3d-buildings")) {
+        map.current.removeLayer("3d-buildings");
+      }
+
+      // Return to 2D view
+      map.current.easeTo({
+        pitch: 0,
+        bearing: 0,
+        duration: 1000,
+      });
     }
   };
 
@@ -1327,6 +1498,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
               );
             }
           }}
+          onToggle3D={toggle3D}
+          is3DEnabled={is3DEnabled}
         />
 
         {/* Layer control */}

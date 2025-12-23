@@ -10,6 +10,8 @@ interface MapControlsProps {
   onResetView: () => void;
   onToggleRouting: () => void;
   onLocateUser: () => void;
+  onToggle3D: () => void;
+  is3DEnabled: boolean;
 }
 
 const MapControls: React.FC<MapControlsProps> = ({
@@ -18,6 +20,8 @@ const MapControls: React.FC<MapControlsProps> = ({
   onResetView,
   onToggleRouting,
   onLocateUser,
+  onToggle3D,
+  is3DEnabled,
 }) => {
   const t = useTranslations();
 
@@ -150,23 +154,27 @@ const MapControls: React.FC<MapControlsProps> = ({
         </svg>
       </button>
 
-      {/* Measure Distance (Optional) */}
+      {/* Toggle 3D View */}
       <button
-        className={buttonClass}
-        aria-label="Measure distance"
-        title="اندازه‌گیری فاصله"
+        onClick={onToggle3D}
+        className={`${buttonClass} ${is3DEnabled ? "bg-[#00FF85]/20 hover:bg-[#00FF85]/30 border-[#00FF85]" : ""}`}
+        aria-label={is3DEnabled ? "Disable 3D view" : "Enable 3D view"}
+        title={
+          is3DEnabled ? "غیرفعال‌سازی نمای سه‌بعدی" : "فعال‌سازی نمای سه‌بعدی"
+        }
       >
         <svg
-          className="w-5 h-5 text-white"
+          className={`w-5 h-5 ${is3DEnabled ? "text-[#00FF85]" : "text-white"}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth={2}
-            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
           />
         </svg>
       </button>
