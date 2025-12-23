@@ -111,7 +111,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [showRoutePanel, setShowRoutePanel] = useState(false);
   const [currentLayer, setCurrentLayer] = useState<MapLayer>(
-    MAP_LAYERS.find((layer) => layer.id === "darkmatter") || MAP_LAYERS[0],
+    MAP_LAYERS.find((layer) => layer.id === "openfreemap_dark") ||
+      MAP_LAYERS[0],
   );
   const [places, setPlaces] = useState<Place[]>([]);
   const [filteredPlaces, setFilteredPlaces] = useState<Place[]>([]);
@@ -680,39 +681,10 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     if (!mapContainer.current) return;
 
     // Initialize the map
+    // Safe to use vector style directly on first load – no previous style to conflict with
     map.current = new maplibregl.Map({
       container: mapContainer.current,
-      style: currentLayer.url.endsWith(".json")
-        ? currentLayer.url // Use the JSON style URL for vector layers
-        : // For raster layers, create a proper style object
-          {
-            version: 8,
-            sources: {
-              "osm-raster": {
-                type: "raster",
-                tiles: [currentLayer.url],
-                tileSize: 256,
-                attribution: currentLayer.attribution,
-                maxzoom: currentLayer.maxZoom,
-              },
-            },
-            layers: [
-              {
-                id: "background",
-                type: "background",
-                paint: {
-                  "background-color": "#0a0a00",
-                },
-              },
-              {
-                id: "osm-raster",
-                type: "raster",
-                source: "osm-raster",
-                minzoom: 0,
-                maxzoom: currentLayer.maxZoom,
-              },
-            ],
-          },
+      style: "https://tiles.openfreemap.org/styles/dark", // OpenFreeMap Dark vector style
       center: center ? [center.lng, center.lat] : [51.389, 35.6892], // Default to Tehran
       zoom: zoom || 6,
       maxBounds: IRAN_BOUNDS,
