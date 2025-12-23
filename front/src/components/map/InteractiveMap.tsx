@@ -21,6 +21,9 @@ import LayerControl from "./LayerControl";
 import MapStatsIndicator from "@/components/map/MapStatsIndicator";
 import { placeSchema } from "@/types/declarations/selectInp";
 
+// Enable RTL text support for Persian, Arabic, Hebrew, etc.
+const maplibreglGlobal = maplibregl as any; // To access the global setRTLTextPlugin
+
 // Use placeSchema from selectInp as the base type
 type Place = placeSchema;
 
@@ -66,6 +69,22 @@ const MAP_LAYERS: MapLayer[] = [
     attribution:
       '<a href="https://github.com/cyclosm/cyclosm-cartocss-style/releases" title="CyclOSM - Open Bicycle render">CyclOSM</a> | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 18,
+  },
+  {
+    id: "openfreemap_dark",
+    name: "OpenFreeMap Dark",
+    url: "https://tiles.openfreemap.org/styles/dark",
+    attribution:
+      '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors | <a href="https://openfreemap.org">OpenFreeMap</a>',
+    maxZoom: 22,
+  },
+  {
+    id: "openfreemap_liberty",
+    name: "OpenFreeMap Liberty",
+    url: "https://tiles.openfreemap.org/styles/liberty",
+    attribution:
+      '&copy; <a href="https://openstreetmap.org">OpenStreetMap</a> contributors | <a href="https://openfreemap.org">OpenFreeMap</a>',
+    maxZoom: 22,
   },
 ];
 
@@ -700,6 +719,18 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       attributionControl: false,
     });
 
+    // Enable RTL text support for Persian, Arabic, Hebrew, etc.
+    // Only set the plugin if it hasn't been set already to avoid "setRTLTextPlugin cannot be called multiple times" error
+    if (
+      !maplibreglGlobal.getRTLTextPluginStatus ||
+      maplibreglGlobal.getRTLTextPluginStatus() === "unavailable"
+    ) {
+      maplibreglGlobal.setRTLTextPlugin(
+        "https://unpkg.com/@mapbox/mapbox-gl-rtl-text@0.2.3/mapbox-gl-rtl-text.min.js",
+        true, // lazy load – improves performance
+      );
+    }
+
     // Add scale control
     map.current.addControl(
       new maplibregl.ScaleControl({ maxWidth: 200 }),
@@ -828,157 +859,144 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [showPlaceDetails, setShowPlaceDetails]);
 
-  // Handle layer change
+  // Handle layer change - robust implementation to prevent WebGL context errors
   const handleLayerChange = (layer: MapLayer) => {
     if (!map.current) return;
 
     setCurrentLayer(layer);
 
-    // Store existing route data before changing the layer
-    const existingRoute = map.current.getSource("route")
-      ? (map.current.getSource("route") as maplibregl.GeoJSONSource).getData()
-      : null;
-    const existingStartMarker = map.current.getSource("start-marker")
-      ? (
-          map.current.getSource("start-marker") as maplibregl.GeoJSONSource
-        ).getData()
-      : null;
+    // Proactively remove ALL route and pathfinding layers/sources before changing style
+    // This prevents WebGL context errors when switching to vector styles
+    const layersToRemove = ["route", "start-marker"];
+    const sourcesToRemove = ["route", "start-marker"];
 
-    // Store place markers data
-    const placeMarkersData: { [key: string]: any } = {};
+    // Add pathfinding place markers to removal list
     pathfindingPath.forEach((_, index) => {
-      const sourceId = `place-source-${index}`;
-      if (map.current && map.current.getSource(sourceId)) {
-        placeMarkersData[sourceId] = (
-          map.current.getSource(sourceId) as maplibregl.GeoJSONSource
-        ).getData();
+      layersToRemove.push(`place-marker-${index}`);
+      sourcesToRemove.push(`place-source-${index}`);
+    });
+
+    // Remove all route-related layers and sources
+    layersToRemove.forEach((layerId) => {
+      if (map.current && map.current.getLayer(layerId)) {
+        map.current.removeLayer(layerId);
       }
     });
 
-    // Remove existing attribution control temporarily
+    sourcesToRemove.forEach((sourceId) => {
+      if (map.current && map.current.getSource(sourceId)) {
+        map.current.removeSource(sourceId);
+      }
+    });
+
+    // Remove existing attribution control
     if (attributionControlRef.current) {
       map.current.removeControl(attributionControlRef.current);
+      attributionControlRef.current = null;
     }
 
-    // Update map style
-    if (layer.url.endsWith(".json")) {
-      // Vector tile style - we need to load the style and ensure background
-      map.current.setStyle(layer.url);
-    } else {
-      // Raster tiles - create a proper style object
-      map.current.setStyle({
-        version: 8,
-        sources: {
-          "osm-raster": {
-            type: "raster",
-            tiles: [layer.url],
-            tileSize: 256,
-            attribution: layer.attribution,
-            maxzoom: layer.maxZoom,
-          },
-        },
-        layers: [
-          {
-            id: "background",
-            type: "background",
-            paint: {
-              "background-color": "#0a0a00",
-            },
-          },
-          {
-            id: "osm-raster",
-            type: "raster",
-            source: "osm-raster",
-            minzoom: 0,
-            maxzoom: layer.maxZoom,
-          },
-        ],
-      });
-    }
+    try {
+      // Update map style
+      if (
+        layer.url.endsWith(".json") ||
+        layer.id === "openfreemap_dark" ||
+        layer.id === "openfreemap_liberty"
+      ) {
+        // Vector tile style - use the style URL directly
+        map.current.setStyle(layer.url);
 
-    // Re-add markers and attribution control after style change
-    // Wait for the style to load before adding markers
-    map.current.once("styledata", () => {
-      // Re-add markers
-      updateMarkers(filteredPlaces);
+        // Use 'styledata' event to re-add markers and route after style change
+        map.current.once("styledata", () => {
+          // Re-add markers
+          updateMarkers(filteredPlaces);
 
-      // Re-add route if it existed
-      if (existingRoute && isPathfindingActive) {
-        // Add route source
-        map.current!.addSource("route", {
-          type: "geojson",
-          data: existingRoute as any,
+          // Re-add pathfinding elements if active
+          if (isPathfindingActive && pathfindingRouteGeometry.length > 0) {
+            addPathToMap(pathfindingRouteGeometry);
+          }
+
+          // Re-add the attribution control with updated attribution
+          const newAttributionControl = new maplibregl.AttributionControl({
+            compact: true,
+          });
+          map.current!.addControl(newAttributionControl, "bottom-right");
+          attributionControlRef.current = newAttributionControl;
         });
 
-        // Add route layer
-        map.current!.addLayer({
-          id: "route",
-          type: "line",
-          source: "route",
-          layout: {
-            "line-join": "round",
-            "line-cap": "round",
-          },
-          paint: {
-            "line-color": "#3b82f6",
-            "line-width": 5,
-            "line-opacity": 0.75,
-          },
-        });
+        // Handle style load errors with fallback
+        map.current.once("error", (e) => {
+          console.error("Map style loading error:", e.error);
+          toast.error(
+            t("map.layerLoadError") ||
+              "Failed to load map layer, using default layer",
+          );
 
-        // Re-add start marker if it existed
-        if (existingStartMarker) {
-          map.current!.addSource("start-marker", {
-            type: "geojson",
-            data: existingStartMarker as any,
-          });
-
-          map.current!.addLayer({
-            id: "start-marker",
-            type: "circle",
-            source: "start-marker",
-            paint: {
-              "circle-radius": 10,
-              "circle-color": "#10B981", // Green for start
-              "circle-stroke-width": 2,
-              "circle-stroke-color": "#FFFFFF",
-            },
-          });
-        }
-
-        // Re-add place markers for each stop
-        pathfindingPath.forEach((place, index) => {
-          const markerId = `place-marker-${index}`;
-          const sourceId = `place-source-${index}`;
-
-          if (placeMarkersData[sourceId]) {
-            map.current!.addSource(sourceId, {
-              type: "geojson",
-              data: placeMarkersData[sourceId] as any,
-            });
-
-            map.current!.addLayer({
-              id: markerId,
-              type: "circle",
-              source: sourceId,
-              paint: {
-                "circle-radius": index === 0 ? 10 : 8, // Make first place slightly larger
-                "circle-color": index === 0 ? "#F59E0B" : "#EF4444", // Yellow for first, red for others
-                "circle-stroke-width": 2,
-                "circle-stroke-color": "#FFFFFF",
-              },
-            });
+          // Fallback to the original "darkmatter" raster layer
+          const fallbackLayer =
+            MAP_LAYERS.find((l) => l.id === "darkmatter") || MAP_LAYERS[0];
+          if (fallbackLayer && fallbackLayer.id !== currentLayer.id) {
+            handleLayerChange(fallbackLayer);
           }
         });
-      }
+      } else {
+        // Raster tiles - create a proper style object
+        map.current.setStyle({
+          version: 8,
+          sources: {
+            "osm-raster": {
+              type: "raster",
+              tiles: [layer.url],
+              tileSize: 256,
+              attribution: layer.attribution,
+              maxzoom: layer.maxZoom,
+            },
+          },
+          layers: [
+            {
+              id: "background",
+              type: "background",
+              paint: {
+                "background-color": "#0a0a00",
+              },
+            },
+            {
+              id: "osm-raster",
+              type: "raster",
+              source: "osm-raster",
+              minzoom: 0,
+              maxzoom: layer.maxZoom,
+            },
+          ],
+        });
 
-      // Re-add the attribution control with updated attribution
-      const newAttributionControl = new maplibregl.AttributionControl({
-        compact: true,
-      });
-      map.current!.addControl(newAttributionControl, "bottom-right");
-      attributionControlRef.current = newAttributionControl;
-    });
+        // For raster layers, update markers after style change
+        map.current.once("styledata", () => {
+          updateMarkers(filteredPlaces);
+
+          // Re-add pathfinding elements if active
+          if (isPathfindingActive && pathfindingRouteGeometry.length > 0) {
+            addPathToMap(pathfindingRouteGeometry);
+          }
+
+          // Re-add the attribution control with updated attribution
+          const newAttributionControl = new maplibregl.AttributionControl({
+            compact: true,
+          });
+          map.current!.addControl(newAttributionControl, "bottom-right");
+          attributionControlRef.current = newAttributionControl;
+        });
+      }
+    } catch (error) {
+      console.error("Error changing map layer:", error);
+      toast.error(t("map.layerChangeError") || "Error changing map layer");
+
+      // Fallback to the original "darkmatter" raster layer
+      const fallbackLayer =
+        MAP_LAYERS.find((l) => l.id === "darkmatter") || MAP_LAYERS[0];
+      if (fallbackLayer && fallbackLayer.id !== currentLayer.id) {
+        handleLayerChange(fallbackLayer);
+      }
+    }
   };
 
   // Handle map move to update tooltip position when map moves
@@ -1300,7 +1318,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         )}
 
         {/* Map container */}
-        <div ref={mapContainer} className="w-full h-full bg-[#0a0a00]" />
+        <div
+          ref={mapContainer}
+          className="w-full h-full bg-[#0a0a00]"
+          lang="fa"
+        />
 
         {/* Map controls */}
         <MapControls

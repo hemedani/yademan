@@ -79,6 +79,8 @@ const LayerControl: React.FC<LayerControlProps> = ({
           </svg>
         );
       case "darkmatter":
+      case "openfreemap_dark":
+      case "openfreemap_liberty":
         return (
           <svg
             className="w-5 h-5"
@@ -166,6 +168,8 @@ const LayerControl: React.FC<LayerControlProps> = ({
           </div>
         );
       case "darkmatter":
+      case "openfreemap_dark":
+      case "openfreemap_liberty":
         return (
           <div
             className={`${previewClasses} bg-gradient-to-br from-gray-900 to-black`}
