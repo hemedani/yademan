@@ -136,7 +136,9 @@
         "standard": "استاندارد",
         "humanitarian": "انسان دوستانه",
         "cyclosm": "CyclOSM",
-        "darkmatter": "ماده تاریک"
+        "darkmatter": "ماده تاریک",
+        "openfreemap_dark": "OpenFreeMap تیره",
+        "openfreemap_liberty": "OpenFreeMap لیبرتی"
       }
     }
   },

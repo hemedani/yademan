@@ -128,7 +128,9 @@
         "standard": "Standard",
         "humanitarian": "Humanitarian",
         "cyclosm": "CyclOSM",
-        "darkmatter": "Dark Matter"
+        "darkmatter": "Dark Matter",
+        "openfreemap_dark": "OpenFreeMap Dark",
+        "openfreemap_liberty": "OpenFreeMap Liberty"
       }
     }
   },
