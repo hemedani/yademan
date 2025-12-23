@@ -338,3 +338,34 @@ Note: When handling API responses, the backend typically returns the actual data
 
     - When using dynamic values in loadOptions functions, always watch for changes and provide fallbacks to prevent errors
     - Consider the UX implications when implementing cascading dropdowns and provide proper loading states and error handling
+
+## Development Guidelines
+
+Please follow these guidelines when working with this project:
+
+### Do NOT Automatically Execute
+
+- **DO NOT** run any development server (e.g., `pnpm run dev`, `npm start`, etc.)
+- **DO NOT** execute any build commands (e.g., `pnpm run build`, etc.)
+- **DO NOT** start any local servers or processes automatically
+
+### Wait for Explicit Instructions
+
+Only run development servers or build commands when I explicitly ask you to do so. For example:
+
+- "Please start the development server"
+- "Run the build command"
+- "Start the local server"
+
+### Default Behavior
+
+When I ask about development or building, provide the commands that would be used, but do not execute them until I give explicit permission.
+
+### Exception Cases
+
+You may still:
+
+- Analyze project structure and configuration files
+- Suggest commands that could be run
+- Help debug configuration issues
+- Explain what different commands do
