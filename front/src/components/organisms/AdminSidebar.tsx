@@ -37,12 +37,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
       title: "داشبورد",
       href: "/admin",
       icon: (
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -58,12 +53,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
       title: "مدیریت مکان‌ها",
       href: "/admin/places",
       icon: (
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -85,12 +75,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
           title: "همه مکان‌ها",
           href: "/admin/places",
           icon: (
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -105,12 +90,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
           title: "افزودن مکان جدید",
           href: "/admin/places/create",
           icon: (
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -126,12 +106,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
           href: "/admin/places/pending",
           badge: "۵",
           icon: (
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -146,12 +121,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
           title: "دسته‌بندی‌ها",
           href: "/admin/categories",
           icon: (
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -168,12 +138,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
       title: "مدیریت جغرافیایی",
       href: "/admin/geography",
       icon: (
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -189,12 +154,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
           title: "مدیریت استان‌ها",
           href: "/admin/province",
           icon: (
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -210,44 +170,12 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
           title: "مدیریت شهرها",
           href: "/admin/city",
           icon: (
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
                 d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-              />
-            </svg>
-          ),
-          allowedLevels: ["Manager", "Editor", "Ghost"],
-        },
-        {
-          id: "city-zone",
-          title: "مدیریت مناطق شهری",
-          href: "/admin/city-zone",
-          icon: (
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
               />
             </svg>
           ),
@@ -260,12 +188,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
       title: "تورهای مجازی",
       href: "/admin/virtual-tours",
       icon: (
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -281,12 +204,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
       title: "مدیریت محتوا",
       href: "/admin/content",
       icon: (
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -302,12 +220,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
           title: "برچسب‌ها",
           href: "/admin/tags",
           icon: (
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -322,12 +235,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
           title: "گالری تصاویر",
           href: "/admin/gallery",
           icon: (
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -342,12 +250,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
           title: "تورهای مجازی",
           href: "/admin/virtual-tours",
           icon: (
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -362,12 +265,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
           title: "رویدادهای شهرداری",
           href: "/admin/events",
           icon: (
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -384,12 +282,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
       title: "مدیریت کاربران",
       href: "/admin/users",
       icon: (
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -405,12 +298,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
       title: "مدیریت نظرات",
       href: "/admin/comments",
       icon: (
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -427,12 +315,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
       title: "گزارشات و آمار",
       href: "/admin/reports",
       icon: (
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -448,12 +331,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
       title: "تنظیمات سایت",
       href: "/admin/settings",
       icon: (
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -474,9 +352,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
 
   const handleItemToggle = (itemId: string) => {
     setExpandedItems((prev) =>
-      prev.includes(itemId)
-        ? prev.filter((id) => id !== itemId)
-        : [...prev, itemId],
+      prev.includes(itemId) ? prev.filter((id) => id !== itemId) : [...prev, itemId],
     );
   };
 
@@ -499,9 +375,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
 
   const formatPersianNumber = (num: number): string => {
     const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-    return num
-      .toString()
-      .replace(/[0-9]/g, (digit) => persianDigits[parseInt(digit)]);
+    return num.toString().replace(/[0-9]/g, (digit) => persianDigits[parseInt(digit)]);
   };
 
   const renderMenuItem = (item: MenuItem, isChild = false) => {
@@ -535,11 +409,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
             <div
               className={`
               p-2 rounded-lg transition-all duration-300
-              ${
-                isActive
-                  ? "bg-white/20"
-                  : "group-hover:bg-gray-700 group-hover:text-pink-400"
-              }
+              ${isActive ? "bg-white/20" : "group-hover:bg-gray-700 group-hover:text-pink-400"}
             `}
             >
               {item.icon}
@@ -563,12 +433,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
           )}
         </div>
@@ -604,21 +469,12 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
             className="p-2 rounded-lg hover:bg-gray-800 transition-colors duration-200 text-gray-300"
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d={
-                  sidebarCollapsed
-                    ? "M4 6h16M4 12h16M4 18h16"
-                    : "M6 18L18 6M6 6l12 12"
-                }
+                d={sidebarCollapsed ? "M4 6h16M4 12h16M4 18h16" : "M6 18L18 6M6 6l12 12"}
               />
             </svg>
           </button>
@@ -673,12 +529,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
               className="w-10 h-10 bg-pink-600 hover:bg-pink-700 text-white rounded-lg flex items-center justify-center transition-colors duration-200"
               title="خروج"
             >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"

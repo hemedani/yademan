@@ -67,9 +67,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
 
   const formatPersianNumber = useCallback((num: number): string => {
     const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-    return num
-      .toString()
-      .replace(/[0-9]/g, (digit) => persianDigits[parseInt(digit)]);
+    return num.toString().replace(/[0-9]/g, (digit) => persianDigits[parseInt(digit)]);
   }, []);
 
   const formatPersianTime = useCallback((date: Date): string => {
@@ -80,10 +78,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
       second: "2-digit",
       timeZone: "Asia/Tehran",
     });
-    return timeString.replace(
-      /[0-9]/g,
-      (digit) => persianDigits[parseInt(digit)],
-    );
+    return timeString.replace(/[0-9]/g, (digit) => persianDigits[parseInt(digit)]);
   }, []);
 
   const formatPersianDate = useCallback((date: Date): string => {
@@ -102,12 +97,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
         title: "کل مکان‌ها",
         value: data?.places || 0,
         icon: (
-          <svg
-            className="w-8 h-8"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -131,12 +121,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
         title: "کاربران فعال",
         value: data?.users || 0,
         icon: (
-          <svg
-            className="w-8 h-8"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -154,12 +139,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
         title: "نظرات درانتظار",
         value: data?.pendingComments || 0,
         icon: (
-          <svg
-            className="w-8 h-8"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -177,12 +157,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
         title: "بازدیدها",
         value: data?.visits || 0,
         icon: (
-          <svg
-            className="w-8 h-8"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -206,12 +181,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
         title: "دسته‌بندی‌ها",
         value: data?.categories || 0,
         icon: (
-          <svg
-            className="w-8 h-8"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -229,12 +199,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
         title: "فایل‌های آپلود شده",
         value: data.files || 0,
         icon: (
-          <svg
-            className="w-8 h-8"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -261,12 +226,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
         color: "text-blue-600",
         bgGradient: "from-blue-50 to-blue-100",
         icon: (
-          <svg
-            className="w-10 h-10"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -283,12 +243,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
         color: "text-green-600",
         bgGradient: "from-green-50 to-green-100",
         icon: (
-          <svg
-            className="w-10 h-10"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -305,12 +260,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
         color: "text-purple-600",
         bgGradient: "from-purple-50 to-purple-100",
         icon: (
-          <svg
-            className="w-10 h-10"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -327,12 +277,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
         color: "text-orange-600",
         bgGradient: "from-orange-50 to-orange-100",
         icon: (
-          <svg
-            className="w-10 h-10"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -355,45 +300,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
         color: "text-teal-600",
         bgGradient: "from-teal-50 to-teal-100",
         icon: (
-          <svg
-            className="w-10 h-10"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth={2}
               d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-            />
-          </svg>
-        ),
-      },
-      {
-        title: "مدیریت مناطق شهری",
-        description: "تعریف و سازماندهی مناطق شهری",
-        href: "/admin/city-zone",
-        color: "text-indigo-600",
-        bgGradient: "from-indigo-50 to-indigo-100",
-        icon: (
-          <svg
-            className="w-10 h-10"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-            />
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
             />
           </svg>
         ),
@@ -405,12 +317,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
         color: "text-rose-600",
         bgGradient: "from-rose-50 to-rose-100",
         icon: (
-          <svg
-            className="w-10 h-10"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -428,11 +335,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
     switch (trend) {
       case "up":
         return (
-          <svg
-            className="w-4 h-4 text-green-500"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
+          <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
             <path
               fillRule="evenodd"
               d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z"
@@ -442,11 +345,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
         );
       case "down":
         return (
-          <svg
-            className="w-4 h-4 text-red-500"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
+          <svg className="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20">
             <path
               fillRule="evenodd"
               d="M16.707 10.293a1 1 0 010 1.414l-6 6a1 1 0 01-1.414 0l-6-6a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l4.293-4.293a1 1 0 011.414 0z"
@@ -456,11 +355,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
         );
       default:
         return (
-          <svg
-            className="w-4 h-4 text-gray-500"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
+          <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
             <path
               fillRule="evenodd"
               d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
@@ -481,9 +376,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
               <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
                 خوش آمدید!
               </h1>
-              <p className="text-gray-300 text-lg">
-                آمار و وضعیت کلی سیستم مدیریت نقشه ایران
-              </p>
+              <p className="text-gray-300 text-lg">آمار و وضعیت کلی سیستم مدیریت نقشه ایران</p>
               <div className="flex items-center space-x-4 text-sm text-gray-400 mt-4">
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
@@ -563,9 +456,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
                 )}
               </div>
               <div className="space-y-1">
-                <h3 className="text-2xl font-bold text-white">
-                  {formatPersianNumber(card.value)}
-                </h3>
+                <h3 className="text-2xl font-bold text-white">{formatPersianNumber(card.value)}</h3>
                 <p className="text-gray-300 font-medium">{card.title}</p>
               </div>
             </div>
@@ -595,20 +486,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
                       {action.icon}
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-lg font-bold text-white mb-1">
-                        {action.title}
-                      </h3>
-                      <p className="text-gray-400 text-sm leading-relaxed">
-                        {action.description}
-                      </p>
+                      <h3 className="text-lg font-bold text-white mb-1">{action.title}</h3>
+                      <p className="text-gray-400 text-sm leading-relaxed">{action.description}</p>
                     </div>
                     <div className="text-pink-500 opacity-70 group-hover:opacity-100 transition-opacity duration-300">
-                      <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -634,16 +516,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                    <span className="font-medium text-green-400">
-                      پایگاه داده
-                    </span>
+                    <span className="font-medium text-green-400">پایگاه داده</span>
                   </div>
                   <div className="text-green-400">
-                    <svg
-                      className="w-5 h-5"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                       <path
                         fillRule="evenodd"
                         d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -662,11 +538,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
                     <span className="font-medium text-blue-400">API سرور</span>
                   </div>
                   <div className="text-blue-400">
-                    <svg
-                      className="w-5 h-5"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                       <path
                         fillRule="evenodd"
                         d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -682,16 +554,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse"></div>
-                    <span className="font-medium text-purple-400">
-                      فضای ذخیره
-                    </span>
+                    <span className="font-medium text-purple-400">فضای ذخیره</span>
                   </div>
                   <div className="text-purple-400">
-                    <svg
-                      className="w-5 h-5"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                       <path
                         fillRule="evenodd"
                         d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -717,11 +583,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
             <div className="space-y-4">
               <div className="flex items-center  space-x-4 p-4 bg-gray-800/60 rounded-xl border-r-4 border-blue-500">
                 <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white">
-                  <svg
-                    className="w-6 h-6"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fillRule="evenodd"
                       d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
@@ -731,21 +593,14 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
                 </div>
                 <div className="flex-1">
                   <h4 className="font-semibold text-white">کاربر جدید</h4>
-                  <p className="text-sm text-gray-400">
-                    علی محمدی به سیستم پیوست
-                  </p>
+                  <p className="text-sm text-gray-400">علی محمدی به سیستم پیوست</p>
                 </div>
                 <span className="text-sm text-gray-400">۱۰ دقیقه پیش</span>
               </div>
 
               <div className="flex items-center  space-x-4 p-4 bg-gray-800/60 rounded-xl border-r-4 border-green-500">
                 <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white">
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -762,21 +617,14 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
                 </div>
                 <div className="flex-1">
                   <h4 className="font-semibold text-white">مکان تایید شد</h4>
-                  <p className="text-sm text-gray-400">
-                    باغ ارم شیراز تایید و منتشر شد
-                  </p>
+                  <p className="text-sm text-gray-400">باغ ارم شیراز تایید و منتشر شد</p>
                 </div>
                 <span className="text-sm text-gray-400">۲۰ دقیقه پیش</span>
               </div>
 
               <div className="flex items-center  space-x-4 p-4 bg-gray-800/60 rounded-xl border-r-4 border-yellow-500">
                 <div className="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center text-white">
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -787,21 +635,14 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
                 </div>
                 <div className="flex-1">
                   <h4 className="font-semibold text-white">نظر جدید</h4>
-                  <p className="text-sm text-gray-400">
-                    نظر جدید منتظر بررسی است
-                  </p>
+                  <p className="text-sm text-gray-400">نظر جدید منتظر بررسی است</p>
                 </div>
                 <span className="text-sm text-gray-400">۱ ساعت پیش</span>
               </div>
 
               <div className="flex items-center  space-x-4 p-4 bg-gray-800/60 rounded-xl border-r-4 border-purple-500">
                 <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white">
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -812,9 +653,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
                 </div>
                 <div className="flex-1">
                   <h4 className="font-semibold text-white">فایل آپلود</h4>
-                  <p className="text-sm text-gray-400">
-                    تصاویر جدید به گالری اضافه شد
-                  </p>
+                  <p className="text-sm text-gray-400">تصاویر جدید به گالری اضافه شد</p>
                 </div>
                 <span className="text-sm text-gray-400">۲ ساعت پیش</span>
               </div>
@@ -849,9 +688,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="bg-gray-800/60 rounded-xl p-6 text-center border border-gray-700">
-                <div className="text-3xl font-bold text-blue-400 mb-2">
-                  {formatPersianNumber(98)}%
-                </div>
+                <div className="text-3xl font-bold text-blue-400 mb-2">{formatPersianNumber(98)}%</div>
                 <p className="text-gray-400 font-medium">سرعت سایت</p>
                 <div className="mt-3 bg-gray-700 rounded-full h-2">
                   <div
@@ -897,8 +734,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ data = {} }) => {
           سیستم مدیریت نقشه ایران آماده خدمات‌رسانی است
         </h3>
         <p className="text-gray-400 mb-6 max-w-2xl mx-auto leading-relaxed">
-          تمام اجزای سیستم به درستی کار می‌کند و آماده ارائه خدمات به کاربران
-          عزیز است. برای دسترسی سریع از منوی کناری یا اقدامات سریع استفاده کنید.
+          تمام اجزای سیستم به درستی کار می‌کند و آماده ارائه خدمات به کاربران عزیز است. برای دسترسی
+          سریع از منوی کناری یا اقدامات سریع استفاده کنید.
         </p>
         <div className="flex items-center justify-center  space-x-6 text-sm text-gray-400">
           <span>آخرین به‌روزرسانی: {formatPersianTime(currentTime)}</span>

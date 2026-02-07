@@ -11,7 +11,6 @@ export const addFn: ActFn = async (body) => {
 	const {
 		province,
 		city,
-		city_zone,
 		category,
 		tags,
 		gallery,
@@ -36,13 +35,6 @@ export const addFn: ActFn = async (body) => {
 
 		city: {
 			_ids: new ObjectId(city as string),
-			relatedRelations: {
-				places: true,
-			},
-		},
-
-		city_zone: {
-			_ids: new ObjectId(city_zone as string),
 			relatedRelations: {
 				places: true,
 			},

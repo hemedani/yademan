@@ -7,6 +7,7 @@ import {
 } from "@deps";
 import { coreApp } from "../mod.ts";
 import { createUpdateAt } from "@lib";
+import { user_excludes } from "./excludes.ts";
 
 export const pure_file = {
 	name: string(),
@@ -21,12 +22,12 @@ export const file_relations = {
 		schemaName: "user",
 		optional: false,
 		type: "single" as RelationDataType,
-		excludes: ["summary", "createdAt", "updatedAt"],
+		excludes: user_excludes,
 		relatedRelations: {
 			uploadedAssets: {
 				type: "multiple" as RelationDataType,
 				limit: 50,
-				excludes: ["alt_text", "createdAt", "updatedAt"],
+				excludes: ["createdAt", "updatedAt", "size"], // Using the same excludes as file_excludes
 				sort: {
 					field: "_id",
 					order: "desc" as RelationSortOrderType,

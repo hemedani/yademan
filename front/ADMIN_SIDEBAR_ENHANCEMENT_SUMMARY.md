@@ -8,16 +8,16 @@ Enhanced the AdminSidebar component to address two critical issues: missing geog
 
 ### 1. Missing Geographical Management Links ❌ → ✅ FIXED
 
-**Problem**: The sidebar lacked essential geographical management functionality for city, city-zone, and province administration.
+**Problem**: The sidebar lacked essential geographical management functionality for city, and province administration.
 
 **Solution**: Added a comprehensive "مدیریت جغرافیایی" (Geographical Management) section with three sub-items:
 
 #### New Menu Structure:
+
 ```
 مدیریت جغرافیایی (Geographical Management)
 ├── مدیریت استان‌ها (Province Management) → /admin/province
 ├── مدیریت شهرها (City Management) → /admin/city
-└── مدیریت مناطق شهری (City-Zone Management) → /admin/city-zone
 ```
 
 ### 2. Sidebar Scrolling Issues ❌ → ✅ FIXED
@@ -27,6 +27,7 @@ Enhanced the AdminSidebar component to address two critical issues: missing geog
 **Root Cause**: Improper flex layout configuration preventing the navigation area from scrolling properly.
 
 **Solution**: Implemented proper flexbox architecture with:
+
 - `flex flex-col` on main container
 - `h-screen` for reliable full-screen height
 - `min-h-0` on navigation area to enable proper flex shrinking
@@ -61,6 +62,7 @@ Each new geographical menu item follows the established pattern:
 ### Layout Architecture Improvements
 
 **Before**:
+
 ```css
 .sidebar {
   height: 100%;
@@ -75,6 +77,7 @@ Each new geographical menu item follows the established pattern:
 ```
 
 **After**:
+
 ```css
 .sidebar {
   height: 100vh;
@@ -97,11 +100,11 @@ Each new geographical menu item follows the established pattern:
 
 - **Province Management**: Globe/map icon representing large territorial areas
 - **City Management**: Building icon representing urban infrastructure
-- **City-Zone Management**: Location pin icon representing specific geographical zones
 
 ### Color Consistency
 
 All new items maintain the existing design language:
+
 - Consistent hover states and transitions
 - Matching icon sizes (w-4 h-4 for children, w-5 h-5 for parents)
 - Uniform spacing and typography
@@ -110,6 +113,7 @@ All new items maintain the existing design language:
 ### User Experience Flow
 
 Logical hierarchical organization:
+
 ```
 Geographic Scope: Province → City → City Zone
 Administrative Flow: Largest → Smallest geographical units
@@ -118,16 +122,19 @@ Administrative Flow: Largest → Smallest geographical units
 ## Accessibility Enhancements
 
 ### Keyboard Navigation
+
 - All menu items are keyboard accessible
 - Proper focus management with tab navigation
 - Enter/Space key activation for menu items
 
 ### Screen Reader Support
+
 - Semantic HTML structure maintained
 - Clear, descriptive menu item titles
 - Proper ARIA handling through existing patterns
 
 ### RTL Layout Compliance
+
 - Full right-to-left layout support
 - Proper text alignment and spacing
 - Icon and text positioning optimized for Persian language
@@ -135,11 +142,13 @@ Administrative Flow: Largest → Smallest geographical units
 ## Performance Optimizations
 
 ### Efficient State Management
+
 - Added "geography" to default expanded items for better UX
 - Minimal state updates with proper dependency management
 - No unnecessary re-renders with existing memoization patterns
 
 ### Rendering Efficiency
+
 - Maintained existing `renderMenuItem` pattern
 - SVG icons for crisp scaling and fast loading
 - Consistent transition classes for smooth animations
@@ -147,7 +156,9 @@ Administrative Flow: Largest → Smallest geographical units
 ## Code Quality Improvements
 
 ### TypeScript Enhancements
+
 **Before**:
+
 ```typescript
 interface AdminSidebarProps {
   // Empty props interface
@@ -155,12 +166,14 @@ interface AdminSidebarProps {
 ```
 
 **After**:
+
 ```typescript
 // AdminSidebar component props (currently no props needed)
 type AdminSidebarProps = Record<string, never>;
 ```
 
 ### Clean Architecture
+
 - Removed empty interface TypeScript warning
 - Maintained existing patterns and conventions
 - Added proper comments for clarity
@@ -169,17 +182,20 @@ type AdminSidebarProps = Record<string, never>;
 ## User Experience Improvements
 
 ### Enhanced Navigation
+
 - **Discoverability**: Clear geographical management section
 - **Logical Grouping**: Related functions grouped together
 - **Visual Hierarchy**: Consistent with existing menu structure
 - **Expandable Sections**: Maintains existing accordion behavior
 
 ### Responsive Design
+
 - **Mobile Optimization**: Proper scrolling on all screen sizes
 - **Desktop Efficiency**: Optimal space utilization
 - **Tablet Experience**: Seamless interaction across breakpoints
 
 ### Visual Feedback
+
 - **Hover States**: Consistent interactive feedback
 - **Active States**: Clear indication of current page
 - **Smooth Transitions**: 300ms duration for all animations
@@ -188,13 +204,16 @@ type AdminSidebarProps = Record<string, never>;
 ## Integration Points
 
 ### Route Verification
+
 All new menu items link to existing admin routes:
+
 - ✅ `/admin/province` - Province management page exists
 - ✅ `/admin/city` - City management page exists
-- ✅ `/admin/city-zone` - City-zone management page exists
 
 ### Permission System
+
 All new items respect the existing authorization system:
+
 - **Allowed Levels**: Manager, Editor, Ghost
 - **Access Control**: Integrated with existing `allowedLevels` system
 - **UI Filtering**: Menu items automatically filtered based on user permissions
@@ -202,6 +221,7 @@ All new items respect the existing authorization system:
 ## Testing Recommendations
 
 ### Manual Testing Checklist
+
 - [ ] Verify all new menu items navigate correctly
 - [ ] Test sidebar scrolling on various screen heights
 - [ ] Confirm expandable section behavior works properly
@@ -210,17 +230,18 @@ All new items respect the existing authorization system:
 - [ ] Test on mobile devices for touch interaction
 
 ### Automated Testing Considerations
+
 ```typescript
-describe('AdminSidebar Geographical Management', () => {
-  it('should render geographical management section', () => {
+describe("AdminSidebar Geographical Management", () => {
+  it("should render geographical management section", () => {
     // Test geographical menu section exists
   });
 
-  it('should navigate to correct routes', () => {
+  it("should navigate to correct routes", () => {
     // Test menu item navigation
   });
 
-  it('should be scrollable when content overflows', () => {
+  it("should be scrollable when content overflows", () => {
     // Test scrolling functionality
   });
 });
@@ -229,12 +250,14 @@ describe('AdminSidebar Geographical Management', () => {
 ## Browser Compatibility
 
 ### Flexbox Support
+
 - ✅ Chrome/Safari (WebKit)
 - ✅ Firefox (Gecko)
 - ✅ Safari Mobile (iOS)
 - ✅ Chrome Mobile (Android)
 
 ### Scroll Behavior
+
 - ✅ Modern browsers with CSS scroll behavior
 - ✅ Touch devices with native scroll support
 - ✅ Keyboard navigation compatibility
@@ -242,12 +265,14 @@ describe('AdminSidebar Geographical Management', () => {
 ## Future Enhancement Opportunities
 
 ### Advanced Features
+
 1. **Search Functionality**: Add search within sidebar menu items
 2. **Favorites System**: Allow users to bookmark frequently used items
 3. **Contextual Menus**: Show relevant actions based on current page
 4. **Notification Badges**: Display pending items count on menu items
 
 ### Performance Optimizations
+
 1. **Virtual Scrolling**: For very large menu structures
 2. **Lazy Loading**: Load menu items on demand
 3. **Caching**: Cache menu state in localStorage
@@ -256,11 +281,13 @@ describe('AdminSidebar Geographical Management', () => {
 ## Deployment Considerations
 
 ### Build Impact
+
 - **Bundle Size**: Minimal increase (only SVG icons and menu structure)
 - **Runtime Performance**: No additional computational overhead
 - **Memory Usage**: Negligible impact on memory consumption
 
 ### Migration Notes
+
 - **Backward Compatibility**: Fully compatible with existing admin structure
 - **Configuration**: No additional configuration required
 - **Database**: No database schema changes needed
@@ -268,6 +295,7 @@ describe('AdminSidebar Geographical Management', () => {
 ## Security Considerations
 
 ### Access Control
+
 - **Route Protection**: All new routes protected by existing admin middleware
 - **User Level Validation**: Proper permission checking maintained
 - **Session Management**: Integrated with existing authentication system
@@ -277,7 +305,8 @@ describe('AdminSidebar Geographical Management', () => {
 The AdminSidebar enhancement successfully addresses both the missing geographical management functionality and the scrolling accessibility issue. The implementation maintains design consistency, follows established patterns, and provides a seamless user experience.
 
 ### Key Achievements:
-- ✅ **Complete Geographical Management**: Province, City, and City-Zone administration
+
+- ✅ **Complete Geographical Management**: Province, City, and administration
 - ✅ **Fixed Scrolling Issues**: Proper flex layout with reliable scrolling
 - ✅ **Improved User Experience**: Logical menu organization and smooth interactions
 - ✅ **Code Quality**: Clean, maintainable TypeScript with proper typing

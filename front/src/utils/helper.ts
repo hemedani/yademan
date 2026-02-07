@@ -62,21 +62,11 @@ const ArrayToSelectOptions = <T>(
 ) => {
   return data.map((item) => ({
     value: String(item[valueKey]),
-    label: `${item[labelKey]} ${
-      secondaryLabelKey ? item[secondaryLabelKey] : ""
-    }`,
+    label: `${item[labelKey]} ${secondaryLabelKey ? item[secondaryLabelKey] : ""}`,
   }));
 };
 
-export type ModelName =
-  | "user"
-  | "city"
-  | "province"
-  | "city_zone"
-  | "category"
-  | "place"
-  | "tag"
-  | "virtual_tour";
+export type ModelName = "user" | "city" | "province" | "category" | "place" | "tag" | "virtual_tour";
 
 function translateModelNameToPersian(modelName: ModelName): string {
   switch (modelName) {
@@ -86,8 +76,6 @@ function translateModelNameToPersian(modelName: ModelName): string {
       return "شهر";
     case "province":
       return "استان";
-    case "city_zone":
-      return "منطقه شهری";
     case "category":
       return "دسته  بندی";
     case "tag":

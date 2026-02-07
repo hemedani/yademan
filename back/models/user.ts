@@ -15,6 +15,7 @@ import {
 	union,
 } from "@deps";
 import { createUpdateAt, isValidNationalNumber } from "@lib";
+import { file_excludes, location_excludes, user_excludes } from "./excludes.ts";
 
 export const user_level_array = ["Ghost", "Manager", "Editor", "Ordinary"];
 export const user_level_emums = enums(user_level_array);
@@ -77,21 +78,25 @@ export const user_relations = {
 		schemaName: "file",
 		type: "single" as RelationDataType,
 		optional: true,
+		excludes: file_excludes,
 		relatedRelations: {},
 	},
 	national_card: {
 		schemaName: "file",
 		type: "single" as RelationDataType,
 		optional: true,
+		excludes: file_excludes,
 		relatedRelations: {},
 	},
 	province: {
 		schemaName: "province",
 		type: "single" as RelationDataType,
 		optional: true,
+		excludes: location_excludes,
 		relatedRelations: {
 			users: {
 				type: "multiple" as RelationDataType,
+				excludes: user_excludes,
 				limit: 500,
 				sort: {
 					field: "_id",
@@ -104,9 +109,11 @@ export const user_relations = {
 		schemaName: "city",
 		type: "single" as RelationDataType,
 		optional: true,
+		excludes: location_excludes,
 		relatedRelations: {
 			users: {
 				type: "multiple" as RelationDataType,
+				excludes: user_excludes,
 				limit: 500,
 				sort: {
 					field: "_id",

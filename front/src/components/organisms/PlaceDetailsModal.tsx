@@ -9,10 +9,7 @@ import Image from "next/image";
 import { getLesanBaseUrl } from "@/services/api";
 import CommentSection, { MinimalComment } from "../organisms/CommentSection";
 import { get as getPlace } from "@/app/actions/place";
-import {
-  placeSchema,
-  virtual_tourSchema,
-} from "@/types/declarations/selectInp";
+import { placeSchema, virtual_tourSchema } from "@/types/declarations/selectInp";
 import VirtualTourPreview from "@/components/organisms/VirtualTourPreview";
 
 interface PlaceDetailsModalProps {
@@ -84,10 +81,6 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
               name: 1,
               english_name: 1,
             },
-            city_zone: {
-              _id: 1,
-              name: 1,
-            },
             category: {
               _id: 1,
               name: 1,
@@ -158,9 +151,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
           const placeData = result.body[0];
           const normalizedPlaceData = {
             ...placeData,
-            comments: Array.isArray(placeData.comments)
-              ? placeData.comments
-              : [],
+            comments: Array.isArray(placeData.comments) ? placeData.comments : [],
           } as placeSchema;
           setPlace(normalizedPlaceData);
         } else {
@@ -202,8 +193,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
   }, [onClose, isFullScreen]);
 
   // Check if the place has virtual tours
-  const hasVirtualTours =
-    place?.virtual_tours && place?.virtual_tours.length > 0;
+  const hasVirtualTours = place?.virtual_tours && place?.virtual_tours.length > 0;
 
   // Check if the place has gallery images
   const hasGallery = place?.gallery && place?.gallery.length > 0;
@@ -324,9 +314,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="p-2 rounded-full bg-[#1e1e1e]/80 backdrop-blur-sm border border-[#333] hover:bg-[#2a2a2a] transition-colors text-white shadow-lg"
-                    aria-label={
-                      isFullScreen ? t("Common.close") : t("Common.moreInfo")
-                    }
+                    aria-label={isFullScreen ? t("Common.close") : t("Common.moreInfo")}
                   >
                     {isFullScreen ? (
                       <svg
@@ -406,9 +394,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <p className="text-[#a0a0a0] leading-relaxed whitespace-pre-line">
-                {place.description}
-              </p>
+              <p className="text-[#a0a0a0] leading-relaxed whitespace-pre-line">{place.description}</p>
             </motion.div>
 
             {/* Tags */}
@@ -419,9 +405,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
               >
-                <h3 className="text-sm font-medium text-white mb-3">
-                  {t("place.tags")}
-                </h3>
+                <h3 className="text-sm font-medium text-white mb-3">{t("place.tags")}</h3>
                 <div className="flex flex-wrap gap-2">
                   {place.tags.map((tag, index) => (
                     <motion.span
@@ -431,9 +415,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                       transition={{ delay: 0.4 + index * 0.05 }}
                       className="px-3 py-1.5 rounded-full text-sm flex items-center gap-1"
                       style={{
-                        backgroundColor: tag.color
-                          ? `${tag.color}20`
-                          : "rgba(30, 30, 30, 0.5)",
+                        backgroundColor: tag.color ? `${tag.color}20` : "rgba(30, 30, 30, 0.5)",
                         color: tag.color || "#a0a0a0",
                         border: `1px solid ${tag.color || "#333"}40`,
                       }}
@@ -466,9 +448,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                 {/* Address */}
                 {place?.address && (
                   <div className="mb-4">
-                    <h3 className="text-sm font-medium text-white mb-1">
-                      {t("place.address")}
-                    </h3>
+                    <h3 className="text-sm font-medium text-white mb-1">{t("place.address")}</h3>
                     <p className="text-sm text-[#a0a0a0]">{place.address}</p>
                   </div>
                 )}
@@ -476,12 +456,8 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                 {/* Hours of Operation */}
                 {place?.hoursOfOperation && (
                   <div className="mb-4">
-                    <h3 className="text-sm font-medium text-white mb-1">
-                      {t("place.hours")}
-                    </h3>
-                    <p className="text-sm text-[#a0a0a0]">
-                      {place.hoursOfOperation}
-                    </p>
+                    <h3 className="text-sm font-medium text-white mb-1">{t("place.hours")}</h3>
+                    <p className="text-sm text-[#a0a0a0]">{place.hoursOfOperation}</p>
                   </div>
                 )}
               </motion.div>
@@ -496,13 +472,10 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                 {/* Contact */}
                 {place?.contact &&
                   Object.keys(place.contact).some(
-                    (key) =>
-                      !!place.contact?.[key as keyof typeof place.contact],
+                    (key) => !!place.contact?.[key as keyof typeof place.contact],
                   ) && (
                     <div className="mb-4">
-                      <h3 className="text-sm font-medium text-white mb-1">
-                        {t("place.contact")}
-                      </h3>
+                      <h3 className="text-sm font-medium text-white mb-1">{t("place.contact")}</h3>
                       <div className="space-y-1">
                         {place.contact.phone && (
                           <p className="text-sm text-[#a0a0a0] flex items-center gap-2">
@@ -566,10 +539,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                               rel="noopener noreferrer"
                               className="text-[#FF007A] hover:text-[#ff339c] transition-colors"
                             >
-                              {place.contact.website.replace(
-                                /^https?:\/\//,
-                                "",
-                              )}
+                              {place.contact.website.replace(/^https?:\/\//, "")}
                             </a>
                           </p>
                         )}
@@ -587,9 +557,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                 className="mt-6 p-4 bg-gradient-to-br from-[#1e1e1e]/50 to-[#2a2a2a]/50 backdrop-blur-sm rounded-2xl border border-[#333] shadow-xl"
                 transition={{ delay: 0.2 }}
               >
-                <h3 className="text-sm font-medium text-white mb-3">
-                  {t("place.gallery")}
-                </h3>
+                <h3 className="text-sm font-medium text-white mb-3">{t("place.gallery")}</h3>
 
                 {/* Current Image */}
                 <div className="relative aspect-video mb-3 overflow-hidden rounded-lg group">
@@ -726,13 +694,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
           <div className="border-t border-[#333] p-6 flex justify-between items-center bg-gradient-to-b from-[#1a1a1a]/70 to-[#0a0a00]/70 backdrop-blur-sm">
             <div className="text-sm text-[#a0a0a0]">
               <span>{t("place.lastUpdated")}: </span>
-              <time
-                dateTime={
-                  place?.updatedAt
-                    ? new Date(place.updatedAt).toISOString()
-                    : ""
-                }
-              >
+              <time dateTime={place?.updatedAt ? new Date(place.updatedAt).toISOString() : ""}>
                 {place?.updatedAt
                   ? new Intl.DateTimeFormat(undefined, {
                       year: "numeric",
@@ -769,33 +731,32 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
               )}
 
               {/* Directions button */}
-              {place?.center?.coordinates &&
-                place.center.coordinates.length >= 2 && (
-                  <motion.a
-                    href={`https://www.google.com/maps/dir/?api=1&destination=${place.center.coordinates[1]},${place.center.coordinates[0]}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="px-4 py-2 bg-[#1e1e1e] border border-[#333] hover:bg-[#2a2a2a] text-white rounded-md text-sm font-medium flex items-center gap-2 transition-all hover:shadow-lg"
+              {place?.center?.coordinates && place.center.coordinates.length >= 2 && (
+                <motion.a
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${place.center.coordinates[1]},${place.center.coordinates[0]}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="px-4 py-2 bg-[#1e1e1e] border border-[#333] hover:bg-[#2a2a2a] text-white rounded-md text-sm font-medium flex items-center gap-2 transition-all hover:shadow-lg"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 text-white"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
-                      />
-                    </svg>
-                    {t("place.directions")}
-                  </motion.a>
-                )}
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                    />
+                  </svg>
+                  {t("place.directions")}
+                </motion.a>
+              )}
             </div>
           </div>
         </motion.div>
@@ -803,13 +764,9 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
 
       {/* Virtual Tour Selector Modal */}
       <AnimatePresence>
-        {showVirtualTourSelector &&
-        place?.virtual_tours &&
-        place.virtual_tours.length > 0 ? (
+        {showVirtualTourSelector && place?.virtual_tours && place.virtual_tours.length > 0 ? (
           <VirtualTourPreview
-            virtualTours={
-              place.virtual_tours as unknown as virtual_tourSchema[]
-            }
+            virtualTours={place.virtual_tours as unknown as virtual_tourSchema[]}
             placeName={place.name}
             onClose={() => setShowVirtualTourSelector(false)}
             onLaunchVirtualTour={handleLaunchVirtualTour}

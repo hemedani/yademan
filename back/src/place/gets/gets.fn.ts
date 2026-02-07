@@ -20,7 +20,6 @@ export const getsFn: ActFn = async (body) => {
 		// Location context
 		province,
 		city,
-		cityZone,
 
 		// Relations
 		registrarId,
@@ -50,7 +49,6 @@ export const getsFn: ActFn = async (body) => {
 	// For related collections, we need to use their IDs
 	if (province) matchConditions["province._id"] = province;
 	if (city) matchConditions["city._id"] = city;
-	if (cityZone) matchConditions["city_zone._id"] = cityZone;
 
 	// --- Relations ---
 	if (registrarId) matchConditions["registrar._id"] = registrarId;

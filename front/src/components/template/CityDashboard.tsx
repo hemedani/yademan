@@ -2,7 +2,6 @@
 
 import CommonModelDashboard from "./CommonModelDashboard";
 import CityUpdateModal from "./CityUpdateModal";
-import SeedCityZonesModal from "./SeedCityZonesModal";
 import { ModelName } from "@/utils/helper";
 
 interface TData {
@@ -18,13 +17,7 @@ interface CityDashboardProps {
   lesanUrl: string;
 }
 
-const CityDashboard: React.FC<CityDashboardProps> = ({
-  data,
-  model,
-  remove,
-  token,
-  lesanUrl,
-}) => {
+const CityDashboard: React.FC<CityDashboardProps> = ({ data, model, remove, token, lesanUrl }) => {
   const CityUpdateModalWrapper = ({
     isOpen,
     onClose,
@@ -58,7 +51,6 @@ const CityDashboard: React.FC<CityDashboardProps> = ({
       token={token}
       lesanUrl={lesanUrl}
       updateModal={CityUpdateModalWrapper}
-      seedZonesModal={SeedCityZonesModal}
     />
   );
 };

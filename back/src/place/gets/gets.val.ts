@@ -26,7 +26,6 @@ export const getsValidator = () => {
 			// --- Location & Context (filtering by name) ---
 			province: optional(string()),
 			city: optional(string()),
-			cityZone: optional(string()), // Was: city_zone
 
 			// --- Relations ---
 			registrarId: optional(objectIdValidation),

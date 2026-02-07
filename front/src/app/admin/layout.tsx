@@ -437,13 +437,44 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <AuthProvider>
           <InnerAdminLayout>{children}</InnerAdminLayout>
           <Toaster
-            position="top-center"
+            position="top-left"
             reverseOrder={false}
             toastOptions={{
               duration: 4000,
               style: {
+                background: "rgba(18, 18, 18, 0.95)",
+                backdropFilter: "blur(12px)",
+                border: "1px solid rgba(51, 51, 51, 0.3)",
+                boxShadow: "0 10px 25px rgba(0, 0, 0, 0.5)",
+                padding: 0,
+                maxWidth: "400px",
                 fontSize: "14px",
-                maxWidth: "90vw",
+                borderRadius: "12px",
+                color: "#a0a0a0",
+              },
+              success: {
+                style: {
+                  background: "rgba(18, 18, 18, 0.95)",
+                  color: "#00ff85",
+                  border: "1px solid rgba(0, 255, 133, 0.3)",
+                  boxShadow: "0 0 15px rgba(0, 255, 133, 0.3)",
+                },
+              },
+              error: {
+                style: {
+                  background: "rgba(18, 18, 18, 0.95)",
+                  color: "#ff007a",
+                  border: "1px solid rgba(255, 0, 122, 0.3)",
+                  boxShadow: "0 0 15px rgba(255, 0, 122, 0.3)",
+                },
+              },
+              loading: {
+                style: {
+                  background: "rgba(18, 18, 18, 0.95)",
+                  color: "#a0a0a0",
+                  border: "1px solid rgba(160, 160, 160, 0.3)",
+                  boxShadow: "0 0 15px rgba(160, 160, 160, 0.3)",
+                },
               },
             }}
           />

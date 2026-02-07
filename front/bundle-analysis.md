@@ -12,8 +12,6 @@ Route (app)                                      Size  First Load JS
 ├ ƒ /[locale]/about                             208 B         122 kB
 ├ ƒ /[locale]/admin                           3.77 kB         119 kB
 ├ ƒ /[locale]/admin/city                      6.41 kB         157 kB
-├ ƒ /[locale]/admin/city-zone                 5.65 kB         148 kB
-├ ƒ /[locale]/admin/city-zone/create          5.95 kB         140 kB
 ├ ƒ /[locale]/admin/city/create               7.18 kB         172 kB
 ├ ƒ /[locale]/admin/dashboard                   154 B         102 kB
 ├ ƒ /[locale]/admin/province                  6.62 kB         149 kB
@@ -71,12 +69,7 @@ Route (app)                                      Size  First Load JS
 
 ```tsx
 // MobileNavBar.tsx
-import {
-  HomeIcon,
-  CalendarDaysIcon,
-  Bars3Icon,
-  UserIcon,
-} from "@heroicons/react/24/outline";
+import { HomeIcon, CalendarDaysIcon, Bars3Icon, UserIcon } from "@heroicons/react/24/outline";
 import {
   HomeIcon as HomeIconSolid,
   CalendarDaysIcon as CalendarDaysIconSolid,
@@ -85,10 +78,7 @@ import {
 } from "@heroicons/react/24/solid";
 
 // TopBar.tsx
-import {
-  MagnifyingGlassIcon,
-  AdjustmentsHorizontalIcon,
-} from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
 ```
 
 ### After (Per-Icon Imports):

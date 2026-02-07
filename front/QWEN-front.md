@@ -288,7 +288,7 @@ Note: When handling API responses, the backend typically returns the actual data
     - When creating forms that need to work with react-hook-form:
       - Use the `register` function for simple inputs like text, number, etc.
       - Use `setValue` from react-hook-form for dynamic components like AsyncSelectBox
-      - For dependent fields (e.g., province -> city -> city_zone), use the `watch` function to track parent field changes
+      - For dependent fields (e.g., province -> city), use the `watch` function to track parent field changes
       - When using dependent fields, add a `key` prop that changes when the parent field changes: `key={watch("parentField") || "default-key"}`
       - For multi-select fields, use the `isMulti` prop in AsyncSelectBox
       - Always define the proper TypeScript types in the defaultValues to prevent type errors

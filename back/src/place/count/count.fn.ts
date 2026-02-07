@@ -8,7 +8,6 @@ export const countFn: ActFn = async (body) => {
 			// Location & Context (filtering by name of embedded object)
 			province,
 			city,
-			cityZone,
 
 			polygon,
 		},
@@ -21,7 +20,6 @@ export const countFn: ActFn = async (body) => {
 	// --- Location & Context (exact match on embedded object's 'name' field) ---
 	if (province) filters["province.name"] = province;
 	if (city) filters["city.name"] = city;
-	if (cityZone) filters["city_zone.name"] = cityZone;
 
 	// --- GeoJSON Location Filter ---
 	if (polygon) {

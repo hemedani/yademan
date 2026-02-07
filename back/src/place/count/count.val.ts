@@ -8,7 +8,6 @@ export const countValidator = () => {
 			// --- Location & Context (filtering by name) ---
 			province: optional(string()),
 			city: optional(string()),
-			cityZone: optional(string()), // Was: city_zone
 
 			// ---  GeoJSON ---
 			polygon: optional(geoJSONStruct("Polygon")), // Was: location

@@ -4,6 +4,7 @@ import { getsSetup } from "./gets/mod.ts";
 import { updateSetup } from "./update/mod.ts";
 import { removeSetup } from "./remove/mod.ts";
 import { countSetup } from "./count/mod.ts";
+import { seedSetup } from "./seed/mod.ts";
 
 export const provinceSetup = () => {
 	addSetup();
@@ -12,4 +13,5 @@ export const provinceSetup = () => {
 	getsSetup();
 	removeSetup();
 	countSetup();
+	seedSetup();
 };

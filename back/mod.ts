@@ -2,7 +2,6 @@ import { lesan, MongoClient } from "@deps";
 import {
 	categories,
 	cities,
-	city_zones,
 	comments,
 	events,
 	files,
@@ -21,11 +20,10 @@ const client = await new MongoClient(MONGO_URI).connect();
 const db = client.db("yademan");
 coreApp.odm.setDb(db);
 
-export const user = users();
 export const file = files();
+export const user = users();
 export const province = provinces();
 export const city = cities();
-export const city_zone = city_zones();
 export const place = places();
 export const comment = comments();
 export const tag = tags();

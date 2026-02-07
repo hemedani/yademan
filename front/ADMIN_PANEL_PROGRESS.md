@@ -93,7 +93,6 @@ This document summarizes the progress made on modernizing and redesigning the ad
 ├── places/            # Place management
 ├── comments/          # Comment moderation
 ├── city/              # City management
-├── city-zone/         # City zone management
 ├── province/          # Province management
 └── layout.tsx         # Admin layout wrapper
 ```

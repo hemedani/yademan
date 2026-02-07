@@ -8,7 +8,6 @@ export const addValidator = () => {
 			...place_pure,
 			province: objectIdValidation,
 			city: objectIdValidation,
-			city_zone: objectIdValidation,
 			category: objectIdValidation,
 			tags: optional(array(objectIdValidation)),
 			gallery: optional(array(objectIdValidation)),

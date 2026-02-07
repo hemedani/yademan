@@ -1,6 +1,6 @@
-import { date, defaulted } from "@deps";
+import { date, defaulted, optional } from "@deps";
 
 export const createUpdateAt = {
-	createdAt: defaulted(date(), () => new Date()),
-	updatedAt: defaulted(date(), () => new Date()),
+	createdAt: optional(defaulted(date(), () => new Date())),
+	updatedAt: optional(defaulted(date(), () => new Date())),
 };

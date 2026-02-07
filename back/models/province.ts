@@ -1,6 +1,7 @@
 import { coreApp } from "../mod.ts";
 import { type RelationDataType } from "@deps";
 import { pure_location } from "@model";
+import { user_excludes } from "./excludes.ts";
 
 export const province_pure = { ...pure_location };
 
@@ -9,6 +10,7 @@ export const province_relations = {
 		schemaName: "user",
 		type: "single" as RelationDataType,
 		optional: true,
+		excludes: user_excludes,
 		relatedRelations: {},
 	},
 };

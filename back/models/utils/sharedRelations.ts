@@ -1,5 +1,6 @@
 import { optional, RelationDataType, string } from "@deps";
 import { createUpdateAt } from "../../utils/createUpdateAt.ts";
+import { user_excludes } from "../excludes.ts";
 
 export const shared_relation_pure = {
 	name: string(),
@@ -16,6 +17,7 @@ export const createSharedRelations = () => ({
 	registrar: {
 		schemaName: "user",
 		type: "single" as RelationDataType,
+		excludes: user_excludes,
 		optional: true,
 		relatedRelations: {},
 	},

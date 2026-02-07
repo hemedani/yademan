@@ -10,6 +10,12 @@ import {
 	string,
 } from "@deps";
 import { createUpdateAt } from "@lib";
+import {
+	file_excludes,
+	place_excludes,
+	user_excludes,
+	virtual_tour_excludes,
+} from "./excludes.ts";
 
 export const virtual_tour_status_enum = enums(["draft", "active", "archived"]);
 
@@ -34,9 +40,11 @@ export const virtual_tour_relations = {
 		schemaName: "place",
 		type: "single" as RelationDataType,
 		optional: false, // A tour must be associated with a place.
+		excludes: place_excludes,
 		relatedRelations: {
 			virtual_tours: {
 				type: "multiple" as RelationDataType,
+				excludes: virtual_tour_excludes,
 				limit: 50,
 				sort: {
 					field: "_id",
@@ -53,6 +61,7 @@ export const virtual_tour_relations = {
 		schemaName: "file",
 		type: "single" as RelationDataType,
 		optional: true,
+		excludes: file_excludes,
 		relatedRelations: {},
 	},
 
@@ -63,6 +72,7 @@ export const virtual_tour_relations = {
 		schemaName: "user",
 		type: "single" as RelationDataType,
 		optional: true,
+		excludes: user_excludes,
 		relatedRelations: {},
 	},
 };

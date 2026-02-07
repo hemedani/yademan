@@ -16,8 +16,7 @@ export const remove = async (_id: string, hardCascade = false) => {
           hardCascade,
         },
         get: {
-          _id: 1,
-          name: 1,
+          success: 1
         },
       },
     },

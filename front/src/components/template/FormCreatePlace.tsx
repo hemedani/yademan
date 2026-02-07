@@ -9,8 +9,6 @@ import { add } from "@/app/actions/place/add";
 import { gets as getCategoriesAction } from "@/app/actions/category/gets";
 import { gets as getProvincesAction } from "@/app/actions/province/gets";
 import { gets as getCitiesAction } from "@/app/actions/city/gets";
-import { gets as getCityZonesAction } from "@/app/actions/city_zone/gets";
-import { get as getCityZoneAction } from "@/app/actions/city_zone/get";
 import { gets as getTagsAction } from "@/app/actions/tag/gets";
 import dynamic from "next/dynamic";
 import L from "leaflet";
@@ -23,22 +21,12 @@ import "leaflet/dist/leaflet.css";
 import { ReqType } from "@/types/declarations/selectInp";
 
 // Dynamically import map components
-const MapContainer = dynamic(
-  () => import("react-leaflet").then((mod) => mod.MapContainer),
-  { ssr: false },
-);
-const TileLayer = dynamic(
-  () => import("react-leaflet").then((mod) => mod.TileLayer),
-  { ssr: false },
-);
-const Polygon = dynamic(
-  () => import("react-leaflet").then((mod) => mod.Polygon),
-  { ssr: false },
-);
-const Marker = dynamic(
-  () => import("react-leaflet").then((mod) => mod.Marker),
-  { ssr: false },
-);
+const MapContainer = dynamic(() => import("react-leaflet").then((mod) => mod.MapContainer), {
+  ssr: false,
+});
+const TileLayer = dynamic(() => import("react-leaflet").then((mod) => mod.TileLayer), { ssr: false });
+const Polygon = dynamic(() => import("react-leaflet").then((mod) => mod.Polygon), { ssr: false });
+const Marker = dynamic(() => import("react-leaflet").then((mod) => mod.Marker), { ssr: false });
 const SimpleDrawing = dynamic(() => import("@/components/SimpleDrawing"), {
   ssr: false,
 });
@@ -91,11 +79,7 @@ const placeSchema = z.object({
     .max(20, { message: "شماره تلفن نمی‌تواند بیشتر از ۲۰ کاراکتر باشد" })
     .optional()
     .or(z.literal("")),
-  email: z
-    .string()
-    .email({ message: "لطفاً یک ایمیل معتبر وارد کنید" })
-    .optional()
-    .or(z.literal("")),
+  email: z.string().email({ message: "لطفاً یک ایمیل معتبر وارد کنید" }).optional().or(z.literal("")),
   website: z
     .string()
     .url({ message: "لطفاً یک آدرس وب معتبر وارد کنید" })
@@ -111,7 +95,6 @@ const placeSchema = z.object({
   }),
   province: z.string().min(1, { message: "انتخاب استان الزامی است" }),
   city: z.string().min(1, { message: "انتخاب شهر الزامی است" }),
-  city_zone: z.string().optional().or(z.literal("")),
   category: z.string().min(1, { message: "لطفاً یک دسته‌بندی انتخاب کنید" }),
   tags: z.array(z.string()).optional(),
   center: z.object({
@@ -131,13 +114,7 @@ const placeSchema = z.object({
 // Define the form type based on the schema
 type PlaceFormValues = z.infer<typeof placeSchema>;
 
-const FormCreatePlace = ({
-  token,
-  lesanUrl,
-}: {
-  token?: string;
-  lesanUrl?: string;
-}) => {
+const FormCreatePlace = ({ token, lesanUrl }: { token?: string; lesanUrl?: string }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [galleryImages, setGalleryImages] = useState<string[]>([]);
@@ -147,9 +124,7 @@ const FormCreatePlace = ({
   const [centerPoint, setCenterPoint] = useState<LatLng | null>(null);
   const [isDrawingMode, setIsDrawingMode] = useState(false);
   const [isCenterMode, setIsCenterMode] = useState(false);
-  const [mapCenter, setMapCenter] = useState<[number, number]>([
-    35.6892, 51.389,
-  ]); // Default to Tehran, Iran
+  const [mapCenter, setMapCenter] = useState<[number, number]>([35.6892, 51.389]); // Default to Tehran, Iran
   const [mapZoom, setMapZoom] = useState(6);
   const [mapKey, setMapKey] = useState(0);
   const [isMapReady, setIsMapReady] = useState(false);
@@ -177,7 +152,6 @@ const FormCreatePlace = ({
       status: "draft",
       province: "",
       city: "",
-      city_zone: "",
       category: "",
       tags: [],
       center: {
@@ -198,11 +172,9 @@ const FormCreatePlace = ({
       // @ts-expect-error - _getIconUrl exists but is not in TypeScript definitions
       delete L.Icon.Default.prototype._getIconUrl;
       L.Icon.Default.mergeOptions({
-        iconRetinaUrl:
-          "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png",
+        iconRetinaUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png",
         iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
-        shadowUrl:
-          "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
+        shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
       });
 
       // Fix for "wrong event specified: touchleave" error
@@ -214,43 +186,38 @@ const FormCreatePlace = ({
   }, []);
 
   // Load provinces options
-  const loadProvincesOptions = useCallback(
-    async (inputValue?: string): Promise<SelectOption[]> => {
-      const setParams: { limit: number; page: number; name?: string } = {
-        limit: 20,
-        page: 1,
-      };
-      if (inputValue) {
-        setParams.name = inputValue;
-      }
+  const loadProvincesOptions = useCallback(async (inputValue?: string): Promise<SelectOption[]> => {
+    const setParams: { limit: number; page: number; name?: string } = {
+      limit: 20,
+      page: 1,
+    };
+    if (inputValue) {
+      setParams.name = inputValue;
+    }
 
-      console.log("Fetching provinces with params:", setParams);
-      try {
-        const response = await getProvincesAction({
-          set: setParams,
-          get: { _id: 1, name: 1 },
-        });
-        console.log("Provinces API response:", response);
+    console.log("Fetching provinces with params:", setParams);
+    try {
+      const response = await getProvincesAction({
+        set: setParams,
+        get: { _id: 1, name: 1 },
+      });
+      console.log("Provinces API response:", response);
 
-        if (response && response.success) {
-          const provinces = response.body.map(
-            (item: { _id: string; name: string }) => ({
-              value: item._id,
-              label: item.name,
-            }),
-          );
-          console.log("Parsed provinces:", provinces);
-          return provinces;
-        }
-        console.log("No successful response from provinces API");
-        return [];
-      } catch (error) {
-        console.error("Error loading provinces:", error);
-        return [];
+      if (response && response.success) {
+        const provinces = response.body.map((item: { _id: string; name: string }) => ({
+          value: item._id,
+          label: item.name,
+        }));
+        console.log("Parsed provinces:", provinces);
+        return provinces;
       }
-    },
-    [],
-  );
+      console.log("No successful response from provinces API");
+      return [];
+    } catch (error) {
+      console.error("Error loading provinces:", error);
+      return [];
+    }
+  }, []);
 
   // Load cities options based on selected province
   const loadCitiesOptions = useCallback(
@@ -284,12 +251,10 @@ const FormCreatePlace = ({
         console.log("Cities API response:", response);
 
         if (response && response.success) {
-          const cities = response.body.map(
-            (item: { _id: string; name: string }) => ({
-              value: item._id,
-              label: item.name,
-            }),
-          );
+          const cities = response.body.map((item: { _id: string; name: string }) => ({
+            value: item._id,
+            label: item.name,
+          }));
           console.log("Parsed cities:", cities);
           return cities;
         }
@@ -303,163 +268,64 @@ const FormCreatePlace = ({
     [watch],
   );
 
-  // Load city zones options based on selected city
-  const loadCityZonesOptions = useCallback(
-    async (inputValue: string): Promise<SelectOption[]> => {
-      const selectedCityValue = watch("city");
-      if (!selectedCityValue) {
-        console.log("No city selected, returning empty array");
-        return [];
-      }
-
-      const setParams: {
-        limit: number;
-        page: number;
-        name?: string;
-        cityId?: string;
-      } = {
-        limit: 20,
-        page: 1,
-        cityId: selectedCityValue,
-      };
-      if (inputValue) {
-        setParams.name = inputValue;
-      }
-
-      try {
-        console.log("Fetching city zones with params:", setParams);
-        const response = await getCityZonesAction({
-          set: setParams,
-          get: { _id: 1, name: 1 },
-        });
-        console.log("City zones API response:", response);
-
-        if (response && response.success) {
-          const cityZones = response.body.map(
-            (item: { _id: string; name: string }) => ({
-              value: item._id,
-              label: item.name,
-            }),
-          );
-          console.log("Parsed city zones:", cityZones);
-          return cityZones;
-        }
-        console.log("No successful response from city zones API");
-        return [];
-      } catch (error) {
-        console.error("Error loading city zones:", error);
-        return [];
-      }
-    },
-    [watch],
-  );
-
   // Load categories options
-  const loadCategoriesOptions = useCallback(
-    async (inputValue: string): Promise<SelectOption[]> => {
-      const setParams: { limit: number; page: number; name?: string } = {
-        limit: 20,
-        page: 1,
-      };
-      if (inputValue) {
-        setParams.name = inputValue;
+  const loadCategoriesOptions = useCallback(async (inputValue: string): Promise<SelectOption[]> => {
+    const setParams: { limit: number; page: number; name?: string } = {
+      limit: 20,
+      page: 1,
+    };
+    if (inputValue) {
+      setParams.name = inputValue;
+    }
+    try {
+      const response = await getCategoriesAction({
+        set: setParams,
+        get: { _id: 1, name: 1 },
+      });
+      if (response && response.success) {
+        return response.body.map((item: { _id: string; name: string }) => ({
+          value: item._id,
+          label: item.name,
+        }));
       }
-      try {
-        const response = await getCategoriesAction({
-          set: setParams,
-          get: { _id: 1, name: 1 },
-        });
-        if (response && response.success) {
-          return response.body.map((item: { _id: string; name: string }) => ({
-            value: item._id,
-            label: item.name,
-          }));
-        }
-        return [];
-      } catch (error) {
-        console.error("Error loading categories:", error);
-        return [];
-      }
-    },
-    [],
-  );
+      return [];
+    } catch (error) {
+      console.error("Error loading categories:", error);
+      return [];
+    }
+  }, []);
 
   // Load tags options
-  const loadTagsOptions = useCallback(
-    async (inputValue: string): Promise<SelectOption[]> => {
-      const setParams: { limit: number; page: number; name?: string } = {
-        limit: 20,
-        page: 1,
-      };
-      if (inputValue) {
-        setParams.name = inputValue;
+  const loadTagsOptions = useCallback(async (inputValue: string): Promise<SelectOption[]> => {
+    const setParams: { limit: number; page: number; name?: string } = {
+      limit: 20,
+      page: 1,
+    };
+    if (inputValue) {
+      setParams.name = inputValue;
+    }
+    try {
+      const response = await getTagsAction({
+        set: setParams,
+        get: { _id: 1, name: 1 },
+      });
+      if (response && response.success) {
+        return response.body.map((item: { _id: string; name: string }) => ({
+          value: item._id,
+          label: item.name,
+        }));
       }
-      try {
-        const response = await getTagsAction({
-          set: setParams,
-          get: { _id: 1, name: 1 },
-        });
-        if (response && response.success) {
-          return response.body.map((item: { _id: string; name: string }) => ({
-            value: item._id,
-            label: item.name,
-          }));
-        }
-        return [];
-      } catch (error) {
-        console.error("Error loading tags:", error);
-        return [];
-      }
-    },
-    [],
-  );
+      return [];
+    } catch (error) {
+      console.error("Error loading tags:", error);
+      return [];
+    }
+  }, []);
 
   // Handle province selection
-  // When province changes, city and city_zone should be cleared
+  // When province changes, city should be cleared
   const handleProvinceSelect = async (option: SelectOption | null) => {
     setValue("city", "");
-    setValue("city_zone", "");
-  };
-
-  // Handle city selection
-  const handleCitySelect = async (option: SelectOption | null) => {
-    setValue("city_zone", "");
-  };
-
-  // Handle city zone selection
-  const handleCityZoneSelect = async (option: SelectOption | null) => {
-    // If a city zone is selected, get its details and center the map on it
-    if (option) {
-      try {
-        const response = await getCityZoneAction(option.value, {
-          _id: 1,
-          name: 1,
-          center: 1,
-          area: 1,
-        });
-
-        if (response && response.success && response.body) {
-          const cityZone = response.body[0];
-          if (cityZone.center && cityZone.center.coordinates) {
-            // Coordinates format is [longitude, latitude] from the schema
-            const [lng, lat] = cityZone.center.coordinates;
-            setMapCenter([lat, lng]); // Leaflet format is [latitude, longitude]
-            setMapZoom(12); // Appropriate zoom for city zone level
-            setMapKey((prev) => prev + 1); // Force map re-render to reflect new center
-          }
-        } else {
-          console.error(
-            "Failed to fetch city zone:",
-            response?.body?.message || "Unknown error",
-          );
-        }
-      } catch (error) {
-        console.error("Error fetching city zone:", error);
-        // Fallback: just zoom in a bit more without centering
-        setMapZoom(12);
-        setMapKey((prev) => prev + 1);
-      }
-    }
   };
 
   // Handle polygon creation from drawing tool
@@ -468,10 +334,7 @@ const FormCreatePlace = ({
       setDrawnPolygon(polygons);
       // Convert the polygon to the format expected by the schema
       const coordinates = polygons.map((polygon) =>
-        polygon.map((point) => [
-          Number(point.lng.toFixed(6)),
-          Number(point.lat.toFixed(6)),
-        ]),
+        polygon.map((point) => [Number(point.lng.toFixed(6)), Number(point.lat.toFixed(6))]),
       );
 
       if (coordinates.length > 0) {
@@ -490,11 +353,7 @@ const FormCreatePlace = ({
           { shouldValidate: true },
         );
       } else {
-        setValue(
-          "area",
-          { type: "MultiPolygon", coordinates: [] },
-          { shouldValidate: true },
-        );
+        setValue("area", { type: "MultiPolygon", coordinates: [] }, { shouldValidate: true });
       }
       trigger();
     },
@@ -504,11 +363,7 @@ const FormCreatePlace = ({
   // Handle polygon deletion
   const handlePolygonDeleted = useCallback(() => {
     setDrawnPolygon(null);
-    setValue(
-      "area",
-      { type: "MultiPolygon", coordinates: [] },
-      { shouldValidate: true },
-    );
+    setValue("area", { type: "MultiPolygon", coordinates: [] }, { shouldValidate: true });
     trigger();
   }, [setValue, trigger]);
 
@@ -557,11 +412,7 @@ const FormCreatePlace = ({
   // Clear drawn polygon
   const clearDrawnPolygon = () => {
     setDrawnPolygon(null);
-    setValue(
-      "area",
-      { type: "MultiPolygon", coordinates: [] },
-      { shouldValidate: true },
-    );
+    setValue("area", { type: "MultiPolygon", coordinates: [] }, { shouldValidate: true });
     trigger();
   };
 
@@ -570,11 +421,7 @@ const FormCreatePlace = ({
     // Set centerPoint to null to hide the marker
     setCenterPoint(null);
     // Reset to default Tehran coordinates in the form
-    setValue(
-      "center",
-      { type: "Point", coordinates: [51.389, 35.6892] },
-      { shouldValidate: true },
-    );
+    setValue("center", { type: "Point", coordinates: [51.389, 35.6892] }, { shouldValidate: true });
     trigger();
   };
 
@@ -590,10 +437,7 @@ const FormCreatePlace = ({
         center: {
           type: "Point",
           coordinates: (centerPoint
-            ? [
-                Number(centerPoint.lng.toFixed(6)),
-                Number(centerPoint.lat.toFixed(6)),
-              ]
+            ? [Number(centerPoint.lng.toFixed(6)), Number(centerPoint.lat.toFixed(6))]
             : [51.389, 35.6892]) as [number, number], // Default to Tehran if no center point selected
         },
         area: data.area!,
@@ -605,15 +449,12 @@ const FormCreatePlace = ({
         },
         province: data.province,
         city: data.city,
-        city_zone: data.city_zone!,
         category: data.category,
         hoursOfOperation: data.hoursOfOperation || undefined,
         status: data.status,
         tags: data.tags || [],
         thumbnail: data.thumbnail || undefined,
         gallery: galleryImages.length > 0 ? galleryImages : undefined,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       };
 
       const result = await add({
@@ -686,9 +527,7 @@ const FormCreatePlace = ({
               token={token}
             />
             {errors.thumbnail && (
-              <p className="text-red-400 text-xs mt-1">
-                {errors.thumbnail.message}
-              </p>
+              <p className="text-red-400 text-xs mt-1">{errors.thumbnail.message}</p>
             )}
           </div>
 
@@ -714,11 +553,7 @@ const FormCreatePlace = ({
                 </div>
               )}
             </div>
-            {errors.gallery && (
-              <p className="text-red-400 text-xs mt-1">
-                {errors.gallery.message}
-              </p>
-            )}
+            {errors.gallery && <p className="text-red-400 text-xs mt-1">{errors.gallery.message}</p>}
           </div>
         </div>
 
@@ -763,21 +598,7 @@ const FormCreatePlace = ({
             loadOptions={loadCitiesOptions}
             placeholder=" شهر را انتخاب کنید"
             errMsg={errors.city?.message}
-            onSelectChange={handleCitySelect}
             isRequired={true}
-          />
-
-          {/* City Zone Selection */}
-          <AsyncSelectBox
-            key={watch("city") || "no-city"}
-            name="city_zone"
-            label="انتخاب منطقه"
-            setValue={setValue}
-            defaultOptions
-            loadOptions={loadCityZonesOptions}
-            placeholder="منطقه را انتخاب کنید"
-            errMsg={errors.city_zone?.message}
-            onSelectChange={handleCityZoneSelect}
           />
         </div>
       </div>
@@ -809,12 +630,7 @@ const FormCreatePlace = ({
                   onClick={clearDrawnPolygon}
                   className="bg-red-900/30 text-red-400 px-3 py-1.5 rounded-lg text-sm flex items-center gap-1 hover:bg-red-900/50 transition-colors border border-red-800"
                 >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -831,12 +647,7 @@ const FormCreatePlace = ({
                   onClick={clearCenterPoint}
                   className="bg-red-900/30 text-red-400 px-3 py-1.5 rounded-lg text-sm flex items-center gap-1 hover:bg-red-900/50 transition-colors border border-red-800"
                 >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -854,18 +665,12 @@ const FormCreatePlace = ({
             <button
               type="button"
               onClick={toggleDrawingMode}
-              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
-                isDrawingMode
+              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${isDrawingMode
                   ? "bg-pink-600 text-white"
                   : "bg-gray-700 text-white border border-gray-600 hover:bg-gray-600"
-              }`}
+                }`}
             >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -879,18 +684,12 @@ const FormCreatePlace = ({
             <button
               type="button"
               onClick={toggleCenterMode}
-              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
-                isCenterMode
+              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${isCenterMode
                   ? "bg-purple-600 text-white"
                   : "bg-gray-700 text-white border border-gray-600 hover:bg-gray-600"
-              }`}
+                }`}
             >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -920,10 +719,7 @@ const FormCreatePlace = ({
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
-              <MapClickHandler
-                isActive={isCenterMode}
-                onMapClick={handleMapClick}
-              />
+              <MapClickHandler isActive={isCenterMode} onMapClick={handleMapClick} />
               {drawnPolygon && (
                 <Polygon
                   positions={drawnPolygon}
@@ -936,9 +732,7 @@ const FormCreatePlace = ({
                   }}
                 />
               )}
-              {centerPoint && (
-                <Marker position={[centerPoint.lat, centerPoint.lng]} />
-              )}
+              {centerPoint && <Marker position={[centerPoint.lat, centerPoint.lng]} />}
               <SimpleDrawing
                 isActive={isDrawingMode}
                 onPolygonCreated={handlePolygonCreated}
@@ -948,15 +742,11 @@ const FormCreatePlace = ({
           </div>
 
           {errors.area && (
-            <p className="text-red-500 text-sm mt-2 text-right">
-              {errors.area.message}
-            </p>
+            <p className="text-red-500 text-sm mt-2 text-right">{errors.area.message}</p>
           )}
 
           {errors.center && (
-            <p className="text-red-500 text-sm mt-2 text-right">
-              {errors.center.message}
-            </p>
+            <p className="text-red-500 text-sm mt-2 text-right">{errors.center.message}</p>
           )}
 
           <div className="mt-4 space-y-3">
@@ -976,9 +766,7 @@ const FormCreatePlace = ({
                       d="M5 13l4 4L19 7"
                     />
                   </svg>
-                  <p className="text-sm text-green-800 font-semibold">
-                    منطقه مکان ترسیم شد
-                  </p>
+                  <p className="text-sm text-green-800 font-semibold">منطقه مکان ترسیم شد</p>
                 </div>
               </div>
             )}
@@ -999,9 +787,7 @@ const FormCreatePlace = ({
                       d="M5 13l4 4L19 7"
                     />
                   </svg>
-                  <p className="text-sm text-purple-800 font-semibold">
-                    نقطه مرکز انتخاب شد
-                  </p>
+                  <p className="text-sm text-purple-800 font-semibold">نقطه مرکز انتخاب شد</p>
                 </div>
                 <div className="text-xs text-purple-700">
                   <p>• طول جغرافیایی: {centerPoint.lng.toFixed(6)}</p>
@@ -1095,10 +881,7 @@ const FormCreatePlace = ({
         </h2>
 
         <div>
-          <label
-            htmlFor="status"
-            className="block text-sm font-medium text-gray-300 mb-2 text-right"
-          >
+          <label htmlFor="status" className="block text-sm font-medium text-gray-300 mb-2 text-right">
             وضعیت *
           </label>
           <select
@@ -1109,10 +892,9 @@ const FormCreatePlace = ({
               text-right transition-all duration-200 ease-in-out
               focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-0 focus:border-pink-500
               hover:border-gray-500
-              ${
-                errors.status
-                  ? "border-red-500 bg-red-900/30 focus:ring-red-500 focus:border-red-500"
-                  : "border-gray-600 hover:bg-gray-600/50"
+              ${errors.status
+                ? "border-red-500 bg-red-900/30 focus:ring-red-500 focus:border-red-500"
+                : "border-gray-600 hover:bg-gray-600/50"
               }
             `}
           >
@@ -1128,11 +910,7 @@ const FormCreatePlace = ({
           </select>
           {errors.status && (
             <span className="text-red-400 text-xs font-medium text-right mt-1 flex items-center gap-1">
-              <svg
-                className="w-3 h-3 flex-shrink-0"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
+              <svg className="w-3 h-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fillRule="evenodd"
                   d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"

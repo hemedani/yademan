@@ -51,7 +51,6 @@ interface MapState {
     status?: string;
     province?: string;
     city?: string;
-    city_zone?: string;
     registrarId?: string;
     categoryIds?: string[];
     tagIds?: string[];
@@ -97,9 +96,7 @@ interface MapState {
   setAntiquityFilter: (antiquity: number | undefined) => void;
   setFilters: (filters: Partial<MapState["filters"]>) => void;
   setPlaceFilters: (filters: Partial<MapState["filters"]>) => void;
-  setAreaFilter: (
-    area: { type: "Polygon"; coordinates: number[][][] } | null,
-  ) => void;
+  setAreaFilter: (area: { type: "Polygon"; coordinates: number[][][] } | null) => void;
 
   // Pathfinding actions
   setIsPathfindingActive: (active: boolean) => void;
@@ -107,9 +104,7 @@ interface MapState {
   setPathfindingPlaces: (
     places: { coordinates: [number, number]; name: string; id: string }[],
   ) => void;
-  setPathfindingPath: (
-    path: { coordinates: [number, number]; name: string; id: string }[],
-  ) => void;
+  setPathfindingPath: (path: { coordinates: [number, number]; name: string; id: string }[]) => void;
   setPathfindingTotalDistance: (distance: number) => void;
   setPathfindingRouteGeometry: (geometry: [number, number][]) => void;
   resetPathfinding: () => void;
@@ -128,8 +123,7 @@ const DEFAULT_CENTER: MapCenter = {
 };
 
 const DEFAULT_ZOOM = 10;
-const DEFAULT_STYLE =
-  "https://api.maptiler.com/maps/streets/style.json?key=YOUR_MAPTILER_KEY";
+const DEFAULT_STYLE = "https://api.maptiler.com/maps/streets/style.json?key=YOUR_MAPTILER_KEY";
 
 export const useMapStore = create<MapState>()(
   devtools(
@@ -171,8 +165,7 @@ export const useMapStore = create<MapState>()(
         setError: (error) => set({ error }),
         setIsAddingLocation: (isAddingLocation) => set({ isAddingLocation }),
         setIsDrawingPolygon: (isDrawingPolygon) => set({ isDrawingPolygon }),
-        setSelectedLocationId: (selectedLocationId) =>
-          set({ selectedLocationId }),
+        setSelectedLocationId: (selectedLocationId) => set({ selectedLocationId }),
         setSearchQuery: (searchQuery) => set({ searchQuery }),
         setAntiquityFilter: (antiquity) =>
           set((state) => ({
@@ -192,16 +185,12 @@ export const useMapStore = create<MapState>()(
           })),
 
         // Pathfinding setters
-        setIsPathfindingActive: (isPathfindingActive) =>
-          set({ isPathfindingActive }),
-        setPathfindingStartLocation: (pathfindingStartLocation) =>
-          set({ pathfindingStartLocation }),
+        setIsPathfindingActive: (isPathfindingActive) => set({ isPathfindingActive }),
+        setPathfindingStartLocation: (pathfindingStartLocation) => set({ pathfindingStartLocation }),
         setPathfindingPlaces: (pathfindingPlaces) => set({ pathfindingPlaces }),
         setPathfindingPath: (pathfindingPath) => set({ pathfindingPath }),
-        setPathfindingTotalDistance: (pathfindingTotalDistance) =>
-          set({ pathfindingTotalDistance }),
-        setPathfindingRouteGeometry: (pathfindingRouteGeometry) =>
-          set({ pathfindingRouteGeometry }),
+        setPathfindingTotalDistance: (pathfindingTotalDistance) => set({ pathfindingTotalDistance }),
+        setPathfindingRouteGeometry: (pathfindingRouteGeometry) => set({ pathfindingRouteGeometry }),
         resetPathfinding: () =>
           set({
             isPathfindingActive: false,
@@ -297,8 +286,7 @@ export const useMapStyle = () => useMapStore((state) => state.style);
 export const useMapBounds = () => useMapStore((state) => state.bounds);
 export const useMapLoading = () => useMapStore((state) => state.isLoading);
 export const useMapError = () => useMapStore((state) => state.error);
-export const useSelectedLocation = () =>
-  useMapStore((state) => state.selectedLocationId);
+export const useSelectedLocation = () => useMapStore((state) => state.selectedLocationId);
 export const useInteractionModes = () =>
   useMapStore((state) => ({
     isAddingLocation: state.isAddingLocation,

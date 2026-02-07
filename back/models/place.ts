@@ -12,7 +12,9 @@ import {
 	string,
 	unknown,
 } from "@deps";
-import { geoJSONStruct } from "@model";
+import { geoJSONStruct, location_excludes, user_excludes } from "@model";
+import { place_excludes, shared_relation_excludes } from "./excludes.ts";
+import { file_excludes } from "./excludes.ts";
 import { createUpdateAt } from "../utils/createUpdateAt.ts";
 
 // Enum for place status: Defines the possible states of a place record (e.g., draft for unpublished, active for live, archived for historical/inactive).
@@ -96,9 +98,11 @@ export const place_relations = {
 		schemaName: "user",
 		type: "single" as RelationDataType,
 		optional: true,
+		excludes: user_excludes,
 		relatedRelations: {
 			registered_places: {
 				type: "multiple" as RelationDataType,
+				excludes: place_excludes,
 				limit: 50,
 				sort: {
 					field: "_id",
@@ -114,9 +118,11 @@ export const place_relations = {
 		schemaName: "province",
 		type: "single" as RelationDataType,
 		optional: true,
+		excludes: location_excludes,
 		relatedRelations: {
 			places: {
 				type: "multiple" as RelationDataType,
+				excludes: place_excludes,
 				limit: 50,
 				sort: {
 					field: "_id",
@@ -132,27 +138,11 @@ export const place_relations = {
 		schemaName: "city",
 		type: "single" as RelationDataType,
 		optional: true,
+		excludes: location_excludes,
 		relatedRelations: {
 			places: {
 				type: "multiple" as RelationDataType,
-				limit: 50,
-				sort: {
-					field: "_id",
-					order: "desc" as RelationSortOrderType,
-				},
-			},
-		},
-	},
-
-	// City Zone: Links to a single 'city_zone' (optional), for finer location granularity.
-	// Reverse: City zone has a list of places.
-	city_zone: {
-		schemaName: "city_zone",
-		type: "single" as RelationDataType,
-		optional: true,
-		relatedRelations: {
-			places: {
-				type: "multiple" as RelationDataType,
+				excludes: place_excludes,
 				limit: 50,
 				sort: {
 					field: "_id",
@@ -168,9 +158,11 @@ export const place_relations = {
 		schemaName: "category",
 		type: "single" as RelationDataType,
 		optional: false,
+		excludes: shared_relation_excludes,
 		relatedRelations: {
 			places: {
 				type: "multiple" as RelationDataType,
+				excludes: place_excludes,
 				limit: 50,
 				sort: {
 					field: "_id",
@@ -186,9 +178,11 @@ export const place_relations = {
 		schemaName: "tag",
 		type: "multiple" as RelationDataType,
 		optional: true,
+		excludes: shared_relation_excludes,
 		relatedRelations: {
 			places: {
 				type: "multiple" as RelationDataType,
+				excludes: place_excludes,
 				limit: 50,
 				sort: {
 					field: "_id",
@@ -204,6 +198,7 @@ export const place_relations = {
 		schemaName: "file",
 		type: "single" as RelationDataType,
 		optional: true,
+		excludes: file_excludes,
 		relatedRelations: {},
 	},
 
@@ -213,6 +208,7 @@ export const place_relations = {
 		schemaName: "file",
 		type: "multiple" as RelationDataType,
 		optional: true,
+		excludes: file_excludes,
 		relatedRelations: {},
 	},
 };

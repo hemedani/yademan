@@ -19,9 +19,7 @@ interface GeoFeature {
   };
 }
 
-export const getGeoJSON = async (
-  groupBy: "province" | "city" | "city_zone",
-) => {
+export const getGeoJSON = async (groupBy: "province" | "city") => {
   const token = (await cookies()).get("token");
 
   try {
@@ -50,18 +48,6 @@ export const getGeoJSON = async (
           },
         };
         break;
-      case "city_zone":
-        model = "city_zone";
-        includeRelations = {
-          _id: 1,
-          name: 1,
-          area: 1,
-          city: {
-            _id: 1,
-            name: 1,
-          },
-        };
-        break;
       default:
         throw new Error(`Unsupported groupBy parameter: ${groupBy}`);
     }
@@ -69,7 +55,7 @@ export const getGeoJSON = async (
     const response = await AppApi().send(
       {
         service: "main",
-        model: model as "province" | "city" | "city_zone",
+        model: model as "province" | "city",
         act: "gets",
         details: {
           set: {
@@ -83,10 +69,7 @@ export const getGeoJSON = async (
     );
 
     if (!response.success || !response.body) {
-      console.error(
-        `Failed to fetch ${groupBy} data:`,
-        response.error || "Unknown error",
-      );
+      console.error(`Failed to fetch ${groupBy} data:`, response.error || "Unknown error");
       throw new Error(`Failed to fetch ${groupBy} data`);
     }
 
@@ -125,9 +108,6 @@ export const getGeoJSON = async (
         if (groupBy === "city" && feature.province) {
           properties.provinceId = feature.province._id;
           properties.provinceName = feature.province.name;
-        } else if (groupBy === "city_zone" && feature.city) {
-          properties.cityId = feature.city._id;
-          properties.cityName = feature.city.name;
         }
 
         return {

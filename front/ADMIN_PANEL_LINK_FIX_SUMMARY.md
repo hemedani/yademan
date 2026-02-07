@@ -75,7 +75,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 ├── places/
 ├── comments/
 ├── city/
-├── city-zone/
 ├── province/
 ├── gallery/
 ├── virtual-tours/

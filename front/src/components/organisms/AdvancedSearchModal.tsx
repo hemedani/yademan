@@ -11,7 +11,6 @@ import { gets as getCategoryOptions } from "@/app/actions/category/gets";
 import { gets as getTagOptions } from "@/app/actions/tag/gets";
 import { gets as getProvinceOptions } from "@/app/actions/province/gets";
 import { gets as getCityOptions } from "@/app/actions/city/gets";
-import { gets as getCityZoneOptions } from "@/app/actions/city_zone/gets";
 
 interface AdvancedSearchModalProps {
   isOpen: boolean;
@@ -19,11 +18,7 @@ interface AdvancedSearchModalProps {
   onSubmit: (filters: any) => void;
 }
 
-const AdvancedSearchModal: React.FC<AdvancedSearchModalProps> = ({
-  isOpen,
-  onClose,
-  onSubmit,
-}) => {
+const AdvancedSearchModal: React.FC<AdvancedSearchModalProps> = ({ isOpen, onClose, onSubmit }) => {
   const t = useTranslations("AdvancedSearchModal");
 
   // Initialize form with default values
@@ -41,7 +36,6 @@ const AdvancedSearchModal: React.FC<AdvancedSearchModalProps> = ({
       status: "",
       province: "",
       city: "",
-      city_zone: "",
       registrarId: "",
       categoryIds: [] as string[], // Specify the type as string[]
       tagIds: [] as string[], // Specify the type as string[]
@@ -62,7 +56,6 @@ const AdvancedSearchModal: React.FC<AdvancedSearchModalProps> = ({
         status: currentMapFilters.status || "",
         province: currentMapFilters.province || "",
         city: currentMapFilters.city || "",
-        city_zone: currentMapFilters.city_zone || "",
         registrarId: currentMapFilters.registrarId || "",
         categoryIds: currentMapFilters.categoryIds || [],
         tagIds: currentMapFilters.tagIds || [],
@@ -81,8 +74,7 @@ const AdvancedSearchModal: React.FC<AdvancedSearchModalProps> = ({
       if (
         preparedFilters[key] === "" ||
         preparedFilters[key] === null ||
-        (Array.isArray(preparedFilters[key]) &&
-          preparedFilters[key].length === 0)
+        (Array.isArray(preparedFilters[key]) && preparedFilters[key].length === 0)
       ) {
         delete preparedFilters[key];
       }
@@ -99,7 +91,6 @@ const AdvancedSearchModal: React.FC<AdvancedSearchModalProps> = ({
       status: "",
       province: "",
       city: "",
-      city_zone: "",
       registrarId: "",
       categoryIds: [],
       tagIds: [],
@@ -269,44 +260,6 @@ const AdvancedSearchModal: React.FC<AdvancedSearchModalProps> = ({
                   />
                 </div>
 
-                {/* City Zone */}
-                <div>
-                  <AsyncSelectBox
-                    key={watch("city") || "no-city"}
-                    name="city_zone"
-                    label={t("cityZone")}
-                    setValue={setValue}
-                    loadOptions={async () => {
-                      try {
-                        const selectedCity = watch("city");
-                        if (!selectedCity) return [];
-
-                        const response = await getCityZoneOptions({
-                          set: {
-                            page: 1,
-                            limit: 100,
-                            cityId: selectedCity,
-                          },
-                          get: { _id: 1, name: 1 },
-                        });
-
-                        if (response.success && response.body) {
-                          return response.body.map((cityZone: any) => ({
-                            value: cityZone._id,
-                            label: cityZone.name,
-                          }));
-                        }
-                        return [];
-                      } catch (error) {
-                        console.error("Error loading city zones:", error);
-                        return [];
-                      }
-                    }}
-                    placeholder={t("cityZonePlaceholder")}
-                    defaultOptions
-                  />
-                </div>
-
                 {/* Registrar ID */}
                 <div>
                   <MyInput
@@ -389,9 +342,7 @@ const AdvancedSearchModal: React.FC<AdvancedSearchModalProps> = ({
                     placeholder={t("maxDistancePlaceholder")}
                     min="0"
                   />
-                  <p className="text-sm text-gray-400 mt-1">
-                    {t("maxDistanceDescription")}
-                  </p>
+                  <p className="text-sm text-gray-400 mt-1">{t("maxDistanceDescription")}</p>
                 </div>
 
                 {/* Min Distance */}
@@ -404,9 +355,7 @@ const AdvancedSearchModal: React.FC<AdvancedSearchModalProps> = ({
                     placeholder={t("minDistancePlaceholder")}
                     min="0"
                   />
-                  <p className="text-sm text-gray-400 mt-1">
-                    {t("minDistanceDescription")}
-                  </p>
+                  <p className="text-sm text-gray-400 mt-1">{t("minDistanceDescription")}</p>
                 </div>
               </div>
 

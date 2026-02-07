@@ -103,16 +103,13 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
   const markersRef = useRef<Map<string, maplibregl.Marker>>(new Map());
   const markerElementsRef = useRef<Map<string, HTMLDivElement>>(new Map());
   const markerRootsRef = useRef<Map<string, any>>(new Map());
-  const attributionControlRef = useRef<maplibregl.AttributionControl | null>(
-    null,
-  );
+  const attributionControlRef = useRef<maplibregl.AttributionControl | null>(null);
 
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [showSidebar, setShowSidebar] = useState(false);
   const [showRoutePanel, setShowRoutePanel] = useState(false);
   const [currentLayer, setCurrentLayer] = useState<MapLayer>(
-    MAP_LAYERS.find((layer) => layer.id === "openfreemap_dark") ||
-      MAP_LAYERS[0],
+    MAP_LAYERS.find((layer) => layer.id === "openfreemap_dark") || MAP_LAYERS[0],
   );
   const [places, setPlaces] = useState<Place[]>([]);
   const [filteredPlaces, setFilteredPlaces] = useState<Place[]>([]);
@@ -140,16 +137,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
   const apiResponseCache = useRef<Map<string, Place[]>>(new Map());
 
   const t = useTranslations();
-  const {
-    filters,
-    searchQuery,
-    center,
-    zoom,
-    setCenter,
-    setZoom,
-    getCurrentBounds,
-    setBounds,
-  } = useMapStore();
+  const { filters, searchQuery, center, zoom, setCenter, setZoom, getCurrentBounds, setBounds } =
+    useMapStore();
 
   const setMapStoreAreaFilter = useMapStore((state) => state.setAreaFilter);
 
@@ -163,7 +152,6 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       filters.status || "nostatus",
       filters.province || "noprovince",
       filters.city || "nocity",
-      filters.city_zone || "nocityzone",
       filters.antiquity?.toString() || "noantiquity",
       // Include area in cache key if present
       filters.area ? JSON.stringify(filters.area) : "noarea",
@@ -273,9 +261,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           // Add event listeners to the marker container for hover effects
           markerElement.addEventListener("mouseenter", (e) => {
             // Calculate position from the marker's coordinates relative to the map container
-            const screenCoords = map.current!.project(
-              place.center.coordinates as [number, number],
-            );
+            const screenCoords = map.current!.project(place.center.coordinates as [number, number]);
             // Adjust coordinates to be relative to the screen (not map container)
             const rect = mapContainer.current?.getBoundingClientRect();
             setTooltipPosition({
@@ -332,10 +318,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
 
                     // Fly to location
                     map.current?.flyTo({
-                      center: clickedPlace.center.coordinates as [
-                        number,
-                        number,
-                      ],
+                      center: clickedPlace.center.coordinates as [number, number],
                       zoom: 14,
                       essential: true,
                     });
@@ -422,10 +405,6 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         setParams = { ...setParams, city: filters.city };
       }
 
-      if (filters.city_zone) {
-        setParams = { ...setParams, cityZone: filters.city_zone };
-      }
-
       // Add antiquity filter to be sent to backend, rounded to integer
       if (filters.antiquity !== undefined && filters.antiquity >= 0) {
         setParams = {
@@ -488,21 +467,13 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
 
       if (response.success) {
         // Extract place data from response
-        const placesData = Array.isArray(response.body)
-          ? response.body
-          : response.body?.data || [];
+        const placesData = Array.isArray(response.body) ? response.body : response.body?.data || [];
 
         // Convert string dates to Date objects for compatibility
         const convertedPlacesData = placesData.map((place: any) => ({
           ...place,
-          updatedAt:
-            typeof place.updatedAt === "string"
-              ? new Date(place.updatedAt)
-              : place.updatedAt,
-          createdAt:
-            typeof place.createdAt === "string"
-              ? new Date(place.createdAt)
-              : place.createdAt,
+          updatedAt: typeof place.updatedAt === "string" ? new Date(place.updatedAt) : place.updatedAt,
+          createdAt: typeof place.createdAt === "string" ? new Date(place.createdAt) : place.createdAt,
         }));
 
         if (convertedPlacesData.length > 0) {
@@ -534,9 +505,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         // setFilteredPlaces will be updated by the search effect
         // Only show toast if we have a cache miss to avoid duplicate toasts when cached results are empty
         if (!apiResponseCache.current.has(cacheKey)) {
-          toast.error(
-            t("errors.failedToFetchPlaces") || "Failed to fetch places",
-          );
+          toast.error(t("errors.failedToFetchPlaces") || "Failed to fetch places");
         }
 
         // Still cache the failure to prevent re-fetching with same parameters
@@ -647,10 +616,10 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           Array.isArray(place.center.coordinates) &&
           place.center.coordinates.length >= 2
         ) {
-          bounds.extend([
-            place.center.coordinates[0],
-            place.center.coordinates[1],
-          ] as [number, number]);
+          bounds.extend([place.center.coordinates[0], place.center.coordinates[1]] as [
+            number,
+            number,
+          ]);
         }
       });
 
@@ -744,10 +713,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     }
 
     // Add scale control
-    map.current.addControl(
-      new maplibregl.ScaleControl({ maxWidth: 200 }),
-      "bottom-left",
-    );
+    map.current.addControl(new maplibregl.ScaleControl({ maxWidth: 200 }), "bottom-left");
 
     // Add attribution control and store reference
     const attributionControl = new maplibregl.AttributionControl({
@@ -755,6 +721,9 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     });
     map.current.addControl(attributionControl, "bottom-right");
     attributionControlRef.current = attributionControl;
+
+    // Increase text sizes in map layers
+    increaseTextSizes();
 
     // Handle map events
     map.current.on("moveend", () => {
@@ -843,9 +812,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       filtered = filtered.filter(
         (place) =>
           place.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          place.description
-            ?.toLowerCase()
-            .includes(searchQuery.toLowerCase()) ||
+          place.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
           place.tags?.some((tag) => {
             const tagName = typeof tag === "object" ? tag.name : tag;
             return tagName.toLowerCase().includes(searchQuery.toLowerCase());
@@ -976,19 +943,18 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           });
           map.current!.addControl(newAttributionControl, "bottom-right");
           attributionControlRef.current = newAttributionControl;
+
+          // Increase text sizes in map layers after style change
+          increaseTextSizes();
         });
 
         // Handle style load errors with fallback
         map.current.once("error", (e) => {
           console.error("Map style loading error:", e.error);
-          toast.error(
-            t("map.layerLoadError") ||
-              "Failed to load map layer, using default layer",
-          );
+          toast.error(t("map.layerLoadError") || "Failed to load map layer, using default layer");
 
           // Fallback to the original "darkmatter" raster layer
-          const fallbackLayer =
-            MAP_LAYERS.find((l) => l.id === "darkmatter") || MAP_LAYERS[0];
+          const fallbackLayer = MAP_LAYERS.find((l) => l.id === "darkmatter") || MAP_LAYERS[0];
           if (fallbackLayer && fallbackLayer.id !== currentLayer.id) {
             handleLayerChange(fallbackLayer);
           }
@@ -1062,6 +1028,9 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           });
           map.current!.addControl(newAttributionControl, "bottom-right");
           attributionControlRef.current = newAttributionControl;
+
+          // Increase text sizes in map layers after style change
+          increaseTextSizes();
         });
       }
     } catch (error) {
@@ -1069,8 +1038,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       toast.error(t("map.layerChangeError") || "Error changing map layer");
 
       // Fallback to the original "darkmatter" raster layer
-      const fallbackLayer =
-        MAP_LAYERS.find((l) => l.id === "darkmatter") || MAP_LAYERS[0];
+      const fallbackLayer = MAP_LAYERS.find((l) => l.id === "darkmatter") || MAP_LAYERS[0];
       if (fallbackLayer && fallbackLayer.id !== currentLayer.id) {
         handleLayerChange(fallbackLayer);
       }
@@ -1142,6 +1110,50 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     }
   };
 
+  // Function to increase text font sizes in map layers
+  const increaseTextSizes = () => {
+    if (!map.current) return;
+
+    // Wait for style to be loaded
+    if (!map.current.isStyleLoaded()) {
+      map.current.once("styledata", increaseTextSizes);
+      return;
+    }
+
+    try {
+      // Get all layers and modify text layers
+      const layers = map.current.getStyle().layers;
+      if (!layers) return;
+
+      layers.forEach((layer) => {
+        if (layer.type === "symbol" && layer.layout && layer.layout["text-field"]) {
+          // Increase font size with zoom-based interpolation for better readability
+          const currentSize = map.current!.getLayoutProperty(layer.id, "text-size");
+          if (currentSize) {
+            // Use interpolation to make text more readable at different zoom levels (more moderate increase)
+            const newSize = ["interpolate", ["linear"], ["zoom"], 0, 10, 10, 12, 18, 16];
+            map.current!.setLayoutProperty(layer.id, "text-size", newSize);
+          } else {
+            // Set a default moderate size with zoom-based interpolation
+            map.current!.setLayoutProperty(layer.id, "text-size", [
+              "interpolate",
+              ["linear"],
+              ["zoom"],
+              0,
+              10,
+              10,
+              12,
+              18,
+              16,
+            ]); // Default with zoom-based scaling
+          }
+        }
+      });
+    } catch (error) {
+      console.warn("Error increasing text sizes:", error);
+    }
+  };
+
   // Handle map move to update tooltip position when map moves
   useEffect(() => {
     if (!map.current || !hoveredPlace) return;
@@ -1150,9 +1162,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       // If we have a hovered place, update its tooltip position when map moves
       if (hoveredPlace) {
         // Convert the place's coordinates to screen coordinates
-        const screenCoords = map.current!.project(
-          hoveredPlace.center.coordinates as [number, number],
-        );
+        const screenCoords = map.current!.project(hoveredPlace.center.coordinates as [number, number]);
         // Adjust coordinates to be relative to the screen (not map container)
         const mapRect = mapContainer.current?.getBoundingClientRect();
         setTooltipPosition({
@@ -1173,17 +1183,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
 
   // Pathfinding state
   const isPathfindingActive = useMapStore((state) => state.isPathfindingActive);
-  const pathfindingStartLocation = useMapStore(
-    (state) => state.pathfindingStartLocation,
-  );
+  const pathfindingStartLocation = useMapStore((state) => state.pathfindingStartLocation);
   const pathfindingPlaces = useMapStore((state) => state.pathfindingPlaces);
   const pathfindingPath = useMapStore((state) => state.pathfindingPath);
-  const pathfindingTotalDistance = useMapStore(
-    (state) => state.pathfindingTotalDistance,
-  );
-  const pathfindingRouteGeometry = useMapStore(
-    (state) => state.pathfindingRouteGeometry,
-  );
+  const pathfindingTotalDistance = useMapStore((state) => state.pathfindingTotalDistance);
+  const pathfindingRouteGeometry = useMapStore((state) => state.pathfindingRouteGeometry);
   const [routeGeometry, setRouteGeometry] = useState<[number, number][]>([]);
 
   // Add the path to the map
@@ -1369,10 +1373,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
   }, [isPathfindingActive, pathfindingRouteGeometry, pathfindingPath]);
 
   // Handle route calculation
-  const calculateRoute = async (
-    start: [number, number],
-    end: [number, number],
-  ) => {
+  const calculateRoute = async (start: [number, number], end: [number, number]) => {
     if (!map.current) return;
 
     try {
@@ -1461,11 +1462,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         )}
 
         {/* Map container */}
-        <div
-          ref={mapContainer}
-          className="w-full h-full bg-[#0a0a00]"
-          lang="fa"
-        />
+        <div ref={mapContainer} className="w-full h-full bg-[#0a0a00]" lang="fa" />
 
         {/* Map controls */}
         <MapControls
@@ -1484,10 +1481,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
               navigator.geolocation.getCurrentPosition(
                 (position) => {
                   map.current?.flyTo({
-                    center: [
-                      position.coords.longitude,
-                      position.coords.latitude,
-                    ],
+                    center: [position.coords.longitude, position.coords.latitude],
                     zoom: 14,
                     essential: true,
                   });
@@ -1528,16 +1522,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
 
         {/* Place Details Modal */}
         {selectedPlace && showPlaceDetails && (
-          <PlaceDetailsModal
-            placeId={selectedPlace._id!}
-            onClose={() => setShowPlaceDetails(false)}
-          />
+          <PlaceDetailsModal placeId={selectedPlace._id!} onClose={() => setShowPlaceDetails(false)} />
         )}
 
         {/* Place Hover Tooltip */}
-        {hoveredPlace && (
-          <PlaceHoverTooltip place={hoveredPlace} position={tooltipPosition} />
-        )}
+        {hoveredPlace && <PlaceHoverTooltip place={hoveredPlace} position={tooltipPosition} />}
       </div>
     </>
   );
