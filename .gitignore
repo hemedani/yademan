@@ -4,3 +4,8 @@ back/uploads
 dump.rdb
 front/naghshe-doc
 front/screenshot
+back/assets/gadm41_IRN_1.json
+back/assets/geojson/irn_admin1_simplified.json
+back/assets/geojson/irn_admin2_simplified.json
+back/assets/irn_admin_boundaries.gdb
+back/assets/irn_admin_boundaries.geojson
