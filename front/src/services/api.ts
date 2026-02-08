@@ -77,6 +77,21 @@ export const AppApi = (lesanUrl?: string, token?: string) => {
       baseHeaders["token"] = `${authToken}`;
     }
 
+    /*
+    *	@LOG @DEBUG @INFO
+    *	This log written by ::==> {{ `` }}
+    *
+    *	Please remove your log after debugging
+    */
+    console.log(" ============= ");
+    console.group("url------ ");
+    console.log();
+    console.info({ url }, " ------ ");
+    console.log();
+    console.groupEnd();
+    console.log(" ============= ");
+
+
     return lesanApi({
       URL: url,
       baseHeaders,

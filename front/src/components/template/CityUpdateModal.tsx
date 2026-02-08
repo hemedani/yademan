@@ -4,6 +4,7 @@ import { FormUpdateCity } from "./FormUpdateCity";
 import { AppApi } from "@/services/api";
 import { ToastNotify } from "@/utils/helper";
 import { useScrollLock } from "@/hooks/useScrollLock";
+import { get } from "@/app/actions/city/get"
 
 interface CityData {
   _id: string;
@@ -48,25 +49,12 @@ const CityUpdateModal: React.FC<CityUpdateModalProps> = ({
     setError(null);
 
     try {
-      const response = await AppApi().send(
+      const response = await get(cityId,
         {
-          service: "main",
-          model: "city",
-          act: "get",
-          details: {
-            set: {
-              _id: cityId,
-            },
-            get: {
-              _id: 1,
-              name: 1,
-              english_name: 1,
-              area: 1,
-              center: 1,
-            },
-          },
+          english_name: 1,
+          area: 1,
+          center: 1,
         },
-        { token },
       );
 
       if (
