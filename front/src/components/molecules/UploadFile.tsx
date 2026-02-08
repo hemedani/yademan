@@ -3,9 +3,10 @@ import {
   isValidPdfExtension,
   isValidGeoJsonExtension,
 } from "@/utils/checkFileExtension";
-import { getLesanBaseUrl } from "@/services/api";
+import { AppApi, getLesanBaseUrl } from "@/services/api";
 import React, { useState } from "react";
 import Image from "next/image";
+import Cookies from "js-cookie";
 
 export const dynamic = "force-dynamic";
 
@@ -42,30 +43,36 @@ export const UploadImage = ({
     if (!file) return;
     setIsUploaded("uploading");
 
-    const lesanBody = {
-      service: "main",
-      model: "file",
-      act: "uploadFile",
-      details: {
-        get: { mimType: 1, _id: 1 },
-        set: type ? { type } : {},
-      },
-    };
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("lesan-body", JSON.stringify(lesanBody));
-
     try {
-      const response = await fetch(`${getLesanBaseUrl()}/lesan`, {
+      // Get the API instance
+      const api = AppApi(undefined, token || Cookies.get("token") || undefined);
+
+      // For file uploads, we need to make a direct request to the proxy
+      // since we're dealing with FormData which is different from regular API calls
+      const lesanBody = {
+        service: "main",
+        model: "file",
+        act: "uploadFile",
+        details: {
+          get: { mimType: 1, _id: 1 },
+          set: type ? { type } : {},
+        },
+      };
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("lesan-body", JSON.stringify(lesanBody));
+
+      // Make the request to the proxy endpoint
+      const response = await fetch("/api/proxy", {
         method: "POST",
         body: formData,
-        mode: "cors", // Force CORS mode
-        credentials: "include", // If auth cookies are used; otherwise omit
         headers: {
-          token: token || "", // Custom token header
+          // Only include token header if a token is available
+          ...(token || Cookies.get("token") ? { token: token || Cookies.get("token") || "" } : {}),
         },
       });
+
       const data = await response.json();
 
       if (data.success) {
@@ -84,10 +91,7 @@ export const UploadImage = ({
   return (
     <div className="w-full flex flex-col gap-2">
       {label && (
-        <label
-          htmlFor={inputName}
-          className="text-sm font-medium text-gray-300 text-right"
-        >
+        <label htmlFor={inputName} className="text-sm font-medium text-gray-300 text-right">
           {label}
           {isRequired && <span className="text-red-500 mr-1">*</span>}
         </label>
@@ -129,10 +133,7 @@ export const UploadImage = ({
           </div>
         ) : file && file.type === "application/pdf" ? (
           <div className="w-full h-40 mt-4 rounded-lg overflow-hidden border border-gray-600">
-            <embed
-              className="w-full h-full object-cover"
-              src={URL.createObjectURL(file)}
-            />
+            <embed className="w-full h-full object-cover" src={URL.createObjectURL(file)} />
           </div>
         ) : file &&
           (file.type === "application/json" ||
