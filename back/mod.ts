@@ -47,5 +47,7 @@ coreApp.runServer({
 		"http://localhost:3005",
 		"http://194.5.192.166:3005",
 		"http://localhost:4000",
+		"http://http://185.204.170.27:4000",
+		"http://http://185.204.170.27:3005",
 	],
 });
