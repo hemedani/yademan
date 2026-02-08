@@ -4,20 +4,17 @@ import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { placeSchema } from "@/types/declarations/selectInp";
-import { getLesanBaseUrl } from "@/services/api";
+import { getImageUploadUrl } from "@/utils/imageUrl";
 
 interface PlaceHoverTooltipProps {
   place: placeSchema;
   position: { x: number; y: number };
 }
 
-const PlaceHoverTooltip: React.FC<PlaceHoverTooltipProps> = ({
-  place,
-  position,
-}) => {
+const PlaceHoverTooltip: React.FC<PlaceHoverTooltipProps> = ({ place, position }) => {
   // Extract thumbnail URL from place data
   const thumbnailUrl = place.thumbnail?.name
-    ? `${getLesanBaseUrl()}/uploads/images/${place.thumbnail.name}`
+    ? getImageUploadUrl(place.thumbnail.name, "images")
     : "/placeholder-image.jpg";
 
   // Check if we have tags to display
@@ -51,8 +48,7 @@ const PlaceHoverTooltip: React.FC<PlaceHoverTooltipProps> = ({
               sizes="128px"
               className="object-cover transition-transform duration-300 hover:scale-105"
               style={{
-                maskImage:
-                  "linear-gradient(to bottom, black 70%, transparent 100%)",
+                maskImage: "linear-gradient(to bottom, black 70%, transparent 100%)",
               }}
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
@@ -62,18 +58,13 @@ const PlaceHoverTooltip: React.FC<PlaceHoverTooltipProps> = ({
           </div>
 
           {/* Place name */}
-          <h3 className="text-white font-bold text-lg mb-1 truncate tracking-wide">
-            {place.name}
-          </h3>
+          <h3 className="text-white font-bold text-lg mb-1 truncate tracking-wide">{place.name}</h3>
 
           {/* Category with icon */}
           {place.category && (
             <div className="flex items-center gap-2 mb-2">
               {place.category.icon && (
-                <span
-                  className="text-base"
-                  style={{ color: place.category.color || "#FF007A" }}
-                >
+                <span className="text-base" style={{ color: place.category.color || "#FF007A" }}>
                   {place.category.icon.startsWith("fa-") ? (
                     <i className={`fa ${place.category.icon}`}></i>
                   ) : (
@@ -98,23 +89,14 @@ const PlaceHoverTooltip: React.FC<PlaceHoverTooltipProps> = ({
                   key={index}
                   className="px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1"
                   style={{
-                    backgroundColor: tag.color
-                      ? `${tag.color}20`
-                      : "rgba(255, 0, 122, 0.1)",
+                    backgroundColor: tag.color ? `${tag.color}20` : "rgba(255, 0, 122, 0.1)",
                     color: tag.color || "#FF007A",
                     border: `1px solid ${tag.color || "#FF007A"}40`,
                   }}
                 >
                   {tag.icon && (
-                    <span
-                      className="text-xs"
-                      style={{ color: tag.color || "#FF007A" }}
-                    >
-                      {tag.icon.startsWith("fa-") ? (
-                        <i className={`fa ${tag.icon}`}></i>
-                      ) : (
-                        tag.icon
-                      )}
+                    <span className="text-xs" style={{ color: tag.color || "#FF007A" }}>
+                      {tag.icon.startsWith("fa-") ? <i className={`fa ${tag.icon}`}></i> : tag.icon}
                     </span>
                   )}
                   {tag.name}
@@ -124,9 +106,7 @@ const PlaceHoverTooltip: React.FC<PlaceHoverTooltipProps> = ({
           )}
 
           {/* Description - truncated to 3 lines */}
-          <p className="text-[#e0e0e0] text-sm line-clamp-3">
-            {place.description}
-          </p>
+          <p className="text-[#e0e0e0] text-sm line-clamp-3">{place.description}</p>
         </div>
 
         {/* Tooltip pointer */}

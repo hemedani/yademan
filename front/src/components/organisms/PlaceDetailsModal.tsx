@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import Image from "next/image";
 import { getLesanBaseUrl } from "@/services/api";
+import { getImageUploadUrl } from "@/utils/imageUrl";
 import CommentSection, { MinimalComment } from "../organisms/CommentSection";
 import { get as getPlace } from "@/app/actions/place";
 import { placeSchema, virtual_tourSchema } from "@/types/declarations/selectInp";
@@ -248,7 +249,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
           <div className="relative h-64 w-full overflow-hidden">
             {headerImage && (
               <Image
-                src={`${getLesanBaseUrl()}/uploads/images/${headerImage}`}
+                src={getImageUploadUrl(headerImage, "images")}
                 alt={place.name}
                 fill
                 className="object-cover"
@@ -563,7 +564,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                 <div className="relative aspect-video mb-3 overflow-hidden rounded-lg group">
                   {place.gallery && place.gallery[activeImageIndex] && (
                     <Image
-                      src={`${getLesanBaseUrl()}/uploads/images/${place.gallery[activeImageIndex].name}`}
+                      src={getImageUploadUrl(place.gallery[activeImageIndex].name, "images")}
                       alt={`${place.name} - ${activeImageIndex + 1}`}
                       fill
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -660,7 +661,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({
                         onClick={() => setActiveImageIndex(index)}
                       >
                         <Image
-                          src={`${getLesanBaseUrl()}/uploads/images/${image.name}`}
+                          src={getImageUploadUrl(image.name, "images")}
                           alt={`${place.name} - Thumbnail ${index + 1}`}
                           fill
                           className="object-cover"

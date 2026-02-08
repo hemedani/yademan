@@ -8,12 +8,12 @@ import dynamic from "next/dynamic";
 import { get as getVirtualTour } from "@/app/actions/virtual_tour/get";
 import { virtual_tourSchema } from "@/types/declarations/selectInp";
 import { getLesanBaseUrl } from "@/services/api";
+import { getImageUploadUrl } from "@/utils/imageUrl";
 
 // Dynamically import PhotoSphereViewer to avoid SSR issues
-const PhotoSphereViewer = dynamic(
-  () => import("@/components/organisms/PhotoSphereViewer"),
-  { ssr: false },
-);
+const PhotoSphereViewer = dynamic(() => import("@/components/organisms/PhotoSphereViewer"), {
+  ssr: false,
+});
 
 const VirtualTourPage = () => {
   const t = useTranslations();
@@ -97,12 +97,8 @@ const VirtualTourPage = () => {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0a0a00]">
         <div className="text-center p-6 max-w-md">
-          <h2 className="text-2xl font-bold text-white mb-4">
-            {t("virtualTour.errorTitle")}
-          </h2>
-          <p className="text-[#a0a0a0] mb-6">
-            {error || t("virtualTour.errorMessage")}
-          </p>
+          <h2 className="text-2xl font-bold text-white mb-4">{t("virtualTour.errorTitle")}</h2>
+          <p className="text-[#a0a0a0] mb-6">{error || t("virtualTour.errorMessage")}</p>
           <button
             onClick={() => router.push(`/${locale || "en"}/`)}
             className="px-4 py-2 bg-gradient-to-r from-[#FF007A] to-[#A020F0] text-white rounded-md text-sm font-medium"
@@ -118,12 +114,8 @@ const VirtualTourPage = () => {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0a0a00]">
         <div className="text-center p-6 max-w-md">
-          <h2 className="text-2xl font-bold text-white mb-4">
-            {t("virtualTour.errorTitle")}
-          </h2>
-          <p className="text-[#a0a0a0] mb-6">
-            {t("virtualTour.missingPanorama")}
-          </p>
+          <h2 className="text-2xl font-bold text-white mb-4">{t("virtualTour.errorTitle")}</h2>
+          <p className="text-[#a0a0a0] mb-6">{t("virtualTour.missingPanorama")}</p>
           <button
             onClick={() => router.push(`/${locale || "en"}/`)}
             className="px-4 py-2 bg-gradient-to-r from-[#FF007A] to-[#A020F0] text-white rounded-md text-sm font-medium"
@@ -140,9 +132,7 @@ const VirtualTourPage = () => {
       <div className="absolute top-4 left-4 z-10 bg-[#1e1e1e]/80 backdrop-blur-sm rounded-xl p-4 border border-[#333] max-w-xs">
         <h1 className="text-xl font-bold text-white truncate">{tour.name}</h1>
         {tour.description && (
-          <p className="text-[#a0a0a0] text-sm mt-2 line-clamp-2">
-            {tour.description}
-          </p>
+          <p className="text-[#a0a0a0] text-sm mt-2 line-clamp-2">{tour.description}</p>
         )}
         <div className="mt-2 text-xs text-[#a0a0a0]">
           {tour.place?.name && <span>{tour.place.name}</span>}
@@ -171,7 +161,7 @@ const VirtualTourPage = () => {
       </button>
 
       <PhotoSphereViewer
-        panoramaUrl={`${getLesanBaseUrl()}/uploads/images/${tour.panorama.name}`}
+        panoramaUrl={getImageUploadUrl(tour.panorama.name, "images")}
         height="100vh"
         width="100%"
         hotspots={(tour.hotspots || []).map((hotspot, index) => ({

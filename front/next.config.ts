@@ -172,7 +172,21 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
-    domains: ["localhost", "api.mapbox.com", "tile.openstreetmap.org"],
+    domains: ["localhost", "api.mapbox.com", "tile.openstreetmap.org", "185.204.170.27"],
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "185.204.170.27",
+        port: "1405",
+        pathname: "/uploads/**",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "1405",
+        pathname: "/uploads/**",
+      },
+    ],
   },
   typescript: {
     // Ignore TypeScript errors during build - we'll handle them during development

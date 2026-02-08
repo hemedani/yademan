@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { getLesanBaseUrl } from "@/services/api";
+import { getImageUploadUrl } from "@/utils/imageUrl";
 import { virtual_tourSchema } from "@/types/declarations/selectInp";
 import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
@@ -107,9 +108,7 @@ const VirtualTourPreview: React.FC<VirtualTourPreviewProps> = ({
                 <h3 className="text-xl font-bold text-white mb-2">
                   {t("place.noVirtualToursAvailable")}
                 </h3>
-                <p className="text-[#a0a0a0]">
-                  {t("place.noVirtualToursDescription")}
-                </p>
+                <p className="text-[#a0a0a0]">{t("place.noVirtualToursDescription")}</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -124,7 +123,7 @@ const VirtualTourPreview: React.FC<VirtualTourPreviewProps> = ({
                     <div className="relative h-48 overflow-hidden">
                       {tour.panorama?.name ? (
                         <Image
-                          src={`${getLesanBaseUrl()}/uploads/images/${tour.panorama.name}`}
+                          src={getImageUploadUrl(tour.panorama.name, "images")}
                           alt={tour.name}
                           fill
                           className="object-cover"
@@ -159,13 +158,9 @@ const VirtualTourPreview: React.FC<VirtualTourPreviewProps> = ({
                       </div>
                     </div>
                     <div className="p-5">
-                      <h3 className="text-lg font-bold text-white mb-2 truncate">
-                        {tour.name}
-                      </h3>
+                      <h3 className="text-lg font-bold text-white mb-2 truncate">{tour.name}</h3>
                       {tour.description && (
-                        <p className="text-[#a0a0a0] text-sm mb-4 line-clamp-2">
-                          {tour.description}
-                        </p>
+                        <p className="text-[#a0a0a0] text-sm mb-4 line-clamp-2">{tour.description}</p>
                       )}
                       <motion.button
                         whileHover={{ scale: 1.02 }}

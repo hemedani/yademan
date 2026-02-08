@@ -4,6 +4,7 @@ import {
   isValidGeoJsonExtension,
 } from "@/utils/checkFileExtension";
 import { AppApi, getLesanBaseUrl } from "@/services/api";
+import { getImageUploadUrl } from "@/utils/imageUrl";
 import React, { useState } from "react";
 import Image from "next/image";
 import Cookies from "js-cookie";
@@ -162,7 +163,7 @@ export const UploadImage = ({
           <div className="w-full h-40 mt-4 rounded-lg overflow-hidden border border-gray-600">
             <Image
               className="w-full h-full object-cover"
-              src={`${getLesanBaseUrl()}/uploads/images/${filePath}`}
+              src={getImageUploadUrl(filePath, "images")}
               alt="Uploaded image preview"
               width={400}
               height={160}
@@ -170,10 +171,7 @@ export const UploadImage = ({
           </div>
         ) : filePath && isValidPdfExtension(filePath) ? (
           <div className="w-full h-40 mt-4 rounded-lg overflow-hidden border border-gray-600">
-            <embed
-              className="w-full h-full object-cover"
-              src={`${getLesanBaseUrl()}/uploads/docs/${filePath}`}
-            />
+            <embed className="w-full h-full object-cover" src={getImageUploadUrl(filePath, "docs")} />
           </div>
         ) : filePath && isValidGeoJsonExtension(filePath) ? (
           <div className="w-full h-40 mt-4 rounded-lg overflow-hidden border border-gray-600 flex items-center justify-center bg-gray-700">
