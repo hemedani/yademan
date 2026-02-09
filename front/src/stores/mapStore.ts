@@ -181,7 +181,7 @@ export const useMapStore = create<MapState>()(
           })),
         setAreaFilter: (area) =>
           set((state) => ({
-            filters: { ...state.filters, area },
+            filters: { ...state.filters, area: area || undefined },
           })),
 
         // Pathfinding setters

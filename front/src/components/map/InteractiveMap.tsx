@@ -646,6 +646,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
 
   // Initialize map
   useEffect(() => {
+    // Capture ref values to avoid stale closures in the cleanup function
+    const currentMarkers = markersRef.current;
+    const currentMarkerElements = markerElementsRef.current;
+    const currentMarkerRoots = markerRootsRef.current;
+
     if (!mapContainer.current) return;
 
     // Initialize the map
@@ -757,10 +762,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
 
     // Cleanup
     return () => {
-      // Capture current values of refs to avoid stale closures
-      const currentMarkers = markersRef.current;
-      const currentMarkerElements = markerElementsRef.current;
-      const currentMarkerRoots = markerRootsRef.current;
+      // Use the values captured at the start of the effect to avoid stale closures
       const currentAbortController = abortControllerRef.current;
       const currentMapMoveTimeout = mapMoveTimeoutRef.current;
       const currentMap = map.current;
@@ -776,7 +778,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         currentAbortController.abort();
       }
 
-      // Remove all markers
+      // Remove all markers using the values captured at the start of the effect
       currentMarkers.forEach((marker) => marker.remove());
       currentMarkers.clear();
       currentMarkerElements.forEach((el, id) => {
@@ -796,6 +798,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       currentMarkerRoots.clear();
 
       currentMap?.remove();
+
+      // Clean up the attribution control ref
       attributionControlRef.current = null;
     };
     // We intentionally limit dependencies to avoid unnecessary re-initializations
@@ -1198,132 +1202,136 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
   const [routeGeometry, setRouteGeometry] = useState<[number, number][]>([]);
 
   // Add the path to the map
-  const addPathToMap = (path: [number, number][]) => {
-    if (!map.current) return;
+  const addPathToMap = useCallback(
+    (path: [number, number][]) => {
+      if (!map.current) return;
 
-    // Remove existing route if it exists
-    if (map.current.getLayer("route")) {
-      map.current.removeLayer("route");
-    }
-    if (map.current.getSource("route")) {
-      map.current.removeSource("route");
-    }
-
-    // Add path if there's more than one point
-    if (path.length > 1) {
-      const route = {
-        type: "Feature",
-        geometry: {
-          type: "LineString",
-          coordinates: path,
-        },
-      };
-
-      // Add route source
-      map.current.addSource("route", {
-        type: "geojson",
-        data: route as any,
-      });
-
-      // Add route layer
-      map.current.addLayer({
-        id: "route",
-        type: "line",
-        source: "route",
-        layout: {
-          "line-join": "round",
-          "line-cap": "round",
-        },
-        paint: {
-          "line-color": "#3b82f6",
-          "line-width": 5,
-          "line-opacity": 0.75,
-        },
-      });
-
-      // Add start marker
-      if (pathfindingStartLocation) {
-        // Remove existing start marker if it exists
-        if (map.current.getLayer("start-marker")) {
-          map.current.removeLayer("start-marker");
-        }
-        if (map.current.getSource("start-marker")) {
-          map.current.removeSource("start-marker");
-        }
-
-        const startMarker = {
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: pathfindingStartLocation,
-          },
-          properties: {
-            title: "شما",
-          },
-        };
-
-        map.current.addSource("start-marker", {
-          type: "geojson",
-          data: startMarker,
-        });
-
-        map.current.addLayer({
-          id: "start-marker",
-          type: "circle",
-          source: "start-marker",
-          paint: {
-            "circle-radius": 10,
-            "circle-color": "#10B981", // Green for start
-            "circle-stroke-width": 2,
-            "circle-stroke-color": "#FFFFFF",
-          },
-        });
+      // Remove existing route if it exists
+      if (map.current.getLayer("route")) {
+        map.current.removeLayer("route");
+      }
+      if (map.current.getSource("route")) {
+        map.current.removeSource("route");
       }
 
-      // Add place markers for each stop
-      pathfindingPath.forEach((place, index) => {
-        const markerId = `place-marker-${index}`;
-        const sourceId = `place-source-${index}`;
-
-        // Remove existing marker if it exists
-        if (map && map.current && map.current.getLayer(markerId)) {
-          map.current.removeLayer(markerId);
-        }
-        if (map && map.current && map.current.getSource(sourceId)) {
-          map.current.removeSource(sourceId);
-        }
-
-        const placeMarker = {
+      // Add path if there's more than one point
+      if (path.length > 1) {
+        const route: GeoJSON.Feature<GeoJSON.LineString, Record<string, unknown>> = {
           type: "Feature",
           geometry: {
-            type: "Point",
-            coordinates: place.coordinates,
+            type: "LineString",
+            coordinates: path,
           },
-          properties: {
-            title: place.name,
-            index: index + 1,
-          },
+          properties: {},
         };
 
-        map.current!.addSource(sourceId, {
+        // Add route source
+        map.current.addSource("route", {
           type: "geojson",
-          data: placeMarker,
+          data: route,
         });
 
-        map.current!.addLayer({
-          id: markerId,
-          type: "circle",
-          source: sourceId,
+        // Add route layer
+        map.current.addLayer({
+          id: "route",
+          type: "line",
+          source: "route",
+          layout: {
+            "line-join": "round",
+            "line-cap": "round",
+          },
           paint: {
-            "circle-radius": index === 0 ? 10 : 8, // Make first place slightly larger
-            "circle-color": index === 0 ? "#F59E0B" : "#EF4444", // Yellow for first, red for others
-            "circle-stroke-width": 2,
-            "circle-stroke-color": "#FFFFFF",
+            "line-color": "#3b82f6",
+            "line-width": 5,
+            "line-opacity": 0.75,
           },
         });
-      });
-    }
-  };
+
+        // Add start marker
+        if (pathfindingStartLocation) {
+          // Remove existing start marker if it exists
+          if (map.current.getLayer("start-marker")) {
+            map.current.removeLayer("start-marker");
+          }
+          if (map.current.getSource("start-marker")) {
+            map.current.removeSource("start-marker");
+          }
+
+          const startMarker: GeoJSON.Feature<GeoJSON.Point, { title: string }> = {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: pathfindingStartLocation,
+            },
+            properties: {
+              title: "شما",
+            },
+          };
+
+          map.current.addSource("start-marker", {
+            type: "geojson",
+            data: startMarker,
+          });
+
+          map.current.addLayer({
+            id: "start-marker",
+            type: "circle",
+            source: "start-marker",
+            paint: {
+              "circle-radius": 10,
+              "circle-color": "#10B981", // Green for start
+              "circle-stroke-width": 2,
+              "circle-stroke-color": "#FFFFFF",
+            },
+          });
+        }
+
+        // Add place markers for each stop
+        pathfindingPath.forEach((place, index) => {
+          const markerId = `place-marker-${index}`;
+          const sourceId = `place-source-${index}`;
+
+          // Remove existing marker if it exists
+          if (map && map.current && map.current.getLayer(markerId)) {
+            map.current.removeLayer(markerId);
+          }
+          if (map && map.current && map.current.getSource(sourceId)) {
+            map.current.removeSource(sourceId);
+          }
+
+          const placeMarker: GeoJSON.Feature<GeoJSON.Point, { title: string; index: number }> = {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: place.coordinates,
+            },
+            properties: {
+              title: place.name,
+              index: index + 1,
+            },
+          };
+
+          map.current!.addSource(sourceId, {
+            type: "geojson",
+            data: placeMarker,
+          });
+
+          map.current!.addLayer({
+            id: markerId,
+            type: "circle",
+            source: sourceId,
+            paint: {
+              "circle-radius": index === 0 ? 10 : 8, // Make first place slightly larger
+              "circle-color": index === 0 ? "#F59E0B" : "#EF4444", // Yellow for first, red for others
+              "circle-stroke-width": 2,
+              "circle-stroke-color": "#FFFFFF",
+            },
+          });
+        });
+      }
+    },
+    [map, pathfindingStartLocation, pathfindingPath],
+  );
 
   // Effect to handle path updates
   useEffect(() => {
@@ -1389,21 +1397,22 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       // const route = await response.json();
 
       // For now, draw a simple line
-      const route = {
+      const route: GeoJSON.Feature<GeoJSON.LineString, Record<string, unknown>> = {
         type: "Feature",
         geometry: {
           type: "LineString",
           coordinates: [start, end],
         },
+        properties: {},
       };
 
       // Add route layer
       if (map.current.getSource("route")) {
-        (map.current.getSource("route") as any).setData(route);
+        (map.current.getSource("route") as maplibregl.GeoJSONSource).setData(route);
       } else {
         map.current.addSource("route", {
           type: "geojson",
-          data: route as any,
+          data: route,
         });
 
         map.current.addLayer({

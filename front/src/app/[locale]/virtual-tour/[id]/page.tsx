@@ -7,7 +7,6 @@ import { useLocale } from "next-intl";
 import dynamic from "next/dynamic";
 import { get as getVirtualTour } from "@/app/actions/virtual_tour/get";
 import { virtual_tourSchema } from "@/types/declarations/selectInp";
-import { getLesanBaseUrl } from "@/services/api";
 import { getImageUploadUrl } from "@/utils/imageUrl";
 
 // Dynamically import PhotoSphereViewer to avoid SSR issues
@@ -46,7 +45,6 @@ const VirtualTourPage = () => {
               _id: 1,
               name: 1,
               mimType: 1,
-              size: 1,
               alt_text: 1,
             },
             place: {

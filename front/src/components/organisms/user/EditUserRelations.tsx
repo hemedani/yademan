@@ -12,14 +12,11 @@ import { UploadImage } from "@/components/molecules/UploadFile";
 export const UpdateUserRelationSchema = z.object({
   _id: z.string(),
   avatar: z.any().optional(), // برای عکس پروفایل
-  nationalCard: z.any().optional(), // برای کارت ملی
+  national_card: z.any().optional(), // برای کارت ملی
 });
 
-export type UpdateUserRelationSchemaType = z.infer<
-  typeof UpdateUserRelationSchema
->;
-export type UpdateUserRelationSet =
-  ReqType["main"]["user"]["updateUserRelations"]["set"];
+export type UpdateUserRelationSchemaType = z.infer<typeof UpdateUserRelationSchema>;
+export type UpdateUserRelationSet = ReqType["main"]["user"]["updateUserRelations"]["set"];
 
 export const EditUserRelations = ({
   _id,
@@ -56,9 +53,7 @@ export const EditUserRelations = ({
           <span className="text-gray-300">عکس پروفایل کاربری</span>
           <UploadImage
             inputName="avatar"
-            setUploadedImage={(uploaded: string) =>
-              setValue("avatar", uploaded)
-            }
+            setUploadedImage={(uploaded: string) => setValue("avatar", uploaded)}
             type="image"
             token={token}
             filePath={avatar ? avatar.name : undefined}
@@ -67,10 +62,8 @@ export const EditUserRelations = ({
         <div className="w-1/2 p-4">
           <span className="text-gray-300">عکس کارت ملی</span>
           <UploadImage
-            inputName="nationalCard"
-            setUploadedImage={(uploaded: string) =>
-              setValue("nationalCard", uploaded)
-            }
+            inputName="national_card"
+            setUploadedImage={(uploaded: string) => setValue("national_card", uploaded)}
             type="image"
             token={token}
             filePath={national_card ? national_card.name : undefined}

@@ -3,14 +3,15 @@ import { translateModelNameToPersian } from "@/utils/helper";
 import { Metadata } from "next";
 
 interface PageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 /**
  * Edit Place page component
  */
-export default async function EditPlace({ params }: PageProps) {
-  const placeId = await params.id;
+export default async function EditPlace(props: PageProps) {
+  const params = await props.params;
+  const placeId = params.id;
 
   return (
     <div className="relative min-h-full">
@@ -21,9 +22,7 @@ export default async function EditPlace({ params }: PageProps) {
             <h1 className="text-2xl md:text-3xl text-white font-bold">
               ویرایش {translateModelNameToPersian("place")}
             </h1>
-            <p className="text-gray-400 mt-2 text-sm">
-              اطلاعات مکان را ویرایش کنید
-            </p>
+            <p className="text-gray-400 mt-2 text-sm">اطلاعات مکان را ویرایش کنید</p>
           </div>
         </div>
       </div>
@@ -36,7 +35,7 @@ export default async function EditPlace({ params }: PageProps) {
 /**
  * Generate metadata for the page
  */
-export function generateMetadata({}: PageProps): Metadata {
+export function generateMetadata(): Metadata {
   return {
     title: `ویرایش ${translateModelNameToPersian("place")} | نقشه شهر`,
   };

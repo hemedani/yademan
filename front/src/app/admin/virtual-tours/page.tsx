@@ -50,9 +50,7 @@ export default async function VirtualToursManagement({
   });
 
   const token = (await cookies()).get("token");
-  const lesanUrl = process.env.LESAN_URL
-    ? process.env.LESAN_URL
-    : "http://localhost:1382";
+  const lesanUrl = process.env.LESAN_URL ? process.env.LESAN_URL : "http://localhost:1382";
 
   return (
     <div className="relative min-h-full text-white">
@@ -74,29 +72,15 @@ export default async function VirtualToursManagement({
           href="/admin/virtual-tours/create"
           className="px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-lg hover:from-pink-700 hover:to-purple-700 transition-all duration-300 flex items-center gap-2 shadow-lg shadow-pink-500/30"
         >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 4v16m8-8H4"
-            />
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
           ایجاد تور مجازی جدید
         </Link>
       </div>
 
       <SearchBox title="name" defaultValue={name} />
-      <VirtualToursDashboard
-        data={data.success ? data.body : []}
-        model="virtual_tour"
-        remove={remove}
-      />
+      <VirtualToursDashboard data={data.success ? data.body : []} remove={remove} />
       <Pagination countPage={counted?.body.qty} initialPage={+page} />
     </div>
   );

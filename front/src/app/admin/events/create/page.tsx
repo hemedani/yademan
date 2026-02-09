@@ -102,12 +102,10 @@ const CreateEventPage: React.FC = () => {
       });
 
       if (response && response.success) {
-        return response.body.map(
-          (item: { _id: string; first_name: string; last_name: string }) => ({
-            value: item._id,
-            label: `${item.first_name} ${item.last_name}`,
-          }),
-        );
+        return response.body.map((item: { _id: string; first_name: string; last_name: string }) => ({
+          value: item._id,
+          label: `${item.first_name} ${item.last_name}`,
+        }));
       }
       return [];
     } catch (error) {
@@ -157,12 +155,10 @@ const CreateEventPage: React.FC = () => {
       });
 
       if (response && response.success) {
-        return response.body.data.map(
-          (item: { _id: string; name: string }) => ({
-            value: item._id,
-            label: item.name,
-          }),
-        );
+        return response.body.data.map((item: { _id: string; name: string }) => ({
+          value: item._id,
+          label: item.name,
+        }));
       }
       return [];
     } catch (error) {
@@ -175,10 +171,7 @@ const CreateEventPage: React.FC = () => {
   const createEvent = async (formData: EventFormValues) => {
     try {
       // Get token from cookies
-      const token =
-        typeof window !== "undefined"
-          ? Cookies.get("token") || undefined
-          : undefined;
+      const token = typeof window !== "undefined" ? Cookies.get("token") || undefined : undefined;
       const api = AppApi(undefined, token);
 
       // Prepare the event data
@@ -187,12 +180,8 @@ const CreateEventPage: React.FC = () => {
         status: formData.status || "draft", // Ensure default status
         isPublic: formData.isPublic ?? false, // Ensure default isPublic
         registrationRequired: formData.registrationRequired ?? false, // Ensure default registrationRequired
-        startTime: formData.startTime
-          ? new Date(formData.startTime).toISOString()
-          : undefined,
-        endTime: formData.endTime
-          ? new Date(formData.endTime).toISOString()
-          : undefined,
+        startTime: formData.startTime ? new Date(formData.startTime).toISOString() : undefined,
+        endTime: formData.endTime ? new Date(formData.endTime).toISOString() : undefined,
         organizer: formData.organizer || undefined,
         tags: formData.tags || undefined,
         placeIds: formData.placeIds || undefined,
@@ -259,21 +248,14 @@ const CreateEventPage: React.FC = () => {
         <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
           ایجاد رویداد جدید
         </h1>
-        <p className="text-gray-400 mt-2">
-          اطلاعات رویداد شهرداری را وارد کنید
-        </p>
+        <p className="text-gray-400 mt-2">اطلاعات رویداد شهرداری را وارد کنید</p>
       </div>
 
       <Link
         href="/admin/events"
         className="inline-flex items-center text-pink-400 hover:text-pink-300 mb-6"
       >
-        <svg
-          className="w-4 h-4 ml-1"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -324,9 +306,7 @@ const CreateEventPage: React.FC = () => {
               control={control}
               render={({ field }) => (
                 <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium text-gray-300 text-right">
-                    وضعیت
-                  </label>
+                  <label className="text-sm font-medium text-gray-300 text-right">وضعیت</label>
                   <select
                     {...field}
                     className="w-full px-4 py-2 border border-gray-600 bg-gray-700 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 text-white"
@@ -468,10 +448,7 @@ const CreateEventPage: React.FC = () => {
                     onChange={(e) => field.onChange(e.target.checked)}
                     className="h-4 w-4 text-pink-500 focus:ring-pink-500 bg-gray-700 border-gray-600 rounded"
                   />
-                  <label
-                    htmlFor="isPublic"
-                    className="text-sm font-medium text-gray-300 text-right"
-                  >
+                  <label htmlFor="isPublic" className="text-sm font-medium text-gray-300 text-right">
                     عمومی
                   </label>
                 </div>
@@ -507,7 +484,6 @@ const CreateEventPage: React.FC = () => {
           <div className="w-1/2 p-4">
             <AsyncSelectBox
               name="organizer"
-              control={control}
               label="سازمان‌دهنده"
               setValue={setValue}
               loadOptions={loadUsersOptions}
@@ -548,23 +524,17 @@ const CreateEventPage: React.FC = () => {
 
           {/* Thumbnail Upload */}
           <div className="w-1/2 p-4">
-            <span className="text-sm font-medium text-gray-300 block mb-2 text-right">
-              تصویر شاخص
-            </span>
+            <span className="text-sm font-medium text-gray-300 block mb-2 text-right">تصویر شاخص</span>
             <UploadImage
               inputName="thumbnail"
               setUploadedImage={(uploaded: string) =>
                 setValue("thumbnail", uploaded, { shouldValidate: true })
               }
               type="image"
-              token={
-                typeof window !== "undefined" ? Cookies.get("token") : undefined
-              }
+              token={typeof window !== "undefined" ? Cookies.get("token") : undefined}
             />
             {errors.thumbnail && (
-              <p className="text-red-500 text-xs mt-1 text-right">
-                {errors.thumbnail.message}
-              </p>
+              <p className="text-red-500 text-xs mt-1 text-right">{errors.thumbnail.message}</p>
             )}
           </div>
 
@@ -583,11 +553,7 @@ const CreateEventPage: React.FC = () => {
                   });
                 }}
                 type="image"
-                token={
-                  typeof window !== "undefined"
-                    ? Cookies.get("token")
-                    : undefined
-                }
+                token={typeof window !== "undefined" ? Cookies.get("token") : undefined}
               />
               {galleryImages.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-2">
@@ -598,9 +564,7 @@ const CreateEventPage: React.FC = () => {
               )}
             </div>
             {errors.gallery && (
-              <p className="text-red-500 text-xs mt-1 text-right">
-                {errors.gallery.message}
-              </p>
+              <p className="text-red-500 text-xs mt-1 text-right">{errors.gallery.message}</p>
             )}
           </div>
         </div>

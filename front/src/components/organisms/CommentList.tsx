@@ -72,9 +72,7 @@ const CommentList: React.FC<CommentListProps> = ({
             key={comment._id || `comment-${index}`}
             id={comment._id!}
             avatar={
-              comment.user?.avatar?.name
-                ? `/uploads/images/${comment.user.avatar.name}`
-                : undefined
+              comment.user?.avatar?.name ? `/uploads/images/${comment.user.avatar.name}` : undefined
             }
             userName={
               `${comment.user?.first_name || ""} ${comment.user?.last_name || ""}`.trim() ||
@@ -82,7 +80,11 @@ const CommentList: React.FC<CommentListProps> = ({
             }
             content={comment.text}
             rating={comment.rating}
-            timestamp={new Date(comment.createdAt).toLocaleDateString()}
+            timestamp={
+              comment.createdAt
+                ? new Date(comment.createdAt).toLocaleDateString()
+                : t("Comments.unknownDate")
+            }
             likes={0} // The schema doesn't have a direct likes count
             onLike={onLike}
             onReply={onReply}

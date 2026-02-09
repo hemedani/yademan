@@ -8,11 +8,22 @@ import L from "leaflet";
 // Fix for "wrong event specified: touchleave" error
 // This extends Leaflet's capabilities for touch devices
 if (typeof window !== "undefined") {
-  L.Draw.Polyline.prototype._onTouch = (L.Util as any).falseFn;
-  L.Draw.Polygon.prototype._onTouch = (L.Util as any).falseFn;
-  L.Draw.Rectangle.prototype._onTouch = (L.Util as any).falseFn;
-  L.Draw.Circle.prototype._onTouch = (L.Util as any).falseFn;
-  L.Draw.Marker.prototype._onTouch = (L.Util as any).falseFn;
+  // Check if _onTouch method exists before trying to override it
+  if ("_onTouch" in L.Draw.Polyline.prototype) {
+    (L.Draw.Polyline.prototype as any)._onTouch = L.Util.falseFn;
+  }
+  if ("_onTouch" in L.Draw.Polygon.prototype) {
+    (L.Draw.Polygon.prototype as any)._onTouch = L.Util.falseFn;
+  }
+  if ("_onTouch" in L.Draw.Rectangle.prototype) {
+    (L.Draw.Rectangle.prototype as any)._onTouch = L.Util.falseFn;
+  }
+  if ("_onTouch" in L.Draw.Circle.prototype) {
+    (L.Draw.Circle.prototype as any)._onTouch = L.Util.falseFn;
+  }
+  if ("_onTouch" in L.Draw.Marker.prototype) {
+    (L.Draw.Marker.prototype as any)._onTouch = L.Util.falseFn;
+  }
 }
 
 interface SimpleDrawingProps {
@@ -33,12 +44,8 @@ const SimpleDrawing: React.FC<SimpleDrawingProps> = ({
   // Disable touch events that cause problems
   useEffect(() => {
     // Set Leaflet's tap handler to be disabled for browsers where touch !== pointer
-    if (
-      typeof window !== "undefined" &&
-      L.Browser.touch &&
-      !L.Browser.pointer
-    ) {
-      L.DomEvent.disableClickPropagation = (L.DomUtil as any).falseFn;
+    if (typeof window !== "undefined" && L.Browser.touch && !L.Browser.pointer) {
+      (L.DomEvent as any).disableClickPropagation = L.Util.falseFn;
     }
   }, []);
 
@@ -100,8 +107,7 @@ const SimpleDrawing: React.FC<SimpleDrawingProps> = ({
             allowIntersection: false,
             drawError: {
               color: "#e1e100",
-              message:
-                "<strong>Error!</strong> Polygon cannot intersect itself!",
+              message: "<strong>Error!</strong> Polygon cannot intersect itself!",
             },
             shapeOptions: {
               color: "#2563eb",

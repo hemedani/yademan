@@ -9,9 +9,7 @@ interface AntiquitySliderProps {
   className?: string;
 }
 
-const AntiquitySlider: React.FC<AntiquitySliderProps> = ({
-  className = "",
-}) => {
+const AntiquitySlider: React.FC<AntiquitySliderProps> = ({ className = "" }) => {
   const t = useTranslations("AntiquitySlider");
   const [value, setValue] = useState<number>(0);
   const [inputValue, setInputValue] = useState<string>("0");
@@ -30,7 +28,6 @@ const AntiquitySlider: React.FC<AntiquitySliderProps> = ({
   // Get and update map store
   const antiquityFilter = useMapStore((state) => state.filters.antiquity);
   const setAntiquityFilter = useMapStore((state) => state.setAntiquityFilter);
-  const places = useMapStore((state) => state.places);
 
   // Initialize value from store
   useEffect(() => {
@@ -96,11 +93,7 @@ const AntiquitySlider: React.FC<AntiquitySliderProps> = ({
     setInputValue(value);
 
     const numValue = parseInt(value, 10);
-    if (
-      !isNaN(numValue) &&
-      numValue >= minAntiquity &&
-      numValue <= maxAntiquity
-    ) {
+    if (!isNaN(numValue) && numValue >= minAntiquity && numValue <= maxAntiquity) {
       setValue(numValue);
     }
   };
@@ -154,9 +147,7 @@ const AntiquitySlider: React.FC<AntiquitySliderProps> = ({
               d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
             />
           </svg>
-          <h3 className="text-white font-semibold text-lg">
-            {t("antiquityFilter")}
-          </h3>
+          <h3 className="text-white font-semibold text-lg">{t("antiquityFilter")}</h3>
         </div>
 
         <div className="flex items-center gap-4 w-full md:w-auto">
@@ -196,22 +187,14 @@ const AntiquitySlider: React.FC<AntiquitySliderProps> = ({
           >
             {isPlaying ? (
               <>
-                <svg
-                  className="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
                 </svg>
                 <span>{t("pause")}</span>
               </>
             ) : (
               <>
-                <svg
-                  className="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z" />
                 </svg>
                 <span>{t("play")}</span>
@@ -238,13 +221,9 @@ const AntiquitySlider: React.FC<AntiquitySliderProps> = ({
           onClick={(e) => {
             // Handle click to move slider
             const sliderRect = e.currentTarget.getBoundingClientRect();
-            const position = Math.min(
-              Math.max(0, e.clientX - sliderRect.left),
-              sliderRect.width,
-            );
+            const position = Math.min(Math.max(0, e.clientX - sliderRect.left), sliderRect.width);
             const newValue = Math.round(
-              (position / sliderRect.width) * (maxAntiquity - minAntiquity) +
-                minAntiquity,
+              (position / sliderRect.width) * (maxAntiquity - minAntiquity) + minAntiquity,
             );
 
             if (newValue >= minAntiquity && newValue <= maxAntiquity) {
@@ -272,22 +251,22 @@ const AntiquitySlider: React.FC<AntiquitySliderProps> = ({
               setIsPlaying(false);
 
               // Calculate new value based on drag position
-              const sliderRect =
-                event.currentTarget.parentElement?.getBoundingClientRect();
-              if (sliderRect) {
-                const position = Math.min(
-                  Math.max(0, info.point.x - sliderRect.left),
-                  sliderRect.width,
-                );
-                const newValue = Math.round(
-                  (position / sliderRect.width) *
-                    (maxAntiquity - minAntiquity) +
-                    minAntiquity,
-                );
+              if (event.currentTarget) {
+                const targetElement = event.currentTarget as HTMLElement;
+                const sliderRect = targetElement.parentElement?.getBoundingClientRect();
+                if (sliderRect) {
+                  const position = Math.min(
+                    Math.max(0, info.point.x - sliderRect.left),
+                    sliderRect.width,
+                  );
+                  const newValue = Math.round(
+                    (position / sliderRect.width) * (maxAntiquity - minAntiquity) + minAntiquity,
+                  );
 
-                if (newValue >= minAntiquity && newValue <= maxAntiquity) {
-                  setValue(newValue);
-                  setInputValue(newValue.toString());
+                  if (newValue >= minAntiquity && newValue <= maxAntiquity) {
+                    setValue(newValue);
+                    setInputValue(newValue.toString());
+                  }
                 }
               }
             }}

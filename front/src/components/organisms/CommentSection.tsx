@@ -9,10 +9,7 @@ import NeonButton from "../atoms/NeonButton";
 import CommentForm from "../molecules/CommentForm";
 import CommentList from "./CommentList";
 import { commentSchema, userSchema } from "@/types/declarations/selectInp";
-import {
-  addComment as createComment,
-  getComments,
-} from "@/app/actions/comment";
+import { addComment as createComment, getComments } from "@/app/actions/comment";
 
 // Define a minimal comment type that picks only the fields CommentSection needs from commentSchema
 // Using Pick to extract specific fields and creating subtypes for nested objects
@@ -27,13 +24,7 @@ export type MinimalComment = {
   updatedAt: commentSchema["updatedAt"];
   user: Pick<
     userSchema,
-    | "_id"
-    | "first_name"
-    | "last_name"
-    | "email"
-    | "level"
-    | "is_verified"
-    | "avatar"
+    "_id" | "first_name" | "last_name" | "email" | "level" | "is_verified" | "avatar"
   >;
 } & {
   place?: Pick<
@@ -42,15 +33,11 @@ export type MinimalComment = {
     | "name"
     | "description"
     | "slug"
-    | "center"
-    | "area"
     | "address"
     | "contact"
     | "hoursOfOperation"
-    | "meta"
     | "status"
-    | "createdAt"
-    | "updatedAt"
+    | "antiquity"
   >;
 }; // Allow optional place property when passed from parent components like PlaceDetailsModal
 
@@ -71,13 +58,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({
   const { isAuthenticated, user } = useAuth();
 
   // Ensure placeComments is always an array
-  const normalizedPlaceComments = Array.isArray(placeComments)
-    ? placeComments
-    : [];
+  const normalizedPlaceComments = Array.isArray(placeComments) ? placeComments : [];
 
-  const [comments, setComments] = useState<MinimalComment[]>(
-    normalizedPlaceComments,
-  ); // Start with embedded comments
+  const [comments, setComments] = useState<MinimalComment[]>(normalizedPlaceComments); // Start with embedded comments
   const [loading, setLoading] = useState(false); // Not loading initially since using embedded comments
   // No sorting functionality for now - will be implemented in future backend changes
   const [hasMore, setHasMore] = useState(true);
@@ -115,10 +98,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
                 _id: 1,
                 name: 1,
                 mimType: 1,
-                size: 1,
                 alt_text: 1,
-                createdAt: 1,
-                updatedAt: 1,
               },
             },
           },
@@ -180,11 +160,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
     toast.success(t("Comments.likeSuccess"));
   };
 
-  const handleReply = async (
-    parentId: string,
-    content: string,
-    rating: number | null,
-  ) => {
+  const handleReply = async (parentId: string, content: string, rating: number | null) => {
     if (!isAuthenticated) {
       toast.error(t("Comments.loginRequired"));
       return;

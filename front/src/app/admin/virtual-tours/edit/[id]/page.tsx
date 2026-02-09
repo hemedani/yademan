@@ -6,12 +6,9 @@ import { gets } from "@/app/actions/place/gets";
 import { get } from "@/app/actions/virtual_tour/get";
 import { FormEditVirtualTour } from "@/components/template/FormEditVirtualTour";
 
-export default async function EditVirtualTourPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function EditVirtualTourPage(props: { params: Promise<{ id: string }> }) {
   const token = (await cookies()).get("token");
+  const params = await props.params;
   const { id } = params;
 
   // Fetch the virtual tour data
@@ -87,14 +84,8 @@ export default async function EditVirtualTourPage({
         </div>
       </div>
 
-      <Suspense
-        fallback={<div className="p-8 text-white">در حال بارگذاری...</div>}
-      >
-        <FormEditVirtualTour
-          token={token?.value}
-          places={places}
-          tourData={tourData}
-        />
+      <Suspense fallback={<div className="p-8 text-white">در حال بارگذاری...</div>}>
+        <FormEditVirtualTour token={token?.value} places={places} tourData={tourData} />
       </Suspense>
     </div>
   );
