@@ -38,7 +38,7 @@ export const update = async (
           english_name: 1,
           area: 1,
           center: 1,
-        } as any,
+        },
       },
     },
     { token: token?.value },

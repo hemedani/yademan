@@ -28,7 +28,6 @@ export const getUser = async (_id: string) => {
             _id: 1,
             name: 1,
             mimType: 1,
-            size: 1,
           },
         },
       },

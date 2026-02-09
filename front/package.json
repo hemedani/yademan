@@ -5,8 +5,10 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
+    "build:strict": "npm run type-check && npm run lint && next build",
     "start": "next start -p ${APP_PORT:-3000}",
-    "lint": "next lint"
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.4",
