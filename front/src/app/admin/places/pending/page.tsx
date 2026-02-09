@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 interface PendingPlace {
@@ -130,22 +131,17 @@ export default function PendingPlacesPage() {
     const matchesSearch =
       place.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       place.address.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      !selectedCategory || place.category._id === selectedCategory;
+    const matchesCategory = !selectedCategory || place.category._id === selectedCategory;
 
     return matchesSearch && matchesCategory;
   });
 
   const totalPages = Math.ceil(filteredPlaces.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedPlaces = filteredPlaces.slice(
-    startIndex,
-    startIndex + itemsPerPage,
-  );
+  const paginatedPlaces = filteredPlaces.slice(startIndex, startIndex + itemsPerPage);
 
   const handleApprove = async (placeId: string) => {
-    if (!confirm("آیا مطمئن هستید که می‌خواهید این مکان را تأیید کنید؟"))
-      return;
+    if (!confirm("آیا مطمئن هستید که می‌خواهید این مکان را تأیید کنید؟")) return;
 
     setActionLoading(true);
     try {
@@ -193,9 +189,7 @@ export default function PendingPlacesPage() {
 
   const formatPersianNumber = (num: number): string => {
     const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-    return num
-      .toString()
-      .replace(/[0-9]/g, (digit) => persianDigits[parseInt(digit)]);
+    return num.toString().replace(/[0-9]/g, (digit) => persianDigits[parseInt(digit)]);
   };
 
   if (loading) {
@@ -213,10 +207,7 @@ export default function PendingPlacesPage() {
   }
 
   return (
-    <div
-      className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-slate-900 p-6"
-      dir="rtl"
-    >
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-slate-900 p-6" dir="rtl">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -226,8 +217,7 @@ export default function PendingPlacesPage() {
                 مکان‌های در انتظار تأیید
               </h1>
               <p className="text-gray-400 mt-2">
-                {formatPersianNumber(pendingPlaces.length)} مکان در انتظار بررسی
-                و تأیید شما
+                {formatPersianNumber(pendingPlaces.length)} مکان در انتظار بررسی و تأیید شما
               </p>
             </div>
             <button
@@ -242,9 +232,7 @@ export default function PendingPlacesPage() {
           <div className="bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-gray-700/60">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  جستجو
-                </label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">جستجو</label>
                 <input
                   type="text"
                   value={searchTerm}
@@ -277,9 +265,7 @@ export default function PendingPlacesPage() {
         {paginatedPlaces.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-6xl mb-4">🏛️</div>
-            <h3 className="text-xl font-bold text-white mb-2">
-              هیچ مکان در انتظاری وجود ندارد
-            </h3>
+            <h3 className="text-xl font-bold text-white mb-2">هیچ مکان در انتظاری وجود ندارد</h3>
             <p className="text-gray-400">همه مکان‌ها بررسی و تأیید شده‌اند</p>
           </div>
         ) : (
@@ -294,18 +280,17 @@ export default function PendingPlacesPage() {
                   <div className="lg:w-64">
                     <div className="aspect-video bg-gray-700 rounded-xl overflow-hidden">
                       {place.images && place.images.length > 0 ? (
-                        <img
+                        <Image
                           src={place.images[0]}
                           alt={place.name}
+                          width={300}
+                          height={200}
                           className="w-full h-full object-cover"
+                          unoptimized={true}
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-gray-400">
-                          <svg
-                            className="w-12 h-12"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
+                          <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
                             <path
                               fillRule="evenodd"
                               d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
@@ -321,12 +306,8 @@ export default function PendingPlacesPage() {
                   <div className="flex-1">
                     <div className="flex justify-between items-start mb-4">
                       <div>
-                        <h3 className="text-xl font-bold text-white mb-2">
-                          {place.name}
-                        </h3>
-                        <p className="text-gray-300 mb-2">
-                          {place.shortDescription}
-                        </p>
+                        <h3 className="text-xl font-bold text-white mb-2">{place.name}</h3>
+                        <p className="text-gray-300 mb-2">{place.shortDescription}</p>
                         <div className="flex items-center text-sm text-gray-400 mb-2">
                           <svg
                             className="w-4 h-4 ml-2"
@@ -389,27 +370,18 @@ export default function PendingPlacesPage() {
 
                     {/* Submitter Info */}
                     <div className="mb-4 p-3 bg-gray-700/50 rounded-lg">
-                      <h4 className="text-sm font-medium text-gray-300 mb-1">
-                        ارسال شده توسط:
-                      </h4>
+                      <h4 className="text-sm font-medium text-gray-300 mb-1">ارسال شده توسط:</h4>
                       <div className="text-sm text-gray-400">
                         <p>
-                          {place.submittedBy.first_name}{" "}
-                          {place.submittedBy.last_name}
+                          {place.submittedBy.first_name} {place.submittedBy.last_name}
                         </p>
                         <p>{place.submittedBy.email}</p>
-                        <p>
-                          تاریخ ارسال: {formatPersianDate(place.submittedAt)}
-                        </p>
+                        <p>تاریخ ارسال: {formatPersianDate(place.submittedAt)}</p>
                       </div>
                       {place.reasonForPending && (
                         <div className="mt-2">
-                          <p className="text-sm font-medium text-amber-500">
-                            دلیل در انتظار:
-                          </p>
-                          <p className="text-sm text-amber-400">
-                            {place.reasonForPending}
-                          </p>
+                          <p className="text-sm font-medium text-amber-500">دلیل در انتظار:</p>
+                          <p className="text-sm text-amber-400">{place.reasonForPending}</p>
                         </div>
                       )}
                     </div>
@@ -480,9 +452,7 @@ export default function PendingPlacesPage() {
               ))}
 
               <button
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                }
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}
                 className="px-3 py-2 text-sm font-medium text-gray-400 hover:text-gray-200 disabled:opacity-50"
               >
@@ -504,12 +474,7 @@ export default function PendingPlacesPage() {
                   onClick={() => setShowModal(false)}
                   className="p-2 hover:bg-gray-700 rounded-lg transition-colors duration-200 text-gray-300"
                 >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -528,9 +493,7 @@ export default function PendingPlacesPage() {
 
                 <div>
                   <h3 className="font-bold text-gray-300 mb-2">توضیحات کامل</h3>
-                  <p className="text-gray-300 leading-relaxed">
-                    {selectedPlace.description}
-                  </p>
+                  <p className="text-gray-300 leading-relaxed">{selectedPlace.description}</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -541,9 +504,7 @@ export default function PendingPlacesPage() {
 
                   <div>
                     <h3 className="font-bold text-gray-300 mb-2">دسته‌بندی</h3>
-                    <p className="text-gray-300">
-                      {selectedPlace.category.name}
-                    </p>
+                    <p className="text-gray-300">{selectedPlace.category.name}</p>
                   </div>
 
                   {selectedPlace.phone && (
@@ -573,11 +534,14 @@ export default function PendingPlacesPage() {
                     <h3 className="font-bold text-gray-300 mb-2">تصاویر</h3>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                       {selectedPlace.images.map((image, index) => (
-                        <img
+                        <Image
                           key={index}
                           src={image}
                           alt={`${selectedPlace.name} - تصویر ${index + 1}`}
+                          width={128}
+                          height={128}
                           className="w-full h-32 object-cover rounded-lg"
+                          unoptimized={true}
                         />
                       ))}
                     </div>

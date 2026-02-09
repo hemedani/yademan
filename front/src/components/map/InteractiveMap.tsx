@@ -539,9 +539,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     setIsFetchingPlaces,
     setPlaces,
     updateMarkers,
-    places.length, // Add places.length to the dependency array for the conditional logic
     filters,
-    map,
     createCacheKey,
     searchQuery,
   ]);
@@ -759,23 +757,32 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
 
     // Cleanup
     return () => {
+      // Capture current values of refs to avoid stale closures
+      const currentMarkers = markersRef.current;
+      const currentMarkerElements = markerElementsRef.current;
+      const currentMarkerRoots = markerRootsRef.current;
+      const currentAbortController = abortControllerRef.current;
+      const currentMapMoveTimeout = mapMoveTimeoutRef.current;
+      const currentMap = map.current;
+      const currentAttributionControl = attributionControlRef.current;
+
       // Clear any pending timeouts
-      if (mapMoveTimeoutRef.current) {
-        clearTimeout(mapMoveTimeoutRef.current);
+      if (currentMapMoveTimeout) {
+        clearTimeout(currentMapMoveTimeout);
       }
 
       // Cancel any ongoing requests
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
+      if (currentAbortController) {
+        currentAbortController.abort();
       }
 
       // Remove all markers
-      markersRef.current.forEach((marker) => marker.remove());
-      markersRef.current.clear();
-      markerElementsRef.current.forEach((el, id) => {
+      currentMarkers.forEach((marker) => marker.remove());
+      currentMarkers.clear();
+      currentMarkerElements.forEach((el, id) => {
         if (el && el.parentElement) {
           // Unmount the React component properly
-          const root = markerRootsRef.current.get(id);
+          const root = currentMarkerRoots.get(id);
           if (root) {
             root.unmount();
           }
@@ -785,10 +792,10 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           }
         }
       });
-      markerElementsRef.current.clear();
-      markerRootsRef.current.clear();
+      currentMarkerElements.clear();
+      currentMarkerRoots.clear();
 
-      map.current?.remove();
+      currentMap?.remove();
       attributionControlRef.current = null;
     };
     // We intentionally limit dependencies to avoid unnecessary re-initializations
@@ -1370,7 +1377,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       }
       setRouteGeometry([]);
     }
-  }, [isPathfindingActive, pathfindingRouteGeometry, pathfindingPath]);
+  }, [isPathfindingActive, pathfindingRouteGeometry, pathfindingPath, addPathToMap]);
 
   // Handle route calculation
   const calculateRoute = async (start: [number, number], end: [number, number]) => {

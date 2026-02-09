@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 
 interface GalleryImage {
   _id: string;
@@ -122,9 +123,7 @@ export default function GalleryPage() {
 
   const handleImageSelect = (imageId: string) => {
     setSelectedImages((prev) =>
-      prev.includes(imageId)
-        ? prev.filter((id) => id !== imageId)
-        : [...prev, imageId],
+      prev.includes(imageId) ? prev.filter((id) => id !== imageId) : [...prev, imageId],
     );
   };
 
@@ -137,11 +136,7 @@ export default function GalleryPage() {
   };
 
   const handleDelete = async (imageIds: string[]) => {
-    if (
-      !confirm(
-        `آیا مطمئن هستید که می‌خواهید ${imageIds.length} تصویر را حذف کنید؟`,
-      )
-    ) {
+    if (!confirm(`آیا مطمئن هستید که می‌خواهید ${imageIds.length} تصویر را حذف کنید؟`)) {
       return;
     }
 
@@ -165,17 +160,12 @@ export default function GalleryPage() {
     (image) =>
       image.originalName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       image.alt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      image.tags.some((tag) =>
-        tag.toLowerCase().includes(searchTerm.toLowerCase()),
-      ),
+      image.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase())),
   );
 
   const totalPages = Math.ceil(filteredImages.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedImages = filteredImages.slice(
-    startIndex,
-    startIndex + itemsPerPage,
-  );
+  const paginatedImages = filteredImages.slice(startIndex, startIndex + itemsPerPage);
 
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return "۰ بایت";
@@ -184,17 +174,13 @@ export default function GalleryPage() {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
     const size = parseFloat((bytes / Math.pow(k, i)).toFixed(2));
-    const persianSize = size
-      .toString()
-      .replace(/[0-9]/g, (digit) => persianDigits[parseInt(digit)]);
+    const persianSize = size.toString().replace(/[0-9]/g, (digit) => persianDigits[parseInt(digit)]);
     return persianSize + " " + sizes[i];
   };
 
   const formatPersianNumber = (num: number): string => {
     const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-    return num
-      .toString()
-      .replace(/[0-9]/g, (digit) => persianDigits[parseInt(digit)]);
+    return num.toString().replace(/[0-9]/g, (digit) => persianDigits[parseInt(digit)]);
   };
 
   const formatPersianDate = (dateString: string) => {
@@ -228,20 +214,13 @@ export default function GalleryPage() {
               <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
                 گالری تصاویر
               </h1>
-              <p className="text-gray-400 mt-2">
-                {formatPersianNumber(images.length)} تصویر در گالری
-              </p>
+              <p className="text-gray-400 mt-2">{formatPersianNumber(images.length)} تصویر در گالری</p>
             </div>
             <button
               onClick={() => setUploadModalOpen(true)}
               className="bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg shadow-pink-500/30 flex items-center  space-x-2"
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -287,32 +266,20 @@ export default function GalleryPage() {
                   <button
                     onClick={() => setViewMode("grid")}
                     className={`p-2 rounded-md transition-colors duration-200 ${
-                      viewMode === "grid"
-                        ? "bg-gray-600 text-pink-500"
-                        : "text-gray-300"
+                      viewMode === "grid" ? "bg-gray-600 text-pink-500" : "text-gray-300"
                     }`}
                   >
-                    <svg
-                      className="w-4 h-4"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                     </svg>
                   </button>
                   <button
                     onClick={() => setViewMode("list")}
                     className={`p-2 rounded-md transition-colors duration-200 ${
-                      viewMode === "list"
-                        ? "bg-gray-600 text-pink-500"
-                        : "text-gray-300"
+                      viewMode === "list" ? "bg-gray-600 text-pink-500" : "text-gray-300"
                     }`}
                   >
-                    <svg
-                      className="w-4 h-4"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                       <path
                         fillRule="evenodd"
                         d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
@@ -342,9 +309,7 @@ export default function GalleryPage() {
                   onClick={handleSelectAll}
                   className="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm transition-colors duration-200"
                 >
-                  {selectedImages.length === filteredImages.length
-                    ? "لغو انتخاب"
-                    : "انتخاب همه"}
+                  {selectedImages.length === filteredImages.length ? "لغو انتخاب" : "انتخاب همه"}
                 </button>
               </div>
             </div>
@@ -355,13 +320,9 @@ export default function GalleryPage() {
         {paginatedImages.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-6xl mb-4">🖼️</div>
-            <h3 className="text-xl font-bold text-slate-600 mb-2">
-              هیچ تصویری یافت نشد
-            </h3>
+            <h3 className="text-xl font-bold text-slate-600 mb-2">هیچ تصویری یافت نشد</h3>
             <p className="text-slate-500 mb-4">
-              {searchTerm
-                ? "نتیجه‌ای برای جستجوی شما یافت نشد"
-                : "هنوز هیچ تصویری آپلود نکرده‌اید"}
+              {searchTerm ? "نتیجه‌ای برای جستجوی شما یافت نشد" : "هنوز هیچ تصویری آپلود نکرده‌اید"}
             </p>
             {!searchTerm && (
               <button
@@ -382,10 +343,13 @@ export default function GalleryPage() {
                     className="bg-white/80 backdrop-blur-xl rounded-2xl p-4 shadow-xl border border-white/20 hover:shadow-2xl transition-all duration-300 group"
                   >
                     <div className="relative">
-                      <img
+                      <Image
                         src={image.url}
                         alt={image.alt}
+                        width={300}
+                        height={160}
                         className="w-full h-40 object-cover rounded-lg"
+                        unoptimized={true}
                       />
                       <div className="absolute top-2 right-2">
                         <input
@@ -442,9 +406,7 @@ export default function GalleryPage() {
                       </h3>
                       <div className="flex items-center justify-between text-xs text-slate-500 mt-1">
                         <span>{formatFileSize(image.size)}</span>
-                        <span>
-                          {formatPersianNumber(image.usageCount)} استفاده
-                        </span>
+                        <span>{formatPersianNumber(image.usageCount)} استفاده</span>
                       </div>
                       <div className="flex flex-wrap gap-1 mt-2">
                         {image.tags.slice(0, 2).map((tag, index) => (
@@ -479,30 +441,24 @@ export default function GalleryPage() {
                         onChange={() => handleImageSelect(image._id)}
                         className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
                       />
-                      <img
+                      <Image
                         src={image.url}
                         alt={image.alt}
+                        width={80}
+                        height={80}
                         className="w-20 h-20 object-cover rounded-lg"
+                        unoptimized={true}
                       />
                       <div className="flex-1">
-                        <h3 className="font-bold text-slate-800 mb-1">
-                          {image.originalName}
-                        </h3>
-                        <p className="text-slate-600 text-sm mb-2">
-                          {image.alt}
-                        </p>
+                        <h3 className="font-bold text-slate-800 mb-1">{image.originalName}</h3>
+                        <p className="text-slate-600 text-sm mb-2">{image.alt}</p>
                         <div className="flex items-center gap-4 text-xs text-slate-500 mb-2">
                           <span>{formatFileSize(image.size)}</span>
                           <span>{image.mimeType}</span>
+                          <span>{formatPersianNumber(image.usageCount)} استفاده</span>
+                          <span>آپلود شده در {formatPersianDate(image.uploadedAt)}</span>
                           <span>
-                            {formatPersianNumber(image.usageCount)} استفاده
-                          </span>
-                          <span>
-                            آپلود شده در {formatPersianDate(image.uploadedAt)}
-                          </span>
-                          <span>
-                            توسط {image.uploadedBy.first_name}{" "}
-                            {image.uploadedBy.last_name}
+                            توسط {image.uploadedBy.first_name} {image.uploadedBy.last_name}
                           </span>
                         </div>
                         <div className="flex flex-wrap gap-1">
@@ -607,9 +563,7 @@ export default function GalleryPage() {
               ))}
 
               <button
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                }
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}
                 className="px-3 py-2 text-sm font-medium text-gray-400 hover:text-white disabled:opacity-50"
               >
@@ -626,19 +580,12 @@ export default function GalleryPage() {
           <div className="bg-gray-800 rounded-2xl max-w-2xl w-full border border-gray-700">
             <div className="p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-white">
-                  آپلود تصویر جدید
-                </h2>
+                <h2 className="text-2xl font-bold text-white">آپلود تصویر جدید</h2>
                 <button
                   onClick={() => setUploadModalOpen(false)}
                   className="p-2 hover:bg-gray-700 rounded-lg transition-colors duration-200 text-gray-300"
                 >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -651,12 +598,8 @@ export default function GalleryPage() {
 
               <div className="text-center py-12">
                 <div className="text-6xl mb-4">📤</div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  قابلیت آپلود به زودی
-                </h3>
-                <p className="text-gray-400">
-                  این قسمت در آپدیت بعدی اضافه خواهد شد
-                </p>
+                <h3 className="text-xl font-bold text-white mb-2">قابلیت آپلود به زودی</h3>
+                <p className="text-gray-400">این قسمت در آپدیت بعدی اضافه خواهد شد</p>
               </div>
 
               <div className="flex justify-end">

@@ -1,7 +1,8 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import React, { useState } from "react";
+import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 interface LocationGalleryProps {
   images: string[];
@@ -9,7 +10,7 @@ interface LocationGalleryProps {
 }
 
 const LocationGallery: React.FC<LocationGalleryProps> = ({ images, title }) => {
-  const t = useTranslations('Location');
+  const t = useTranslations("Location");
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -29,7 +30,7 @@ const LocationGallery: React.FC<LocationGalleryProps> = ({ images, title }) => {
             d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
           />
         </svg>
-        <p className="text-gray-500">{t('noImages')}</p>
+        <p className="text-gray-500">{t("noImages")}</p>
       </div>
     );
   }
@@ -54,16 +55,19 @@ const LocationGallery: React.FC<LocationGalleryProps> = ({ images, title }) => {
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
       <div className="p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">{t('gallery')}</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-4">{t("gallery")}</h2>
 
         {/* Main Image Display */}
         <div className="relative mb-4">
           <div className="aspect-w-16 aspect-h-9 bg-gray-200 rounded-lg overflow-hidden">
-            <img
+            <Image
               src={images[selectedImageIndex]}
               alt={`${title} - ${selectedImageIndex + 1}`}
+              width={800}
+              height={450}
               className="w-full h-64 sm:h-80 object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
               onClick={() => openModal(selectedImageIndex)}
+              unoptimized={true}
             />
           </div>
 
@@ -76,7 +80,12 @@ const LocationGallery: React.FC<LocationGalleryProps> = ({ images, title }) => {
                 aria-label="Previous image"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
                 </svg>
               </button>
               <button
@@ -85,7 +94,12 @@ const LocationGallery: React.FC<LocationGalleryProps> = ({ images, title }) => {
                 aria-label="Next image"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
                 </svg>
               </button>
             </>
@@ -106,14 +120,17 @@ const LocationGallery: React.FC<LocationGalleryProps> = ({ images, title }) => {
                 onClick={() => setSelectedImageIndex(index)}
                 className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${
                   index === selectedImageIndex
-                    ? 'border-blue-500 ring-2 ring-blue-200'
-                    : 'border-gray-200 hover:border-gray-300'
+                    ? "border-blue-500 ring-2 ring-blue-200"
+                    : "border-gray-200 hover:border-gray-300"
                 }`}
               >
-                <img
+                <Image
                   src={image}
                   alt={`${title} thumbnail ${index + 1}`}
+                  width={80}
+                  height={60}
                   className="w-full h-full object-cover"
+                  unoptimized={true}
                 />
               </button>
             ))}
@@ -125,10 +142,13 @@ const LocationGallery: React.FC<LocationGalleryProps> = ({ images, title }) => {
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4">
           <div className="relative max-w-7xl max-h-full">
-            <img
+            <Image
               src={images[selectedImageIndex]}
               alt={`${title} - ${selectedImageIndex + 1}`}
+              width={1400}
+              height={900}
               className="max-w-full max-h-full object-contain"
+              unoptimized={true}
             />
 
             {/* Close Button */}
@@ -138,7 +158,12 @@ const LocationGallery: React.FC<LocationGalleryProps> = ({ images, title }) => {
               aria-label="Close gallery"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
 
@@ -151,7 +176,12 @@ const LocationGallery: React.FC<LocationGalleryProps> = ({ images, title }) => {
                   aria-label="Previous image"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 19l-7-7 7-7"
+                    />
                   </svg>
                 </button>
                 <button
@@ -160,7 +190,12 @@ const LocationGallery: React.FC<LocationGalleryProps> = ({ images, title }) => {
                   aria-label="Next image"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
                   </svg>
                 </button>
               </>

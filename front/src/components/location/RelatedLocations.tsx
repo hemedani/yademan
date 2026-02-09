@@ -1,7 +1,8 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { useTranslations } from 'next-intl';
+import React from "react";
+import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 interface RelatedLocation {
   id: string;
@@ -17,38 +18,35 @@ interface RelatedLocationsProps {
   locations?: RelatedLocation[];
 }
 
-const RelatedLocations: React.FC<RelatedLocationsProps> = ({
-  currentLocationId,
-  locations = []
-}) => {
-  const t = useTranslations('Location');
+const RelatedLocations: React.FC<RelatedLocationsProps> = ({ currentLocationId, locations = [] }) => {
+  const t = useTranslations("Location");
 
   // Mock data for demonstration
   const mockLocations: RelatedLocation[] = [
     {
-      id: '2',
-      title: 'میدان نقش جهان',
-      category: 'میراث جهانی',
+      id: "2",
+      title: "میدان نقش جهان",
+      category: "میراث جهانی",
       rating: 4.9,
-      image: '/images/naghsh-jahan.jpg',
-      distance: 8.2
+      image: "/images/naghsh-jahan.jpg",
+      distance: 8.2,
     },
     {
-      id: '3',
-      title: 'کاخ گلستان',
-      category: 'کاخ تاریخی',
+      id: "3",
+      title: "کاخ گلستان",
+      category: "کاخ تاریخی",
       rating: 4.7,
-      image: '/images/golestan.jpg',
-      distance: 12.5
+      image: "/images/golestan.jpg",
+      distance: 12.5,
     },
     {
-      id: '4',
-      title: 'تخت سلیمان',
-      category: 'مکان باستانی',
+      id: "4",
+      title: "تخت سلیمان",
+      category: "مکان باستانی",
       rating: 4.6,
-      image: '/images/takht-soleyman.jpg',
-      distance: 15.3
-    }
+      image: "/images/takht-soleyman.jpg",
+      distance: 15.3,
+    },
   ];
 
   const displayLocations = locations.length > 0 ? locations : mockLocations;
@@ -61,21 +59,13 @@ const RelatedLocations: React.FC<RelatedLocationsProps> = ({
     for (let i = 0; i < 5; i++) {
       if (i < fullStars) {
         stars.push(
-          <svg
-            key={i}
-            className="w-4 h-4 text-yellow-400 fill-current"
-            viewBox="0 0 20 20"
-          >
+          <svg key={i} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-          </svg>
+          </svg>,
         );
       } else if (i === fullStars && hasHalfStar) {
         stars.push(
-          <svg
-            key={i}
-            className="w-4 h-4 text-yellow-400"
-            viewBox="0 0 20 20"
-          >
+          <svg key={i} className="w-4 h-4 text-yellow-400" viewBox="0 0 20 20">
             <defs>
               <linearGradient id={`half-star-related-${i}`}>
                 <stop offset="50%" stopColor="currentColor" />
@@ -86,18 +76,13 @@ const RelatedLocations: React.FC<RelatedLocationsProps> = ({
               fill={`url(#half-star-related-${i})`}
               d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
             />
-          </svg>
+          </svg>,
         );
       } else {
         stars.push(
-          <svg
-            key={i}
-            className="w-4 h-4 text-gray-300"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
+          <svg key={i} className="w-4 h-4 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-          </svg>
+          </svg>,
         );
       }
     }
@@ -150,10 +135,13 @@ const RelatedLocations: React.FC<RelatedLocationsProps> = ({
               {/* Image */}
               <div className="relative h-32">
                 {location.image ? (
-                  <img
+                  <Image
                     src={location.image}
                     alt={location.title}
+                    width={200}
+                    height={128}
                     className="w-full h-full object-cover"
+                    unoptimized={true}
                   />
                 ) : (
                   <div className="w-full h-full bg-gray-300 flex items-center justify-center">
@@ -181,9 +169,7 @@ const RelatedLocations: React.FC<RelatedLocationsProps> = ({
 
               {/* Content */}
               <div className="p-4">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2 truncate">
-                  {location.title}
-                </h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2 truncate">{location.title}</h3>
 
                 {/* Category Badge */}
                 <div className="mb-2">
@@ -194,12 +180,8 @@ const RelatedLocations: React.FC<RelatedLocationsProps> = ({
 
                 {/* Rating */}
                 <div className="flex items-center">
-                  <div className="flex items-center">
-                    {renderStars(location.rating)}
-                  </div>
-                  <span className="ml-2 text-sm text-gray-600">
-                    {location.rating.toFixed(1)}
-                  </span>
+                  <div className="flex items-center">{renderStars(location.rating)}</div>
+                  <span className="ml-2 text-sm text-gray-600">{location.rating.toFixed(1)}</span>
                 </div>
               </div>
             </div>
@@ -210,18 +192,8 @@ const RelatedLocations: React.FC<RelatedLocationsProps> = ({
         <div className="mt-6 text-center">
           <button className="inline-flex items-center px-6 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
             مشاهده مکان‌های بیشتر
-            <svg
-              className="ml-2 w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
+            <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </button>
         </div>

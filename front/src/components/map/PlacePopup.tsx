@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 
 interface Place {
@@ -24,11 +25,7 @@ interface PlacePopupProps {
   onNavigate?: () => void;
 }
 
-const PlacePopup: React.FC<PlacePopupProps> = ({
-  place,
-  onMoreInfo,
-  onNavigate,
-}) => {
+const PlacePopup: React.FC<PlacePopupProps> = ({ place, onMoreInfo, onNavigate }) => {
   const t = useTranslations();
 
   return (
@@ -36,10 +33,13 @@ const PlacePopup: React.FC<PlacePopupProps> = ({
       {/* Header with image */}
       {place.images && place.images.length > 0 && (
         <div className="relative h-32 -mx-3 -mt-3 mb-3 rounded-t-lg overflow-hidden">
-          <img
+          <Image
             src={place.images[0]}
             alt={place.name}
+            width={300}
+            height={128}
             className="w-full h-full object-cover"
+            unoptimized={true}
             onError={(e) => {
               (e.target as HTMLImageElement).style.display = "none";
             }}
@@ -63,9 +63,7 @@ const PlacePopup: React.FC<PlacePopupProps> = ({
               <svg
                 key={i}
                 className={`w-3 h-3 ${
-                  i < Math.floor(place.rating!)
-                    ? "text-[#FFD700]"
-                    : "text-[#555]"
+                  i < Math.floor(place.rating!) ? "text-[#FFD700]" : "text-[#555]"
                 }`}
                 fill="currentColor"
                 viewBox="0 0 24 24"
@@ -79,9 +77,7 @@ const PlacePopup: React.FC<PlacePopupProps> = ({
       )}
 
       {/* Description */}
-      <p className="text-sm text-[#a0a0a0] mb-2 line-clamp-2">
-        {place.description}
-      </p>
+      <p className="text-sm text-[#a0a0a0] mb-2 line-clamp-2">{place.description}</p>
 
       {/* Address */}
       {place.address && (
@@ -121,9 +117,7 @@ const PlacePopup: React.FC<PlacePopupProps> = ({
             </span>
           ))}
           {place.tags.length > 3 && (
-            <span className="px-2 py-0.5 text-[#a0a0a0] text-xs">
-              +{place.tags.length - 3}
-            </span>
+            <span className="px-2 py-0.5 text-[#a0a0a0] text-xs">+{place.tags.length - 3}</span>
           )}
         </div>
       )}

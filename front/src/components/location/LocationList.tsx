@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 
 interface Location {
@@ -30,9 +31,7 @@ const LocationList: React.FC<LocationListProps> = ({
   onLocationClick,
 }) => {
   const t = useTranslations("Location");
-  const [selectedLocationId, setSelectedLocationId] = useState<string | null>(
-    null,
-  );
+  const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
 
   // Mock data for demonstration
   const mockLocations: Location[] = [
@@ -88,21 +87,13 @@ const LocationList: React.FC<LocationListProps> = ({
     for (let i = 0; i < 5; i++) {
       if (i < fullStars) {
         stars.push(
-          <svg
-            key={i}
-            className="w-4 h-4 text-yellow-400 fill-current"
-            viewBox="0 0 20 20"
-          >
+          <svg key={i} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
           </svg>,
         );
       } else if (i === fullStars && hasHalfStar) {
         stars.push(
-          <svg
-            key={i}
-            className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400"
-            viewBox="0 0 20 20"
-          >
+          <svg key={i} className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400" viewBox="0 0 20 20">
             <defs>
               <linearGradient id={`half-star-${i}`}>
                 <stop offset="50%" stopColor="currentColor" />
@@ -176,12 +167,8 @@ const LocationList: React.FC<LocationListProps> = ({
             d="M15 11a3 3 0 11-6 0 3 3 0 616 0z"
           />
         </svg>
-        <p className="text-gray-500 text-base sm:text-lg font-medium">
-          {t("noLocationsFound")}
-        </p>
-        <p className="text-gray-400 text-sm sm:text-base mt-2">
-          {t("tryDifferentFilters")}
-        </p>
+        <p className="text-gray-500 text-base sm:text-lg font-medium">{t("noLocationsFound")}</p>
+        <p className="text-gray-400 text-sm sm:text-base mt-2">{t("tryDifferentFilters")}</p>
       </div>
     );
   }
@@ -211,10 +198,13 @@ const LocationList: React.FC<LocationListProps> = ({
                 {/* Image */}
                 <div className="w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0">
                   {location.image ? (
-                    <img
+                    <Image
                       src={location.image}
                       alt={location.title}
+                      width={112}
+                      height={112}
                       className="w-full h-full object-cover rounded-lg sm:rounded-xl"
+                      unoptimized={true}
                     />
                   ) : (
                     <div className="w-full h-full bg-gray-200 rounded-lg sm:rounded-xl flex items-center justify-center">
@@ -258,9 +248,7 @@ const LocationList: React.FC<LocationListProps> = ({
 
                   {/* Rating */}
                   <div className="flex items-center mb-3">
-                    <div className="flex items-center space-x-1 ">
-                      {renderStars(location.rating)}
-                    </div>
+                    <div className="flex items-center space-x-1 ">{renderStars(location.rating)}</div>
                     <span className="mr-2 text-sm sm:text-base text-gray-600">
                       {location.rating.toFixed(1)} ({location.reviewCount})
                     </span>
