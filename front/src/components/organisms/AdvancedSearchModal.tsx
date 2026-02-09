@@ -45,25 +45,25 @@ const AdvancedSearchModal: React.FC<AdvancedSearchModalProps> = ({ isOpen, onClo
   });
 
   // Get map store for getting current values
-  const { filters: currentMapFilters } = useMapStore();
+  const filters = useMapStore((state) => state.filters);
 
   // Initialize with current map filters when opening
   useEffect(() => {
     if (isOpen) {
       reset({
-        name: currentMapFilters.name || "",
-        slug: currentMapFilters.slug || "",
-        status: currentMapFilters.status || "",
-        province: currentMapFilters.province || "",
-        city: currentMapFilters.city || "",
-        registrarId: currentMapFilters.registrarId || "",
-        categoryIds: currentMapFilters.categoryIds || [],
-        tagIds: currentMapFilters.tagIds || [],
-        maxDistance: currentMapFilters.maxDistance || undefined,
-        minDistance: currentMapFilters.minDistance || undefined,
+        name: filters.name || "",
+        slug: filters.slug || "",
+        status: filters.status || "",
+        province: filters.province || "",
+        city: filters.city || "",
+        registrarId: filters.registrarId || "",
+        categoryIds: filters.categoryIds || [],
+        tagIds: filters.tagIds || [],
+        maxDistance: filters.maxDistance || undefined,
+        minDistance: filters.minDistance || undefined,
       });
     }
-  }, [isOpen, currentMapFilters, reset]);
+  }, [isOpen, reset]);
 
   const handleFormSubmit = (data: any) => {
     // Prepare filters for submission

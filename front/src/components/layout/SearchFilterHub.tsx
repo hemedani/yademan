@@ -11,10 +11,7 @@ interface SearchFilterHubProps {
   onSearchChange: (value: string) => void;
 }
 
-const SearchFilterHub: React.FC<SearchFilterHubProps> = ({
-  searchValue,
-  onSearchChange,
-}) => {
+const SearchFilterHub: React.FC<SearchFilterHubProps> = ({ searchValue, onSearchChange }) => {
   const [categories, setCategories] = useState<categorySchema[]>([]);
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
@@ -57,12 +54,14 @@ const SearchFilterHub: React.FC<SearchFilterHubProps> = ({
       const newIds = prev.includes(categoryId)
         ? prev.filter((id) => id !== categoryId)
         : [...prev, categoryId];
-
-      // Update map filters
-      setFilters({ categoryIds: newIds.length > 0 ? newIds : undefined });
       return newIds;
     });
   };
+
+  // Update map filters when selectedCategoryIds changes
+  useEffect(() => {
+    setFilters({ categoryIds: selectedCategoryIds.length > 0 ? selectedCategoryIds : undefined });
+  }, [selectedCategoryIds, setFilters]);
 
   return (
     <div className="flex flex-col items-center w-full px-4">
@@ -114,14 +113,10 @@ const SearchFilterHub: React.FC<SearchFilterHubProps> = ({
                 >
                   {category.icon && (
                     <>
-                      <span
-                        className="text-lg"
-                        style={{ color: category.color }}
-                      >
+                      <span className="text-lg" style={{ color: category.color }}>
                         {category.icon}
                       </span>
-                      <div className="w-px h-5 bg-white/30 mx-1" />{" "}
-                      {/* Divider */}
+                      <div className="w-px h-5 bg-white/30 mx-1" /> {/* Divider */}
                     </>
                   )}
                   <span>{category.name}</span>
