@@ -82,27 +82,19 @@ export const FormCreateUser = ({ token }: { token?: string }) => {
       >
         <div className="w-full flex flex-wrap">
           <div className="w-1/2 p-4">
-            <span className="text-sm font-medium text-gray-300">
-              عکس پروفایل
-            </span>
+            <span className="text-sm font-medium text-gray-300">عکس پروفایل</span>
             <UploadImage
               inputName="avatar"
-              setUploadedImage={(uploaded: string) =>
-                setValue("avatar", uploaded)
-              }
+              setUploadedImage={(uploaded: string) => setValue("avatar", uploaded)}
               type="image"
               token={token}
             />
           </div>
           <div className="w-1/2 p-4">
-            <span className="text-sm font-medium text-gray-300">
-              عکس کارت ملی
-            </span>
+            <span className="text-sm font-medium text-gray-300">عکس کارت ملی</span>
             <UploadImage
               inputName="nationalCard"
-              setUploadedImage={(uploaded: string) =>
-                setValue("nationalCard", uploaded)
-              }
+              setUploadedImage={(uploaded: string) => setValue("nationalCard", uploaded)}
               type="image"
               token={token}
             />
@@ -199,7 +191,7 @@ export const FormCreateUser = ({ token }: { token?: string }) => {
           <SelectBox
             label="وضعیت تایید"
             name="is_verified"
-            setValue={(fieldName, value) => {
+            setValue={(fieldName: string, value: string) => {
               setValue("is_verified", value === "true");
             }}
             errMsg={errors.is_verified?.message}

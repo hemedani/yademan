@@ -63,7 +63,20 @@ const AdvancedSearchModal: React.FC<AdvancedSearchModalProps> = ({ isOpen, onClo
         minDistance: filters.minDistance || undefined,
       });
     }
-  }, [isOpen, reset]);
+  }, [
+    isOpen,
+    reset,
+    filters.name,
+    filters.slug,
+    filters.status,
+    filters.province,
+    filters.city,
+    filters.registrarId,
+    filters.categoryIds,
+    filters.tagIds,
+    filters.maxDistance,
+    filters.minDistance,
+  ]);
 
   const handleFormSubmit = (data: any) => {
     // Prepare filters for submission
