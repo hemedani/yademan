@@ -70,12 +70,18 @@ export default async function VirtualToursManagement({
       <div className="absolute top-1 left-5 mt-4">
         <Link
           href="/admin/virtual-tours/create"
-          className="px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-lg hover:from-pink-700 hover:to-purple-700 transition-all duration-300 flex items-center gap-2 shadow-lg shadow-pink-500/30"
+          className="px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold rounded-lg hover:from-pink-700 hover:to-purple-700 transition-all duration-300 flex items-center gap-2 shadow-lg shadow-pink-500/30 text-shadow"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          <svg
+            className="w-5 h-5 font-bold"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            strokeWidth={2.5}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
           </svg>
-          ایجاد تور مجازی جدید
+          <span className="font-semibold">ایجاد تور مجازی جدید</span>
         </Link>
       </div>
 

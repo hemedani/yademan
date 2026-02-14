@@ -44,15 +44,17 @@ export const FormCreateVirtualTour = ({
     register,
     handleSubmit,
     setValue,
-    control,
     formState: { errors, isValid, isSubmitting },
   } = useForm<VirtualTourFormData>({
     resolver: zodResolver(VirtualTourCreateSchema),
     defaultValues: {
+      name: "",
       description: "",
+      placeId: "",
+      panoramaId: "",
       status: "draft",
     },
-    mode: "onChange",
+    mode: "all",
   });
 
   const onSubmit: SubmitHandler<VirtualTourFormData> = async (data) => {
@@ -87,21 +89,17 @@ export const FormCreateVirtualTour = ({
       >
         <div className="w-full flex flex-wrap">
           <div className="w-full p-4">
-            <span className="text-sm font-medium text-gray-300">
-              تصویر پانوراما
-            </span>
+            <span className="text-sm font-medium text-gray-300">تصویر پانوراما</span>
             <UploadImage
               inputName="panorama"
               setUploadedImage={(uploaded: string) =>
-                setValue("panoramaId", uploaded, { shouldValidate: true })
+                setValue("panoramaId", uploaded, { shouldValidate: true, shouldDirty: true })
               }
               type="image"
               token={token}
             />
             {errors.panoramaId && (
-              <p className="text-red-400 text-xs mt-1">
-                {errors.panoramaId.message}
-              </p>
+              <p className="text-red-400 text-xs mt-1">{errors.panoramaId.message}</p>
             )}
           </div>
 
@@ -126,7 +124,9 @@ export const FormCreateVirtualTour = ({
             <SelectBox
               label="مکان"
               name="placeId"
-              setValue={setValue}
+              setValue={(name: any, value: any) =>
+                setValue(name, value, { shouldValidate: true, shouldDirty: true })
+              }
               errMsg={errors.placeId?.message}
               options={places}
               placeholder="انتخاب مکان"
@@ -137,7 +137,9 @@ export const FormCreateVirtualTour = ({
             <SelectBox
               label="وضعیت"
               name="status"
-              setValue={setValue}
+              setValue={(name: any, value: any) =>
+                setValue(name, value, { shouldValidate: true, shouldDirty: true })
+              }
               errMsg={errors.status?.message}
               options={[
                 { value: "draft", label: "پیش‌نویس" },

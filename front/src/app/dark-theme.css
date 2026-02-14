@@ -26,17 +26,13 @@
 
     /* Glow effects */
     --neon-pink-glow: 0 0 10px rgba(255, 0, 122, 0.5);
-    --neon-pink-glow-lg:
-        0 0 20px rgba(255, 0, 122, 0.7), 0 0 30px rgba(255, 0, 122, 0.4);
+    --neon-pink-glow-lg: 0 0 20px rgba(255, 0, 122, 0.7), 0 0 30px rgba(255, 0, 122, 0.4);
     --neon-green-glow: 0 0 10px rgba(0, 255, 133, 0.5);
-    --neon-green-glow-lg:
-        0 0 20px rgba(0, 255, 133, 0.7), 0 0 30px rgba(0, 255, 133, 0.4);
+    --neon-green-glow-lg: 0 0 20px rgba(0, 255, 133, 0.7), 0 0 30px rgba(0, 255, 133, 0.4);
     --neon-purple-glow: 0 0 10px rgba(160, 32, 240, 0.5);
-    --neon-purple-glow-lg:
-        0 0 20px rgba(160, 32, 240, 0.7), 0 0 30px rgba(160, 32, 240, 0.4);
+    --neon-purple-glow-lg: 0 0 20px rgba(160, 32, 240, 0.7), 0 0 30px rgba(160, 32, 240, 0.4);
     --neon-lime-glow: 0 0 10px rgba(191, 255, 0, 0.5);
-    --neon-lime-glow-lg:
-        0 0 20px rgba(191, 255, 0, 0.7), 0 0 30px rgba(191, 255, 0, 0.4);
+    --neon-lime-glow-lg: 0 0 20px rgba(191, 255, 0, 0.7), 0 0 30px rgba(191, 255, 0, 0.4);
 }
 
 /* Base dark theme styles */
@@ -256,11 +252,11 @@ textarea:focus {
 }
 
 /* Dark theme for links */
-a {
+a:not([class*="bg-"]):not([class*="background"]) {
     color: var(--neon-pink) !important;
 }
 
-a:hover {
+a:not([class*="bg-"]):not([class*="background"]):hover {
     color: var(--neon-pink-light) !important;
     text-decoration: underline;
 }

@@ -1,13 +1,7 @@
 "use client";
 import React from "react";
 import Select, { GroupBase, OptionsOrGroups, PropsValue } from "react-select";
-import {
-  FieldValues,
-  FieldPath,
-  UseFormSetValue,
-  PathValue,
-  Path,
-} from "react-hook-form";
+import { FieldValues, FieldPath, UseFormSetValue, PathValue, Path } from "react-hook-form";
 import { ReactSelectOption } from "@/types/option";
 
 interface SelectBoxProps<
@@ -17,7 +11,7 @@ interface SelectBoxProps<
 > {
   name: FieldPath<T>;
   label: string;
-  setValue: UseFormSetValue<T>;
+  setValue: UseFormSetValue<T> | ((name: FieldPath<T>, value: any, options?: any) => void);
   options: ReactSelectOption[];
   placeholder?: string;
   labelAsValue?: boolean;
@@ -27,11 +21,7 @@ interface SelectBoxProps<
   defaultOptions?: OptionsOrGroups<Option, Group> | boolean;
 }
 
-const SelectBox = <
-  Option,
-  Group extends GroupBase<Option>,
-  T extends FieldValues = FieldValues,
->({
+const SelectBox = <Option, Group extends GroupBase<Option>, T extends FieldValues = FieldValues>({
   name,
   setValue,
   label,
@@ -52,14 +42,13 @@ const SelectBox = <
       <Select
         id={name}
         options={options}
-        onChange={(newVal) =>
-          setValue(
-            name,
-            (labelAsValue
-              ? newVal!.label
-              : newVal!.value) as unknown as PathValue<T, Path<T>>,
-          )
-        }
+        onChange={(newVal) => {
+          const value = (labelAsValue ? newVal!.label : newVal!.value) as unknown as PathValue<
+            T,
+            Path<T>
+          >;
+          setValue(name, value);
+        }}
         placeholder={placeholder}
         classNamePrefix="react-select"
         className={`text-sm ${errMsg ? "border-red-500" : "border-gray-300"}`}

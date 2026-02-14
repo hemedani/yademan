@@ -98,33 +98,9 @@ export default function VirtualToursDashboard({ data, remove }: Props) {
   };
 
   return (
-    <div className="w-full text-white">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-white">مدیریت تورهای مجازی</h2>
-        <Link
-          href="/admin/virtual-tours/create"
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-lg hover:from-pink-700 hover:to-purple-700 transition-all duration-300 shadow-lg shadow-pink-500/30"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-5 h-5"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 4.5v15m7.5-7.5h-15"
-            />
-          </svg>
-          ایجاد تور مجازی جدید
-        </Link>
-      </div>
-
+    <div className="mt-8 w-full text-white">
       {data.length === 0 ? (
-        <div className="bg-gray-800 rounded-xl shadow-lg p-8 text-center border border-gray-700">
+        <div className="mt-8 bg-gray-800 rounded-xl shadow-lg p-8 text-center border border-gray-700">
           <div className="w-20 h-20 mx-auto mb-4 flex items-center justify-center rounded-full bg-gray-700">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -141,12 +117,9 @@ export default function VirtualToursDashboard({ data, remove }: Props) {
               />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-white mb-2">
-            هیچ تور مجازی یافت نشد
-          </h3>
+          <h3 className="text-lg font-semibold text-white mb-2">هیچ تور مجازی یافت نشد</h3>
           <p className="text-gray-400 mb-6">
-            با کلیک بر روی دکمه «ایجاد تور مجازی جدید» اولین تور مجازی خود را
-            بسازید.
+            با کلیک بر روی دکمه «ایجاد تور مجازی جدید» اولین تور مجازی خود را بسازید.
           </p>
           <Link
             href="/admin/virtual-tours/create"
@@ -161,24 +134,12 @@ export default function VirtualToursDashboard({ data, remove }: Props) {
             <table className="w-full border-collapse text-sm">
               <thead>
                 <tr className="bg-gray-700 border-b border-gray-600">
-                  <th className="p-4 text-right font-semibold text-white">
-                    نام
-                  </th>
-                  <th className="p-4 text-right font-semibold text-white">
-                    مکان
-                  </th>
-                  <th className="p-4 text-right font-semibold text-white">
-                    وضعیت
-                  </th>
-                  <th className="p-4 text-right font-semibold text-white">
-                    تاریخ ایجاد
-                  </th>
-                  <th className="p-4 text-right font-semibold text-white">
-                    آخرین بروزرسانی
-                  </th>
-                  <th className="p-4 text-right font-semibold text-white">
-                    عملیات
-                  </th>
+                  <th className="p-4 text-right font-semibold text-white">نام</th>
+                  <th className="p-4 text-right font-semibold text-white">مکان</th>
+                  <th className="p-4 text-right font-semibold text-white">وضعیت</th>
+                  <th className="p-4 text-right font-semibold text-white">تاریخ ایجاد</th>
+                  <th className="p-4 text-right font-semibold text-white">آخرین بروزرسانی</th>
+                  <th className="p-4 text-right font-semibold text-white">عملیات</th>
                 </tr>
               </thead>
               <tbody>
@@ -188,9 +149,7 @@ export default function VirtualToursDashboard({ data, remove }: Props) {
                     className="border-b border-gray-700 hover:bg-gray-700/50 transition-colors"
                   >
                     <td className="p-4">
-                      <div className="font-semibold text-white">
-                        {item.name}
-                      </div>
+                      <div className="font-semibold text-white">{item.name}</div>
                       {item.description && (
                         <div className="text-xs text-gray-400 mt-1 line-clamp-2 max-w-xs">
                           {item.description}
@@ -199,22 +158,14 @@ export default function VirtualToursDashboard({ data, remove }: Props) {
                     </td>
                     <td className="p-4">
                       {item.place ? (
-                        <span className="text-sm text-gray-300">
-                          {item.place.name}
-                        </span>
+                        <span className="text-sm text-gray-300">{item.place.name}</span>
                       ) : (
-                        <span className="text-xs text-gray-500">
-                          تعیین نشده
-                        </span>
+                        <span className="text-xs text-gray-500">تعیین نشده</span>
                       )}
                     </td>
                     <td className="p-4">{getStatusBadge(item.status)}</td>
-                    <td className="p-4 text-gray-300">
-                      {formatDate(item.createdAt)}
-                    </td>
-                    <td className="p-4 text-gray-300">
-                      {formatDate(item.updatedAt)}
-                    </td>
+                    <td className="p-4 text-gray-300">{formatDate(item.createdAt)}</td>
+                    <td className="p-4 text-gray-300">{formatDate(item.updatedAt)}</td>
                     <td className="p-4">
                       <div className="flex gap-2">
                         <Link
