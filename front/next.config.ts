@@ -171,6 +171,13 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "550mb", // Increase limit to 50MB for large database uploads
     },
   },
+  // Increase API route body size limit for file uploads
+  api: {
+    bodyParser: {
+      sizeLimit: "50mb",
+    },
+    responseLimit: "50mb",
+  },
   images: {
     domains: ["localhost", "api.mapbox.com", "tile.openstreetmap.org", "185.204.170.27"],
     remotePatterns: [

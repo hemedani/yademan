@@ -64,27 +64,47 @@ export const UploadImage = ({
       formData.append("file", file);
       formData.append("lesan-body", JSON.stringify(lesanBody));
 
-      // Make the request to the proxy endpoint
-      const response = await fetch("/api/proxy", {
-        method: "POST",
-        body: formData,
-        headers: {
-          // Only include token header if a token is available
-          ...(token || Cookies.get("token") ? { token: token || Cookies.get("token") || "" } : {}),
-        },
-      });
+      // Create an AbortController for timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 50000); // 50 second timeout
 
-      const data = await response.json();
+      try {
+        // Make the request to the proxy endpoint
+        const response = await fetch("/api/proxy", {
+          method: "POST",
+          body: formData,
+          headers: {
+            // Only include token header if a token is available
+            ...(token || Cookies.get("token") ? { token: token || Cookies.get("token") || "" } : {}),
+          },
+          signal: controller.signal,
+        });
 
-      if (data.success) {
-        setUploadedImage(data.body._id); // اینجا باید _id برگشتی رو ست کنیم
-        setIsUploaded(true);
-      } else {
-        console.error("Upload failed", data);
-        setIsUploaded(false);
+        clearTimeout(timeoutId);
+
+        const data = await response.json();
+
+        if (data.success) {
+          setUploadedImage(data.body._id); // اینجا باید _id برگشتی رو ست کنیم
+          setIsUploaded(true);
+        } else {
+          console.error("Upload failed", data);
+          alert(`خطا در بارگذاری: ${data.body?.message || "خطای ناشناخته"}`);
+          setIsUploaded(false);
+        }
+      } catch (fetchError: any) {
+        clearTimeout(timeoutId);
+        if (fetchError.name === "AbortError") {
+          console.error("Upload timeout", fetchError);
+          alert("زمان بارگذاری به پایان رسید. لطفا فایل کوچکتری انتخاب کنید یا دوباره تلاش کنید.");
+          setIsUploaded(false);
+        } else {
+          throw fetchError;
+        }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error uploading file", error);
+      alert(`خطا در بارگذاری فایل: ${error.message || "خطای شبکه"}`);
       setIsUploaded(false);
     }
   };
