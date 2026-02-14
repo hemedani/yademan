@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     // Check if this is a multipart request (for file uploads)
     const contentType = request.headers.get("content-type");
     let requestBody: BodyInit;
-    let headers: Record<string, string> = {};
+    const headers: Record<string, string> = {};
 
     if (contentType && contentType.includes("multipart/form-data")) {
       // For multipart requests (file uploads), pass the raw body directly
