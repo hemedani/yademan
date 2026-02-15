@@ -50,38 +50,46 @@ export default function EventsList({
         // Call the backend API to get events
         const response = await getEvents({
           set: {
+            page: 1,
             limit,
-            skip: 0,
             startTimeAfter: upcomingOnly ? new Date().toISOString() : undefined,
           },
           get: {
-            _id: 1,
-            name: 1,
-            description: 1,
-            startTime: 1,
-            endTime: 1,
-            color: 1,
-            icon: 1,
-            status: 1,
-            isPublic: 1,
-            places: {
+            data: {
+              _id: 1,
               name: 1,
-              center: 1,
+              description: 1,
+              startTime: 1,
+              endTime: 1,
+              color: 1,
+              icon: 1,
+              status: 1,
+              isPublic: 1,
+              places: {
+                name: 1,
+                center: 1,
+              },
+              organizer: {
+                first_name: 1,
+                last_name: 1,
+              },
+              thumbnail: {
+                name: 1,
+              },
             },
-            organizer: {
-              first_name: 1,
-              last_name: 1,
-            },
-            thumbnail: {
-              name: 1,
+            metadata: {
+              total: 1,
+              page: 1,
+              limit: 1,
+              pageCount: 1,
             },
           },
         });
 
-        if (response.success) {
-          setEvents(response.body);
+        if (response.success && response.body?.data) {
+          setEvents(response.body.data);
         } else {
-          setError(response.body.message || t("Events.fetchError"));
+          setError(response.body?.message || t("Events.fetchError"));
         }
       } catch (err) {
         console.error("Error fetching events:", err);
@@ -103,9 +111,7 @@ export default function EventsList({
   }
 
   if (error) {
-    return (
-      <div className={`p-4 text-center text-red-500 ${className}`}>{error}</div>
-    );
+    return <div className={`p-4 text-center text-red-500 ${className}`}>{error}</div>;
   }
 
   if (events.length === 0) {
@@ -150,49 +156,31 @@ export default function EventsList({
                       ];
 
                       // Prepare places for pathfinding
-                      const placesForPathfinding = event.places!.map(
-                        (place) => ({
-                          coordinates: place.center.coordinates as [
-                            number,
-                            number,
-                          ],
-                          name: place.name,
-                          id: place._id || "",
-                        }),
-                      );
+                      const placesForPathfinding = event.places!.map((place) => ({
+                        coordinates: place.center.coordinates as [number, number],
+                        name: place.name,
+                        id: place._id || "",
+                      }));
 
                       // Set the pathfinding state in the store
                       useMapStore.getState().setIsPathfindingActive(true);
-                      useMapStore
-                        .getState()
-                        .setPathfindingStartLocation(userLocation);
-                      useMapStore
-                        .getState()
-                        .setPathfindingPlaces(placesForPathfinding);
+                      useMapStore.getState().setPathfindingStartLocation(userLocation);
+                      useMapStore.getState().setPathfindingPlaces(placesForPathfinding);
 
                       // Calculate the path
-                      const { findShortestPath } = await import(
-                        "@/utils/pathfinding"
-                      );
-                      const result = findShortestPath(
-                        userLocation,
-                        placesForPathfinding,
-                      );
+                      const { findShortestPath } = await import("@/utils/pathfinding");
+                      const result = findShortestPath(userLocation, placesForPathfinding);
 
                       // Update the store with the pathfinding results
                       useMapStore.getState().setPathfindingPath(result.path);
-                      useMapStore
-                        .getState()
-                        .setPathfindingTotalDistance(result.totalDistance);
+                      useMapStore.getState().setPathfindingTotalDistance(result.totalDistance);
 
                       // Generate a simple line geometry for the path
                       const routeGeometry: [number, number][] = [userLocation];
                       for (const place of result.path) {
                         routeGeometry.push(place.coordinates);
                       }
-                      useMapStore
-                        .getState()
-                        .setPathfindingRouteGeometry(routeGeometry);
+                      useMapStore.getState().setPathfindingRouteGeometry(routeGeometry);
                     })().catch(console.error);
                   },
                   (error) => {
@@ -200,56 +188,34 @@ export default function EventsList({
                     // If we can't get the user's location, use Tehran as default
                     // Wrap the async operations in an immediately invoked async function
                     (async () => {
-                      const defaultLocation: [number, number] = [
-                        51.389, 35.6892,
-                      ];
+                      const defaultLocation: [number, number] = [51.389, 35.6892];
 
                       // Prepare places for pathfinding
-                      const placesForPathfinding = event.places!.map(
-                        (place) => ({
-                          coordinates: place.center.coordinates as [
-                            number,
-                            number,
-                          ],
-                          name: place.name,
-                          id: place._id || "",
-                        }),
-                      );
+                      const placesForPathfinding = event.places!.map((place) => ({
+                        coordinates: place.center.coordinates as [number, number],
+                        name: place.name,
+                        id: place._id || "",
+                      }));
 
                       // Set the pathfinding state in the store
                       useMapStore.getState().setIsPathfindingActive(true);
-                      useMapStore
-                        .getState()
-                        .setPathfindingStartLocation(defaultLocation);
-                      useMapStore
-                        .getState()
-                        .setPathfindingPlaces(placesForPathfinding);
+                      useMapStore.getState().setPathfindingStartLocation(defaultLocation);
+                      useMapStore.getState().setPathfindingPlaces(placesForPathfinding);
 
                       // Calculate the path
-                      const { findShortestPath } = await import(
-                        "@/utils/pathfinding"
-                      );
-                      const result = findShortestPath(
-                        defaultLocation,
-                        placesForPathfinding,
-                      );
+                      const { findShortestPath } = await import("@/utils/pathfinding");
+                      const result = findShortestPath(defaultLocation, placesForPathfinding);
 
                       // Update the store with the pathfinding results
                       useMapStore.getState().setPathfindingPath(result.path);
-                      useMapStore
-                        .getState()
-                        .setPathfindingTotalDistance(result.totalDistance);
+                      useMapStore.getState().setPathfindingTotalDistance(result.totalDistance);
 
                       // Generate a simple line geometry for the path
-                      const routeGeometry: [number, number][] = [
-                        defaultLocation,
-                      ];
+                      const routeGeometry: [number, number][] = [defaultLocation];
                       for (const place of result.path) {
                         routeGeometry.push(place.coordinates);
                       }
-                      useMapStore
-                        .getState()
-                        .setPathfindingRouteGeometry(routeGeometry);
+                      useMapStore.getState().setPathfindingRouteGeometry(routeGeometry);
                     })().catch(console.error);
                   },
                 );
@@ -269,36 +235,23 @@ export default function EventsList({
 
                   // Set the pathfinding state in the store
                   useMapStore.getState().setIsPathfindingActive(true);
-                  useMapStore
-                    .getState()
-                    .setPathfindingStartLocation(defaultLocation);
-                  useMapStore
-                    .getState()
-                    .setPathfindingPlaces(placesForPathfinding);
+                  useMapStore.getState().setPathfindingStartLocation(defaultLocation);
+                  useMapStore.getState().setPathfindingPlaces(placesForPathfinding);
 
                   // Calculate the path
-                  const { findShortestPath } = await import(
-                    "@/utils/pathfinding"
-                  );
-                  const result = findShortestPath(
-                    defaultLocation,
-                    placesForPathfinding,
-                  );
+                  const { findShortestPath } = await import("@/utils/pathfinding");
+                  const result = findShortestPath(defaultLocation, placesForPathfinding);
 
                   // Update the store with the pathfinding results
                   useMapStore.getState().setPathfindingPath(result.path);
-                  useMapStore
-                    .getState()
-                    .setPathfindingTotalDistance(result.totalDistance);
+                  useMapStore.getState().setPathfindingTotalDistance(result.totalDistance);
 
                   // Generate a simple line geometry for the path
                   const routeGeometry: [number, number][] = [defaultLocation];
                   for (const place of result.path) {
                     routeGeometry.push(place.coordinates);
                   }
-                  useMapStore
-                    .getState()
-                    .setPathfindingRouteGeometry(routeGeometry);
+                  useMapStore.getState().setPathfindingRouteGeometry(routeGeometry);
                 })().catch(console.error);
               }
             }
@@ -314,12 +267,8 @@ export default function EventsList({
             </div>
 
             <div className="flex-1 min-w-0">
-              <h4 className="text-sm font-medium text-white truncate">
-                {event.name}
-              </h4>
-              <p className="text-xs text-[#a0a0a0] mt-1 line-clamp-2">
-                {event.description}
-              </p>
+              <h4 className="text-sm font-medium text-white truncate">{event.name}</h4>
+              <p className="text-xs text-[#a0a0a0] mt-1 line-clamp-2">{event.description}</p>
 
               <div className="mt-2 flex items-center space-x-2 text-xs text-[#a0a0a0]">
                 <svg
@@ -341,10 +290,7 @@ export default function EventsList({
               {event.places && event.places.length > 0 && (
                 <div className="mt-1 flex flex-wrap gap-1">
                   {event.places.map((place, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center space-x-2 text-xs text-[#a0a0a0]"
-                    >
+                    <div key={index} className="flex items-center space-x-2 text-xs text-[#a0a0a0]">
                       <svg
                         className="w-4 h-4 text-[#a0a0a0]"
                         fill="none"
