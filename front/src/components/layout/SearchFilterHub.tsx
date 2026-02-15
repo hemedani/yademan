@@ -9,14 +9,36 @@ import { gets as getCategoryList } from "@/app/actions/category/gets";
 interface SearchFilterHubProps {
   searchValue: string;
   onSearchChange: (value: string) => void;
+  onSearch?: (searchValue: string) => void;
 }
 
-const SearchFilterHub: React.FC<SearchFilterHubProps> = ({ searchValue, onSearchChange }) => {
+const SearchFilterHub: React.FC<SearchFilterHubProps> = ({
+  searchValue,
+  onSearchChange,
+  onSearch,
+}) => {
   const [categories, setCategories] = useState<categorySchema[]>([]);
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
 
   const setFilters = useMapStore((state) => state.setFilters);
+
+  // Handle search request to backend
+  const handleSearch = () => {
+    if (searchValue.trim()) {
+      // Update filters with the search name
+      setFilters({ name: searchValue.trim() });
+      // Call the optional onSearch callback if provided
+      onSearch?.(searchValue.trim());
+    }
+  };
+
+  // Handle Enter key press
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
 
   // Fetch categories on component mount
   useEffect(() => {
@@ -76,13 +98,18 @@ const SearchFilterHub: React.FC<SearchFilterHubProps> = ({ searchValue, onSearch
           type="text"
           value={searchValue}
           onChange={(e) => onSearchChange(e.target.value)}
+          onKeyPress={handleKeyPress}
           placeholder="جستجو در نقشه..."
           dir="rtl"
-          className="w-full py-4 pr-14 pl-6 rounded-full bg-black/10 backdrop-blur-2xl border border-white/10 text-white placeholder:text-white/50 focus:outline-none focus:ring-0 focus:border-[#FF007A] focus:shadow-[0_0_15px_rgba(255,0,122,0.3)] relative search-filter-input"
+          className="w-full py-4 pr-6 pl-14 rounded-full bg-black/10 backdrop-blur-2xl border border-white/10 text-white placeholder:text-white/50 focus:outline-none focus:ring-0 focus:border-[#FF007A] focus:shadow-[0_0_15px_rgba(255,0,122,0.3)] relative search-filter-input"
         />
-        <div className="absolute inset-y-0 right-0 flex items-center pr-5 pointer-events-none">
-          <MagnifyingGlassIcon className="h-5 w-5 text-white/70" />
-        </div>
+        <button
+          onClick={handleSearch}
+          className="absolute inset-y-0 left-0 flex items-center pl-5 cursor-pointer hover:scale-110 transition-transform"
+          aria-label="جستجو"
+        >
+          <MagnifyingGlassIcon className="h-5 w-5 text-white/70 hover:text-[#FF007A]" />
+        </button>
         {/* Neon scanner line */}
         <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#FF007A] to-transparent opacity-50" />
       </motion.div>

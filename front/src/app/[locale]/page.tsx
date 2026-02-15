@@ -21,8 +21,7 @@ export default function HomePage() {
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
   const { isFilterOpen, toggleFilter, closeFilter } = useFilterPanel();
-  const { searchQuery, setSearchQuery, getCurrentBounds, filters } =
-    useMapStore();
+  const { searchQuery, setSearchQuery, getCurrentBounds, filters, setFilters } = useMapStore();
 
   // PWA Install Prompt
   useEffect(() => {
@@ -35,10 +34,7 @@ export default function HomePage() {
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
 
     return () => {
-      window.removeEventListener(
-        "beforeinstallprompt",
-        handleBeforeInstallPrompt,
-      );
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
     };
   }, []);
 
@@ -65,12 +61,23 @@ export default function HomePage() {
     setShowInstallPrompt(false);
   };
 
-  const handleSearchChange = useCallback(
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchValue(value);
+  }, []);
+
+  const handleSearch = useCallback(
     (value: string) => {
-      setSearchValue(value);
-      setSearchQuery(value);
+      if (value.trim()) {
+        // Update filters with the search name to trigger backend request
+        setFilters({ name: value.trim() });
+        setSearchQuery(value.trim());
+      } else {
+        // Clear the name filter if search is empty
+        setFilters({ name: undefined });
+        setSearchQuery("");
+      }
     },
-    [setSearchQuery],
+    [setFilters, setSearchQuery],
   );
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -98,24 +105,10 @@ export default function HomePage() {
     <div className="relative h-screen w-full overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Animated Background Pattern */}
       <div className="absolute inset-0 z-0 opacity-5">
-        <svg
-          className="w-full h-full"
-          viewBox="0 0 100 100"
-          preserveAspectRatio="none"
-        >
+        <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
           <defs>
-            <pattern
-              id="grid"
-              width="10"
-              height="10"
-              patternUnits="userSpaceOnUse"
-            >
-              <path
-                d="M 10 0 L 0 0 0 10"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="0.5"
-              />
+            <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+              <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" strokeWidth="0.5" />
             </pattern>
           </defs>
           <rect width="100" height="100" fill="url(#grid)" />
@@ -130,6 +123,7 @@ export default function HomePage() {
         <SearchFilterHub
           searchValue={searchValue}
           onSearchChange={handleSearchChange}
+          onSearch={handleSearch}
         />
       </div>
 
@@ -263,12 +257,7 @@ export default function HomePage() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                      <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -293,12 +282,7 @@ export default function HomePage() {
                       onClick={() => setShowInstallPrompt(false)}
                       className="p-2 bg-white/20 hover:bg-white/30 rounded-xl transition-colors"
                     >
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
