@@ -1,4 +1,4 @@
-import type { ActFn } from "@deps";
+import { type ActFn, ObjectId } from "@deps";
 import { place } from "../../../mod.ts"; // Assuming 'accident' is your MongoDB model/collection utility
 
 export const getsFn: ActFn = async (body) => {
@@ -47,19 +47,27 @@ export const getsFn: ActFn = async (body) => {
 
 	// --- Location & Context ---
 	// For related collections, we need to use their IDs
-	if (province) matchConditions["province._id"] = province;
-	if (city) matchConditions["city._id"] = city;
+	if (province) {
+		matchConditions["province._id"] = new ObjectId(province as string);
+	}
+	if (city) matchConditions["city._id"] = new ObjectId(city as string);
 
 	// --- Relations ---
-	if (registrarId) matchConditions["registrar._id"] = registrarId;
+	if (registrarId) {
+		matchConditions["registrar._id"] = new ObjectId(registrarId as string);
+	}
 
 	// Handle arrays of IDs for categories and tags
 	if (categoryIds && categoryIds.length > 0) {
-		matchConditions["category._id"] = { $in: categoryIds };
+		matchConditions["category._id"] = {
+			$in: categoryIds.map((ci: string) => new ObjectId(ci)),
+		};
 	}
 
 	if (tagIds && tagIds.length > 0) {
-		matchConditions["tags._id"] = { $in: tagIds };
+		matchConditions["tags._id"] = {
+			$in: tagIds.map((ti: string) => new ObjectId(ti)),
+		};
 	}
 
 	// --- GeoJSON Filters ---
@@ -135,6 +143,20 @@ export const getsFn: ActFn = async (body) => {
 
 	// Add $count stage to get total documents
 	countPipeline.push({ $count: "total" });
+
+	/*
+	 * 	@LOG @DEBUG @INFO
+	 * 	This log written by ::==> {{ `` }}
+	 *
+	 * 	Please remove your log after debugging
+	 */
+	console.log(" ============= ");
+	console.group("countPipeline, pipeline ------ ");
+	console.log();
+	console.info({ countPipeline, pipeline }, " ------ ");
+	console.log();
+	console.groupEnd();
+	console.log(" ============= ");
 
 	// Execute both pipelines in parallel for efficiency
 	const [results, countResult] = await Promise.all([
