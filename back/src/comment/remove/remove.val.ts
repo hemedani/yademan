@@ -1,9 +1,9 @@
-import { boolean, enums, object, optional, string } from "@deps";
+import { boolean, enums, object, objectIdValidation, optional } from "@deps";
 
 export const removeValidator = () => {
 	return object({
 		set: object({
-			_id: string(),
+			_id: objectIdValidation,
 			hardCascade: optional(boolean()),
 		}),
 		get: object({
