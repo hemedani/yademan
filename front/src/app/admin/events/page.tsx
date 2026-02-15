@@ -39,9 +39,7 @@ const EventsManagement: React.FC = () => {
 
   const formatPersianNumber = useCallback((num: number): string => {
     const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-    return num
-      .toString()
-      .replace(/[0-9]/g, (digit) => persianDigits[parseInt(digit)]);
+    return num.toString().replace(/[0-9]/g, (digit) => persianDigits[parseInt(digit)]);
   }, []);
 
   const formatPersianDate = useCallback((dateString: string): string => {
@@ -93,10 +91,7 @@ const EventsManagement: React.FC = () => {
       setError(null);
 
       // Get token from cookies
-      const token =
-        typeof window !== "undefined"
-          ? Cookies.get("token") || undefined
-          : undefined;
+      const token = typeof window !== "undefined" ? Cookies.get("token") || undefined : undefined;
       const api = AppApi(undefined, token);
 
       const response = await api.send({
@@ -108,43 +103,52 @@ const EventsManagement: React.FC = () => {
             page: currentPage,
             limit: itemsPerPage,
             name: filters.search || undefined,
-            status: filters.status || undefined,
-            isPublic:
-              filters.isPublic === "" ? undefined : filters.isPublic === "true",
+            status: filters.status
+              ? (filters.status as "draft" | "published" | "archived" | "cancelled")
+              : undefined,
+            isPublic: filters.isPublic === "" ? undefined : filters.isPublic === "true",
           },
           get: {
-            _id: 1,
-            name: 1,
-            description: 1,
-            startTime: 1,
-            endTime: 1,
-            color: 1,
-            icon: 1,
-            capacity: 1,
-            status: 1,
-            isPublic: 1,
-            ticketPrice: 1,
-            registrationRequired: 1,
-            maxAttendees: 1,
-            eventUrl: 1,
-            registrationUrl: 1,
-            createdAt: 1,
-            updatedAt: 1,
-            registrar: {
-              _id: 1,
-              first_name: 1,
-              last_name: 1,
-              email: 1,
-            },
-            places: {
+            data: {
               _id: 1,
               name: 1,
+              description: 1,
+              startTime: 1,
+              endTime: 1,
+              color: 1,
+              icon: 1,
+              capacity: 1,
+              status: 1,
+              isPublic: 1,
+              ticketPrice: 1,
+              registrationRequired: 1,
+              maxAttendees: 1,
+              eventUrl: 1,
+              registrationUrl: 1,
+              createdAt: 1,
+              updatedAt: 1,
+              registrar: {
+                _id: 1,
+                first_name: 1,
+                last_name: 1,
+                email: 1,
+              },
+              places: {
+                _id: 1,
+                name: 1,
+              },
+              organizer: {
+                _id: 1,
+                first_name: 1,
+                last_name: 1,
+                email: 1,
+              },
             },
-            organizer: {
-              _id: 1,
-              first_name: 1,
-              last_name: 1,
-              email: 1,
+            metadata: {
+              total: 1,
+              page: 1,
+              limit: 1,
+              pageCount: 1,
             },
           },
         },
@@ -181,10 +185,7 @@ const EventsManagement: React.FC = () => {
       setActionLoading(eventId);
 
       // Get token from cookies
-      const token =
-        typeof window !== "undefined"
-          ? Cookies.get("token") || undefined
-          : undefined;
+      const token = typeof window !== "undefined" ? Cookies.get("token") || undefined : undefined;
       const api = AppApi(undefined, token);
 
       const response = await api.send({
@@ -220,9 +221,7 @@ const EventsManagement: React.FC = () => {
 
       if (response.success && response.body) {
         setEvents((prev) =>
-          prev.map((event) =>
-            event._id === eventId ? { ...response.body } : event,
-          ),
+          prev.map((event) => (event._id === eventId ? { ...response.body } : event)),
         );
       } else {
         setError("خطا در تغییر وضعیت رویداد");
@@ -243,10 +242,7 @@ const EventsManagement: React.FC = () => {
       setActionLoading(eventId);
 
       // Get token from cookies
-      const token =
-        typeof window !== "undefined"
-          ? Cookies.get("token") || undefined
-          : undefined;
+      const token = typeof window !== "undefined" ? Cookies.get("token") || undefined : undefined;
       const api = AppApi(undefined, token);
 
       const response = await api.send({
@@ -276,13 +272,10 @@ const EventsManagement: React.FC = () => {
     }
   };
 
-  const handleFilterChange = useCallback(
-    (key: keyof EventFilters, value: string) => {
-      setFilters((prev) => ({ ...prev, [key]: value }));
-      setCurrentPage(1);
-    },
-    [],
-  );
+  const handleFilterChange = useCallback((key: keyof EventFilters, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setCurrentPage(1);
+  }, []);
 
   useEffect(() => {
     fetchEvents();
@@ -297,9 +290,7 @@ const EventsManagement: React.FC = () => {
             <div className="absolute inset-0 w-16 h-16 border-4 border-pink-600 border-t-transparent rounded-full animate-spin"></div>
           </div>
           <div className="space-y-2">
-            <h2 className="text-xl font-bold text-white">
-              در حال بارگذاری رویدادها
-            </h2>
+            <h2 className="text-xl font-bold text-white">در حال بارگذاری رویدادها</h2>
             <p className="text-gray-400">لطفاً منتظر بمانید...</p>
           </div>
         </div>
@@ -316,23 +307,18 @@ const EventsManagement: React.FC = () => {
             <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
               مدیریت رویدادهای شهرداری
             </h1>
-            <p className="text-gray-400 text-lg">
-              بررسی و مدیریت رویدادهای شهری
-            </p>
+            <p className="text-gray-400 text-lg">بررسی و مدیریت رویدادهای شهری</p>
             <div className="flex items-center  space-x-4 text-sm text-gray-500">
               <span>مجموع {formatPersianNumber(events.length)} رویداد</span>
               <span>•</span>
               <span>
-                صفحه {formatPersianNumber(currentPage)} از{" "}
-                {formatPersianNumber(totalPages)}
+                صفحه {formatPersianNumber(currentPage)} از {formatPersianNumber(totalPages)}
               </span>
             </div>
           </div>
 
           {/* Add New Event Button */}
-          {(userLevel === "Manager" ||
-            userLevel === "Editor" ||
-            userLevel === "Ghost") && (
+          {(userLevel === "Manager" || userLevel === "Editor" || userLevel === "Ghost") && (
             <Link
               href="/admin/events/create"
               className="px-6 py-3 bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl hover:from-pink-700 hover:to-purple-700 transition-all duration-300 font-medium shadow-lg shadow-pink-500/30"
@@ -347,9 +333,7 @@ const EventsManagement: React.FC = () => {
       <div className="bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-700">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              جستجو
-            </label>
+            <label className="block text-sm font-medium text-gray-300 mb-2">جستجو</label>
             <input
               type="text"
               value={filters.search}
@@ -360,9 +344,7 @@ const EventsManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              وضعیت
-            </label>
+            <label className="block text-sm font-medium text-gray-300 mb-2">وضعیت</label>
             <select
               value={filters.status}
               onChange={(e) => handleFilterChange("status", e.target.value)}
@@ -387,9 +369,7 @@ const EventsManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              عمومی
-            </label>
+            <label className="block text-sm font-medium text-gray-300 mb-2">عمومی</label>
             <select
               value={filters.isPublic}
               onChange={(e) => handleFilterChange("isPublic", e.target.value)}
@@ -450,12 +430,8 @@ const EventsManagement: React.FC = () => {
                 />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">
-              رویدادی یافت نشد
-            </h3>
-            <p className="text-gray-400">
-              هیچ رویدادی با فیلترهای انتخابی شما یافت نشد.
-            </p>
+            <h3 className="text-xl font-semibold text-white mb-2">رویدادی یافت نشد</h3>
+            <p className="text-gray-400">هیچ رویدادی با فیلترهای انتخابی شما یافت نشد.</p>
           </div>
         ) : (
           events.map((event) => (
@@ -472,23 +448,14 @@ const EventsManagement: React.FC = () => {
                         className="w-4 h-4 rounded-full"
                         style={{ backgroundColor: event.color || "#8884d8" }}
                       ></div>
-                      <h3 className="text-xl font-semibold text-white">
-                        {event.name}
-                      </h3>
+                      <h3 className="text-xl font-semibold text-white">{event.name}</h3>
                     </div>
 
-                    {event.description && (
-                      <p className="text-gray-300 mb-3">{event.description}</p>
-                    )}
+                    {event.description && <p className="text-gray-300 mb-3">{event.description}</p>}
 
                     <div className="flex flex-wrap gap-4 text-sm text-gray-400">
                       <div className="flex items-center  space-x-2">
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -496,18 +463,11 @@ const EventsManagement: React.FC = () => {
                             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                           />
                         </svg>
-                        <span>
-                          {formatPersianDate(event.startTime.toString())}
-                        </span>
+                        <span>{formatPersianDate(event.startTime.toString())}</span>
                       </div>
 
                       <div className="flex items-center  space-x-2">
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -515,9 +475,7 @@ const EventsManagement: React.FC = () => {
                             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                           />
                         </svg>
-                        <span>
-                          تا {formatPersianDate(event.endTime.toString())}
-                        </span>
+                        <span>تا {formatPersianDate(event.endTime.toString())}</span>
                       </div>
 
                       {event.capacity && (
@@ -563,8 +521,7 @@ const EventsManagement: React.FC = () => {
                       <div className="mt-3 flex items-center  space-x-2 text-sm text-gray-400">
                         <span>ثبت شده توسط:</span>
                         <span className="font-medium text-gray-300">
-                          {event.registrar.first_name}{" "}
-                          {event.registrar.last_name}
+                          {event.registrar.first_name} {event.registrar.last_name}
                         </span>
                       </div>
                     )}
@@ -599,13 +556,9 @@ const EventsManagement: React.FC = () => {
                 <div className="flex items-center justify-between pt-4 border-t border-gray-700">
                   <div className="flex items-center  space-x-2">
                     {event.status !== "published" &&
-                      (userLevel === "Manager" ||
-                        userLevel === "Editor" ||
-                        userLevel === "Ghost") && (
+                      (userLevel === "Manager" || userLevel === "Editor" || userLevel === "Ghost") && (
                         <button
-                          onClick={() =>
-                            handleStatusChange(event._id!, "published")
-                          }
+                          onClick={() => handleStatusChange(event._id!, "published")}
                           disabled={actionLoading === event._id}
                           className="px-4 py-2 bg-green-900/30 text-green-400 border border-green-800 rounded-lg hover:bg-green-800/50 transition-colors text-sm font-medium disabled:opacity-50"
                         >
@@ -614,13 +567,9 @@ const EventsManagement: React.FC = () => {
                       )}
 
                     {event.status !== "draft" &&
-                      (userLevel === "Manager" ||
-                        userLevel === "Editor" ||
-                        userLevel === "Ghost") && (
+                      (userLevel === "Manager" || userLevel === "Editor" || userLevel === "Ghost") && (
                         <button
-                          onClick={() =>
-                            handleStatusChange(event._id!, "draft")
-                          }
+                          onClick={() => handleStatusChange(event._id!, "draft")}
                           disabled={actionLoading === event._id}
                           className="px-4 py-2 bg-yellow-900/30 text-yellow-400 border border-yellow-800 rounded-lg hover:bg-yellow-800/50 transition-colors text-sm font-medium disabled:opacity-50"
                         >
@@ -629,13 +578,9 @@ const EventsManagement: React.FC = () => {
                       )}
 
                     {event.status !== "cancelled" &&
-                      (userLevel === "Manager" ||
-                        userLevel === "Editor" ||
-                        userLevel === "Ghost") && (
+                      (userLevel === "Manager" || userLevel === "Editor" || userLevel === "Ghost") && (
                         <button
-                          onClick={() =>
-                            handleStatusChange(event._id!, "cancelled")
-                          }
+                          onClick={() => handleStatusChange(event._id!, "cancelled")}
                           disabled={actionLoading === event._id}
                           className="px-4 py-2 bg-red-900/30 text-red-400 border border-red-800 rounded-lg hover:bg-red-800/50 transition-colors text-sm font-medium disabled:opacity-50"
                         >
@@ -645,9 +590,7 @@ const EventsManagement: React.FC = () => {
                   </div>
 
                   {/* Delete Button */}
-                  {(userLevel === "Manager" ||
-                    userLevel === "Editor" ||
-                    userLevel === "Ghost") && (
+                  {(userLevel === "Manager" || userLevel === "Editor" || userLevel === "Ghost") && (
                     <button
                       onClick={() => {
                         setSelectedEvent(event);
@@ -656,12 +599,7 @@ const EventsManagement: React.FC = () => {
                       className="p-2 text-red-400 hover:bg-red-900/50 rounded-lg transition-colors"
                       title="حذف رویداد"
                     >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -695,27 +633,23 @@ const EventsManagement: React.FC = () => {
             </button>
 
             <div className="flex items-center  space-x-1">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (page) => (
-                  <button
-                    key={page}
-                    onClick={() => setCurrentPage(page)}
-                    className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                      currentPage === page
-                        ? "bg-pink-600 text-white"
-                        : "text-gray-300 bg-gray-800 border border-gray-600 hover:bg-gray-700"
-                    }`}
-                  >
-                    {formatPersianNumber(page)}
-                  </button>
-                ),
-              )}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                    currentPage === page
+                      ? "bg-pink-600 text-white"
+                      : "text-gray-300 bg-gray-800 border border-gray-600 hover:bg-gray-700"
+                  }`}
+                >
+                  {formatPersianNumber(page)}
+                </button>
+              ))}
             </div>
 
             <button
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
               className="px-4 py-2 text-sm font-medium text-gray-400 bg-gray-800 border border-gray-600 rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
@@ -746,13 +680,11 @@ const EventsManagement: React.FC = () => {
                 </svg>
               </div>
 
-              <h3 className="text-lg font-semibold text-white text-center mb-2">
-                حذف رویداد
-              </h3>
+              <h3 className="text-lg font-semibold text-white text-center mb-2">حذف رویداد</h3>
               <p className="text-gray-400 text-center mb-6">
                 آیا مطمئن هستید که می‌خواهید رویداد{" "}
-                <span className="font-semibold">{selectedEvent.name}</span> را
-                حذف کنید؟ این عمل قابل بازگشت نیست.
+                <span className="font-semibold">{selectedEvent.name}</span> را حذف کنید؟ این عمل قابل
+                بازگشت نیست.
               </p>
 
               <div className="flex justify-center  space-x-3">
@@ -770,9 +702,7 @@ const EventsManagement: React.FC = () => {
                   disabled={actionLoading === selectedEvent._id}
                   className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  {actionLoading === selectedEvent._id
-                    ? "در حال حذف..."
-                    : "حذف رویداد"}
+                  {actionLoading === selectedEvent._id ? "در حال حذف..." : "حذف رویداد"}
                 </button>
               </div>
             </div>

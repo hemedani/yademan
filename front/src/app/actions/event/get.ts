@@ -3,10 +3,7 @@ import { AppApi } from "@/services/api";
 import { ReqType } from "@/types/declarations/selectInp";
 import { cookies } from "next/headers";
 
-export const get = async (
-  id: string,
-  get: ReqType["main"]["event"]["gets"]["get"],
-) => {
+export const get = async (id: string, get: ReqType["main"]["event"]["get"]["get"]) => {
   const token = (await cookies()).get("token");
 
   return await AppApi().send(
