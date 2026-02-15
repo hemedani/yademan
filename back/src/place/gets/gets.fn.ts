@@ -144,20 +144,6 @@ export const getsFn: ActFn = async (body) => {
 	// Add $count stage to get total documents
 	countPipeline.push({ $count: "total" });
 
-	/*
-	 * 	@LOG @DEBUG @INFO
-	 * 	This log written by ::==> {{ `` }}
-	 *
-	 * 	Please remove your log after debugging
-	 */
-	console.log(" ============= ");
-	console.group("countPipeline, pipeline ------ ");
-	console.log();
-	console.info({ countPipeline, pipeline }, " ------ ");
-	console.log();
-	console.groupEnd();
-	console.log(" ============= ");
-
 	// Execute both pipelines in parallel for efficiency
 	const [results, countResult] = await Promise.all([
 		place.aggregation({
