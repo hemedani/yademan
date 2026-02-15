@@ -1,22 +1,12 @@
 "use client";
 import dynamic from "next/dynamic";
 import React from "react";
-import {
-  FieldPath,
-  FieldValues,
-  Path,
-  PathValue,
-  UseFormSetValue,
-} from "react-hook-form";
+import { FieldPath, FieldValues, Path, PathValue, UseFormSetValue } from "react-hook-form";
 import { GroupBase, OptionsOrGroups, StylesConfig } from "react-select";
 
 const AsyncSelect = dynamic(() => import("react-select/async"), { ssr: false });
 
-interface InputProps<
-  Option,
-  Group extends GroupBase<Option>,
-  T extends FieldValues = FieldValues,
-> {
+interface InputProps<Option, Group extends GroupBase<Option>, T extends FieldValues = FieldValues> {
   name: FieldPath<T>;
   label: string;
   setValue: UseFormSetValue<T>;
@@ -35,11 +25,7 @@ interface InputProps<
   isRequired?: boolean;
 }
 
-const AsyncSelectBox = <
-  Option,
-  Group extends GroupBase<Option>,
-  T extends FieldValues = FieldValues,
->({
+const AsyncSelectBox = <Option, Group extends GroupBase<Option>, T extends FieldValues = FieldValues>({
   errMsg,
   name,
   label,
@@ -124,9 +110,7 @@ const AsyncSelectBox = <
       "&:hover": {
         color: "#ec4899", // pink
       },
-      transform: state.selectProps.menuIsOpen
-        ? "rotate(180deg)"
-        : "rotate(0deg)",
+      transform: state.selectProps.menuIsOpen ? "rotate(180deg)" : "rotate(0deg)",
       transition: "all 0.2s ease-in-out",
     }),
 
@@ -146,10 +130,14 @@ const AsyncSelectBox = <
       backgroundColor: "#1f2937", // dark blue-gray
       border: "1px solid #374151",
       borderRadius: "12px",
-      boxShadow:
-        "0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3)",
+      boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3)",
       marginTop: "4px",
       overflow: "hidden",
+      zIndex: 9999,
+    }),
+
+    menuPortal: (provided) => ({
+      ...provided,
       zIndex: 9999,
     }),
 
@@ -215,10 +203,7 @@ const AsyncSelectBox = <
 
   return (
     <div className={`flex flex-col gap-2 ${className || ""}`}>
-      <label
-        htmlFor={name}
-        className="text-sm font-medium text-gray-300 text-right"
-      >
+      <label htmlFor={name} className="text-sm font-medium text-gray-300 text-right">
         {label}
         {props.isRequired && <span className="text-red-500 mr-1">*</span>}
       </label>
@@ -228,6 +213,8 @@ const AsyncSelectBox = <
           cacheOptions
           defaultOptions={defaultOptions}
           loadOptions={loadOptions}
+          menuPortalTarget={typeof document !== "undefined" ? document.body : null}
+          menuPosition="fixed"
           onChange={(newVal: any, actionMeta: any) => {
             if (isMulti) {
               // Handle multi-select
@@ -243,9 +230,7 @@ const AsyncSelectBox = <
             } else {
               // Handle single select
               if (newVal) {
-                const selectedValue = labelAsValue
-                  ? newVal.label
-                  : newVal.value;
+                const selectedValue = labelAsValue ? newVal.label : newVal.value;
                 // Also call setValue to ensure form is updated properly
                 setValue(name, selectedValue as PathValue<T, Path<T>>);
               } else {
@@ -273,11 +258,7 @@ const AsyncSelectBox = <
 
       {errMsg && (
         <span className="text-red-400 text-xs font-medium text-right mt-1 flex items-center gap-1">
-          <svg
-            className="w-3 h-3 flex-shrink-0"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
+          <svg className="w-3 h-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
             <path
               fillRule="evenodd"
               d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
