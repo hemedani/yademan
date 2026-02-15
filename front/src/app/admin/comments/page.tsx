@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { AppApi } from "@/services/api";
 import Cookies from "js-cookie";
+import toast from "react-hot-toast";
 
 interface Comment {
   _id: string;
@@ -56,9 +57,7 @@ const CommentsManagement: React.FC = () => {
 
   const formatPersianNumber = useCallback((num: number): string => {
     const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-    return num
-      .toString()
-      .replace(/[0-9]/g, (digit) => persianDigits[parseInt(digit)]);
+    return num.toString().replace(/[0-9]/g, (digit) => persianDigits[parseInt(digit)]);
   }, []);
 
   const formatPersianDate = useCallback((dateString: string): string => {
@@ -104,18 +103,14 @@ const CommentsManagement: React.FC = () => {
           {[1, 2, 3, 4, 5].map((star) => (
             <svg
               key={star}
-              className={`w-4 h-4 ${
-                star <= rating ? "text-yellow-400" : "text-gray-500"
-              }`}
+              className={`w-4 h-4 ${star <= rating ? "text-yellow-400" : "text-gray-500"}`}
               fill="currentColor"
               viewBox="0 0 20 20"
             >
               <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
             </svg>
           ))}
-          <span className="text-sm text-gray-400 mr-2">
-            {formatPersianNumber(rating)}
-          </span>
+          <span className="text-sm text-gray-400 mr-2">{formatPersianNumber(rating)}</span>
         </div>
       );
     },
@@ -129,10 +124,7 @@ const CommentsManagement: React.FC = () => {
       setError(null);
 
       // Get token from cookies
-      const token =
-        typeof window !== "undefined"
-          ? Cookies.get("token") || undefined
-          : undefined;
+      const token = typeof window !== "undefined" ? Cookies.get("token") || undefined : undefined;
       const api = AppApi(undefined, token);
 
       const response = await api.send({
@@ -199,10 +191,7 @@ const CommentsManagement: React.FC = () => {
     try {
       setActionLoading(commentId);
       // Get token from cookies
-      const token =
-        typeof window !== "undefined"
-          ? Cookies.get("token") || undefined
-          : undefined;
+      const token = typeof window !== "undefined" ? Cookies.get("token") || undefined : undefined;
       const api = AppApi(undefined, token);
 
       const response = await api.send({
@@ -236,7 +225,7 @@ const CommentsManagement: React.FC = () => {
         },
       });
 
-      if (response.success && response.body) {
+      if (response && response.body) {
         setComments((prev) =>
           prev.map((comment) =>
             comment._id === commentId
@@ -265,10 +254,7 @@ const CommentsManagement: React.FC = () => {
     try {
       setActionLoading(commentId);
       // Get token from cookies
-      const token =
-        typeof window !== "undefined"
-          ? Cookies.get("token") || undefined
-          : undefined;
+      const token = typeof window !== "undefined" ? Cookies.get("token") || undefined : undefined;
       const api = AppApi(undefined, token);
 
       const response = await api.send({
@@ -283,30 +269,28 @@ const CommentsManagement: React.FC = () => {
         },
       });
 
-      if (response.success && response.body?.success) {
-        setComments((prev) =>
-          prev.filter((comment) => comment._id !== commentId),
-        );
+      if (response.success) {
+        setComments((prev) => prev.filter((comment) => comment._id !== commentId));
         setShowDeleteModal(false);
         setSelectedComment(null);
+        toast.success("نظر با موفقیت حذف شد");
       } else {
         setError("خطا در حذف نظر");
+        toast.error("خطا در حذف نظر");
       }
     } catch (err) {
       setError("خطا در ارتباط با سرور");
+      toast.error("خطا در ارتباط با سرور");
       console.error("Error deleting comment:", err);
     } finally {
       setActionLoading(null);
     }
   };
 
-  const handleFilterChange = useCallback(
-    (key: keyof CommentFilters, value: string) => {
-      setFilters((prev) => ({ ...prev, [key]: value }));
-      setCurrentPage(1);
-    },
-    [],
-  );
+  const handleFilterChange = useCallback((key: keyof CommentFilters, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setCurrentPage(1);
+  }, []);
 
   useEffect(() => {
     fetchComments();
@@ -321,9 +305,7 @@ const CommentsManagement: React.FC = () => {
             <div className="absolute inset-0 w-16 h-16 border-4 border-pink-600 border-t-transparent rounded-full animate-spin"></div>
           </div>
           <div className="space-y-2">
-            <h2 className="text-xl font-bold text-white">
-              در حال بارگذاری نظرات
-            </h2>
+            <h2 className="text-xl font-bold text-white">در حال بارگذاری نظرات</h2>
             <p className="text-gray-400">لطفاً منتظر بمانید...</p>
           </div>
         </div>
@@ -340,15 +322,12 @@ const CommentsManagement: React.FC = () => {
             <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
               مدیریت نظرات
             </h1>
-            <p className="text-gray-400 text-lg">
-              بررسی و مدیریت نظرات کاربران
-            </p>
+            <p className="text-gray-400 text-lg">بررسی و مدیریت نظرات کاربران</p>
             <div className="flex items-center  space-x-4 text-sm text-gray-500">
               <span>مجموع {formatPersianNumber(comments.length)} نظر</span>
               <span>•</span>
               <span>
-                صفحه {formatPersianNumber(currentPage)} از{" "}
-                {formatPersianNumber(totalPages)}
+                صفحه {formatPersianNumber(currentPage)} از {formatPersianNumber(totalPages)}
               </span>
             </div>
           </div>
@@ -357,29 +336,19 @@ const CommentsManagement: React.FC = () => {
           <div className="grid grid-cols-3 gap-4 text-center">
             <div className="bg-gray-700/30 rounded-xl p-4 border border-gray-600">
               <div className="text-2xl font-bold text-green-400">
-                {formatPersianNumber(
-                  comments.filter((c) => c.status === "approved").length,
-                )}
+                {formatPersianNumber(comments.filter((c) => c.status === "approved").length)}
               </div>
-              <div className="text-sm text-green-300 font-medium">
-                تایید شده
-              </div>
+              <div className="text-sm text-green-300 font-medium">تایید شده</div>
             </div>
             <div className="bg-gray-700/30 rounded-xl p-4 border border-gray-600">
               <div className="text-2xl font-bold text-yellow-400">
-                {formatPersianNumber(
-                  comments.filter((c) => c.status === "pending").length,
-                )}
+                {formatPersianNumber(comments.filter((c) => c.status === "pending").length)}
               </div>
-              <div className="text-sm text-yellow-300 font-medium">
-                در انتظار
-              </div>
+              <div className="text-sm text-yellow-300 font-medium">در انتظار</div>
             </div>
             <div className="bg-gray-700/30 rounded-xl p-4 border border-gray-600">
               <div className="text-2xl font-bold text-red-400">
-                {formatPersianNumber(
-                  comments.filter((c) => c.status === "rejected").length,
-                )}
+                {formatPersianNumber(comments.filter((c) => c.status === "rejected").length)}
               </div>
               <div className="text-sm text-red-300 font-medium">رد شده</div>
             </div>
@@ -391,9 +360,7 @@ const CommentsManagement: React.FC = () => {
       <div className="bg-gray-800 rounded-2xl shadow-lg p-6 border border-gray-700">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              جستجو
-            </label>
+            <label className="block text-sm font-medium text-gray-300 mb-2">جستجو</label>
             <input
               type="text"
               value={filters.search}
@@ -404,9 +371,7 @@ const CommentsManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              وضعیت
-            </label>
+            <label className="block text-sm font-medium text-gray-300 mb-2">وضعیت</label>
             <select
               value={filters.status}
               onChange={(e) => handleFilterChange("status", e.target.value)}
@@ -428,9 +393,7 @@ const CommentsManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              مرتب‌سازی
-            </label>
+            <label className="block text-sm font-medium text-gray-300 mb-2">مرتب‌سازی</label>
             <select
               value={filters.sortBy}
               onChange={(e) => handleFilterChange("sortBy", e.target.value)}
@@ -449,17 +412,10 @@ const CommentsManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
-              ترتیب
-            </label>
+            <label className="block text-sm font-medium text-gray-300 mb-2">ترتیب</label>
             <select
               value={filters.sortOrder}
-              onChange={(e) =>
-                handleFilterChange(
-                  "sortOrder",
-                  e.target.value as "asc" | "desc",
-                )
-              }
+              onChange={(e) => handleFilterChange("sortOrder", e.target.value as "asc" | "desc")}
               className="w-full px-4 py-2 border border-gray-600 bg-gray-700 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 text-white"
             >
               <option value="desc" className="bg-gray-700">
@@ -514,12 +470,8 @@ const CommentsManagement: React.FC = () => {
                 />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">
-              نظری یافت نشد
-            </h3>
-            <p className="text-gray-400">
-              هیچ نظری با فیلترهای انتخابی شما یافت نشد.
-            </p>
+            <h3 className="text-xl font-semibold text-white mb-2">نظری یافت نشد</h3>
+            <p className="text-gray-400">هیچ نظری با فیلترهای انتخابی شما یافت نشد.</p>
           </div>
         ) : (
           comments.map((comment) => (
@@ -567,9 +519,7 @@ const CommentsManagement: React.FC = () => {
 
                 {/* Comment Text */}
                 <div className="mb-4">
-                  <p className="text-gray-300 leading-relaxed">
-                    {comment.text}
-                  </p>
+                  <p className="text-gray-300 leading-relaxed">{comment.text}</p>
                 </div>
 
                 {/* Action Buttons */}
@@ -577,9 +527,7 @@ const CommentsManagement: React.FC = () => {
                   <div className="flex items-center  space-x-2">
                     {comment.status !== "approved" && (
                       <button
-                        onClick={() =>
-                          handleStatusChange(comment._id, "approved")
-                        }
+                        onClick={() => handleStatusChange(comment._id, "approved")}
                         disabled={actionLoading === comment._id}
                         className="px-4 py-2 bg-green-900/30 text-green-400 border border-green-800 rounded-lg hover:bg-green-800/50 transition-colors text-sm font-medium disabled:opacity-50"
                       >
@@ -589,9 +537,7 @@ const CommentsManagement: React.FC = () => {
 
                     {comment.status !== "rejected" && (
                       <button
-                        onClick={() =>
-                          handleStatusChange(comment._id, "rejected")
-                        }
+                        onClick={() => handleStatusChange(comment._id, "rejected")}
                         disabled={actionLoading === comment._id}
                         className="px-4 py-2 bg-red-900/30 text-red-400 border border-red-800 rounded-lg hover:bg-red-800/50 transition-colors text-sm font-medium disabled:opacity-50"
                       >
@@ -601,9 +547,7 @@ const CommentsManagement: React.FC = () => {
 
                     {comment.status !== "pending" && (
                       <button
-                        onClick={() =>
-                          handleStatusChange(comment._id, "pending")
-                        }
+                        onClick={() => handleStatusChange(comment._id, "pending")}
                         disabled={actionLoading === comment._id}
                         className="px-4 py-2 bg-yellow-900/30 text-yellow-400 border border-yellow-800 rounded-lg hover:bg-yellow-800/50 transition-colors text-sm font-medium disabled:opacity-50"
                       >
@@ -621,12 +565,7 @@ const CommentsManagement: React.FC = () => {
                     className="p-2 text-red-400 hover:bg-red-900/50 rounded-lg transition-colors"
                     title="حذف نظر"
                   >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -659,27 +598,23 @@ const CommentsManagement: React.FC = () => {
             </button>
 
             <div className="flex items-center  space-x-1">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (page) => (
-                  <button
-                    key={page}
-                    onClick={() => setCurrentPage(page)}
-                    className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                      currentPage === page
-                        ? "bg-pink-600 text-white"
-                        : "text-gray-300 bg-gray-800 border border-gray-600 hover:bg-gray-700"
-                    }`}
-                  >
-                    {formatPersianNumber(page)}
-                  </button>
-                ),
-              )}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                    currentPage === page
+                      ? "bg-pink-600 text-white"
+                      : "text-gray-300 bg-gray-800 border border-gray-600 hover:bg-gray-700"
+                  }`}
+                >
+                  {formatPersianNumber(page)}
+                </button>
+              ))}
             </div>
 
             <button
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
               className="px-4 py-2 text-sm font-medium text-gray-400 bg-gray-800 border border-gray-600 rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
@@ -710,12 +645,9 @@ const CommentsManagement: React.FC = () => {
                 </svg>
               </div>
 
-              <h3 className="text-lg font-semibold text-white text-center mb-2">
-                حذف نظر
-              </h3>
+              <h3 className="text-lg font-semibold text-white text-center mb-2">حذف نظر</h3>
               <p className="text-gray-400 text-center mb-6">
-                آیا مطمئن هستید که می‌خواهید این نظر را حذف کنید؟ این عمل قابل
-                بازگشت نیست.
+                آیا مطمئن هستید که می‌خواهید این نظر را حذف کنید؟ این عمل قابل بازگشت نیست.
               </p>
 
               <div className="flex justify-center  space-x-3">
@@ -733,9 +665,7 @@ const CommentsManagement: React.FC = () => {
                   disabled={actionLoading === selectedComment._id}
                   className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  {actionLoading === selectedComment._id
-                    ? "در حال حذف..."
-                    : "حذف نظر"}
+                  {actionLoading === selectedComment._id ? "در حال حذف..." : "حذف نظر"}
                 </button>
               </div>
             </div>
