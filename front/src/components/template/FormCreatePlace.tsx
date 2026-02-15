@@ -64,7 +64,7 @@ const placeSchema = z.object({
     .number({
       invalid_type_error: "عمر آثار باید یک عدد معتبر باشد",
     })
-    .min(0, { message: "عمر آثار باید عدد مثبت یا صفر باشد" })
+    .min(-10000, { message: "عمر آثار نمی‌تواند کمتر از ۱۰۰۰۰ سال قبل از هجرت باشد" })
     .max(10000, { message: "عمر آثار باید کمتر از ۱۰۰۰۰ سال باشد" })
     .optional(),
   thumbnail: z.string().optional().or(z.literal("")),
@@ -511,7 +511,7 @@ const FormCreatePlace = ({ token, lesanUrl }: { token?: string; lesanUrl?: strin
             label="عمر آثار (سال)"
             register={register}
             errMsg={errors.antiquity?.message}
-            placeholder="مثال: 2000"
+            placeholder="مثال: 2000 یا -500 (برای سال‌های قبل از هجرت)"
             type="number"
             isRequired={true}
           />
@@ -665,10 +665,11 @@ const FormCreatePlace = ({ token, lesanUrl }: { token?: string; lesanUrl?: strin
             <button
               type="button"
               onClick={toggleDrawingMode}
-              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${isDrawingMode
+              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
+                isDrawingMode
                   ? "bg-pink-600 text-white"
                   : "bg-gray-700 text-white border border-gray-600 hover:bg-gray-600"
-                }`}
+              }`}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -684,10 +685,11 @@ const FormCreatePlace = ({ token, lesanUrl }: { token?: string; lesanUrl?: strin
             <button
               type="button"
               onClick={toggleCenterMode}
-              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${isCenterMode
+              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
+                isCenterMode
                   ? "bg-purple-600 text-white"
                   : "bg-gray-700 text-white border border-gray-600 hover:bg-gray-600"
-                }`}
+              }`}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -892,9 +894,10 @@ const FormCreatePlace = ({ token, lesanUrl }: { token?: string; lesanUrl?: strin
               text-right transition-all duration-200 ease-in-out
               focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-0 focus:border-pink-500
               hover:border-gray-500
-              ${errors.status
-                ? "border-red-500 bg-red-900/30 focus:ring-red-500 focus:border-red-500"
-                : "border-gray-600 hover:bg-gray-600/50"
+              ${
+                errors.status
+                  ? "border-red-500 bg-red-900/30 focus:ring-red-500 focus:border-red-500"
+                  : "border-gray-600 hover:bg-gray-600/50"
               }
             `}
           >

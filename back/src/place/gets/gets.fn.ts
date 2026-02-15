@@ -1,6 +1,20 @@
 import { type ActFn, ObjectId } from "@deps";
 import { place } from "../../../mod.ts"; // Assuming 'accident' is your MongoDB model/collection utility
 
+// Helper function to convert Gregorian year to Solar Hijri year
+// The Solar Hijri calendar is about 621-622 years behind the Gregorian calendar
+const gregorianToSolarHijri = (gregorianYear: number): number => {
+	// The approximate difference between Gregorian and Solar Hijri calendars
+	// This is a simplified conversion - for more precision, a dedicated library would be needed
+	return gregorianYear - 621;
+};
+
+// Get current Solar Hijri year
+const getCurrentSolarHijriYear = (): number => {
+	const currentYear = new Date().getFullYear();
+	return gregorianToSolarHijri(currentYear);
+};
+
 export const getsFn: ActFn = async (body) => {
 	const {
 		set, // Contains all our filter parameters
@@ -90,9 +104,22 @@ export const getsFn: ActFn = async (body) => {
 	}
 
 	// --- Antiquity Filter ---
-	// Filter places that have antiquity greater than or equal to the specified value
-	if (antiquity !== undefined && antiquity >= 0) {
-		matchConditions.antiquity = { $gte: antiquity };
+	// The antiquity parameter represents the minimum age (in years) that a building should have
+	// We need to find buildings whose construction year (in the antiquity field) is older than
+	// (current year - requested age), meaning the construction year should be <= (current year - requested age)
+	if (antiquity !== undefined) {
+		const currentSolarYear = getCurrentSolarHijriYear();
+
+		// Calculate the maximum construction year that still satisfies the age requirement
+		// For example, if current year is 1445 and user wants buildings at least 50 years old,
+		// then the building should be constructed in year (1445 - 50) = 1395 or earlier
+		const maxConstructionYearForRequestedAge = currentSolarYear - antiquity;
+
+		// Filter places where the construction year (antiquity field) is at or before the calculated year
+		// Since earlier years are represented by smaller numbers, we use $lte
+		matchConditions.antiquity = {
+			$lte: maxConstructionYearForRequestedAge,
+		};
 	}
 
 	// $geoNear for proximity search (using near point)
