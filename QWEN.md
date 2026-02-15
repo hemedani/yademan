@@ -158,13 +158,24 @@ The application is designed for containerized deployment using Docker. Both deve
 ## Git commit
 
 When I say `git commit` please do the following:
+
 ```
 Please act as an expert Git commit assistant. Your task is to carefully review the recent project changes (e.g., via git diff or staged files) and generate a series of clear, conventional commit messages following best practices. Use Gitmoji emojis at the start of each commit message to make them more expressive and readable (e.g., :sparkles: for new features, :bug: for fixes).
 Key guidelines:
 Conventional structure: Each commit message should start with a Gitmoji, followed by a type (e.g., feat, fix, refactor, docs, test, chore), a scope in parentheses if applicable (e.g., (ui)), a colon, and a concise description. Include a body if needed for more details, and reference issues if relevant.
 Grouping: Break changes into logical, atomic commits. Group related files or changes together (e.g., one commit for UI updates, another for bug fixes), rather than lumping everything into a single commit. Avoid overly large or unrelated groupings.
-Exclusions: Do not include any "Co-authored-by" lines, such as Co-authored-by: Qwen-Coder <qwen-coder@alibabacloud.com>, in the commit messages.
 Execution: Directly output and execute the necessary Git shell commands (e.g., git add for specific files, followed by git commit -m "message") to apply these commits. Do not ask for confirmation, additional input, or perform unrelated actions like rebasing, squashing, or amending existing commits. Only create new commits on the current branch.
 Best practices: Ensure messages are imperative, concise (50 chars for subject), and descriptive. Focus on what changed and why, not how.
+Additional notes:
+- Use present tense for the subject line (e.g., "Add feature" not "Added feature")
+- Be specific about what was changed (e.g., "Fix user login validation" rather than just "Fix bug")
+- When making breaking changes, indicate this with an exclamation mark after the type (e.g., "feat!: Remove deprecated API endpoint")
+- Reference issue numbers if applicable (e.g., "fix(auth): Resolve login issue #123")
+- For multiple related changes, create separate commits for each logical change
+- When updating dependencies, mention the specific packages (e.g., "chore(deps): Update react and react-dom to v18")
+- For documentation changes, be clear about what documentation was added or updated
+- When changing configuration files, explain the purpose of the changes
 Proceed step-by-step: First, analyze the changes, then propose the grouped commits, and finally execute the Git commands in sequence.
 ```
+
+⚠️ **WARNING**: Under no circumstances should you ever use the `git reset` command when performing git operations, as it can permanently erase work that took days to complete. This command has caused significant data loss in the past and should be avoided entirely.
