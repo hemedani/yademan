@@ -22,13 +22,9 @@ interface TopBarProps {
   _eventsOpen?: boolean;
 }
 
-export default function TopBar({
-  locale = "fa",
-  _eventsOpen = false,
-}: TopBarProps) {
+export default function TopBar({ locale = "fa", _eventsOpen = false }: TopBarProps) {
   const t = useTranslations();
-  const { isAuthenticated, displayName, initials, userLevel, logout, user } =
-    useAuth();
+  const { isAuthenticated, displayName, initials, userLevel, logout, user } = useAuth();
 
   // States for panel visibility
   const [showUserPanel, setShowUserPanel] = useState(false);
@@ -40,8 +36,7 @@ export default function TopBar({
   const userPanelRef = useRef<HTMLDivElement>(null);
   const eventsPanelRef = useRef<HTMLDivElement>(null);
 
-  const isAdmin =
-    isAuthenticated && (userLevel === "Manager" || userLevel === "Ghost");
+  const isAdmin = isAuthenticated && (userLevel === "Manager" || userLevel === "Ghost");
 
   // Handle logout
   const handleLogout = async () => {
@@ -60,10 +55,7 @@ export default function TopBar({
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       // Check if click is outside of topbar completely
-      if (
-        topBarRef.current &&
-        !topBarRef.current.contains(event.target as Node)
-      ) {
+      if (topBarRef.current && !topBarRef.current.contains(event.target as Node)) {
         setShowUserPanel(false);
         setShowEventsPanel(false);
       }
@@ -159,10 +151,7 @@ export default function TopBar({
               title={t("Navigation.adminPanelTooltip")}
               aria-label={t("Navigation.adminPanelAriaLabel")}
             >
-              <Cog6ToothIcon
-                className="h-5 w-5 text-white"
-                aria-hidden="true"
-              />
+              <Cog6ToothIcon className="h-5 w-5 text-white" aria-hidden="true" />
             </Link>
           )}
         </div>
@@ -196,12 +185,8 @@ export default function TopBar({
                   {initials || "U"}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-base font-semibold text-white truncate">
-                    {displayName}
-                  </h3>
-                  <p className="text-xs text-[#a0a0a0] truncate">
-                    {user?.email}
-                  </p>
+                  <h3 className="text-base font-semibold text-white truncate">{displayName}</h3>
+                  <p className="text-xs text-[#a0a0a0] truncate">{user?.email}</p>
                 </div>
               </div>
             </motion.div>
@@ -223,19 +208,17 @@ export default function TopBar({
               </ILink>
 
               {/* Only show settings if user has appropriate level */}
-              {isAuthenticated &&
-                userLevel &&
-                ["Manager", "Editor", "Ghost"].includes(userLevel) && (
-                  <ILink
-                    href="/settings"
-                    locale={locale}
-                    className="flex items-center px-4 py-3 text-sm text-[#a0a0a0] hover:bg-[#1e1e1e] hover:text-white transition-colors duration-150"
-                    onClick={() => setShowUserPanel(false)}
-                  >
-                    <Cog6ToothIcon className="w-5 h-5 ml-3 text-[#FF007A] hover:text-white" />
-                    {t("Navigation.settings")}
-                  </ILink>
-                )}
+              {isAuthenticated && userLevel && ["Manager", "Editor", "Ghost"].includes(userLevel) && (
+                <ILink
+                  href="/settings"
+                  locale={locale}
+                  className="flex items-center px-4 py-3 text-sm text-[#a0a0a0] hover:bg-[#1e1e1e] hover:text-white transition-colors duration-150"
+                  onClick={() => setShowUserPanel(false)}
+                >
+                  <Cog6ToothIcon className="w-5 h-5 ml-3 text-[#FF007A] hover:text-white" />
+                  {t("Navigation.settings")}
+                </ILink>
+              )}
 
               <div className="border-t border-[#333] my-1"></div>
 
@@ -247,10 +230,7 @@ export default function TopBar({
                 <ArrowRightOnRectangleIcon className="w-5 h-5 ml-3" />
                 {isLoggingOut ? (
                   <>
-                    <svg
-                      className="animate-spin w-4 h-4 ml-2 text-[#FF007A]"
-                      viewBox="0 0 24 24"
-                    >
+                    <svg className="animate-spin w-4 h-4 ml-2 text-[#FF007A]" viewBox="0 0 24 24">
                       <circle
                         className="opacity-25"
                         cx="12"
@@ -297,9 +277,7 @@ export default function TopBar({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.2 }}
             >
-              <h3 className="text-base font-semibold text-white">
-                {t("Events.upcomingEvents")}
-              </h3>
+              <h3 className="text-base font-semibold text-white">{t("Events.upcomingEvents")}</h3>
               <ILink
                 href="/events"
                 locale={locale}
@@ -312,27 +290,10 @@ export default function TopBar({
 
             {/* Use the EventsList component to display real events */}
             <div className="py-2 max-h-80 overflow-y-auto">
-              <EventsList
-                limit={5}
-                showAllLink={false}
-                upcomingOnly={true}
-                className=""
-              />
+              <EventsList limit={5} showAllLink={false} upcomingOnly={true} className="" />
             </div>
 
             <div className="p-4 border-t border-[#333] text-center">
-              {isAuthenticated &&
-                userLevel &&
-                ["Manager", "Editor", "Ghost"].includes(userLevel) && (
-                  <ILink
-                    href="/admin/events/create"
-                    locale={locale}
-                    className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-[#FF007A] rounded-lg hover:bg-[#ff339c] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF007A] mb-3"
-                    onClick={() => setShowEventsPanel(false)}
-                  >
-                    {t("Events.createEvent")}
-                  </ILink>
-                )}
               <ILink
                 href="/events"
                 locale={locale}

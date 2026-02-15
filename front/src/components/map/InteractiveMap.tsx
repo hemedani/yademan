@@ -676,45 +676,6 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       );
     }
 
-    // Initialize 3D terrain if enabled
-    if (is3DEnabled) {
-      // Add terrain source and enable 3D view
-      map.current.addSource("terrain", {
-        type: "raster-dem",
-        url: "https://demotiles.maplibre.org/terrain-tiles/tiles.json",
-        tileSize: 256,
-      });
-      map.current.setTerrain({
-        source: "terrain",
-        exaggeration: 1.5,
-      });
-
-      // Enable 3D buildings if current style supports it (vector styles)
-      if (currentLayer.url.endsWith(".json")) {
-        if (!map.current.getLayer("3d-buildings")) {
-          map.current.addLayer({
-            id: "3d-buildings",
-            type: "fill-extrusion",
-            source: "openmaptiles", // standard in OpenFreeMap and most vector styles
-            "source-layer": "building",
-            paint: {
-              "fill-extrusion-color": "#333",
-              "fill-extrusion-height": ["get", "render_height"],
-              "fill-extrusion-base": ["get", "render_min_height"],
-              "fill-extrusion-opacity": 0.8,
-            },
-          });
-        }
-      }
-
-      // Set initial 3D view
-      map.current.easeTo({
-        pitch: 60,
-        bearing: 0,
-        duration: 1500,
-      });
-    }
-
     // Add scale control
     map.current.addControl(new maplibregl.ScaleControl({ maxWidth: 200 }), "bottom-left");
 
@@ -751,6 +712,45 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     map.current.on("load", () => {
       if (onLoad) {
         onLoad();
+      }
+
+      // Initialize 3D terrain if enabled (after map style is loaded)
+      if (is3DEnabled && map.current) {
+        // Add terrain source and enable 3D view
+        map.current.addSource("terrain", {
+          type: "raster-dem",
+          url: "https://demotiles.maplibre.org/terrain-tiles/tiles.json",
+          tileSize: 256,
+        });
+        map.current.setTerrain({
+          source: "terrain",
+          exaggeration: 1.5,
+        });
+
+        // Enable 3D buildings if current style supports it (vector styles)
+        if (currentLayer.url.endsWith(".json")) {
+          if (!map.current.getLayer("3d-buildings")) {
+            map.current.addLayer({
+              id: "3d-buildings",
+              type: "fill-extrusion",
+              source: "openmaptiles", // standard in OpenFreeMap and most vector styles
+              "source-layer": "building",
+              paint: {
+                "fill-extrusion-color": "#333",
+                "fill-extrusion-height": ["get", "render_height"],
+                "fill-extrusion-base": ["get", "render_min_height"],
+                "fill-extrusion-opacity": 0.8,
+              },
+            });
+          }
+        }
+
+        // Set initial 3D view
+        map.current.easeTo({
+          pitch: 60,
+          bearing: 0,
+          duration: 1500,
+        });
       }
 
       // Load places data for initial view only once
@@ -895,8 +895,10 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         // Vector tile style - use the style URL directly
         map.current.setStyle(layer.url);
 
-        // Use 'styledata' event to re-add markers and route after style change
-        map.current.once("styledata", () => {
+        // Use 'style.load' event to re-add markers and route after style is fully loaded
+        map.current.once("style.load", () => {
+          if (!map.current || !map.current.isStyleLoaded()) return;
+
           // Re-add markers
           updateMarkers(filteredPlaces);
 
@@ -1001,8 +1003,10 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           ],
         });
 
-        // For raster layers, update markers after style change
-        map.current.once("styledata", () => {
+        // For raster layers, update markers after style is fully loaded
+        map.current.once("style.load", () => {
+          if (!map.current || !map.current.isStyleLoaded()) return;
+
           updateMarkers(filteredPlaces);
 
           // Re-add pathfinding elements if active
@@ -1058,7 +1062,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
 
   // Toggle 3D terrain view
   const toggle3D = () => {
-    if (!map.current) return;
+    if (!map.current || !map.current.isStyleLoaded()) return;
 
     const newState = !is3DEnabled;
     setIs3DEnabled(newState);
@@ -1204,7 +1208,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
   // Add the path to the map
   const addPathToMap = useCallback(
     (path: [number, number][]) => {
-      if (!map.current) return;
+      if (!map.current || !map.current.isStyleLoaded()) return;
 
       // Remove existing route if it exists
       if (map.current.getLayer("route")) {
@@ -1339,7 +1343,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       setRouteGeometry(pathfindingRouteGeometry);
 
       // Wait for map to be loaded before adding path
-      if (map.current) {
+      if (map.current && map.current.isStyleLoaded()) {
         addPathToMap(pathfindingRouteGeometry);
 
         // Fit map to show the entire route
@@ -1353,6 +1357,27 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
             right: 100,
           },
         });
+      } else if (map.current && !map.current.isStyleLoaded()) {
+        // If style is not loaded yet, wait for it
+        const onStyleLoad = () => {
+          if (map.current) {
+            addPathToMap(pathfindingRouteGeometry);
+
+            // Fit map to show the entire route
+            const bounds = new maplibregl.LngLatBounds();
+            pathfindingRouteGeometry.forEach((coord) => bounds.extend(coord));
+            map.current.fitBounds(bounds, {
+              padding: {
+                top: 100,
+                bottom: 190,
+                left: 100,
+                right: 100,
+              },
+            });
+            map.current.off("load", onStyleLoad);
+          }
+        };
+        map.current.on("load", onStyleLoad);
       }
     } else if (!isPathfindingActive) {
       // Remove path if pathfinding is not active
@@ -1389,7 +1414,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
 
   // Handle route calculation
   const calculateRoute = async (start: [number, number], end: [number, number]) => {
-    if (!map.current) return;
+    if (!map.current || !map.current.isStyleLoaded()) return;
 
     try {
       // TODO: Replace with actual routing API
