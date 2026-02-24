@@ -20,6 +20,7 @@ import RoutePanel from "@/components/map/RoutePanel";
 import LayerControl from "./LayerControl";
 import MapStatsIndicator from "@/components/map/MapStatsIndicator";
 import { placeSchema } from "@/types/declarations/selectInp";
+import iranBorderGeoJSON from "@/data/iranBorder";
 
 // Enable RTL text support for Persian, Arabic, Hebrew, etc.
 const maplibreglGlobal = maplibregl as any; // To access the global setRTLTextPlugin
@@ -642,6 +643,51 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     }
   };
 
+  // Add Iran border neon glow layers to the map
+  const addIranBorderLayers = () => {
+    if (!map.current) return;
+
+    if (map.current.getSource("iran-border")) return;
+
+    map.current.addSource("iran-border", {
+      type: "geojson",
+      data: iranBorderGeoJSON,
+    });
+
+    // Outer glow layer — wide, very transparent
+    map.current.addLayer({
+      id: "iran-border-glow",
+      type: "line",
+      source: "iran-border",
+      layout: {
+        "line-join": "round",
+        "line-cap": "round",
+      },
+      paint: {
+        "line-color": "#FF007A",
+        "line-width": 8,
+        "line-opacity": 0.12,
+        "line-blur": 6,
+      },
+    });
+
+    // Inner line layer — thin, subtle
+    map.current.addLayer({
+      id: "iran-border-line",
+      type: "line",
+      source: "iran-border",
+      layout: {
+        "line-join": "round",
+        "line-cap": "round",
+      },
+      paint: {
+        "line-color": "#FF007A",
+        "line-width": 1.2,
+        "line-opacity": 0.45,
+      },
+    });
+  };
+
   // Update markers when selected place changes
   useEffect(() => {
     updateMarkerSelection();
@@ -754,6 +800,9 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           duration: 1500,
         });
       }
+
+      // Add Iran border neon glow overlay
+      addIranBorderLayers();
 
       // Load places data for initial view only once
       if (!hasInitialized.current) {
@@ -952,6 +1001,9 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
             });
           }
 
+          // Re-add Iran border layers
+          addIranBorderLayers();
+
           // Re-add the attribution control with updated attribution
           const newAttributionControl = new maplibregl.AttributionControl({
             compact: true,
@@ -1038,6 +1090,9 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
               duration: 1500,
             });
           }
+
+          // Re-add Iran border layers
+          addIranBorderLayers();
 
           // Re-add the attribution control with updated attribution
           const newAttributionControl = new maplibregl.AttributionControl({
