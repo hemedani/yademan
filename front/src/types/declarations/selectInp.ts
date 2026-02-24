@@ -4299,6 +4299,212 @@ export type ReqType = {
       };
 
 
+      updatePlaceRelations: {
+        set: {
+          _id: string;
+          province?: string;
+          city?: string;
+          category?: string;
+          tags?: string[];
+          thumbnail?: string;
+          gallery?: string[];
+        };
+        get: {
+          _id?: (0 | 1);
+          name?: (0 | 1);
+          antiquity?: (0 | 1);
+          description?: (0 | 1);
+          slug?: (0 | 1);
+          center?: (0 | 1);
+          area?: (0 | 1);
+          address?: (0 | 1);
+          contact?: (0 | 1);
+          hoursOfOperation?: (0 | 1);
+          meta?: (0 | 1);
+          status?: (0 | 1);
+          createdAt?: (0 | 1);
+          updatedAt?: (0 | 1);
+          registrar?: {
+            _id?: (0 | 1);
+            first_name?: (0 | 1);
+            last_name?: (0 | 1);
+            gender?: (0 | 1);
+            address?: (0 | 1);
+            level?: (0 | 1);
+            email?: (0 | 1);
+            is_verified?: (0 | 1);
+          };
+          province?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            english_name?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          city?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            english_name?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          category?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+          };
+          tags?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+          };
+          thumbnail?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            mimType?: (0 | 1);
+            alt_text?: (0 | 1);
+          };
+          gallery?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            mimType?: (0 | 1);
+            alt_text?: (0 | 1);
+          };
+          comments?: {
+            _id?: (0 | 1);
+            text?: (0 | 1);
+            rating?: (0 | 1);
+            status?: (0 | 1);
+            is_anonymous?: (0 | 1);
+          };
+          virtual_tours?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            status?: (0 | 1);
+          };
+          events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+          };
+        };
+      };
+
+
+      removePlaceRelations: {
+        set: {
+          _id: string;
+          tags?: string[];
+          gallery?: string[];
+        };
+        get: {
+          _id?: (0 | 1);
+          name?: (0 | 1);
+          antiquity?: (0 | 1);
+          description?: (0 | 1);
+          slug?: (0 | 1);
+          center?: (0 | 1);
+          area?: (0 | 1);
+          address?: (0 | 1);
+          contact?: (0 | 1);
+          hoursOfOperation?: (0 | 1);
+          meta?: (0 | 1);
+          status?: (0 | 1);
+          createdAt?: (0 | 1);
+          updatedAt?: (0 | 1);
+          registrar?: {
+            _id?: (0 | 1);
+            first_name?: (0 | 1);
+            last_name?: (0 | 1);
+            gender?: (0 | 1);
+            address?: (0 | 1);
+            level?: (0 | 1);
+            email?: (0 | 1);
+            is_verified?: (0 | 1);
+          };
+          province?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            english_name?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          city?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            english_name?: (0 | 1);
+            createdAt?: (0 | 1);
+            updatedAt?: (0 | 1);
+          };
+          category?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+          };
+          tags?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+          };
+          thumbnail?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            mimType?: (0 | 1);
+            alt_text?: (0 | 1);
+          };
+          gallery?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            mimType?: (0 | 1);
+            alt_text?: (0 | 1);
+          };
+          comments?: {
+            _id?: (0 | 1);
+            text?: (0 | 1);
+            rating?: (0 | 1);
+            status?: (0 | 1);
+            is_anonymous?: (0 | 1);
+          };
+          virtual_tours?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            status?: (0 | 1);
+          };
+          events?: {
+            _id?: (0 | 1);
+            name?: (0 | 1);
+            description?: (0 | 1);
+            startTime?: (0 | 1);
+            endTime?: (0 | 1);
+            color?: (0 | 1);
+            icon?: (0 | 1);
+            capacity?: (0 | 1);
+            status?: (0 | 1);
+            isPublic?: (0 | 1);
+            ticketPrice?: (0 | 1);
+            registrationRequired?: (0 | 1);
+            maxAttendees?: (0 | 1);
+            eventUrl?: (0 | 1);
+          };
+        };
+      };
+
+
       get: {
         set: {
           _id: string;

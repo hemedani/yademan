@@ -20,22 +20,12 @@ interface LatLng {
 }
 
 // Dynamically import map components to avoid SSR issues
-const MapContainer = dynamic(
-  () => import("react-leaflet").then((mod) => mod.MapContainer),
-  { ssr: false },
-);
-const TileLayer = dynamic(
-  () => import("react-leaflet").then((mod) => mod.TileLayer),
-  { ssr: false },
-);
-const Marker = dynamic(
-  () => import("react-leaflet").then((mod) => mod.Marker),
-  { ssr: false },
-);
-const Polygon = dynamic(
-  () => import("react-leaflet").then((mod) => mod.Polygon),
-  { ssr: false },
-);
+const MapContainer = dynamic(() => import("react-leaflet").then((mod) => mod.MapContainer), {
+  ssr: false,
+});
+const TileLayer = dynamic(() => import("react-leaflet").then((mod) => mod.TileLayer), { ssr: false });
+const Marker = dynamic(() => import("react-leaflet").then((mod) => mod.Marker), { ssr: false });
+const Polygon = dynamic(() => import("react-leaflet").then((mod) => mod.Polygon), { ssr: false });
 const SimpleDrawing = dynamic(() => import("@/components/SimpleDrawing"), {
   ssr: false,
 });
@@ -63,7 +53,7 @@ const placeSchema = z.object({
     .number({
       invalid_type_error: "عمر آثار باید یک عدد معتبر باشد",
     })
-    .min(0, { message: "عمر آثار باید عدد مثبت یا صفر باشد" })
+    .min(-10000, { message: "عمر آثار نمی‌تواند کمتر از ۱۰۰۰۰ سال قبل از هجرت باشد" })
     .max(10000, { message: "عمر آثار باید کمتر از ۱۰۰۰۰ سال باشد" })
     .optional(),
   address: z
@@ -76,11 +66,7 @@ const placeSchema = z.object({
     .max(20, { message: "شماره تلفن نمی‌تواند بیشتر از ۲۰ کاراکتر باشد" })
     .optional()
     .or(z.literal("")),
-  email: z
-    .string()
-    .email({ message: "لطفاً یک ایمیل معتبر وارد کنید" })
-    .optional()
-    .or(z.literal("")),
+  email: z.string().email({ message: "لطفاً یک ایمیل معتبر وارد کنید" }).optional().or(z.literal("")),
   website: z
     .string()
     .url({ message: "لطفاً یک آدرس وب معتبر وارد کنید" })
@@ -139,14 +125,10 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [loadingInitial, setLoadingInitial] = useState(true);
-  const [markerPosition, setMarkerPosition] = useState<[number, number]>([
-    35.6892, 51.389,
-  ]); // Default to Tehran, Iran
+  const [markerPosition, setMarkerPosition] = useState<[number, number]>([35.6892, 51.389]); // Default to Tehran, Iran
   const [mapZoom, setMapZoom] = useState(6);
   const [mapKey, setMapKey] = useState(0);
-  const [drawnPolygon, setDrawnPolygon] = useState<[number, number][] | null>(
-    null,
-  );
+  const [drawnPolygon, setDrawnPolygon] = useState<[number, number][] | null>(null);
   const [isDrawingMode, setIsDrawingMode] = useState(false);
 
   // Form setup with Zod validation
@@ -238,14 +220,9 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
             place.area.coordinates[0].length > 0
           ) {
             // Convert first polygon of MultiPolygon coordinates to the format expected by Leaflet
-            const firstPolygon = (
-              place.area.coordinates[0][0] as [number, number][]
-            ).map(
+            const firstPolygon = (place.area.coordinates[0][0] as [number, number][]).map(
               ([lng, lat]: [number, number]) =>
-                [Number(lat.toFixed(6)), Number(lng.toFixed(6))] as [
-                  number,
-                  number,
-                ],
+                [Number(lat.toFixed(6)), Number(lng.toFixed(6))] as [number, number],
             );
             setDrawnPolygon(firstPolygon);
           }
@@ -253,7 +230,6 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
           ToastNotify("error", "خطا در دریافت اطلاعات مکان");
           router.push("/admin/places");
         }
-
       } catch (error) {
         console.error("Error fetching data:", error);
         ToastNotify("error", "خطا در بارگذاری اطلاعات");
@@ -296,10 +272,10 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
         antiquity: data.antiquity ?? 0,
         center: {
           type: "Point" as const,
-          coordinates: [
-            Number(data.longitude.toFixed(6)),
-            Number(data.latitude.toFixed(6)),
-          ] as [number, number],
+          coordinates: [Number(data.longitude.toFixed(6)), Number(data.latitude.toFixed(6))] as [
+            number,
+            number,
+          ],
         },
         area: data.area!,
         address: data.address || undefined,
@@ -343,9 +319,7 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
     // Only handle the first polygon (SimpleDrawing typically returns one polygon)
     if (polygons.length > 0) {
       // Convert LatLng objects to [number, number] format for the state
-      const firstPolygon = polygons[0].map(
-        (point) => [point.lat, point.lng] as [number, number],
-      );
+      const firstPolygon = polygons[0].map((point) => [point.lat, point.lng] as [number, number]);
       setDrawnPolygon(firstPolygon);
 
       // Convert the polygon to the format expected by the form
@@ -476,10 +450,7 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
                 />
               )}
               {markerPosition && <Marker position={markerPosition} />}
-              <MapClickHandler
-                onClick={handleMapClick}
-                isActive={isDrawingMode}
-              />
+              <MapClickHandler onClick={handleMapClick} isActive={isDrawingMode} />
               <SimpleDrawing
                 isActive={isDrawingMode}
                 onPolygonCreated={handlePolygonCreated}
@@ -498,12 +469,7 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
                 onClick={clearDrawnPolygon}
                 className="bg-red-900/30 text-red-400 px-3 py-1.5 rounded-lg text-sm flex items-center gap-1 hover:bg-red-900/50 transition-colors border border-red-800"
               >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -519,17 +485,13 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
           <button
             type="button"
             onClick={toggleDrawingMode}
-            className={`px-4 py-2 rounded-lg flex items-center gap-2 ${isDrawingMode
-              ? "bg-pink-600 text-white"
-              : "bg-gray-700 text-white border border-gray-600 hover:bg-gray-600"
-              }`}
+            className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
+              isDrawingMode
+                ? "bg-pink-600 text-white"
+                : "bg-gray-700 text-white border border-gray-600 hover:bg-gray-600"
+            }`}
           >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -626,9 +588,10 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
                 text-right transition-all duration-200 ease-in-out
                 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-offset-0 focus:border-pink-500
                 hover:border-gray-500
-                ${errors.status
-                  ? "border-red-500 bg-red-900/30 focus:ring-red-500 focus:border-red-500"
-                  : "border-gray-600 hover:bg-gray-600/50"
+                ${
+                  errors.status
+                    ? "border-red-500 bg-red-900/30 focus:ring-red-500 focus:border-red-500"
+                    : "border-gray-600 hover:bg-gray-600/50"
                 }
               `}
             >
@@ -644,11 +607,7 @@ const FormUpdatePlace: React.FC<FormUpdatePlaceProps> = ({ placeId }) => {
             </select>
             {errors.status && (
               <span className="text-red-400 text-xs font-medium text-right mt-1 flex items-center gap-1">
-                <svg
-                  className="w-3 h-3 flex-shrink-0"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
+                <svg className="w-3 h-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path
                     fillRule="evenodd"
                     d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"

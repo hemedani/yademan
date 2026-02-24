@@ -19,6 +19,7 @@ interface InputProps<Option, Group extends GroupBase<Option>, T extends FieldVal
     callback: (options: OptionsOrGroups<Option, Group>) => void,
   ) => Promise<OptionsOrGroups<Option, Group>> | void;
   defaultOptions?: OptionsOrGroups<Option, Group> | boolean;
+  value?: Option | Option[] | null;
   className?: string;
   onSelectChange?: (newValue: any, actionMeta: any) => void;
   cacheOptions?: boolean;
@@ -34,6 +35,7 @@ const AsyncSelectBox = <Option, Group extends GroupBase<Option>, T extends Field
   labelAsValue,
   isMulti,
   defaultOptions,
+  value,
   className,
   placeholder,
   cacheOptions,
@@ -213,6 +215,7 @@ const AsyncSelectBox = <Option, Group extends GroupBase<Option>, T extends Field
           cacheOptions
           defaultOptions={defaultOptions}
           loadOptions={loadOptions}
+          value={value !== undefined ? value : undefined}
           menuPortalTarget={typeof document !== "undefined" ? document.body : null}
           menuPosition="fixed"
           onChange={(newVal: any, actionMeta: any) => {

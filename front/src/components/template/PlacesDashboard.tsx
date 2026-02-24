@@ -3,11 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { DeleteModal } from "./DeleteModal";
-import {
-  ModelName,
-  ToastNotify,
-  translateModelNameToPersian,
-} from "@/utils/helper";
+import { ModelName, ToastNotify, translateModelNameToPersian } from "@/utils/helper";
 import Link from "next/link";
 import "@/app/dark-theme.css";
 
@@ -40,9 +36,7 @@ interface PlacesDashboardProps {
 
 const formatPersianNumber = (num: number): string => {
   const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-  return num
-    .toString()
-    .replace(/[0-9]/g, (digit) => persianDigits[parseInt(digit)]);
+  return num.toString().replace(/[0-9]/g, (digit) => persianDigits[parseInt(digit)]);
 };
 
 const formatPersianDate = (dateString?: string): string => {
@@ -82,11 +76,7 @@ const getStatusText = (status: string) => {
   }
 };
 
-const PlacesDashboard: React.FC<PlacesDashboardProps> = ({
-  data,
-  model,
-  remove,
-}) => {
+const PlacesDashboard: React.FC<PlacesDashboardProps> = ({ data, model, remove }) => {
   const router = useRouter();
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -111,10 +101,7 @@ const PlacesDashboard: React.FC<PlacesDashboardProps> = ({
       const removedItem = await remove(selectedPlace._id, hardCascade);
 
       if (removedItem.success) {
-        ToastNotify(
-          "success",
-          `${translateModelNameToPersian(model)} با موفقیت حذف شد`,
-        );
+        ToastNotify("success", `${translateModelNameToPersian(model)} با موفقیت حذف شد`);
       } else {
         ToastNotify(
           "error",
@@ -136,9 +123,7 @@ const PlacesDashboard: React.FC<PlacesDashboardProps> = ({
           <button
             onClick={() => setViewMode("grid")}
             className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 text-sm ${
-              viewMode === "grid"
-                ? "bg-gray-700 shadow-sm text-pink-400"
-                : "text-gray-400"
+              viewMode === "grid" ? "bg-gray-700 shadow-sm text-pink-400" : "text-gray-400"
             }`}
           >
             <svg
@@ -160,9 +145,7 @@ const PlacesDashboard: React.FC<PlacesDashboardProps> = ({
           <button
             onClick={() => setViewMode("list")}
             className={`px-3 py-1.5 rounded-md flex items-center gap-1.5 text-sm ${
-              viewMode === "list"
-                ? "bg-gray-700 shadow-sm text-pink-400"
-                : "text-gray-400"
+              viewMode === "list" ? "bg-gray-700 shadow-sm text-pink-400" : "text-gray-400"
             }`}
           >
             <svg
@@ -211,25 +194,31 @@ const PlacesDashboard: React.FC<PlacesDashboardProps> = ({
             >
               <div className="p-5">
                 <div className="flex justify-between items-start mb-3">
-                  <h3 className="font-bold text-white text-lg line-clamp-1">
-                    {place.name}
-                  </h3>
+                  <h3 className="font-bold text-white text-lg line-clamp-1">{place.name}</h3>
                   <div className="relative group">
                     <button className="w-8 h-8 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors">
-                      <svg
-                        className="w-4 h-4 text-gray-300"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
+                      <svg className="w-4 h-4 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
                       </svg>
                     </button>
-                    <div className="absolute left-0 top-full mt-1 bg-gray-700 rounded-lg shadow-lg border border-gray-600 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                    <div className="absolute left-0 top-full mt-1 bg-gray-700 rounded-lg shadow-lg border border-gray-600 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10 min-w-[140px]">
                       <Link
                         href={`/admin/places/edit/${place._id}`}
                         className="w-full px-4 py-2 text-right text-sm text-white hover:bg-gray-600 rounded-t-lg block"
                       >
-                        ویرایش
+                        ویرایش اطلاعات
+                      </Link>
+                      <Link
+                        href={`/admin/places/edit/${place._id}/relations`}
+                        className="w-full px-4 py-2 text-right text-sm text-purple-300 hover:bg-gray-600 block"
+                      >
+                        ویرایش روابط
+                      </Link>
+                      <Link
+                        href={`/admin/places/edit/${place._id}/remove-relations`}
+                        className="w-full px-4 py-2 text-right text-sm text-orange-400 hover:bg-gray-600 block"
+                      >
+                        حذف روابط
                       </Link>
                       <button
                         onClick={() => openDeleteModal(place)}
@@ -279,21 +268,13 @@ const PlacesDashboard: React.FC<PlacesDashboardProps> = ({
                         d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                       />
                     </svg>
-                    <span className="text-gray-400 text-xs line-clamp-1">
-                      {place.address}
-                    </span>
+                    <span className="text-gray-400 text-xs line-clamp-1">{place.address}</span>
                   </div>
                 )}
 
                 <div className="flex items-center justify-between text-xs mt-4">
-                  <span className="text-gray-400">
-                    {formatPersianDate(place.updatedAt)}
-                  </span>
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs ${getStatusColor(
-                      place.status,
-                    )}`}
-                  >
+                  <span className="text-gray-400">{formatPersianDate(place.updatedAt)}</span>
+                  <span className={`px-2 py-1 rounded-full text-xs ${getStatusColor(place.status)}`}>
                     {getStatusText(place.status)}
                   </span>
                 </div>
@@ -330,14 +311,10 @@ const PlacesDashboard: React.FC<PlacesDashboardProps> = ({
               {data.map((place) => (
                 <tr
                   key={place._id}
-                  className={`hover:bg-gray-700 ${
-                    actionLoading === place._id ? "opacity-60" : ""
-                  }`}
+                  className={`hover:bg-gray-700 ${actionLoading === place._id ? "opacity-60" : ""}`}
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-white">
-                      {place.name}
-                    </div>
+                    <div className="text-sm font-medium text-white">{place.name}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {place.category ? (
@@ -372,12 +349,24 @@ const PlacesDashboard: React.FC<PlacesDashboardProps> = ({
                     {formatPersianDate(place.updatedAt)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex  space-x-2">
+                    <div className="flex items-center gap-3">
                       <Link
                         href={`/admin/places/edit/${place._id}`}
                         className="text-pink-400 hover:text-pink-300"
                       >
                         ویرایش
+                      </Link>
+                      <Link
+                        href={`/admin/places/edit/${place._id}/relations`}
+                        className="text-purple-400 hover:text-purple-300"
+                      >
+                        روابط
+                      </Link>
+                      <Link
+                        href={`/admin/places/edit/${place._id}/remove-relations`}
+                        className="text-orange-400 hover:text-orange-300"
+                      >
+                        حذف روابط
                       </Link>
                       <button
                         onClick={() => openDeleteModal(place)}

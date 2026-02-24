@@ -15,6 +15,7 @@ export const updateFn: ActFn = async (body) => {
 			meta,
 			center,
 			area,
+			status,
 		},
 		get,
 	} = body.details;
@@ -33,6 +34,7 @@ export const updateFn: ActFn = async (body) => {
 	meta && (updateObj.meta = meta);
 	center && (updateObj.center = center);
 	area && (updateObj.area = area);
+	status && (updateObj.status = status);
 
 	return await place.findOneAndUpdate({
 		filter: { _id: new ObjectId(_id as string) },
