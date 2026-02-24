@@ -62,8 +62,6 @@ export const updatePlaceRelationsFn: ActFn = async (body) => {
 			relatedRelations: {},
 		});
 
-	console.log(relations);
-
 	return await place.addRelation({
 		filters: { _id: new ObjectId(_id as string) },
 		relations,
