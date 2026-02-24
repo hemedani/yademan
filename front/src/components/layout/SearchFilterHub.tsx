@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 // on every render, causing Zustand's Object.is check to always differ → infinite loop.
 const EMPTY_IDS: string[] = [];
 import { motion } from "framer-motion";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useMapStore } from "@/stores/mapStore";
 import { AnimatePresence } from "framer-motion";
 import { categorySchema } from "@/types/declarations/selectInp";
@@ -40,6 +40,13 @@ const SearchFilterHub: React.FC<SearchFilterHubProps> = ({
       // Call the optional onSearch callback if provided
       onSearch?.(searchValue.trim());
     }
+  };
+
+  // Handle clearing the search input and filter
+  const handleClear = () => {
+    onSearchChange("");
+    setFilters({ name: undefined });
+    onSearch?.("");
   };
 
   // Handle Enter key press
@@ -103,8 +110,17 @@ const SearchFilterHub: React.FC<SearchFilterHubProps> = ({
           onKeyPress={handleKeyPress}
           placeholder="جستجو در نقشه..."
           dir="rtl"
-          className="w-full py-4 pr-6 pl-14 rounded-full bg-black/10 backdrop-blur-2xl border border-white/10 text-white placeholder:text-white/50 focus:outline-none focus:ring-0 focus:border-[#FF007A] focus:shadow-[0_0_15px_rgba(255,0,122,0.3)] relative search-filter-input"
+          className={`w-full py-4 pl-14 rounded-full bg-black/10 backdrop-blur-2xl border border-white/10 text-white placeholder:text-white/50 focus:outline-none focus:ring-0 focus:border-[#FF007A] focus:shadow-[0_0_15px_rgba(255,0,122,0.3)] relative search-filter-input ${searchValue ? "pr-12" : "pr-6"}`}
         />
+        {searchValue && (
+          <button
+            onClick={handleClear}
+            className="absolute inset-y-0 right-0 flex items-center pr-4 cursor-pointer hover:scale-110 transition-transform"
+            aria-label="پاک کردن جستجو"
+          >
+            <XMarkIcon className="h-5 w-5 text-white/50 hover:text-white" />
+          </button>
+        )}
         <button
           onClick={handleSearch}
           className="absolute inset-y-0 left-0 flex items-center pl-5 cursor-pointer hover:scale-110 transition-transform"
