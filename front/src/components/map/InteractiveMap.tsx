@@ -4,7 +4,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { createRoot } from "react-dom/client";
-import { flushSync } from "react-dom";
+
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
@@ -206,18 +206,12 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       if (!placesToUpdate || placesToUpdate.length === 0) {
         markersRef.current.forEach((marker) => marker.remove());
         markersRef.current.clear();
-        markerElementsRef.current.forEach((_el, id) => {
-          const root = markerRootsRef.current.get(id);
-          if (root) {
-            // flushSync forces the unmount to complete before React processes
-            // any concurrent renders, preventing the "synchronously unmount"
-            // race condition. React handles DOM cleanup internally — manual
-            // removeChild is not needed and causes DOMException.
-            flushSync(() => root.unmount());
-          }
-        });
+        const rootsToUnmount = [...markerRootsRef.current.values()];
         markerElementsRef.current.clear();
         markerRootsRef.current.clear();
+        setTimeout(() => {
+          rootsToUnmount.forEach((root) => root.unmount());
+        }, 0);
         return;
       }
 
@@ -233,11 +227,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           const markerElement = markerElementsRef.current.get(id);
           if (markerElement) {
             const root = markerRootsRef.current.get(id);
-            if (root) {
-              flushSync(() => root.unmount());
-            }
             markerElementsRef.current.delete(id);
             markerRootsRef.current.delete(id);
+            if (root) {
+              setTimeout(() => root.unmount(), 0);
+            }
           }
         }
       }
