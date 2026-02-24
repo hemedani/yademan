@@ -9,7 +9,7 @@ import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 import { useTranslations } from "next-intl";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useMapStore } from "@/stores/mapStore";
 import MapControls from "./MapControls";
 import { gets } from "@/app/actions/place/gets";
@@ -17,7 +17,6 @@ import PlaceMarker from "@/components/atoms/PlaceMarker";
 import PlaceDetailsModal from "@/components/organisms/PlaceDetailsModal";
 import PlaceHoverTooltip from "./PlaceHoverTooltip";
 import { toast } from "react-hot-toast";
-import RoutePanel from "@/components/map/RoutePanel";
 import LayerControl from "./LayerControl";
 import MapStatsIndicator from "@/components/map/MapStatsIndicator";
 import { placeSchema } from "@/types/declarations/selectInp";
@@ -109,15 +108,12 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
 
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
   const [showSidebar, setShowSidebar] = useState(false);
-  const [showRoutePanel, setShowRoutePanel] = useState(false);
   const [currentLayer, setCurrentLayer] = useState<MapLayer>(
     MAP_LAYERS.find((layer) => layer.id === "openfreemap_dark") || MAP_LAYERS[0],
   );
   const [places, setPlaces] = useState<Place[]>([]);
   const [filteredPlaces, setFilteredPlaces] = useState<Place[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [routeStart, setRouteStart] = useState<[number, number] | null>(null);
-  const [routeEnd, setRouteEnd] = useState<[number, number] | null>(null);
   const [showPlaceDetails, setShowPlaceDetails] = useState(false);
   const [isFetchingPlaces, setIsFetchingPlaces] = useState(false);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
@@ -893,10 +889,10 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
 
     setCurrentLayer(layer);
 
-    // Proactively remove ALL route and pathfinding layers/sources before changing style
+    // Proactively remove pathfinding layers/sources before changing style
     // This prevents WebGL context errors when switching to vector styles
-    const layersToRemove = ["route", "start-marker"];
-    const sourcesToRemove = ["route", "start-marker"];
+    const layersToRemove: string[] = [];
+    const sourcesToRemove: string[] = [];
 
     // Add pathfinding place markers to removal list
     pathfindingPath.forEach((_, index) => {
@@ -904,7 +900,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       sourcesToRemove.push(`place-source-${index}`);
     });
 
-    // Remove all route-related layers and sources
+    // Remove pathfinding-related layers and sources
     layersToRemove.forEach((layerId) => {
       if (map.current && map.current.getLayer(layerId)) {
         map.current.removeLayer(layerId);
@@ -933,7 +929,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         // Vector tile style - use the style URL directly
         map.current.setStyle(layer.url);
 
-        // Use 'style.load' event to re-add markers and route after style is fully loaded
+        // Use 'style.load' event to re-add markers after style is fully loaded
         map.current.once("style.load", () => {
           if (!map.current || !map.current.isStyleLoaded()) return;
 
@@ -1247,7 +1243,6 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
   const pathfindingPath = useMapStore((state) => state.pathfindingPath);
   const pathfindingTotalDistance = useMapStore((state) => state.pathfindingTotalDistance);
   const pathfindingRouteGeometry = useMapStore((state) => state.pathfindingRouteGeometry);
-  const [routeGeometry, setRouteGeometry] = useState<[number, number][]>([]);
 
   // Add the path to the map
   const addPathToMap = useCallback(
@@ -1384,8 +1379,6 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
   // Effect to handle path updates
   useEffect(() => {
     if (isPathfindingActive && pathfindingRouteGeometry.length > 0) {
-      setRouteGeometry(pathfindingRouteGeometry);
-
       // Wait for map to be loaded before adding path
       if (map.current && map.current.isStyleLoaded()) {
         addPathToMap(pathfindingRouteGeometry);
@@ -1452,70 +1445,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           }
         });
       }
-      setRouteGeometry([]);
     }
   }, [isPathfindingActive, pathfindingRouteGeometry, pathfindingPath, addPathToMap]);
-
-  // Handle route calculation
-  const calculateRoute = async (start: [number, number], end: [number, number]) => {
-    if (!map.current || !map.current.isStyleLoaded()) return;
-
-    try {
-      // TODO: Replace with actual routing API
-      // const response = await fetch(`/api/route?start=${start}&end=${end}`);
-      // const route = await response.json();
-
-      // For now, draw a simple line
-      const route: GeoJSON.Feature<GeoJSON.LineString, Record<string, unknown>> = {
-        type: "Feature",
-        geometry: {
-          type: "LineString",
-          coordinates: [start, end],
-        },
-        properties: {},
-      };
-
-      // Add route layer
-      if (map.current.getSource("route")) {
-        (map.current.getSource("route") as maplibregl.GeoJSONSource).setData(route);
-      } else {
-        map.current.addSource("route", {
-          type: "geojson",
-          data: route,
-        });
-
-        map.current.addLayer({
-          id: "route",
-          type: "line",
-          source: "route",
-          layout: {
-            "line-join": "round",
-            "line-cap": "round",
-          },
-          paint: {
-            "line-color": "#3b82f6",
-            "line-width": 5,
-            "line-opacity": 0.75,
-          },
-        });
-      }
-
-      // Fit map to route
-      const bounds = new maplibregl.LngLatBounds();
-      bounds.extend(start);
-      bounds.extend(end);
-      map.current.fitBounds(bounds, {
-        padding: {
-          top: 100,
-          bottom: 190, // Increased padding for bottom to account for timeline
-          left: 100,
-          right: 100,
-        },
-      });
-    } catch (error) {
-      // Error handling for calculateRoute can be added if needed
-    }
-  };
 
   return (
     <>
@@ -1560,7 +1491,6 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
               essential: true,
             });
           }}
-          onToggleRouting={() => setShowRoutePanel(!showRoutePanel)}
           onLocateUser={() => {
             if (navigator.geolocation) {
               navigator.geolocation.getCurrentPosition(
@@ -1588,21 +1518,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           onLayerChange={handleLayerChange}
         />
 
-        {/* Route panel */}
-        <AnimatePresence>
-          {showRoutePanel && (
-            <RoutePanel
-              start={routeStart}
-              end={routeEnd}
-              onClose={() => setShowRoutePanel(false)}
-              onCalculateRoute={calculateRoute}
-              onSetStart={setRouteStart}
-              onSetEnd={setRouteEnd}
-            />
-          )}
-        </AnimatePresence>
-
-        {/* Toggle category list button - positioned just below LayerControl */}
+        {/* Toggle category list button */}
         <div className="absolute top-[132px] right-4 z-10">
           <button
             onClick={() => setShowCategoryList(!showCategoryList)}
