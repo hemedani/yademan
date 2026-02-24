@@ -1,5 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
+
+// Stable fallback — must NOT be inline in the selector or a new reference is created
+// on every render, causing Zustand's Object.is check to always differ → infinite loop.
+const EMPTY_IDS: string[] = [];
 import { motion } from "framer-motion";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useMapStore } from "@/stores/mapStore";
@@ -19,11 +23,14 @@ const SearchFilterHub: React.FC<SearchFilterHubProps> = ({
   onSearch,
 }) => {
   const [categories, setCategories] = useState<categorySchema[]>([]);
-  const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
 
   const setFilters = useMapStore((state) => state.setFilters);
   const showCategoryList = useMapStore((state) => state.showCategoryList);
+  // Read selections directly from the store so AdvancedSearchModal stays in sync.
+  // Using EMPTY_IDS (stable module-level ref) instead of inline ?? [] prevents the
+  // Zustand selector from returning a new array reference on every render.
+  const selectedCategoryIds = useMapStore((state) => state.filters.categoryIds ?? EMPTY_IDS);
 
   // Handle search request to backend
   const handleSearch = () => {
@@ -72,20 +79,13 @@ const SearchFilterHub: React.FC<SearchFilterHubProps> = ({
     fetchCategories();
   }, []);
 
-  // Handle category selection for multi-select
+  // Handle category selection for multi-select — write directly to the store
   const handleCategorySelect = (categoryId: string) => {
-    setSelectedCategoryIds((prev) => {
-      const newIds = prev.includes(categoryId)
-        ? prev.filter((id) => id !== categoryId)
-        : [...prev, categoryId];
-      return newIds;
-    });
+    const newIds = selectedCategoryIds.includes(categoryId)
+      ? selectedCategoryIds.filter((id) => id !== categoryId)
+      : [...selectedCategoryIds, categoryId];
+    setFilters({ categoryIds: newIds.length > 0 ? newIds : undefined });
   };
-
-  // Update map filters when selectedCategoryIds changes
-  useEffect(() => {
-    setFilters({ categoryIds: selectedCategoryIds.length > 0 ? selectedCategoryIds : undefined });
-  }, [selectedCategoryIds, setFilters]);
 
   return (
     <div className="flex flex-col items-center w-full px-4">

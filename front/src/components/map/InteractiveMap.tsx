@@ -4,6 +4,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { createRoot } from "react-dom/client";
+import { flushSync } from "react-dom";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
@@ -205,17 +206,14 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       if (!placesToUpdate || placesToUpdate.length === 0) {
         markersRef.current.forEach((marker) => marker.remove());
         markersRef.current.clear();
-        markerElementsRef.current.forEach((el, id) => {
-          if (el && el.parentElement) {
-            // Unmount the React component properly
-            const root = markerRootsRef.current.get(id);
-            if (root) {
-              root.unmount();
-            }
-
-            while (el.firstChild) {
-              el.removeChild(el.firstChild);
-            }
+        markerElementsRef.current.forEach((_el, id) => {
+          const root = markerRootsRef.current.get(id);
+          if (root) {
+            // flushSync forces the unmount to complete before React processes
+            // any concurrent renders, preventing the "synchronously unmount"
+            // race condition. React handles DOM cleanup internally — manual
+            // removeChild is not needed and causes DOMException.
+            flushSync(() => root.unmount());
           }
         });
         markerElementsRef.current.clear();
@@ -236,13 +234,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           if (markerElement) {
             const root = markerRootsRef.current.get(id);
             if (root) {
-              root.unmount();
+              flushSync(() => root.unmount());
             }
-
-            while (markerElement.firstChild) {
-              markerElement.removeChild(markerElement.firstChild);
-            }
-
             markerElementsRef.current.delete(id);
             markerRootsRef.current.delete(id);
           }

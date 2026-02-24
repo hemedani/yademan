@@ -15,6 +15,11 @@ import { categorySchema, tagSchema } from "@/types/declarations/selectInp";
 
 const PAGE_SIZE = 8;
 
+// Stable fallback — must NOT be inline (`?? []`) inside a Zustand selector.
+// Inline `?? []` creates a new array reference on every render; Zustand's
+// Object.is check then always sees a "change" → infinite re-render loop.
+const EMPTY_IDS: string[] = [];
+
 interface AdvancedSearchModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -130,22 +135,27 @@ const AdvancedSearchModal: React.FC<AdvancedSearchModalProps> = ({ isOpen, onClo
     },
   });
 
-  // Map store
+  // Map store — single source of truth for selections
   const filters = useMapStore((state) => state.filters);
+  const setFilters = useMapStore((state) => state.setFilters);
 
-  // ---- Categories state ----
+  // Selections live in the store so both SearchFilterHub and this modal stay in sync.
+  // EMPTY_IDS is a stable module-level ref — avoids the infinite loop caused by
+  // returning a new [] reference on every selector evaluation.
+  const selectedCategoryIds = useMapStore((state) => state.filters.categoryIds ?? EMPTY_IDS);
+  const selectedTagIds = useMapStore((state) => state.filters.tagIds ?? EMPTY_IDS);
+
+  // ---- Categories list state ----
   const [categories, setCategories] = useState<categorySchema[]>([]);
   const [categoryPage, setCategoryPage] = useState(1);
   const [hasMoreCategories, setHasMoreCategories] = useState(false);
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(false);
-  const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
 
-  // ---- Tags state ----
+  // ---- Tags list state ----
   const [tags, setTags] = useState<tagSchema[]>([]);
   const [tagPage, setTagPage] = useState(1);
   const [hasMoreTags, setHasMoreTags] = useState(false);
   const [isTagsLoading, setIsTagsLoading] = useState(false);
-  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
 
   // ---- Fetch helpers ----
   const fetchCategories = useCallback(async (page: number, append = false) => {
@@ -191,20 +201,15 @@ const AdvancedSearchModal: React.FC<AdvancedSearchModalProps> = ({ isOpen, onClo
     if (!isOpen) return;
 
     // Restore form state from current map filters
-    const initCategoryIds = filters.categoryIds || [];
-    const initTagIds = filters.tagIds || [];
-
+    // categoryIds / tagIds are already live from the store — no need to copy them
     reset({
       province: filters.province || "",
       city: filters.city || "",
-      categoryIds: initCategoryIds,
-      tagIds: initTagIds,
+      categoryIds: filters.categoryIds || [],
+      tagIds: filters.tagIds || [],
       maxDistance: filters.maxDistance || undefined,
       minDistance: filters.minDistance || undefined,
     });
-
-    setSelectedCategoryIds(initCategoryIds);
-    setSelectedTagIds(initTagIds);
 
     // Reset to page 1 and fetch
     setCategoryPage(1);
@@ -213,7 +218,7 @@ const AdvancedSearchModal: React.FC<AdvancedSearchModalProps> = ({ isOpen, onClo
     fetchTags(1, false);
   }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ---- Keep form values in sync with local selection state ----
+  // ---- Keep form values in sync with store selections ----
   useEffect(() => {
     setValue("categoryIds", selectedCategoryIds);
   }, [selectedCategoryIds, setValue]);
@@ -222,14 +227,20 @@ const AdvancedSearchModal: React.FC<AdvancedSearchModalProps> = ({ isOpen, onClo
     setValue("tagIds", selectedTagIds);
   }, [selectedTagIds, setValue]);
 
-  // ---- Toggle handlers ----
-  const toggleCategory = (id: string) =>
-    setSelectedCategoryIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
-    );
+  // ---- Toggle handlers — write directly to store ----
+  const toggleCategory = (id: string) => {
+    const next = selectedCategoryIds.includes(id)
+      ? selectedCategoryIds.filter((x) => x !== id)
+      : [...selectedCategoryIds, id];
+    setFilters({ categoryIds: next.length > 0 ? next : undefined });
+  };
 
-  const toggleTag = (id: string) =>
-    setSelectedTagIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  const toggleTag = (id: string) => {
+    const next = selectedTagIds.includes(id)
+      ? selectedTagIds.filter((x) => x !== id)
+      : [...selectedTagIds, id];
+    setFilters({ tagIds: next.length > 0 ? next : undefined });
+  };
 
   // ---- Load-more handlers ----
   const loadMoreCategories = () => {
@@ -262,8 +273,8 @@ const AdvancedSearchModal: React.FC<AdvancedSearchModalProps> = ({ isOpen, onClo
   };
 
   const handleReset = () => {
-    setSelectedCategoryIds([]);
-    setSelectedTagIds([]);
+    // Clear selections in the store so SearchFilterHub also reflects the reset
+    setFilters({ categoryIds: undefined, tagIds: undefined });
     reset({
       province: "",
       city: "",
