@@ -17,8 +17,7 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({ className = "" }) => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
   const [isMinimized, setIsMinimized] = useState<boolean>(false);
-  const [isAdvancedSearchOpen, setIsAdvancedSearchOpen] =
-    useState<boolean>(false);
+  const [isAdvancedSearchOpen, setIsAdvancedSearchOpen] = useState<boolean>(false);
 
   // Minimum and maximum antiquity ranges
   const minAntiquity = 0;
@@ -204,9 +203,7 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({ className = "" }) => {
                     }}
                     animate={{ x: trackPosition }} // Animate the x position when trackPosition changes
                     transition={
-                      isDragging
-                        ? { duration: 0 }
-                        : { type: "spring", stiffness: 100, damping: 20 }
+                      isDragging ? { duration: 0 } : { type: "spring", stiffness: 100, damping: 20 }
                     } // No transition while dragging for responsiveness, smooth transition otherwise
                     drag="x"
                     dragMomentum={false}
@@ -226,10 +223,7 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({ className = "" }) => {
                       const valueChange = -xMovement / 4;
                       const newValue = dragStartValue.current + valueChange;
 
-                      if (
-                        newValue >= minAntiquity &&
-                        newValue <= maxAntiquity
-                      ) {
+                      if (newValue >= minAntiquity && newValue <= maxAntiquity) {
                         setValue(newValue);
                         setInputValue(newValue.toString());
 
@@ -246,59 +240,48 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({ className = "" }) => {
                     <div className="absolute top-1/2 left-0 right-0 h-px bg-[#2a2a2a] border border-[#333]"></div>
 
                     {/* Graduated tick marks every 10 years */}
-                    {Array.from({ length: maxAntiquity / 10 + 1 }).map(
-                      (_, i) => {
-                        const tickValue = i * 10; // Every 10 years
-                        const xPos = tickValue * 4; // 4px per year
+                    {Array.from({ length: maxAntiquity / 10 + 1 }).map((_, i) => {
+                      const tickValue = i * 10; // Every 10 years
+                      const xPos = tickValue * 4; // 4px per year
 
-                        const isMajor = tickValue % 50 === 0; // Every 50 years is taller
-                        const isVeryMajor = tickValue % 1000 === 0; // Every 1000 years is even taller
+                      const isMajor = tickValue % 50 === 0; // Every 50 years is taller
+                      const isVeryMajor = tickValue % 1000 === 0; // Every 1000 years is even taller
 
-                        return (
-                          <div
-                            key={tickValue}
-                            className="absolute top-1/2 origin-bottom"
+                      return (
+                        <div
+                          key={tickValue}
+                          className="absolute top-1/2 origin-bottom"
+                          style={{
+                            left: `${xPos}px`,
+                            transform: "translateX(-50%)",
+                          }}
+                        >
+                          <motion.div
+                            className={`origin-bottom ${value >= tickValue ? "bg-white" : "bg-[#a0a0a0]"} firefox-visible`}
                             style={{
-                              left: `${xPos}px`,
-                              transform: "translateX(-50%)",
+                              height: isVeryMajor ? "32px" : isMajor ? "24px" : "14px", // Taller marks for 10-year intervals
+                              width: isMajor ? "1.5px" : "1px", // Standard width for 10-year ticks
+                              minWidth: "1px", // Ensures a minimum width for consistent rendering across browsers
                             }}
-                          >
-                            <motion.div
-                              className={`origin-bottom ${value >= tickValue ? "bg-white" : "bg-[#a0a0a0]"} firefox-visible`}
+                            whileHover={{
+                              height: isVeryMajor ? "36px" : isMajor ? "28px" : "18px",
+                              backgroundColor: "#FF007A",
+                            }}
+                          />
+                          {/* Year label below major ticks */}
+                          {isMajor && (
+                            <div
+                              className="absolute top-full left-1/2 -translate-x-1/2 text-xs text-white mt-1"
                               style={{
-                                height: isVeryMajor
-                                  ? "32px"
-                                  : isMajor
-                                    ? "24px"
-                                    : "14px", // Taller marks for 10-year intervals
-                                width: isMajor ? "1.5px" : "1px", // Standard width for 10-year ticks
-                                minWidth: "1px", // Ensures a minimum width for consistent rendering across browsers
+                                color: value >= tickValue ? "white" : "#a0a0a0",
                               }}
-                              whileHover={{
-                                height: isVeryMajor
-                                  ? "36px"
-                                  : isMajor
-                                    ? "28px"
-                                    : "18px",
-                                backgroundColor: "#FF007A",
-                              }}
-                            />
-                            {/* Year label below major ticks */}
-                            {isMajor && (
-                              <div
-                                className="absolute top-full left-1/2 -translate-x-1/2 text-xs text-white mt-1"
-                                style={{
-                                  color:
-                                    value >= tickValue ? "white" : "#a0a0a0",
-                                }}
-                              >
-                                {tickValue}
-                              </div>
-                            )}
-                          </div>
-                        );
-                      },
-                    )}
+                            >
+                              {tickValue}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
 
                     {/* Filled part of the track */}
                     <div
