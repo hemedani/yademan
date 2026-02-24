@@ -32,6 +32,7 @@ interface MapState {
   // UI state
   isLoading: boolean;
   error: string | null;
+  showCategoryList: boolean;
 
   // Interaction modes
   isAddingLocation: boolean;
@@ -93,6 +94,7 @@ interface MapState {
   setIsDrawingPolygon: (isDrawing: boolean) => void;
   setSelectedLocationId: (id: string | null) => void;
   setSearchQuery: (query: string) => void;
+  setShowCategoryList: (show: boolean) => void;
   setAntiquityFilter: (antiquity: number | undefined) => void;
   setFilters: (filters: Partial<MapState["filters"]>) => void;
   setPlaceFilters: (filters: Partial<MapState["filters"]>) => void;
@@ -140,6 +142,7 @@ export const useMapStore = create<MapState>()(
         showClusters: true,
         isLoading: false,
         error: null,
+        showCategoryList: true,
         isAddingLocation: false,
         isDrawingPolygon: false,
         selectedLocationId: null,
@@ -167,6 +170,7 @@ export const useMapStore = create<MapState>()(
         setIsDrawingPolygon: (isDrawingPolygon) => set({ isDrawingPolygon }),
         setSelectedLocationId: (selectedLocationId) => set({ selectedLocationId }),
         setSearchQuery: (searchQuery) => set({ searchQuery }),
+        setShowCategoryList: (showCategoryList) => set({ showCategoryList }),
         setAntiquityFilter: (antiquity) =>
           set((state) => ({
             filters: { ...state.filters, antiquity },

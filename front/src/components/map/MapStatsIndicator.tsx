@@ -10,7 +10,7 @@ const MapStatsIndicator: React.FC<MapStatsIndicatorProps> = ({ count }) => {
   const t = useTranslations();
 
   return (
-    <div className="absolute top-[150px] right-4 z-10">
+    <div className="absolute top-[184px] right-4 z-10">
       <div
         className="p-2 rounded-lg bg-[#121212]/90 backdrop-blur-sm border border-[#333] shadow-lg flex items-center gap-1.5 overflow-hidden min-w-fit"
         onMouseEnter={() => setIsHovered(true)}

@@ -1,8 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useMapStore } from "@/stores/mapStore";
+import { AnimatePresence } from "framer-motion";
 import { categorySchema } from "@/types/declarations/selectInp";
 import { gets as getCategoryList } from "@/app/actions/category/gets";
 
@@ -22,6 +23,7 @@ const SearchFilterHub: React.FC<SearchFilterHubProps> = ({
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
 
   const setFilters = useMapStore((state) => state.setFilters);
+  const showCategoryList = useMapStore((state) => state.showCategoryList);
 
   // Handle search request to backend
   const handleSearch = () => {
@@ -115,44 +117,49 @@ const SearchFilterHub: React.FC<SearchFilterHubProps> = ({
       </motion.div>
 
       {/* Category Filters */}
-      {!isCategoriesLoading && categories.length > 0 && (
-        <motion.div
-          initial={{ x: -300, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-          className="w-full max-w-3xl overflow-x-auto scrollbar-hide"
-        >
-          <div className="flex space-x-3 pb-2 min-w-max">
-            {categories.map((category) => {
-              const isSelected = selectedCategoryIds.includes(category._id!);
-              return (
-                <motion.button
-                  key={category._id}
-                  onClick={() => handleCategorySelect(category._id!)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-full whitespace-nowrap transition-all duration-300 ${
-                    isSelected
-                      ? "bg-[#FF007A]/20 text-white border border-[#FF007A] drop-shadow-[0_0_8px_#FF007A]"
-                      : "bg-white/5 backdrop-blur-md border border-white/10 text-white/60 hover:border-white/40"
-                  }`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                >
-                  {category.icon && (
-                    <>
-                      <span className="text-lg" style={{ color: category.color }}>
-                        {category.icon}
-                      </span>
-                      <div className="w-px h-5 bg-white/30 mx-1" /> {/* Divider */}
-                    </>
-                  )}
-                  <span>{category.name}</span>
-                </motion.button>
-              );
-            })}
-          </div>
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {!isCategoriesLoading && categories.length > 0 && showCategoryList && (
+          <motion.div
+            key="category-list"
+            initial={{ opacity: 0, y: -12, scaleY: 0.9 }}
+            animate={{ opacity: 1, y: 0, scaleY: 1 }}
+            exit={{ opacity: 0, y: -12, scaleY: 0.9 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+            style={{ transformOrigin: "top" }}
+            className="w-full max-w-3xl overflow-x-auto scrollbar-hide"
+          >
+            <div className="flex space-x-3 pb-2 min-w-max">
+              {categories.map((category) => {
+                const isSelected = selectedCategoryIds.includes(category._id!);
+                return (
+                  <motion.button
+                    key={category._id}
+                    onClick={() => handleCategorySelect(category._id!)}
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-full whitespace-nowrap transition-all duration-300 ${
+                      isSelected
+                        ? "bg-[#FF007A]/20 text-white border border-[#FF007A] drop-shadow-[0_0_8px_#FF007A]"
+                        : "bg-white/5 backdrop-blur-md border border-white/10 text-white/60 hover:border-white/40"
+                    }`}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                  >
+                    {category.icon && (
+                      <>
+                        <span className="text-lg" style={{ color: category.color }}>
+                          {category.icon}
+                        </span>
+                        <div className="w-px h-5 bg-white/30 mx-1" /> {/* Divider */}
+                      </>
+                    )}
+                    <span>{category.name}</span>
+                  </motion.button>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
