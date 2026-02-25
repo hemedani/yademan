@@ -720,6 +720,54 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     // Increase text sizes in map layers
     increaseTextSizes();
 
+    // Handle initial style load failure with graceful fallback (e.g. OpenFreeMap CORS / network error)
+    map.current.once("error", (e: any) => {
+      // Only act if the map hasn't fully initialized yet – tile errors after load are expected noise
+      if (!map.current || hasInitialized.current) return;
+      console.warn("Initial map style failed to load, falling back to raster:", e.error?.message || e);
+
+      const darkmatterLayer = MAP_LAYERS.find((l) => l.id === "darkmatter") || MAP_LAYERS[0];
+      setCurrentLayer(darkmatterLayer);
+
+      map.current.setStyle({
+        version: 8,
+        sources: {
+          "osm-raster": {
+            type: "raster",
+            tiles: [darkmatterLayer.url],
+            tileSize: 256,
+            attribution: darkmatterLayer.attribution,
+            maxzoom: darkmatterLayer.maxZoom,
+          },
+        },
+        layers: [
+          {
+            id: "background",
+            type: "background",
+            paint: { "background-color": "#0a0a00" },
+          },
+          {
+            id: "osm-raster",
+            type: "raster",
+            source: "osm-raster",
+            minzoom: 0,
+            maxzoom: darkmatterLayer.maxZoom,
+          },
+        ],
+      });
+
+      // The initial "load" event already fired (or will never fire), so piggyback on style.load
+      map.current.once("style.load", () => {
+        if (!map.current) return;
+        if (onLoad) onLoad();
+        addIranBorderLayers();
+        if (!hasInitialized.current) {
+          hasInitialized.current = true;
+          loadPlaces();
+        }
+      });
+    });
+
     // Handle map events
     map.current.on("moveend", () => {
       if (map.current) {
