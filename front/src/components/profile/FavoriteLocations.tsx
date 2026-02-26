@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
 
 interface FavoriteLocation {
   id: string;
@@ -20,119 +19,106 @@ interface FavoriteLocationsProps {
   isLoading?: boolean;
 }
 
+const mockLocations: FavoriteLocation[] = [
+  {
+    id: "1",
+    title: "تخت جمشید",
+    category: "مکان تاریخی",
+    rating: 4.8,
+    reviewCount: 1250,
+    image: "/images/persepolis.jpg",
+    address: "فارس، شیراز، مرودشت",
+    addedDate: "۱۴۰۳/۰۲/۱۵",
+  },
+  {
+    id: "2",
+    title: "میدان نقش جهان",
+    category: "میراث جهانی",
+    rating: 4.9,
+    reviewCount: 850,
+    image: "/images/naghsh-jahan.jpg",
+    address: "اصفهان، میدان امام",
+    addedDate: "۱۴۰۳/۰۲/۱۰",
+  },
+  {
+    id: "3",
+    title: "برج آزادی",
+    category: "بنای یادبود",
+    rating: 4.6,
+    reviewCount: 2100,
+    image: "/images/azadi-tower.jpg",
+    address: "تهران، میدان آزادی",
+    addedDate: "۱۴۰۳/۰۱/۲۵",
+  },
+];
+
+const categories = ["all", "مکان تاریخی", "میراث جهانی", "بنای یادبود", "مکان طبیعی"];
+
+const categoryLabels: Record<string, string> = {
+  all: "همه",
+  "مکان تاریخی": "مکان‌های تاریخی",
+  "میراث جهانی": "میراث جهانی",
+  "بنای یادبود": "بناهای یادبود",
+  "مکان طبیعی": "مکان‌های طبیعی",
+};
+
+function StarRating({ rating }: { rating: number }) {
+  return (
+    <div className="flex items-center gap-0.5">
+      {Array.from({ length: 5 }, (_, i) => {
+        const filled = i < Math.floor(rating);
+        const half = !filled && i === Math.floor(rating) && rating % 1 !== 0;
+        return (
+          <svg
+            key={i}
+            className={`w-3.5 h-3.5 ${filled || half ? "text-yellow-400" : "text-[#444]"} fill-current`}
+            viewBox="0 0 20 20"
+          >
+            {half ? (
+              <>
+                <defs>
+                  <linearGradient id={`half-${i}`}>
+                    <stop offset="50%" stopColor="currentColor" />
+                    <stop offset="50%" stopColor="#444" />
+                  </linearGradient>
+                </defs>
+                <path
+                  fill={`url(#half-${i})`}
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                />
+              </>
+            ) : (
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            )}
+          </svg>
+        );
+      })}
+    </div>
+  );
+}
+
 const FavoriteLocations: React.FC<FavoriteLocationsProps> = ({
   locations = [],
   isLoading = false,
 }) => {
-  const t = useTranslations("Profile");
-  const [filter, setFilter] = useState<string>("all");
-
-  // Mock data for demonstration
-  const mockLocations: FavoriteLocation[] = [
-    {
-      id: "1",
-      title: "تخت جمشید",
-      category: "مکان تاریخی",
-      rating: 4.8,
-      reviewCount: 1250,
-      image: "/images/persepolis.jpg",
-      address: "فارس، شیراز، مرودشت",
-      addedDate: "۱۴۰۳/۰۲/۱۵",
-    },
-    {
-      id: "2",
-      title: "میدان نقش جهان",
-      category: "میراث جهانی",
-      rating: 4.9,
-      reviewCount: 850,
-      image: "/images/naghsh-jahan.jpg",
-      address: "اصفهان، میدان امام",
-      addedDate: "۱۴۰۳/۰۲/۱۰",
-    },
-    {
-      id: "3",
-      title: "برج آزادی",
-      category: "بنای یادبود",
-      rating: 4.6,
-      reviewCount: 2100,
-      image: "/images/azadi-tower.jpg",
-      address: "تهران، میدان آزادی",
-      addedDate: "۱۴۰۳/۰۱/۲۵",
-    },
-  ];
+  const [filter, setFilter] = useState("all");
 
   const displayLocations = locations.length > 0 ? locations : mockLocations;
 
-  const categories = ["all", "مکان تاریخی", "میراث جهانی", "بنای یادبود", "مکان طبیعی"];
-  const categoryLabels: Record<string, string> = {
-    all: "همه",
-    "مکان تاریخی": "مکان‌های تاریخی",
-    "میراث جهانی": "میراث جهانی",
-    "بنای یادبود": "بناهای یادبود",
-    "مکان طبیعی": "مکان‌های طبیعی",
-  };
-
   const filteredLocations =
-    filter === "all"
-      ? displayLocations
-      : displayLocations.filter((location) => location.category === filter);
-
-  const handleRemoveFavorite = (locationId: string) => {
-    // Handle removing from favorites
-    console.log("Removing from favorites:", locationId);
-  };
-
-  const renderStars = (rating: number) => {
-    const stars = [];
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
-
-    for (let i = 0; i < 5; i++) {
-      if (i < fullStars) {
-        stars.push(
-          <svg key={i} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-          </svg>,
-        );
-      } else if (i === fullStars && hasHalfStar) {
-        stars.push(
-          <svg key={i} className="w-4 h-4 text-yellow-400" viewBox="0 0 20 20">
-            <defs>
-              <linearGradient id={`half-star-fav-${i}`}>
-                <stop offset="50%" stopColor="currentColor" />
-                <stop offset="50%" stopColor="#e5e7eb" />
-              </linearGradient>
-            </defs>
-            <path
-              fill={`url(#half-star-fav-${i})`}
-              d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-            />
-          </svg>,
-        );
-      } else {
-        stars.push(
-          <svg key={i} className="w-4 h-4 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-          </svg>,
-        );
-      }
-    }
-    return stars;
-  };
+    filter === "all" ? displayLocations : displayLocations.filter((loc) => loc.category === filter);
 
   if (isLoading) {
     return (
-      <div className="bg-white rounded-lg shadow-sm border p-6">
+      <div className="bg-[#121212] border border-[#333] rounded-2xl p-6">
         <div className="space-y-4">
-          {[...Array(3)].map((_, index) => (
-            <div key={index} className="animate-pulse">
-              <div className="flex space-x-4">
-                <div className="w-20 h-20 bg-gray-200 rounded-lg"></div>
-                <div className="flex-1 space-y-2">
-                  <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                  <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-                  <div className="h-3 bg-gray-200 rounded w-2/3"></div>
-                </div>
+          {Array.from({ length: 3 }, (_, i) => (
+            <div key={i} className="animate-pulse flex gap-4">
+              <div className="w-20 h-20 rounded-xl bg-[#222] flex-shrink-0" />
+              <div className="flex-1 space-y-2.5 py-1">
+                <div className="h-4 bg-[#222] rounded w-3/4" />
+                <div className="h-3 bg-[#222] rounded w-1/2" />
+                <div className="h-3 bg-[#222] rounded w-2/3" />
               </div>
             </div>
           ))}
@@ -142,55 +128,70 @@ const FavoriteLocations: React.FC<FavoriteLocationsProps> = ({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
+    <div className="bg-[#121212] border border-[#333] rounded-2xl overflow-hidden">
       <div className="p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-gray-900">مکان‌های مورد علاقه</h2>
-          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-lg font-bold text-white flex items-center gap-2">
+            <svg
+              className="w-5 h-5 text-[#FF007A]"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+              />
+            </svg>
+            مکان‌های مورد علاقه
+          </h2>
+          <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#FF007A]/10 border border-[#FF007A]/20 text-[#FF007A]">
             {filteredLocations.length} مکان
           </span>
         </div>
 
-        {/* Filter Tabs */}
+        {/* Filter pills */}
         <div className="flex flex-wrap gap-2 mb-6">
-          {categories.map((category) => (
+          {categories.map((cat) => (
             <button
-              key={category}
-              onClick={() => setFilter(category)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                filter === category
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              key={cat}
+              onClick={() => setFilter(cat)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
+                filter === cat
+                  ? "bg-gradient-to-r from-[#FF007A] to-[#A020F0] text-white shadow-lg shadow-[#FF007A]/20"
+                  : "bg-[#1a1a1a] border border-[#333] text-[#a0a0a0] hover:border-[#FF007A] hover:text-white"
               }`}
             >
-              {categoryLabels[category]}
+              {categoryLabels[cat]}
             </button>
           ))}
         </div>
 
-        {/* Locations Grid */}
+        {/* Grid */}
         {filteredLocations.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredLocations.map((location) => (
               <div
                 key={location.id}
-                className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow border border-gray-200"
+                className="group bg-[#1a1a1a] border border-[#333] rounded-xl overflow-hidden hover:border-[#FF007A]/50 hover:shadow-lg hover:shadow-[#FF007A]/10 transition-all duration-300"
               >
                 {/* Image */}
-                <div className="relative h-40">
+                <div className="relative h-36 bg-[#222]">
                   {location.image ? (
                     <Image
                       src={location.image}
                       alt={location.title}
-                      width={200}
-                      height={160}
-                      className="w-full h-full object-cover"
-                      unoptimized={true}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      unoptimized
                     />
                   ) : (
-                    <div className="w-full h-full bg-gray-300 flex items-center justify-center">
+                    <div className="w-full h-full flex items-center justify-center">
                       <svg
-                        className="w-12 h-12 text-gray-400"
+                        className="w-10 h-10 text-[#444]"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -205,13 +206,19 @@ const FavoriteLocations: React.FC<FavoriteLocationsProps> = ({
                     </div>
                   )}
 
-                  {/* Remove Button */}
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a]/80 to-transparent" />
+
+                  {/* Remove button */}
                   <button
-                    onClick={() => handleRemoveFavorite(location.id)}
-                    className="absolute top-2 right-2 p-1.5 bg-white/90 hover:bg-white rounded-full shadow-sm transition-colors"
+                    className="absolute top-2 right-2 p-1.5 bg-[#121212]/80 backdrop-blur-sm hover:bg-[#FF007A]/20 border border-[#333] hover:border-[#FF007A]/50 rounded-lg transition-all duration-200"
                     title="حذف از علاقه‌مندی‌ها"
                   >
-                    <svg className="w-4 h-4 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                    <svg
+                      className="w-3.5 h-3.5 text-[#FF007A]"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
                       <path
                         fillRule="evenodd"
                         d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
@@ -219,39 +226,53 @@ const FavoriteLocations: React.FC<FavoriteLocationsProps> = ({
                       />
                     </svg>
                   </button>
+
+                  {/* Category badge */}
+                  <div className="absolute bottom-2 left-2">
+                    <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-[#121212]/80 backdrop-blur-sm border border-[#333] text-[#a0a0a0]">
+                      {location.category}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Content */}
                 <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2 truncate">
+                  <h3 className="text-base font-semibold text-white truncate mb-2">
                     {location.title}
                   </h3>
 
-                  {/* Category */}
-                  <div className="mb-2">
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                      {location.category}
-                    </span>
-                  </div>
-
                   {/* Rating */}
-                  <div className="flex items-center mb-2">
-                    <div className="flex items-center">{renderStars(location.rating)}</div>
-                    <span className="ml-2 text-sm text-gray-600">
-                      {location.rating.toFixed(1)} ({location.reviewCount})
+                  <div className="flex items-center gap-2 mb-2">
+                    <StarRating rating={location.rating} />
+                    <span className="text-xs text-[#a0a0a0]">
+                      {location.rating.toFixed(1)}{" "}
+                      <span className="text-[#666]">({location.reviewCount})</span>
                     </span>
                   </div>
 
                   {/* Address */}
-                  <p className="text-sm text-gray-600 mb-3 truncate" title={location.address}>
-                    {location.address}
-                  </p>
+                  <div className="flex items-center gap-1.5 text-xs text-[#666] mb-3 truncate">
+                    <svg
+                      className="w-3.5 h-3.5 flex-shrink-0 text-[#555]"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+                    <span className="truncate">{location.address}</span>
+                  </div>
 
-                  {/* Added Date */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-500">اضافه شده: {location.addedDate}</span>
-                    <button className="text-sm text-blue-600 hover:text-blue-800 transition-colors">
-                      مشاهده
+                  {/* Footer */}
+                  <div className="flex items-center justify-between pt-3 border-t border-[#222]">
+                    <span className="text-xs text-[#555]">{location.addedDate}</span>
+                    <button className="text-xs font-medium text-[#FF007A] hover:text-[#ff339c] transition-colors">
+                      مشاهده روی نقشه ←
                     </button>
                   </div>
                 </div>
@@ -259,29 +280,40 @@ const FavoriteLocations: React.FC<FavoriteLocationsProps> = ({
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <svg
-              className="w-16 h-16 text-gray-400 mx-auto mb-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-              />
-            </svg>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+          /* Empty state */
+          <div className="text-center py-16">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#FF007A]/10 border border-[#FF007A]/20 flex items-center justify-center">
+              <svg
+                className="w-8 h-8 text-[#FF007A]"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+            </div>
+            <h3 className="text-base font-semibold text-white mb-1">
               {filter === "all"
                 ? "هنوز مکانی اضافه نکرده‌اید"
                 : `هیچ ${categoryLabels[filter]} در علاقه‌مندی‌ها یافت نشد`}
             </h3>
-            <p className="text-gray-500 mb-4">
+            <p className="text-sm text-[#a0a0a0] mb-6">
               شروع به کاوش کنید و مکان‌های مورد علاقه خود را اضافه کنید
             </p>
-            <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#FF007A] to-[#A020F0] text-white text-sm font-medium hover:shadow-lg hover:shadow-[#FF007A]/30 transition-all duration-300 transform hover:scale-105">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                />
+              </svg>
               کاوش مکان‌ها
             </button>
           </div>

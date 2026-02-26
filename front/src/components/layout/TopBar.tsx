@@ -209,15 +209,14 @@ export default function TopBar({ locale = "fa", _eventsOpen = false }: TopBarPro
 
               {/* Only show settings if user has appropriate level */}
               {isAuthenticated && userLevel && ["Manager", "Editor", "Ghost"].includes(userLevel) && (
-                <ILink
-                  href="/settings"
-                  locale={locale}
+                <Link
+                  href="/admin/settings"
                   className="flex items-center px-4 py-3 text-sm text-[#a0a0a0] hover:bg-[#1e1e1e] hover:text-white transition-colors duration-150"
                   onClick={() => setShowUserPanel(false)}
                 >
                   <Cog6ToothIcon className="w-5 h-5 ml-3 text-[#FF007A] hover:text-white" />
                   {t("Navigation.settings")}
-                </ILink>
+                </Link>
               )}
 
               <div className="border-t border-[#333] my-1"></div>
