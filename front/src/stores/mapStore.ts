@@ -142,7 +142,7 @@ export const useMapStore = create<MapState>()(
         showClusters: true,
         isLoading: false,
         error: null,
-        showCategoryList: true,
+        showCategoryList: false,
         isAddingLocation: false,
         isDrawingPolygon: false,
         selectedLocationId: null,

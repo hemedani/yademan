@@ -16,10 +16,12 @@ interface MenuItem {
   allowedLevels?: string[];
 }
 
-// AdminSidebar component props (currently no props needed)
-type AdminSidebarProps = Record<string, never>;
+interface AdminSidebarProps {
+  isCollapsed: boolean;
+  onToggle: () => void;
+}
 
-const AdminSidebar: React.FC<AdminSidebarProps> = () => {
+const AdminSidebar: React.FC<AdminSidebarProps> = ({ isCollapsed, onToggle }) => {
   const pathname = usePathname();
   const router = useRouter();
   const { user, userLevel, logout } = useAuth();
@@ -29,7 +31,8 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
     "content",
     "virtualTours",
   ]);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const sidebarCollapsed = isCollapsed;
+  const setSidebarCollapsed = onToggle;
 
   const menuItems: MenuItem[] = [
     {
@@ -385,6 +388,37 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
     const hasChildren = item.children && item.children.length > 0;
     const isExpanded = expandedItems.includes(item.id);
 
+    if (sidebarCollapsed) {
+      return (
+        <div key={item.id} title={item.title}>
+          <div
+            className={`
+              flex items-center justify-center p-2 rounded-xl transition-all duration-300 cursor-pointer
+              ${
+                isActive
+                  ? "bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-lg shadow-pink-500/25"
+                  : "text-gray-400 hover:bg-gray-700 hover:text-white"
+              }
+            `}
+            onClick={() => {
+              if (!hasChildren) {
+                router.push(item.href);
+              }
+            }}
+          >
+            <div
+              className={`
+                p-2 rounded-lg transition-all duration-300
+                ${isActive ? "bg-white/20" : ""}
+              `}
+            >
+              {item.icon}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div key={item.id} className={`${isChild ? "mr-4" : ""}`}>
         <div
@@ -457,8 +491,10 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
       style={{ fontFamily: "IRANSans, Tahoma, Arial, sans-serif" }}
     >
       {/* Header */}
-      <div className="p-6 border-b border-gray-700/60">
-        <div className="flex items-center justify-between">
+      <div className="p-4 border-b border-gray-700/60">
+        <div
+          className={`flex items-center ${sidebarCollapsed ? "justify-center" : "justify-between"}`}
+        >
           <div className={`${sidebarCollapsed ? "hidden" : "block"}`}>
             <h1 className="text-xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
               پنل مدیریت
@@ -466,7 +502,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = () => {
             <p className="text-sm text-gray-400 mt-1">نقشه ایران</p>
           </div>
           <button
-            onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            onClick={() => setSidebarCollapsed()}
             className="p-2 rounded-lg hover:bg-gray-800 transition-colors duration-200 text-gray-300"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

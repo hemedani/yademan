@@ -98,7 +98,7 @@ const VirtualTourPage = () => {
           <h2 className="text-2xl font-bold text-white mb-4">{t("virtualTour.errorTitle")}</h2>
           <p className="text-[#a0a0a0] mb-6">{error || t("virtualTour.errorMessage")}</p>
           <button
-            onClick={() => router.push(`/${locale || "en"}/`)}
+            onClick={() => router.back()}
             className="px-4 py-2 bg-gradient-to-r from-[#FF007A] to-[#A020F0] text-white rounded-md text-sm font-medium"
           >
             {t("Common.back")}
@@ -115,7 +115,7 @@ const VirtualTourPage = () => {
           <h2 className="text-2xl font-bold text-white mb-4">{t("virtualTour.errorTitle")}</h2>
           <p className="text-[#a0a0a0] mb-6">{t("virtualTour.missingPanorama")}</p>
           <button
-            onClick={() => router.push(`/${locale || "en"}/`)}
+            onClick={() => router.back()}
             className="px-4 py-2 bg-gradient-to-r from-[#FF007A] to-[#A020F0] text-white rounded-md text-sm font-medium"
           >
             {t("Common.back")}
@@ -138,7 +138,7 @@ const VirtualTourPage = () => {
       </div>
 
       <button
-        onClick={() => router.push(`/${locale || "en"}/`)}
+        onClick={() => router.back()}
         className="absolute top-4 right-4 z-10 p-3 rounded-full bg-[#1e1e1e]/80 backdrop-blur-sm border border-[#333] text-white hover:bg-[#2a2a2a] transition-colors shadow-lg"
         aria-label={t("Common.close")}
       >

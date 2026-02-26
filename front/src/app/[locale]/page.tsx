@@ -8,7 +8,7 @@ import MapView from "@/components/map/MapView";
 import { useFilterPanel } from "@/hooks/useFilterPanel";
 import { useMapStore } from "@/stores/mapStore";
 import toast from "react-hot-toast";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import TimelineSlider from "@/components/organisms/TimelineSlider";
 import SearchFilterHub from "@/components/layout/SearchFilterHub";
 
@@ -16,9 +16,10 @@ export default function HomePage() {
   const t = useTranslations("HomePage");
   const params = useParams();
   const locale = params.locale as string;
+  const searchParams = useSearchParams();
   const [searchValue, setSearchValue] = useState("");
   const [showWelcome, setShowWelcome] = useState(true);
-  const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const [isMapLoaded, setIsMapLoaded] = useState(() => searchParams.get("map") === "1");
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
   const { isFilterOpen, toggleFilter, closeFilter } = useFilterPanel();
   const { searchQuery, setSearchQuery, getCurrentBounds, filters, setFilters } = useMapStore();

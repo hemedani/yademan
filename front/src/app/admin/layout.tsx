@@ -18,6 +18,7 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -29,12 +30,7 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
 
   useEffect(() => {
     if (!loading && mounted) {
-      if (
-        !user ||
-        (userLevel !== "Manager" &&
-          userLevel !== "Editor" &&
-          userLevel !== "Ghost")
-      ) {
+      if (!user || (userLevel !== "Manager" && userLevel !== "Editor" && userLevel !== "Ghost")) {
         router.push("/login");
         return;
       }
@@ -48,10 +44,7 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
       minute: "2-digit",
       timeZone: "Asia/Tehran",
     });
-    return timeString.replace(
-      /[0-9]/g,
-      (digit) => persianDigits[parseInt(digit)],
-    );
+    return timeString.replace(/[0-9]/g, (digit) => persianDigits[parseInt(digit)]);
   };
 
   const formatPersianDate = (date: Date): string => {
@@ -77,9 +70,7 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
             <div className="absolute inset-0 w-20 h-20 border-4 border-pink-600 border-t-transparent rounded-full animate-spin"></div>
           </div>
           <div className="space-y-2">
-            <h2 className="text-2xl font-bold text-white">
-              در حال بارگذاری پنل مدیریت
-            </h2>
+            <h2 className="text-2xl font-bold text-white">در حال بارگذاری پنل مدیریت</h2>
             <p className="text-gray-300">لطفاً منتظر بمانید...</p>
           </div>
           <div className="flex items-center justify-center space-x-3 text-sm text-gray-400">
@@ -98,10 +89,7 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
     );
   }
 
-  if (
-    !user ||
-    (userLevel !== "Manager" && userLevel !== "Editor" && userLevel !== "Ghost")
-  ) {
+  if (!user || (userLevel !== "Manager" && userLevel !== "Editor" && userLevel !== "Ghost")) {
     return (
       <div
         className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-slate-900 flex items-center justify-center"
@@ -128,11 +116,7 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
               </div>
             </div>
             <div className="absolute -top-2 -right-2 w-6 h-6 bg-pink-500 rounded-full flex items-center justify-center">
-              <svg
-                className="w-4 h-4 text-white"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
+              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fillRule="evenodd"
                   d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -145,16 +129,11 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
           <div className="space-y-4">
             <h1 className="text-3xl font-bold text-white">دسترسی محدود شده</h1>
             <p className="text-lg text-gray-300 leading-relaxed">
-              شما مجوز دسترسی به این بخش را ندارید. لطفاً با حساب کاربری مدیر یا
-              ویراستار وارد شوید.
+              شما مجوز دسترسی به این بخش را ندارید. لطفاً با حساب کاربری مدیر یا ویراستار وارد شوید.
             </p>
             <div className="bg-gray-800 border border-gray-700 rounded-xl p-4 text-sm text-pink-400">
               <div className="flex items-center space-x-3">
-                <svg
-                  className="w-4 h-4 flex-shrink-0"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
+                <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path
                     fillRule="evenodd"
                     d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
@@ -191,10 +170,15 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
       dir="rtl"
       style={{ fontFamily: "IRANSans, Tahoma, Arial, sans-serif" }}
     >
-      <AdminSidebar />
+      <AdminSidebar
+        isCollapsed={sidebarCollapsed}
+        onToggle={() => setSidebarCollapsed((prev) => !prev)}
+      />
 
       {/* Main Content */}
-      <div className="mr-80 transition-all duration-300 ease-in-out">
+      <div
+        className={`${sidebarCollapsed ? "mr-20" : "mr-80"} transition-all duration-300 ease-in-out`}
+      >
         {/* Top Header Bar */}
         <header className="bg-gray-900/80 backdrop-blur-xl border-b border-gray-700/60 stic/ky top-0 z-40 shadow-sm">
           <div className="px-8 py-4">
@@ -204,22 +188,16 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
                   <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">
                     پنل مدیریت نقشه ایران
                   </h1>
-                  <p className="text-sm text-gray-400 mt-1">
-                    سامانه مدیریت مکان‌های فرهنگی و تاریخی
-                  </p>
+                  <p className="text-sm text-gray-400 mt-1">سامانه مدیریت مکان‌های فرهنگی و تاریخی</p>
                 </div>
 
                 <div className="hidden lg:flex items-center space-x-6 bg-gray-800/50 px-4 py-2 rounded-xl border border-gray-700">
                   <div className="flex items-center space-x-3">
-                    <span className="text-sm font-medium text-gray-300">
-                      آنلاین
-                    </span>
+                    <span className="text-sm font-medium text-gray-300">آنلاین</span>
                     <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
                   </div>
                   <div className="w-px h-4 bg-gray-600"></div>
-                  <div className="text-sm text-gray-400">
-                    {formatPersianTime(currentTime)}
-                  </div>
+                  <div className="text-sm text-gray-400">{formatPersianTime(currentTime)}</div>
                 </div>
               </div>
 
@@ -250,12 +228,7 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
 
                 {/* Notifications */}
                 <button className="relative p-3 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-xl transition-all duration-200 group border border-gray-700">
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -273,12 +246,7 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
                   onClick={() => router.push("/admin/settings")}
                   className="p-3 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-xl transition-all duration-200 border border-gray-700"
                 >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -305,12 +273,7 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
                   }}
                   className="p-3 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white rounded-xl transition-all duration-200 border border-gray-700"
                 >
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -380,12 +343,7 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
             className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-green-500/20 transform hover:-translate-y-1"
             title="نظرات درانتظار"
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -396,16 +354,11 @@ function InnerAdminLayout({ children }: AdminLayoutProps) {
           </button>
 
           <button
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/fa?map=1")}
             className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl transition-all duration-300 flex items-center justify-center group shadow-lg hover:shadow-blue-500/20 transform hover:-translate-y-1"
             title="مشاهده سایت اصلی"
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"

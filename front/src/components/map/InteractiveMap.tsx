@@ -1533,11 +1533,16 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           onZoomIn={() => map.current?.zoomIn()}
           onZoomOut={() => map.current?.zoomOut()}
           onResetView={() => {
-            map.current?.flyTo({
-              center: [51.389, 35.6892],
-              zoom: 6,
-              essential: true,
-            });
+            map.current?.fitBounds(
+              [
+                [44.0, 25.1], // Southwest corner of Iran [lng, lat]
+                [63.3, 39.8], // Northeast corner of Iran [lng, lat]
+              ],
+              {
+                padding: { top: 60, bottom: 190, left: 60, right: 60 },
+                duration: 800,
+              },
+            );
           }}
           onLocateUser={() => {
             if (navigator.geolocation) {

@@ -7554,6 +7554,8 @@ set: {
 _id: string;
 name?: string;
 description?: string;
+color?: string;
+icon?: string;
 };
 get: {
 _id?: (0 | 1 );
