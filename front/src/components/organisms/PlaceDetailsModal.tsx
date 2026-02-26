@@ -226,7 +226,7 @@ const PlaceDetailsModal: React.FC<PlaceDetailsModalProps> = ({ placeId, onClose 
       <AnimatePresence>
         <motion.div
           key={`place-modal-${placeId}`}
-          className="fixed top-0 right-0 bottom-0 w-full max-w-xl z-60 flex flex-col bg-[#0a0a00] border-l border-[#333] shadow-[-8px_0_40px_rgba(0,0,0,0.6)]"
+          className="fixed top-0 right-0 bottom-0 w-full max-w-2xl z-60 flex flex-col bg-[#0a0a00] border-l border-[#333] shadow-[-8px_0_40px_rgba(0,0,0,0.6)]"
           initial={{ x: "100%" }}
           animate={{ x: 0 }}
           exit={{ x: "100%" }}

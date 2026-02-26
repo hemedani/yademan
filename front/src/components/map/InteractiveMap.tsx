@@ -179,11 +179,12 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
                 setSelectedPlace(clickedPlace);
                 setShowPlaceDetails(true);
 
-                // Fly to location
+                // Fly to location — offset left so marker stays visible behind the panel
                 map.current?.flyTo({
                   center: clickedPlace.center.coordinates as [number, number],
-                  zoom: 14,
+                  zoom: 16,
                   essential: true,
+                  padding: { top: 60, bottom: 60, left: 60, right: 700 },
                 });
               }}
             />,
@@ -270,11 +271,12 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
                 setSelectedPlace(clickedPlace);
                 setShowPlaceDetails(true);
 
-                // Fly to location
+                // Fly to location — offset left so marker stays visible behind the panel
                 map.current?.flyTo({
                   center: clickedPlace.center.coordinates as [number, number],
-                  zoom: 14,
+                  zoom: 16,
                   essential: true,
+                  padding: { top: 60, bottom: 60, left: 60, right: 700 },
                 });
               }}
             />,
@@ -303,11 +305,12 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
                     setSelectedPlace(clickedPlace);
                     setShowPlaceDetails(true);
 
-                    // Fly to location
+                    // Fly to location — offset left so marker stays visible behind the panel
                     map.current?.flyTo({
                       center: clickedPlace.center.coordinates as [number, number],
-                      zoom: 14,
+                      zoom: 16,
                       essential: true,
+                      padding: { top: 60, bottom: 60, left: 60, right: 700 },
                     });
                   }}
                 />,

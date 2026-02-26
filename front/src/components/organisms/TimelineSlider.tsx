@@ -16,7 +16,7 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({ className = "" }) => {
   const [inputValue, setInputValue] = useState<string>("0");
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [showTooltip, setShowTooltip] = useState<boolean>(false);
-  const [isMinimized, setIsMinimized] = useState<boolean>(false);
+  const [isMinimized, setIsMinimized] = useState<boolean>(true);
   const [isAdvancedSearchOpen, setIsAdvancedSearchOpen] = useState<boolean>(false);
 
   // Minimum and maximum antiquity ranges
