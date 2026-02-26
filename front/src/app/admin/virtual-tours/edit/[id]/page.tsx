@@ -1,30 +1,18 @@
 import { Suspense } from "react";
-import { cookies } from "next/headers";
 import { translateModelNameToPersian } from "@/utils/helper";
 import { ReqType } from "@/types/declarations/selectInp";
-import { gets } from "@/app/actions/place/gets";
 import { get } from "@/app/actions/virtual_tour/get";
 import { FormEditVirtualTour } from "@/components/template/FormEditVirtualTour";
 
 export default async function EditVirtualTourPage(props: { params: Promise<{ id: string }> }) {
-  const token = (await cookies()).get("token");
   const params = await props.params;
   const { id } = params;
 
-  // Fetch the virtual tour data
   const tourGet: ReqType["main"]["virtual_tour"]["get"]["get"] = {
     _id: 1,
     name: 1,
     description: 1,
     status: 1,
-    place: {
-      _id: 1,
-      name: 1,
-    },
-    panorama: {
-      _id: 1,
-      name: 1,
-    },
   };
 
   const tourResponse = await get({
@@ -32,35 +20,7 @@ export default async function EditVirtualTourPage(props: { params: Promise<{ id:
     get: tourGet,
   });
 
-  // Fetch places for the dropdown
-  const placesSet: ReqType["main"]["place"]["gets"]["set"] = {
-    limit: 100, // Fetch up to 100 places
-    page: 1,
-    status: "active", // Only show active places
-  };
-
-  const placesGet: ReqType["main"]["place"]["gets"]["get"] = {
-    data: {
-      _id: 1,
-      name: 1,
-    },
-    metadata: {
-      total: 1,
-      page: 1,
-      limit: 1,
-      pageCount: 1,
-    },
-  };
-
-  const placesResponse = await gets({ set: placesSet, get: placesGet });
-  const places = placesResponse.success
-    ? placesResponse.body.data.map((place: any) => ({
-        value: place._id,
-        label: place.name,
-      }))
-    : [];
-
-  const tourData = tourResponse.success ? tourResponse.body : null;
+  const tourData = tourResponse.success ? tourResponse.body[0] : null;
 
   if (!tourData) {
     return (
@@ -85,7 +45,7 @@ export default async function EditVirtualTourPage(props: { params: Promise<{ id:
       </div>
 
       <Suspense fallback={<div className="p-8 text-white">در حال بارگذاری...</div>}>
-        <FormEditVirtualTour token={token?.value} places={places} tourData={tourData} />
+        <FormEditVirtualTour tourData={tourData} />
       </Suspense>
     </div>
   );

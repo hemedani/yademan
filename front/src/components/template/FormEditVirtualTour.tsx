@@ -3,33 +3,22 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import SelectBox from "../atoms/Select";
-import { UploadImage } from "@/components/molecules/UploadFile";
-import { ToastNotify } from "@/utils/helper";
+import { useEffect, useState } from "react";
+import AsyncSelectBox from "../atoms/AsyncSelectBox";
 import MyInput from "../atoms/MyInput";
+import { ToastNotify } from "@/utils/helper";
 import { update } from "@/app/actions/virtual_tour/update";
-import { ReqType } from "@/types/declarations/selectInp";
-import { useEffect } from "react";
 
 export const VirtualTourEditSchema = z.object({
   _id: z.string().min(1, "شناسه تور مجازی الزامی است"),
   name: z.string().min(1, "نام تور مجازی الزامی است"),
   description: z.string().optional(),
-  placeId: z.string().min(1, "انتخاب مکان الزامی است"),
-  panoramaId: z.string().min(1, "بارگذاری تصویر پانوراما الزامی است"),
   status: z.enum(["draft", "active", "archived"], {
     message: "وضعیت الزامی است",
   }),
 });
 
 export type VirtualTourEditFormData = z.infer<typeof VirtualTourEditSchema>;
-export type VirtualTourUpdateObj =
-  ReqType["main"]["virtual_tour"]["update"]["set"];
-
-type PlaceOption = {
-  value: string;
-  label: string;
-};
 
 type TourData = {
   _id: string;
@@ -46,72 +35,75 @@ type TourData = {
   };
 };
 
+type StatusOption = { value: string; label: string };
+
+const statusOptions: StatusOption[] = [
+  { value: "draft", label: "پیش‌نویس" },
+  { value: "active", label: "فعال" },
+  { value: "archived", label: "بایگانی شده" },
+];
+
+const statusLabelMap: Record<string, string> = {
+  draft: "پیش‌نویس",
+  active: "فعال",
+  archived: "بایگانی شده",
+};
+
+const loadStatusOptions = async (inputValue: string) => {
+  return statusOptions.filter((opt) => opt.label.includes(inputValue));
+};
+
 export const FormEditVirtualTour = ({
-  token,
-  places = [],
   tourData,
 }: {
   token?: string;
-  places: PlaceOption[];
+  places?: { value: string; label: string }[];
   tourData: TourData;
 }) => {
   const router = useRouter();
+
+  const [selectedStatus, setSelectedStatus] = useState<StatusOption | null>(
+    tourData.status ? { value: tourData.status, label: statusLabelMap[tourData.status] } : null,
+  );
 
   const {
     register,
     handleSubmit,
     setValue,
-    control,
-    formState: { errors, isValid, isSubmitting },
     reset,
+    formState: { errors, isValid, isSubmitting },
   } = useForm<VirtualTourEditFormData>({
     resolver: zodResolver(VirtualTourEditSchema),
     defaultValues: {
       _id: tourData._id,
       name: tourData.name,
-      description: tourData.description || "",
-      placeId: tourData.place?._id || "",
-      panoramaId: tourData.panorama?._id || "",
+      description: tourData.description ?? "",
       status: tourData.status,
     },
     mode: "onChange",
   });
 
-  // Initialize form with tour data
   useEffect(() => {
-    if (tourData) {
-      reset({
-        _id: tourData._id,
-        name: tourData.name,
-        description: tourData.description || "",
-        placeId: tourData.place?._id || "",
-        panoramaId: tourData.panorama?._id || "",
-        status: tourData.status,
-      });
-
-      // Also set the values for SelectBox components
-      if (tourData.place) {
-        setValue("placeId", tourData.place._id);
-      }
-
-      if (tourData.status) {
-        setValue("status", tourData.status);
-      }
-    }
-  }, [tourData, reset, setValue]);
+    reset({
+      _id: tourData._id,
+      name: tourData.name,
+      description: tourData.description ?? "",
+      status: tourData.status,
+    });
+    setSelectedStatus(
+      tourData.status ? { value: tourData.status, label: statusLabelMap[tourData.status] } : null,
+    );
+  }, [tourData, reset]);
 
   const onSubmit: SubmitHandler<VirtualTourEditFormData> = async (data) => {
     try {
-      // Convert form data to backend format
-      const updateData: VirtualTourUpdateObj = {
-        _id: data._id,
-        name: data.name,
-        description: data.description,
-        status: data.status,
-      };
-
       const result = await update({
-        set: updateData,
+        set: {
+          _id: data._id,
+          name: data.name,
+          description: data.description,
+          status: data.status,
+        },
         get: { _id: 1, name: 1 },
       });
 
@@ -119,10 +111,7 @@ export const FormEditVirtualTour = ({
         ToastNotify("success", "تور مجازی با موفقیت بروزرسانی شد");
         router.replace("/admin/virtual-tours");
       } else {
-        ToastNotify(
-          "error",
-          result.body?.message || "خطا در بروزرسانی تور مجازی",
-        );
+        ToastNotify("error", result.body?.message || "خطا در بروزرسانی تور مجازی");
       }
     } catch (error) {
       console.error("Error updating virtual tour:", error);
@@ -137,26 +126,6 @@ export const FormEditVirtualTour = ({
         className="space-y-6 bg-gray-800 p-6 border border-gray-700 rounded-xl shadow-lg"
       >
         <div className="w-full flex flex-wrap">
-          <div className="w-full p-4">
-            <span className="text-sm font-medium text-gray-300">
-              تصویر پانوراما
-            </span>
-            <UploadImage
-              inputName="panorama"
-              setUploadedImage={(uploaded: string) =>
-                setValue("panoramaId", uploaded, { shouldValidate: true })
-              }
-              type="image"
-              token={token}
-              filePath={tourData.panorama?.name}
-            />
-            {errors.panoramaId && (
-              <p className="text-red-400 text-xs mt-1">
-                {errors.panoramaId.message}
-              </p>
-            )}
-          </div>
-
           {/* Hidden field for ID */}
           <input type="hidden" {...register("_id")} />
 
@@ -178,45 +147,18 @@ export const FormEditVirtualTour = ({
           />
 
           <div className="w-full md:w-1/2 p-4">
-            <SelectBox
-              label="مکان"
-              name="placeId"
-              setValue={setValue}
-              errMsg={errors.placeId?.message}
-              options={places}
-              placeholder="انتخاب مکان"
-              defaultValue={
-                tourData.place
-                  ? { value: tourData.place._id, label: tourData.place.name }
-                  : undefined
-              }
-            />
-          </div>
-
-          <div className="w-full md:w-1/2 p-4">
-            <SelectBox
+            <AsyncSelectBox
               label="وضعیت"
               name="status"
               setValue={setValue}
+              loadOptions={loadStatusOptions}
+              defaultOptions={statusOptions}
+              value={selectedStatus}
+              placeholder="انتخاب وضعیت"
               errMsg={errors.status?.message}
-              options={[
-                { value: "draft", label: "پیش‌نویس" },
-                { value: "active", label: "فعال" },
-                { value: "archived", label: "بایگانی شده" },
-              ]}
-              defaultValue={
-                tourData.status
-                  ? {
-                      value: tourData.status,
-                      label:
-                        tourData.status === "draft"
-                          ? "پیش‌نویس"
-                          : tourData.status === "active"
-                            ? "فعال"
-                            : "بایگانی شده",
-                    }
-                  : undefined
-              }
+              onSelectChange={(option: StatusOption | null) => {
+                setSelectedStatus(option);
+              }}
             />
           </div>
         </div>

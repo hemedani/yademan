@@ -9,7 +9,7 @@ export const update = async ({ set, get }: ReqType["main"]["virtual_tour"]["upda
   return await AppApi().send(
     {
       service: "main",
-      model: "category",
+      model: "virtual_tour",
       act: "update",
       details: {
         set,
