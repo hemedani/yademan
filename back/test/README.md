@@ -100,7 +100,9 @@ Two things the JSON format cannot express:
 3. Adds 12 real heritage sites (Persepolis, Naqsh-e Jahan, Bam, Golestan, …)
    with correct coordinates, descriptions, opening hours, media and taxonomy.
 4. Adds 5 events, 3 virtual tours, 5 comments and a second staff account
-   (`editor@naghshe.dev` / `EditorDemo123!`).
+   (`editor@naghshe.dev` / `EditorDemo123!`). The comments are created with
+   `status: "approved"`: `comment.add` defaults to `pending`, and the place page
+   only renders approved ones, so a demo seeded with defaults shows no reviews.
 
 Run it **once**. The geography step is idempotent, but the content steps are
 additive: a second run fails on the unique place slugs and the staff email.

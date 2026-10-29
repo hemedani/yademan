@@ -238,13 +238,31 @@ app. The process list lives in `/home/syd/work/ecosystem.config.js`.
 Redeploy after a push:
 
 ```bash
+# Non-interactive SSH does not read .bashrc, so `node`/`pm2` are not on PATH
+# (they come from fnm). Export it first or every pm2 command fails with
+# "command not found".
+export PATH="$HOME/.local/share/fnm/node-versions/v22.23.4/installation/bin:$PATH"
+
 cd ~/work/yademan && git pull --ff-only
 cd front && npm run build          # must run before reloading yademan-FR
-cd ~/work && pm2 reload ecosystem.config.js --update-env && pm2 save
+cd ~/work && pm2 reload yademan-FR --update-env && pm2 save
 ```
 
 Gotchas:
 
+- **`pm2` is not on the PATH of a non-interactive SSH session.** Node is
+  installed through `fnm`, whose `PATH` line lives in `.bashrc` (interactive
+  only), so `ssh host 'pm2 list'` fails even though the daemon is running. Use
+  the export above, or `bash -ic`.
+- **`paper-BC` listens on `1382`, not `1400`.** Port `1400` answers `502` from
+  something else on the box; that is not a health signal for `paper`.
+- **The JSON suites are single-use against a populated database.** They create
+  fixed accounts (`e2e@naghshe.dev`) and places by slug, so a second run dies on
+  duplicate keys. Reset before running them:
+  `mongosh "mongodb://127.0.0.1:27017/yademan" --eval 'db.dropDatabase()'`,
+  then `deno task test:bootstrap` and `deno task test:seed`. Do **not** drop the
+  database on the VPS without checking `db.user` first — a real registered
+  account may live there.
 - **`COOKIE_SECURE`.** The host has no TLS terminator, so `.env.production` and
   the PM2 env set `COOKIE_SECURE=false`. A `Secure` cookie over plain HTTP is
   dropped by the browser, and login then looks successful while every later
@@ -259,6 +277,11 @@ Gotchas:
   printed by `pm2 startup` as root once.
 - **Accounts with published passwords must be rotated** on any public host.
   `back/test/rotate-known-passwords.ts` regenerates them in place.
+- **Only approved comments are public.** `comment.add` defaults `status` to
+  `pending`, and the place page filters to `approved`, so freshly seeded reviews
+  are invisible until moderated. The seed suites set `status: "approved"`
+  explicitly; on an existing database use
+  `db.comment.updateMany({status:"pending"},{$set:{status:"approved"}})`.
 
 ## Access Control
 
