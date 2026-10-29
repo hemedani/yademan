@@ -2112,14 +2112,14 @@ export type ReqType = {
         set: {
           first_name: string;
           last_name: string;
-          father_name: string;
-          mobile: string;
+          email: string;
+          password: string;
+          father_name?: string;
           gender: ("Male" | "Female");
           birth_date?: Date;
           summary?: string;
-          national_number: string;
-          address: string;
-          level: ("Ghost" | "Manager" | "Editor" | "Ordinary");
+          address?: string;
+          level?: ("Ghost" | "Manager" | "Editor" | "Ordinary");
           is_verified: boolean;
           nationalCard?: string;
           avatar?: string;
@@ -6956,7 +6956,7 @@ export type ReqType = {
               };
             };
           };
-          metadata: {
+          metadata?: {
             total?: (0 | 1);
             page?: (0 | 1);
             limit?: (0 | 1);
@@ -9813,7 +9813,7 @@ export type ReqType = {
               };
             };
           };
-          metadata: {
+          metadata?: {
             total?: (0 | 1);
             page?: (0 | 1);
             limit?: (0 | 1);

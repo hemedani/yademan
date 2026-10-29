@@ -38,6 +38,9 @@ interface MapLayer {
 
 const MAPTILER_KEY = "PWAcntNh2dhVx9XsqifY";
 
+// Upper bound for the in-memory response cache.
+const MAX_CACHE_ENTRIES = 40;
+
 const MAP_LAYERS: MapLayer[] = [
   {
     id: "darkmatter",
@@ -134,6 +137,28 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
   // Cache for API responses to prevent duplicate requests
   const apiResponseCache = useRef<Map<string, Place[]>>(new Map());
 
+  // Bounded cache: without an eviction policy the map leaked one entry per
+  // distinct viewport for the lifetime of the tab.
+  const cachePlaces = useCallback((key: string, places: Place[]) => {
+    const cache = apiResponseCache.current;
+    if (cache.size >= MAX_CACHE_ENTRIES) {
+      // Map preserves insertion order, so the first key is the oldest entry.
+      const oldestKey = cache.keys().next().value;
+      if (oldestKey !== undefined) cache.delete(oldestKey);
+    }
+    cache.set(key, places);
+  }, []);
+
+  // Kept in a ref so `updateMarkers` can read the current selection without
+  // having to be rebuilt (and every marker re-rendered) on each click.
+  const selectedPlaceIdRef = useRef<string | undefined>(undefined);
+
+  // Sync before the selection effect below runs (effects run in declaration
+  // order), so marker content always sees the latest selection.
+  useEffect(() => {
+    selectedPlaceIdRef.current = selectedPlace?._id;
+  }, [selectedPlace?._id]);
+
   const t = useTranslations();
   const { filters, searchQuery, center, zoom, setCenter, setZoom, getCurrentBounds, setBounds } =
     useMapStore();
@@ -145,6 +170,14 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
 
   // Create a cache key from the request parameters
   const createCacheKey = useCallback((): string => {
+    // Round the bbox to ~2 decimal places (about 1km) so that a tiny pan does
+    // not produce a brand new key every time.
+    const areaKey = filters.area
+      ? JSON.stringify(filters.area, (key, value) =>
+          typeof value === "number" ? Math.round(value * 100) / 100 : value,
+        )
+      : "noarea";
+
     const params = [
       filters.categoryIds?.join(",") || "nocat",
       filters.tagIds?.join(",") || "notag",
@@ -155,7 +188,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
       filters.city || "nocity",
       filters.antiquity?.toString() || "noantiquity",
       // Include area in cache key if present
-      filters.area ? JSON.stringify(filters.area) : "noarea",
+      areaKey,
     ].join("|");
 
     return params;
@@ -266,7 +299,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           root.render(
             <PlaceMarker
               place={place}
-              isSelected={selectedPlace?._id === place._id}
+              isSelected={selectedPlaceIdRef.current === place._id}
               onClick={(clickedPlace) => {
                 setSelectedPlace(clickedPlace);
                 setShowPlaceDetails(true);
@@ -300,7 +333,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
               root.render(
                 <PlaceMarker
                   place={place}
-                  isSelected={selectedPlace?._id === place._id}
+                  isSelected={selectedPlaceIdRef.current === place._id}
                   onClick={(clickedPlace) => {
                     setSelectedPlace(clickedPlace);
                     setShowPlaceDetails(true);
@@ -320,7 +353,9 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         }
       });
     },
-    [map, selectedPlace?._id, mapContainer],
+    // `selectedPlace` is read through `selectedPlaceIdRef` so that selecting a
+    // marker does not invalidate this callback and rebuild every marker.
+    [map, mapContainer],
   );
 
   // Load places from backend with AbortController for request cancellation
@@ -403,9 +438,11 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         };
       }
 
-      // Add area filter if available
+      // The viewport bbox must go to `polygon`, which the backend tests against
+      // the place's `center` (an indexed 2dsphere field). Sending it as `area`
+      // tests the place boundary instead and cannot use the index.
       if (filters.area) {
-        setParams = { ...setParams, area: filters.area };
+        setParams = { ...setParams, polygon: filters.area };
       }
 
       // Add search query to the API request if available
@@ -439,12 +476,8 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
               icon: 1,
             },
           },
-          metadata: {
-            total: 1,
-            page: 1,
-            limit: 1,
-            pageCount: 1,
-          },
+          // `metadata` is intentionally not requested: it makes the backend run
+          // a second aggregation just to produce a total the map never reads.
         },
       });
 
@@ -472,7 +505,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           updateMarkers(convertedPlacesData);
 
           // Cache the response
-          apiResponseCache.current.set(cacheKey, convertedPlacesData);
+          cachePlaces(cacheKey, convertedPlacesData);
 
           // If first load, zoom to fit all places
           if (isFirstLoad) {
@@ -488,18 +521,14 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
           }
 
           // Still cache the empty result to prevent re-fetching with same parameters
-          apiResponseCache.current.set(cacheKey, []);
+          cachePlaces(cacheKey, []);
         }
       } else {
         setPlaces([]);
         // setFilteredPlaces will be updated by the search effect
-        // Only show toast if we have a cache miss to avoid duplicate toasts when cached results are empty
-        if (!apiResponseCache.current.has(cacheKey)) {
-          toast.error(t("errors.failedToFetchPlaces") || "Failed to fetch places");
-        }
-
-        // Still cache the failure to prevent re-fetching with same parameters
-        apiResponseCache.current.set(cacheKey, []);
+        // A failed request is NOT cached: caching it would pin this viewport
+        // to "no places" for the rest of the session after a single blip.
+        toast.error(t("errors.failedToFetchPlaces") || "Failed to fetch places");
       }
     } catch (error: any) {
       if (error.name === "AbortError") {
@@ -512,8 +541,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
         setPlaces([]);
         // setFilteredPlaces will be updated by the search effect
 
-        // Still cache the failure to prevent re-fetching with same parameters
-        apiResponseCache.current.set(cacheKey, []);
+        // Failures are deliberately not cached so the next pan retries.
       }
     } finally {
       if (!abortController.signal.aborted) {
@@ -531,6 +559,7 @@ const InteractiveMap: React.FC<InteractiveMapProps> = ({ onLoad }) => {
     updateMarkers,
     filters,
     createCacheKey,
+    cachePlaces,
     searchQuery,
   ]);
 

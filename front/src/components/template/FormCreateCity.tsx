@@ -136,6 +136,8 @@ export const FormCreateCity = ({ token, lesanUrl }: { token?: string; lesanUrl: 
           const provinceDetails = await getProvinceAction(selectedOption.value, {
             _id: 1,
             name: 1,
+            // The province's own center is what we need to position the map.
+            center: 1,
             capital: {
               _id: 1,
               name: 1,
@@ -147,8 +149,8 @@ export const FormCreateCity = ({ token, lesanUrl }: { token?: string; lesanUrl: 
             },
           });
 
-          if (provinceDetails && provinceDetails.success && provinceDetails.body.center_location) {
-            const coordinates = provinceDetails.body.center_location.coordinates;
+          if (provinceDetails && provinceDetails.success && provinceDetails.body.center) {
+            const coordinates = provinceDetails.body.center.coordinates;
             if (coordinates && coordinates.length >= 2) {
               setMapCenter([coordinates[1], coordinates[0]]);
               setMapZoom(8);

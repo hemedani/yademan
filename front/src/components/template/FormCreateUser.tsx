@@ -15,11 +15,13 @@ export const UserCreateSchema = z.object({
   first_name: z.string().min(1, "نام الزامی است"),
   last_name: z.string().min(1, "نام خانوادگی الزامی است"),
   father_name: z.string().min(1, "نام پدر الزامی است"),
-  mobile: z.string().regex(/^[0-9]{10}$/, "شماره تماس باید 10 رقم باشد"),
+  // `email` and `password` are required by the user schema; the backend no
+  // longer accepts `mobile` / `national_number`, which are not stored.
+  email: z.string().email("ایمیل معتبر نیست"),
+  password: z.string().min(8, "رمز عبور باید حداقل ۸ کاراکتر باشد"),
   gender: z.enum(["Male", "Female"], { message: "جنسیت الزامی است" }),
   birth_date: z.string().optional(),
   summary: z.string().optional(),
-  national_number: z.string().regex(/^[0-9]{10}$/, "کد ملی باید 10 رقم باشد"),
   address: z.string().min(1, "آدرس الزامی است"),
   level: z.enum(["Ghost", "Manager", "Editor", "Ordinary"], {
     message: "سطح الزامی است",
@@ -122,22 +124,22 @@ export const FormCreateUser = ({ token }: { token?: string }) => {
             className="w-1/2 p-4"
           />
           <MyInput
-            label="شماره موبایل"
+            label="ایمیل"
             register={register}
-            name="mobile"
-            type="text"
-            errMsg={errors.mobile?.message}
+            name="email"
+            type="email"
+            errMsg={errors.email?.message}
             className="w-1/2 p-4"
-            placeholder="مثال: 9123456789"
+            placeholder="user@example.com"
           />
           <MyInput
-            label="کد ملی"
+            label="رمز عبور"
             register={register}
-            name="national_number"
-            type="text"
-            errMsg={errors.national_number?.message}
+            name="password"
+            type="password"
+            errMsg={errors.password?.message}
             className="w-1/2 p-4"
-            placeholder="مثال: 1234567890"
+            placeholder="حداقل ۸ کاراکتر"
           />
           <MyInput
             label="آدرس"
