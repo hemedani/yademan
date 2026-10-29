@@ -210,15 +210,55 @@ when explicitly requested.
 | `.env.backend` | `APP_PORT`, `ENV`, `MONGO_URI`, `REDIS_URI` |
 | `.env.frontend` | `APP_PORT`, `NODE_ENV`, `LESAN_URL` |
 | `front/.env.local` | local `LESAN_URL` and `NEXT_PUBLIC_LESAN_URL` |
-| `back` process env | `TOKEN_KEY` (JWT signing secret) |
+| `back` process env | `TOKEN_KEY` (JWT signing secret), `APP_PORT`, `CORS_ORIGINS` |
 
 Notes:
 
-- The backend currently hardcodes port `1405` in `coreApp.runServer`; `APP_PORT`
-  does not change it.
+- `back/mod.ts` reads `APP_PORT` (default `1405`) and appends `CORS_ORIGINS`
+  (comma-separated) to its built-in browser-origin list, so a host change does
+  not need a code edit.
+- `utils/setToken.ts` **refuses to boot** with `ENV=production` and no
+  `TOKEN_KEY`.
 - Client-side API calls go through `/api/proxy`, so `NEXT_PUBLIC_LESAN_URL` is
   not used by `AppApi` in the current implementation.
 - Do not commit secrets, uploads, or generated assets listed in `.gitignore`.
+
+## Deployment (VPS)
+
+Production runs on `94.184.45.192` under PM2, alongside an unrelated `paper`
+app. The process list lives in `/home/syd/work/ecosystem.config.js`.
+
+| Item | Value |
+|---|---|
+| Backend | `yademan-BC`, port `1405`, `cwd back/` |
+| Frontend | `yademan-FR`, port `3001`, `cwd front/` |
+| Backend env | `/home/syd/work/yademan.env` (chmod 600) |
+| Frontend env | `front/.env.production` (gitignored) |
+
+Redeploy after a push:
+
+```bash
+cd ~/work/yademan && git pull --ff-only
+cd front && npm run build          # must run before reloading yademan-FR
+cd ~/work && pm2 reload ecosystem.config.js --update-env && pm2 save
+```
+
+Gotchas:
+
+- **`COOKIE_SECURE`.** The host has no TLS terminator, so `.env.production` and
+  the PM2 env set `COOKIE_SECURE=false`. A `Secure` cookie over plain HTTP is
+  dropped by the browser, and login then looks successful while every later
+  request is anonymous. Flip it to `true` once HTTPS is in front.
+- **`LESAN_URL` stays on loopback** (`http://127.0.0.1:1405`). Server actions and
+  `/api/proxy` run on the box, so API traffic never leaves it. Only
+  `NEXT_PUBLIC_LESAN_URL` needs the public address.
+- **`npm run build` is mandatory** before reloading the frontend; `next start`
+  serves whatever is in `.next/`, and `front/.next` is not in git.
+- **PM2 startup is not installed.** `systemctl is-enabled pm2-syd` returns
+  `not-found`, so a reboot loses every app (including `paper`). Run the command
+  printed by `pm2 startup` as root once.
+- **Accounts with published passwords must be rotated** on any public host.
+  `back/test/rotate-known-passwords.ts` regenerates them in place.
 
 ## Access Control
 
