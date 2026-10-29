@@ -1,4 +1,3 @@
-import type { Infer } from "@deps";
 import {
 	grantAccess,
 	type MyContext,
@@ -9,7 +8,6 @@ import {
 import { coreApp } from "../../../mod.ts";
 import { addUserFn } from "./addUser.fn.ts";
 import { addUserValidator } from "./addUser.val.ts";
-import { user_level_emums } from "@model";
 
 export const checkGhostUser = () => {
 	const { user, body }: MyContext = coreApp.contextFns
@@ -19,15 +17,14 @@ export const checkGhostUser = () => {
 		return;
 	}
 
-	const insertedLevels = body?.details.set.levels as Infer<
-		typeof user_level_emums
-	>;
+	// The validator field is `level` (singular). Reading `levels` meant this
+	// guard never fired and any Manager could create a Ghost account.
+	const set = body?.details.set as
+		| { level?: string; levels?: string }
+		| undefined;
+	const requestedLevel = set?.level ?? set?.levels;
 
-	if (insertedLevels === undefined || insertedLevels === null) {
-		return;
-	}
-
-	if (insertedLevels !== "Ghost") {
+	if (requestedLevel !== "Ghost") {
 		return;
 	}
 

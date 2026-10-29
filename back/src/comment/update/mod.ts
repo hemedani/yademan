@@ -12,7 +12,8 @@ export const updateSetup = () =>
 			setTokens,
 			setUser,
 			grantAccess({
-				levels: ["Admin", "Manager"],
+				// Ownership is enforced in the action; moderators may edit any.
+				levels: ["Ordinary", "Editor", "Manager"],
 			}),
 		],
 		validator: updateValidator(),

@@ -8,7 +8,9 @@ export const dashboardStatisticValidator = () => {
 			users: optional(enums([0, 1])),
 			provinces: optional(enums([0, 1])),
 			cities: optional(enums([0, 1])),
-			locaions: optional(enums([0, 1])),
+			// Was misspelled `locaions`, so the actual `places` count could never
+			// be requested and the typo'd key was silently ignored.
+			places: optional(enums([0, 1])),
 			categories: optional(enums([0, 1])),
 			tags: optional(enums([0, 1])),
 		}),

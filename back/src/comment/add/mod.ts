@@ -12,7 +12,9 @@ export const addSetup = () =>
 			setTokens,
 			setUser,
 			grantAccess({
-				levels: ["Admin", "Manager", "User"],
+				// `Ordinary` is the real level for a registered user; the legacy
+				// "User" name is not in `user_level_array` and never matched.
+				levels: ["Ordinary", "Editor", "Manager"],
 			}),
 		],
 		validator: addValidator(),

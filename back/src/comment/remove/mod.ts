@@ -12,7 +12,8 @@ export const removeSetup = () =>
 			setTokens,
 			setUser,
 			grantAccess({
-				levels: ["Admin", "Manager"],
+				// Ownership is enforced in the action; moderators may remove any.
+				levels: ["Ordinary", "Editor", "Manager"],
 			}),
 		],
 		validator: removeValidator(),
