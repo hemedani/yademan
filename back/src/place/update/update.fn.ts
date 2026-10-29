@@ -9,6 +9,7 @@ export const updateFn: ActFn = async (body) => {
 			name,
 			antiquity,
 			description,
+			slug,
 			address,
 			contact,
 			hoursOfOperation,
@@ -28,6 +29,10 @@ export const updateFn: ActFn = async (body) => {
 	name && (updateObj.name = name);
 	antiquity && (updateObj.antiquity = antiquity);
 	description && (updateObj.description = description);
+	// `slug` is accepted by the validator and is the key `place.gets` looks up
+	// by slug, so dropping it here silently made renames a no-op that still
+	// answered `success: true`.
+	slug && (updateObj.slug = slug);
 	address && (updateObj.address = address);
 	contact && (updateObj.contact = contact);
 	hoursOfOperation && (updateObj.hoursOfOperation = hoursOfOperation);

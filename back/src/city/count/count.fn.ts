@@ -1,4 +1,5 @@
 import type { ActFn, Document } from "@deps";
+import { containsRegex } from "@lib";
 import { city } from "../../../mod.ts";
 
 export const countFn: ActFn = async (body) => {
@@ -11,7 +12,7 @@ export const countFn: ActFn = async (body) => {
 
 	name &&
 		(filters["name"] = {
-			$regex: new RegExp(name, "i"),
+			$regex: containsRegex(name),
 		});
 
 	const foundedItemsLength = await city.countDocument({

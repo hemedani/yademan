@@ -1,4 +1,5 @@
 import { type ActFn, ObjectId } from "@deps";
+import { containsRegex } from "@lib";
 import { place } from "../../../mod.ts"; // Assuming 'accident' is your MongoDB model/collection utility
 
 // Helper function to convert Gregorian year to Solar Hijri year
@@ -14,6 +15,9 @@ const getCurrentSolarHijriYear = (): number => {
 	const currentYear = new Date().getFullYear();
 	return gregorianToSolarHijri(currentYear);
 };
+
+// `province` / `city` accept either an id or a name.
+const looksLikeObjectId = (value: string) => /^[0-9a-fA-F]{24}$/.test(value);
 
 export const getsFn: ActFn = async (body) => {
 	const {
@@ -55,16 +59,28 @@ export const getsFn: ActFn = async (body) => {
 	const matchConditions: { [key: string]: any } = {};
 
 	// --- Basic Filters ---
-	if (name) matchConditions.name = { $regex: new RegExp(name, "i") };
+	if (name) matchConditions.name = { $regex: containsRegex(name) };
 	if (slug) matchConditions.slug = slug;
 	if (status) matchConditions.status = status;
 
 	// --- Location & Context ---
-	// For related collections, we need to use their IDs
+	// `place.count` filters these by embedded `name`; `gets` used to assume an
+	// ObjectId, so passing a province name crashed with a raw driver error.
+	// Accept either: a 24-char hex string is treated as an id, anything else as
+	// a (case-insensitive) name.
 	if (province) {
-		matchConditions["province._id"] = new ObjectId(province as string);
+		matchConditions[
+			looksLikeObjectId(province) ? "province._id" : "province.name"
+		] = looksLikeObjectId(province)
+			? new ObjectId(province)
+			: { $regex: containsRegex(province) };
 	}
-	if (city) matchConditions["city._id"] = new ObjectId(city as string);
+	if (city) {
+		matchConditions[looksLikeObjectId(city) ? "city._id" : "city.name"] =
+			looksLikeObjectId(city)
+				? new ObjectId(city)
+				: { $regex: containsRegex(city) };
+	}
 
 	// --- Relations ---
 	if (registrarId) {
@@ -130,6 +146,9 @@ export const getsFn: ActFn = async (body) => {
 				near: near,
 				distanceField: "distance", // This will add a 'distance' field to the results
 				spherical: true,
+				// `place` has two 2dsphere indexes (center and area); without an
+				// explicit key MongoDB refuses to pick one for $geoNear.
+				key: "center",
 			},
 		};
 
@@ -152,35 +171,43 @@ export const getsFn: ActFn = async (body) => {
 	}
 
 	// --- Pagination and Sorting ---
+	// Clamp client-supplied pagination: an unbounded `limit` lets a single
+	// request pull the whole collection into memory.
+	const safeLimit = Math.min(Math.max(1, Math.floor(limit)), 200);
+	const safePage = Math.max(1, Math.floor(page));
+
 	// Only add sorting if $geoNear is not used (it already sorts by distance)
 	if (!near) {
 		pipeline.push({ $sort: { _id: -1 } }); // Default sort by most recent
 	}
 
 	// Always add pagination
-	pipeline.push({ $skip: (page - 1) * limit });
-	pipeline.push({ $limit: limit });
+	pipeline.push({ $skip: (safePage - 1) * safeLimit });
+	pipeline.push({ $limit: safeLimit });
 
-	// Add a count of total results
+	// The count only runs when the caller asked for `metadata`. The map never
+	// reads it, and the extra aggregation doubles the cost of every request.
+	const wantsMetadata = Boolean(get.metadata);
+
 	const countPipeline: { [key: string]: any }[] = [...pipeline];
-
 	// Remove pagination from count pipeline
 	countPipeline.pop(); // Remove $limit
 	countPipeline.pop(); // Remove $skip
-
-	// Add $count stage to get total documents
 	countPipeline.push({ $count: "total" });
 
-	// Execute both pipelines in parallel for efficiency
 	const [results, countResult] = await Promise.all([
 		place.aggregation({
 			pipeline,
 			projection: get.data,
 		}).toArray(),
-		place.aggregation({
-			pipeline: countPipeline,
-		}).toArray(),
+		wantsMetadata
+			? place.aggregation({ pipeline: countPipeline }).toArray()
+			: Promise.resolve([] as { total: number }[]),
 	]);
+
+	if (!wantsMetadata) {
+		return { data: results };
+	}
 
 	// Get total count (default to 0 if no results)
 	const total = countResult.length > 0 ? countResult[0].total : 0;
@@ -190,9 +217,9 @@ export const getsFn: ActFn = async (body) => {
 		data: results,
 		metadata: {
 			total,
-			page,
-			limit,
-			pageCount: Math.ceil(total / limit),
+			page: safePage,
+			limit: safeLimit,
+			pageCount: Math.ceil(total / safeLimit),
 		},
 	};
 };

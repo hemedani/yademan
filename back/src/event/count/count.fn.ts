@@ -1,4 +1,5 @@
-import { type ActFn, Document } from "@deps";
+import { type ActFn, Document, ObjectId } from "@deps";
+import { containsRegex } from "@lib";
 import { event } from "../../../mod.ts";
 
 export const countFn: ActFn = async (body) => {
@@ -19,15 +20,19 @@ export const countFn: ActFn = async (body) => {
 	const filter: Document = {};
 
 	if (name) {
-		filter.name = { $regex: name, $options: "i" }; // Case-insensitive search
+		filter.name = { $regex: containsRegex(name) }; // Case-insensitive search
 	}
 
 	if (status) {
 		filter.status = status;
 	}
 
+	// Events store their places as an embedded array on the document, so the
+	// path is `places._id` (not `relations.places._id`).
 	if (placeIds && placeIds.length > 0) {
-		filter["relations.places._id"] = { $in: placeIds };
+		filter["places._id"] = {
+			$in: placeIds.map((pi: string) => new ObjectId(pi)),
+		};
 	}
 
 	if (startTimeAfter || startTimeBefore) {

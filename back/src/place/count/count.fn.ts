@@ -1,4 +1,5 @@
 import type { ActFn, Document } from "@deps";
+import { containsRegex } from "@lib";
 import { place } from "../../../mod.ts";
 
 export const countFn: ActFn = async (body) => {
@@ -15,7 +16,7 @@ export const countFn: ActFn = async (body) => {
 	} = body.details;
 
 	const filters: Document = {};
-	if (name) filters.name = { $regex: new RegExp(name, "i") };
+	if (name) filters.name = { $regex: containsRegex(name) };
 
 	// --- Location & Context (exact match on embedded object's 'name' field) ---
 	if (province) filters["province.name"] = province;

@@ -40,17 +40,18 @@ export const getsValidator = () => {
 				object({
 					_id: optional(enums([-1, 1])),
 					startTime: optional(enums([-1, 1])),
-				})
+				}),
 			),
 		}),
 		get: object({
 			data: selectStruct("event", 2),
-			metadata: object({
+			// Optional: the count aggregation is skipped when it is omitted.
+			metadata: optional(object({
 				total: optional(enums([0, 1])),
 				page: optional(enums([0, 1])),
 				limit: optional(enums([0, 1])),
 				pageCount: optional(enums([0, 1])),
-			}),
+			})),
 		}), // This defines the structure of the returned event objects
 	});
 };

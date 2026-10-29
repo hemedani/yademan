@@ -1,4 +1,5 @@
 import { type ActFn, ObjectId } from "@deps";
+import { clampPagination, containsRegex } from "@lib";
 import { comment } from "../../../mod.ts";
 
 export const getsFn: ActFn = async (body) => {
@@ -26,7 +27,7 @@ export const getsFn: ActFn = async (body) => {
 
 	// --- Text search ---
 	if (text) {
-		matchConditions.text = { $regex: new RegExp(text, "i") };
+		matchConditions.text = { $regex: containsRegex(text) };
 	}
 
 	// --- Status filter ---
@@ -51,7 +52,7 @@ export const getsFn: ActFn = async (body) => {
 
 	// --- User filter ---
 	if (user) {
-		matchConditions["user.name"] = { $regex: new RegExp(user, "i") };
+		matchConditions["user.name"] = { $regex: containsRegex(user) };
 	}
 
 	// Add the $match stage to the pipeline if there are any conditions
@@ -61,8 +62,9 @@ export const getsFn: ActFn = async (body) => {
 
 	// --- Pagination and Sorting ---
 	pipeline.push({ $sort: { _id: -1 } }); // Default sort by newest first
-	pipeline.push({ $skip: (page - 1) * limit });
-	pipeline.push({ $limit: limit });
+	const { page: safePage, limit: safeLimit } = clampPagination(page, limit);
+	pipeline.push({ $skip: (safePage - 1) * safeLimit });
+	pipeline.push({ $limit: safeLimit });
 
 	const foundedComments = await comment
 		.aggregation({

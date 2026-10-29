@@ -1,4 +1,5 @@
 import { type ActFn, ObjectId } from "@deps";
+import { clampPagination, containsRegex } from "@lib";
 import { city } from "../../../mod.ts";
 
 export const getsFn: ActFn = async (body) => {
@@ -12,7 +13,7 @@ export const getsFn: ActFn = async (body) => {
 	name &&
 		pipeline.push({
 			$match: {
-				name: { $regex: new RegExp(name, "i") },
+				name: { $regex: containsRegex(name) },
 			},
 		});
 
@@ -24,8 +25,9 @@ export const getsFn: ActFn = async (body) => {
 		});
 
 	pipeline.push({ $sort: { _id: -1 } });
-	pipeline.push({ $skip: (page - 1) * limit });
-	pipeline.push({ $limit: limit });
+	const { page: safePage, limit: safeLimit } = clampPagination(page, limit);
+	pipeline.push({ $skip: (safePage - 1) * safeLimit });
+	pipeline.push({ $limit: safeLimit });
 
 	return await city
 		.aggregation({

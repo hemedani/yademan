@@ -1,4 +1,5 @@
 import { type ActFn, Document, ObjectId } from "@deps";
+import { containsRegex } from "@lib";
 import { event } from "../../../mod.ts";
 
 export const getsFn: ActFn = async (body) => {
@@ -37,7 +38,7 @@ export const getsFn: ActFn = async (body) => {
 	const matchConditions: { [key: string]: any } = {};
 
 	// --- Basic Filters ---
-	if (name) matchConditions.name = { $regex: new RegExp(name, "i") };
+	if (name) matchConditions.name = { $regex: containsRegex(name) };
 	if (status) matchConditions.status = status;
 	if (typeof isPublic === "boolean") matchConditions.isPublic = isPublic;
 
@@ -70,7 +71,9 @@ export const getsFn: ActFn = async (body) => {
 			matchConditions.startTime.$gte = new Date(startTimeAfter as string);
 		}
 		if (startTimeBefore) {
-			matchConditions.startTime.$lte = new Date(startTimeBefore as string);
+			matchConditions.startTime.$lte = new Date(
+				startTimeBefore as string,
+			);
 		}
 	}
 
@@ -95,18 +98,25 @@ export const getsFn: ActFn = async (body) => {
 
 	if (sort && typeof sort === "object") {
 		// Check if startTime sort is requested
-		if (sort.hasOwnProperty('startTime')) {
+		if (sort.hasOwnProperty("startTime")) {
 			sortObj = { startTime: sort.startTime };
-		} else if (sort.hasOwnProperty('_id')) {
+		} else if (sort.hasOwnProperty("_id")) {
 			sortObj = { _id: sort._id };
 		}
 	}
 
 	pipeline.push({ $sort: sortObj });
 
+	// Clamp client-supplied pagination to keep a single request bounded.
+	const safeLimit = Math.min(Math.max(1, Math.floor(limit)), 200);
+	const safePage = Math.max(1, Math.floor(page));
+
 	// Always add pagination
-	pipeline.push({ $skip: (page - 1) * limit });
-	pipeline.push({ $limit: limit });
+	pipeline.push({ $skip: (safePage - 1) * safeLimit });
+	pipeline.push({ $limit: safeLimit });
+
+	// The count only runs when the caller asked for `metadata`.
+	const wantsMetadata = Boolean(get.metadata);
 
 	// Add a count of total results
 	const countPipeline: { [key: string]: any }[] = [...pipeline];
@@ -118,16 +128,19 @@ export const getsFn: ActFn = async (body) => {
 	// Add $count stage to get total documents
 	countPipeline.push({ $count: "total" });
 
-	// Execute both pipelines in parallel for efficiency
 	const [results, countResult] = await Promise.all([
 		event.aggregation({
 			pipeline,
 			projection: get.data,
 		}).toArray(),
-		event.aggregation({
-			pipeline: countPipeline,
-		}).toArray(),
+		wantsMetadata
+			? event.aggregation({ pipeline: countPipeline }).toArray()
+			: Promise.resolve([] as { total: number }[]),
 	]);
+
+	if (!wantsMetadata) {
+		return { data: results };
+	}
 
 	// Get total count (default to 0 if no results)
 	const total = countResult.length > 0 ? countResult[0].total : 0;
@@ -137,9 +150,9 @@ export const getsFn: ActFn = async (body) => {
 		data: results,
 		metadata: {
 			total,
-			page,
-			limit,
-			pageCount: Math.ceil(total / limit),
+			page: safePage,
+			limit: safeLimit,
+			pageCount: Math.ceil(total / safeLimit),
 		},
 	};
 };

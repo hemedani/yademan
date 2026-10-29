@@ -1,4 +1,5 @@
 import { type ActFn, type Document, ObjectId, type string } from "@deps";
+import { containsRegex } from "@lib";
 import { virtual_tour } from "../../../mod.ts";
 
 export const countFn: ActFn = async (body) => {
@@ -11,7 +12,7 @@ export const countFn: ActFn = async (body) => {
 
 	name &&
 		(filters["name"] = {
-			$regex: new RegExp(name, "i"),
+			$regex: containsRegex(name),
 		});
 
 	placeId &&
