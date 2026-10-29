@@ -301,9 +301,11 @@ Gotchas:
 
 - **Server Actions only:** new backend communication goes through
   `front/src/app/actions/**`. Do not add direct `fetch` calls to the Lesan API
-  from components, and do not use the mock APIs in `front/src/lib/api`. A few
-  older admin pages and the `UploadImage` widget still call `AppApi`/the proxy
-  directly; do not copy that pattern for new code.
+  from components. The old mock layer (`src/lib/api/*`, `/api/auth`,
+  `/api/locations`) has been deleted — it answered with invented users and
+  places, and `/api/auth` accepted `test@example.com` / `password` on the public
+  host. A few older admin pages and the `UploadImage` widget still call
+  `AppApi`/the proxy directly; do not copy that pattern for new code.
 - **Use generated types:** prefer `ReqType` and generated schema types from
   `front/src/types/declarations/selectInp.ts` over hand-written API interfaces.
 - **Do not copy the reference project:** this repository is a heritage/location
