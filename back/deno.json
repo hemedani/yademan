@@ -1,6 +1,10 @@
 {
   "tasks": {
-    "bc-dev": "ENV=development deno run -A --watch --watch-exclude=declarations --no-clear-screen ./mod.ts"
+    "bc-dev": "ENV=development deno run -A --watch --watch-exclude=declarations --no-clear-screen ./mod.ts",
+    "test:bootstrap": "deno run -A test/bootstrap.ts",
+    "test:build": "deno run -A test/build-suites.ts",
+    "test:e2e": "deno run -A test/run-e2e.ts --file test/E2E.json --with-upload",
+    "test:seed": "deno run -A test/run-e2e.ts --file test/seed-presentation.json"
   },
   "fmt": {
     "files": {

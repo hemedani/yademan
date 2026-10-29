@@ -1,0 +1,559 @@
+[
+	{
+		"id": "seed-00-login",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"user\",\n    \"act\": \"login\",\n    \"details\": {\n      \"set\": {\n        \"email\": \"e2e@naghshe.dev\",\n        \"password\": \"E2ePassword123!\"\n      },\n      \"get\": {\n        \"user\": {\n          \"_id\": 1,\n          \"email\": 1,\n          \"level\": 1\n        }\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "token",
+				"value": "[body][token]"
+			}
+		]
+	},
+	{
+		"id": "seed-01-geography",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"province\",\n    \"act\": \"seed\",\n    \"details\": {\n      \"set\": {},\n      \"get\": {\n        \"provincesCreated\": 1,\n        \"citiesCreated\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": []
+	},
+	{
+		"id": "seed-02-lookup-marvdasht",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"city\",\n    \"act\": \"gets\",\n    \"details\": {\n      \"set\": {\n        \"page\": 1,\n        \"limit\": 1,\n        \"name\": \"مرودشت\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"province\": {\n          \"_id\": 1,\n          \"name\": 1\n        }\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "marvdashtCity",
+				"value": "[body][0][_id]"
+			},
+			{
+				"key": "marvdashtProvince",
+				"value": "[body][0][province][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-02-lookup-isfahan",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"city\",\n    \"act\": \"gets\",\n    \"details\": {\n      \"set\": {\n        \"page\": 1,\n        \"limit\": 1,\n        \"name\": \"اصفهان\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"province\": {\n          \"_id\": 1,\n          \"name\": 1\n        }\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "isfahanCity",
+				"value": "[body][0][_id]"
+			},
+			{
+				"key": "isfahanProvince",
+				"value": "[body][0][province][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-02-lookup-shiraz",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"city\",\n    \"act\": \"gets\",\n    \"details\": {\n      \"set\": {\n        \"page\": 1,\n        \"limit\": 1,\n        \"name\": \"شیراز\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"province\": {\n          \"_id\": 1,\n          \"name\": 1\n        }\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "shirazCity",
+				"value": "[body][0][_id]"
+			},
+			{
+				"key": "shirazProvince",
+				"value": "[body][0][province][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-02-lookup-tehran",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"city\",\n    \"act\": \"gets\",\n    \"details\": {\n      \"set\": {\n        \"page\": 1,\n        \"limit\": 1,\n        \"name\": \"تهران\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"province\": {\n          \"_id\": 1,\n          \"name\": 1\n        }\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "tehranCity",
+				"value": "[body][0][_id]"
+			},
+			{
+				"key": "tehranProvince",
+				"value": "[body][0][province][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-02-lookup-kashan",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"city\",\n    \"act\": \"gets\",\n    \"details\": {\n      \"set\": {\n        \"page\": 1,\n        \"limit\": 1,\n        \"name\": \"کاشان\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"province\": {\n          \"_id\": 1,\n          \"name\": 1\n        }\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "kashanCity",
+				"value": "[body][0][_id]"
+			},
+			{
+				"key": "kashanProvince",
+				"value": "[body][0][province][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-02-lookup-yazd",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"city\",\n    \"act\": \"gets\",\n    \"details\": {\n      \"set\": {\n        \"page\": 1,\n        \"limit\": 1,\n        \"name\": \"یزد\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"province\": {\n          \"_id\": 1,\n          \"name\": 1\n        }\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "yazdCity",
+				"value": "[body][0][_id]"
+			},
+			{
+				"key": "yazdProvince",
+				"value": "[body][0][province][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-02-lookup-bam",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"city\",\n    \"act\": \"gets\",\n    \"details\": {\n      \"set\": {\n        \"page\": 1,\n        \"limit\": 1,\n        \"name\": \"بم\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"province\": {\n          \"_id\": 1,\n          \"name\": 1\n        }\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "bamCity",
+				"value": "[body][0][_id]"
+			},
+			{
+				"key": "bamProvince",
+				"value": "[body][0][province][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-02-lookup-gorgan",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"city\",\n    \"act\": \"gets\",\n    \"details\": {\n      \"set\": {\n        \"page\": 1,\n        \"limit\": 1,\n        \"name\": \"گرگان\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"province\": {\n          \"_id\": 1,\n          \"name\": 1\n        }\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "gorganCity",
+				"value": "[body][0][_id]"
+			},
+			{
+				"key": "gorganProvince",
+				"value": "[body][0][province][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-02-lookup-kermanshah",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"city\",\n    \"act\": \"gets\",\n    \"details\": {\n      \"set\": {\n        \"page\": 1,\n        \"limit\": 1,\n        \"name\": \"کرمانشاه\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"province\": {\n          \"_id\": 1,\n          \"name\": 1\n        }\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "kermanshahCity",
+				"value": "[body][0][_id]"
+			},
+			{
+				"key": "kermanshahProvince",
+				"value": "[body][0][province][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-02-lookup-hamedan",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"city\",\n    \"act\": \"gets\",\n    \"details\": {\n      \"set\": {\n        \"page\": 1,\n        \"limit\": 1,\n        \"name\": \"همدان\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"province\": {\n          \"_id\": 1,\n          \"name\": 1\n        }\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "hamedanCity",
+				"value": "[body][0][_id]"
+			},
+			{
+				"key": "hamedanProvince",
+				"value": "[body][0][province][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-02-lookup-tabriz",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"city\",\n    \"act\": \"gets\",\n    \"details\": {\n      \"set\": {\n        \"page\": 1,\n        \"limit\": 1,\n        \"name\": \"تبریز\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"province\": {\n          \"_id\": 1,\n          \"name\": 1\n        }\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "tabrizCity",
+				"value": "[body][0][_id]"
+			},
+			{
+				"key": "tabrizProvince",
+				"value": "[body][0][province][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-03-category-historic",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"category\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"آثار تاریخی\",\n        \"description\": \"بناها و محوطه‌های تاریخی ثبت‌شده در سراسر ایران\",\n        \"color\": \"#7c2d12\",\n        \"icon\": \"landmark\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "historicCategory",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-03-category-museum",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"category\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"موزه\",\n        \"description\": \"موزه‌ها و گنجینه‌های فرهنگی و باستان‌شناسی\",\n        \"color\": \"#1e3a8a\",\n        \"icon\": \"museum\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "museumCategory",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-03-category-religious",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"category\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"مکان مذهبی\",\n        \"description\": \"مساجد، زیارتگاه‌ها و بناهای آیینی\",\n        \"color\": \"#14532d\",\n        \"icon\": \"mosque\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "religiousCategory",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-03-category-garden",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"category\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"باغ ایرانی\",\n        \"description\": \"باغ‌های تاریخی ثبت‌شده در فهرست میراث جهانی\",\n        \"color\": \"#365314\",\n        \"icon\": \"tree\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "gardenCategory",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-03-category-structure",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"category\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"پل و سازه\",\n        \"description\": \"پل‌ها، سدها و سازه‌های مهندسی تاریخی\",\n        \"color\": \"#134e4a\",\n        \"icon\": \"bridge\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "structureCategory",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-03-category-bazaar",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"category\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"بازار و کاروانسرا\",\n        \"description\": \"بازارهای سنتی و کاروانسراهای جاده ابریشم\",\n        \"color\": \"#78350f\",\n        \"icon\": \"bazaar\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "bazaarCategory",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-04-tag-unesco",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"tag\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"میراث جهانی یونسکو\",\n        \"description\": \"آثاری که در فهرست میراث جهانی ثبت شده‌اند\",\n        \"color\": \"#7c2d12\",\n        \"icon\": \"globe\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "unescoTag",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-04-tag-achaemenid",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"tag\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"دوره هخامنشی\",\n        \"description\": \"آثار به‌جامانده از شاهنشاهی هخامنشی\",\n        \"color\": \"#1e3a8a\",\n        \"icon\": \"column\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "achaemenidTag",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-04-tag-sasanian",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"tag\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"دوره ساسانی\",\n        \"description\": \"آثار به‌جامانده از دوره ساسانی\",\n        \"color\": \"#4c1d95\",\n        \"icon\": \"relief\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "sasanianTag",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-04-tag-safavid",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"tag\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"دوره صفوی\",\n        \"description\": \"آثار شاخص دوره صفوی\",\n        \"color\": \"#0f766e\",\n        \"icon\": \"dome\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "safavidTag",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-04-tag-qajar",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"tag\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"دوره قاجار\",\n        \"description\": \"بناهای دوره قاجار با تزئینات شاخص\",\n        \"color\": \"#831843\",\n        \"icon\": \"tile\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "qajarTag",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-04-tag-islamic",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"tag\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"معماری اسلامی\",\n        \"description\": \"شاهکارهای معماری و کاشی‌کاری اسلامی\",\n        \"color\": \"#14532d\",\n        \"icon\": \"star\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "islamicTag",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-04-tag-family",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"tag\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"گردشگری خانوادگی\",\n        \"description\": \"مناسب بازدید خانوادگی و سفر کوتاه\",\n        \"color\": \"#365314\",\n        \"icon\": \"family\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "familyTag",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-04-tag-photo",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"tag\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"عکاسی و طبیعت‌گردی\",\n        \"description\": \"نقاط شاخص برای عکاسی و پیاده‌روی\",\n        \"color\": \"#134e4a\",\n        \"icon\": \"camera\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "photoTag",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-05-place-persepolis",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"place\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"تخت جمشید\",\n        \"antiquity\": 2500,\n        \"description\": \"تخت جمشید یا پارسه، پایتخت تشریفاتی شاهنشاهی هخامنشی، در دامنه کوه رحمت در نزدیکی مرودشت فارس قرار دارد. کتیبه‌های میخی، نقش‌برجسته‌های ملل تابع و پلکان‌های سنگی آن از شاخص‌ترین نمونه‌های هنر و معماری ایران باستان هستند.\",\n        \"slug\": \"persepolis\",\n        \"center\": {\n          \"type\": \"Point\",\n          \"coordinates\": [\n            52.8916,\n            29.9354\n          ]\n        },\n        \"area\": {\n          \"type\": \"MultiPolygon\",\n          \"coordinates\": [\n            [\n              [\n                [\n                  52.8876,\n                  29.9314\n                ],\n                [\n                  52.895599999999995,\n                  29.9314\n                ],\n                [\n                  52.895599999999995,\n                  29.939400000000003\n                ],\n                [\n                  52.8876,\n                  29.939400000000003\n                ],\n                [\n                  52.8876,\n                  29.9314\n                ]\n              ]\n            ]\n          ]\n        },\n        \"address\": \"فارس، مرودشت، محوطه تاریخی تخت جمشید\",\n        \"hoursOfOperation\": \"۸:۰۰ تا ۱۷:۰۰ در نیمه نخست سال\",\n        \"contact\": {\n          \"phone\": \"07143331081\",\n          \"website\": \"https://persepolis.ir\",\n          \"social\": []\n        },\n        \"meta\": {\n          \"gallerySource\": \"naghshe-seed\"\n        },\n        \"status\": \"active\",\n        \"province\": \"{marvdashtProvince}\",\n        \"city\": \"{marvdashtCity}\",\n        \"category\": \"{historicCategory}\",\n        \"tags\": [\n          \"{unescoTag}\",\n          \"{achaemenidTag}\",\n          \"{photoTag}\"\n        ],\n        \"thumbnail\": \"00000000000000000000a100\",\n        \"gallery\": [\n          \"00000000000000000000a112\",\n          \"00000000000000000000a124\"\n        ]\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"slug\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "persepolisPlace",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-05-place-naqsh-e-jahan",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"place\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"میدان نقش جهان\",\n        \"antiquity\": 420,\n        \"description\": \"میدان نقش جهان، قلب شهر صفوی اصفهان، با مسجد شاه، مسجد شیخ لطف‌الله، کاخ عالی‌قاپو و سردر قیصریه احاطه شده است. این میدان یکی از بزرگ‌ترین میدان‌های تاریخی جهان و نمونه‌ای کامل از شهرسازی دوره صفوی است.\",\n        \"slug\": \"naqsh-e-jahan\",\n        \"center\": {\n          \"type\": \"Point\",\n          \"coordinates\": [\n            51.6776,\n            32.6575\n          ]\n        },\n        \"area\": {\n          \"type\": \"MultiPolygon\",\n          \"coordinates\": [\n            [\n              [\n                [\n                  51.6736,\n                  32.6535\n                ],\n                [\n                  51.681599999999996,\n                  32.6535\n                ],\n                [\n                  51.681599999999996,\n                  32.6615\n                ],\n                [\n                  51.6736,\n                  32.6615\n                ],\n                [\n                  51.6736,\n                  32.6535\n                ]\n              ]\n            ]\n          ]\n        },\n        \"address\": \"اصفهان، میدان نقش جهان\",\n        \"hoursOfOperation\": \"همه‌روزه، شبانه‌روزی باز است\",\n        \"contact\": {\n          \"phone\": \"03132200000\",\n          \"website\": \"https://isfahan.ir\",\n          \"social\": []\n        },\n        \"meta\": {\n          \"gallerySource\": \"naghshe-seed\"\n        },\n        \"status\": \"active\",\n        \"province\": \"{isfahanProvince}\",\n        \"city\": \"{isfahanCity}\",\n        \"category\": \"{historicCategory}\",\n        \"tags\": [\n          \"{unescoTag}\",\n          \"{safavidTag}\",\n          \"{photoTag}\"\n        ],\n        \"thumbnail\": \"00000000000000000000a101\",\n        \"gallery\": [\n          \"00000000000000000000a113\",\n          \"00000000000000000000a125\"\n        ]\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"slug\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "naqsh-e-jahanPlace",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-05-place-nasir-ol-molk",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"place\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"مسجد نصیرالملک\",\n        \"antiquity\": 140,\n        \"description\": \"مسجد نصیرالملک شیراز به «مسجد صورتی» شهرت دارد. نور خورشید از شیشه‌های رنگی پنجره‌های ارسی، قالیچه‌ای از رنگ روی سنگ فرش و دیوارها می‌گستراند و آن را به یکی از محبوب‌ترین سوژه‌های عکاسی ایران تبدیل کرده است.\",\n        \"slug\": \"nasir-ol-molk\",\n        \"center\": {\n          \"type\": \"Point\",\n          \"coordinates\": [\n            52.5486,\n            29.6089\n          ]\n        },\n        \"area\": {\n          \"type\": \"MultiPolygon\",\n          \"coordinates\": [\n            [\n              [\n                [\n                  52.5446,\n                  29.604899999999997\n                ],\n                [\n                  52.5526,\n                  29.604899999999997\n                ],\n                [\n                  52.5526,\n                  29.6129\n                ],\n                [\n                  52.5446,\n                  29.6129\n                ],\n                [\n                  52.5446,\n                  29.604899999999997\n                ]\n              ]\n            ]\n          ]\n        },\n        \"address\": \"شیراز، خیابان لطفعلی‌خان زند، کوچه نصیرالملک\",\n        \"hoursOfOperation\": \"۸:۰۰ تا ۱۲:۰۰ و ۱۵:۰۰ تا ۱۸:۰۰\",\n        \"contact\": {\n          \"phone\": \"07132331578\",\n          \"social\": []\n        },\n        \"meta\": {\n          \"gallerySource\": \"naghshe-seed\"\n        },\n        \"status\": \"active\",\n        \"province\": \"{shirazProvince}\",\n        \"city\": \"{shirazCity}\",\n        \"category\": \"{religiousCategory}\",\n        \"tags\": [\n          \"{qajarTag}\",\n          \"{islamicTag}\",\n          \"{photoTag}\"\n        ],\n        \"thumbnail\": \"00000000000000000000a102\",\n        \"gallery\": [\n          \"00000000000000000000a114\",\n          \"00000000000000000000a126\"\n        ]\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"slug\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "nasir-ol-molkPlace",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-05-place-golestan",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"place\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"کاخ گلستان\",\n        \"antiquity\": 220,\n        \"description\": \"مجموعه کاخ گلستان، ارگ سلطنتی تهران از دوره زندیه تا پهلوی، شامل تالار آینه، تالار سلام، شمس‌العماره و ایوان تخت مرمر است. موزه‌های آن گنجینه‌ای از نقاشی، خوشنویسی و هنرهای تزئینی قاجار را نگه می‌دارند.\",\n        \"slug\": \"golestan-palace\",\n        \"center\": {\n          \"type\": \"Point\",\n          \"coordinates\": [\n            51.4198,\n            35.6799\n          ]\n        },\n        \"area\": {\n          \"type\": \"MultiPolygon\",\n          \"coordinates\": [\n            [\n              [\n                [\n                  51.415800000000004,\n                  35.675900000000006\n                ],\n                [\n                  51.4238,\n                  35.675900000000006\n                ],\n                [\n                  51.4238,\n                  35.6839\n                ],\n                [\n                  51.415800000000004,\n                  35.6839\n                ],\n                [\n                  51.415800000000004,\n                  35.675900000000006\n                ]\n              ]\n            ]\n          ]\n        },\n        \"address\": \"تهران، خیابان پانزده خرداد، میدان ارگ\",\n        \"hoursOfOperation\": \"۹:۰۰ تا ۱۷:۰۰ (به‌جز دوشنبه‌ها)\",\n        \"contact\": {\n          \"phone\": \"02133113335\",\n          \"website\": \"https://golestanpalace.ir\",\n          \"social\": []\n        },\n        \"meta\": {\n          \"gallerySource\": \"naghshe-seed\"\n        },\n        \"status\": \"active\",\n        \"province\": \"{tehranProvince}\",\n        \"city\": \"{tehranCity}\",\n        \"category\": \"{museumCategory}\",\n        \"tags\": [\n          \"{unescoTag}\",\n          \"{qajarTag}\",\n          \"{familyTag}\"\n        ],\n        \"thumbnail\": \"00000000000000000000a103\",\n        \"gallery\": [\n          \"00000000000000000000a115\",\n          \"00000000000000000000a127\"\n        ]\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"slug\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "golestanPlace",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-05-place-fin-garden",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"place\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"باغ فین کاشان\",\n        \"antiquity\": 500,\n        \"description\": \"باغ فین کاشان نمونه کامل «باغ ایرانی» است؛ نظام دقیق آب، فواره‌های بدون پمپ و محورهای دید، آن را به الگویی برای باغ‌سازی ایرانی بدل کرده است. حمام فین نیز محل قتل امیرکبیر در سال ۱۲۳۰ خورشیدی بوده است.\",\n        \"slug\": \"fin-garden\",\n        \"center\": {\n          \"type\": \"Point\",\n          \"coordinates\": [\n            51.4443,\n            33.9785\n          ]\n        },\n        \"area\": {\n          \"type\": \"MultiPolygon\",\n          \"coordinates\": [\n            [\n              [\n                [\n                  51.4403,\n                  33.9745\n                ],\n                [\n                  51.448299999999996,\n                  33.9745\n                ],\n                [\n                  51.448299999999996,\n                  33.982499999999995\n                ],\n                [\n                  51.4403,\n                  33.982499999999995\n                ],\n                [\n                  51.4403,\n                  33.9745\n                ]\n              ]\n            ]\n          ]\n        },\n        \"address\": \"اصفهان، کاشان، انتهای خیابان امیرکبیر\",\n        \"hoursOfOperation\": \"۹:۰۰ تا ۱۸:۰۰\",\n        \"contact\": {\n          \"phone\": \"03155400035\",\n          \"social\": []\n        },\n        \"meta\": {\n          \"gallerySource\": \"naghshe-seed\"\n        },\n        \"status\": \"active\",\n        \"province\": \"{kashanProvince}\",\n        \"city\": \"{kashanCity}\",\n        \"category\": \"{gardenCategory}\",\n        \"tags\": [\n          \"{unescoTag}\",\n          \"{safavidTag}\",\n          \"{familyTag}\"\n        ],\n        \"thumbnail\": \"00000000000000000000a104\",\n        \"gallery\": [\n          \"00000000000000000000a116\",\n          \"00000000000000000000a128\"\n        ]\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"slug\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "fin-gardenPlace",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-05-place-jameh-yazd",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"place\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"مسجد جامع یزد\",\n        \"antiquity\": 800,\n        \"description\": \"مسجد جامع یزد با سردر بلند کاشی‌کاری‌شده و مناره‌های دوگانه، یکی از شاخص‌ترین بناهای مذهبی ایران است. گنبدخانه آن از دوره ایلخانی و کاشی‌کاری سردر از دوره تیموری و صفوی است.\",\n        \"slug\": \"jameh-mosque-yazd\",\n        \"center\": {\n          \"type\": \"Point\",\n          \"coordinates\": [\n            54.3683,\n            31.8976\n          ]\n        },\n        \"area\": {\n          \"type\": \"MultiPolygon\",\n          \"coordinates\": [\n            [\n              [\n                [\n                  54.3643,\n                  31.8936\n                ],\n                [\n                  54.372299999999996,\n                  31.8936\n                ],\n                [\n                  54.372299999999996,\n                  31.901600000000002\n                ],\n                [\n                  54.3643,\n                  31.901600000000002\n                ],\n                [\n                  54.3643,\n                  31.8936\n                ]\n              ]\n            ]\n          ]\n        },\n        \"address\": \"یزد، خیابان امام خمینی، محله فهادان\",\n        \"hoursOfOperation\": \"۸:۰۰ تا ۲۰:۰۰\",\n        \"contact\": {\n          \"social\": []\n        },\n        \"meta\": {\n          \"gallerySource\": \"naghshe-seed\"\n        },\n        \"status\": \"active\",\n        \"province\": \"{yazdProvince}\",\n        \"city\": \"{yazdCity}\",\n        \"category\": \"{religiousCategory}\",\n        \"tags\": [\n          \"{islamicTag}\",\n          \"{photoTag}\"\n        ],\n        \"thumbnail\": \"00000000000000000000a105\",\n        \"gallery\": [\n          \"00000000000000000000a117\",\n          \"00000000000000000000a129\"\n        ]\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"slug\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "jameh-yazdPlace",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-05-place-si-o-se-pol",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"place\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"سی‌وسه پل\",\n        \"antiquity\": 380,\n        \"description\": \"سی‌وسه پل یا پل الله‌وردی‌خان، با ۳۳ دهانه، زاینده‌رود را به دو نیمه اصفهان پیوند می‌دهد. این پل در دوره صفوی هم برای گذر و هم به‌عنوان بند و محل برگزاری آیین‌های آبی به کار می‌رفت.\",\n        \"slug\": \"si-o-se-pol\",\n        \"center\": {\n          \"type\": \"Point\",\n          \"coordinates\": [\n            51.6675,\n            32.6447\n          ]\n        },\n        \"area\": {\n          \"type\": \"MultiPolygon\",\n          \"coordinates\": [\n            [\n              [\n                [\n                  51.6635,\n                  32.6407\n                ],\n                [\n                  51.671499999999995,\n                  32.6407\n                ],\n                [\n                  51.671499999999995,\n                  32.6487\n                ],\n                [\n                  51.6635,\n                  32.6487\n                ],\n                [\n                  51.6635,\n                  32.6407\n                ]\n              ]\n            ]\n          ]\n        },\n        \"address\": \"اصفهان، خیابان چهارباغ پایین، سی‌وسه پل\",\n        \"hoursOfOperation\": \"همه‌روزه، شبانه‌روزی باز است\",\n        \"contact\": {\n          \"social\": []\n        },\n        \"meta\": {\n          \"gallerySource\": \"naghshe-seed\"\n        },\n        \"status\": \"active\",\n        \"province\": \"{isfahanProvince}\",\n        \"city\": \"{isfahanCity}\",\n        \"category\": \"{structureCategory}\",\n        \"tags\": [\n          \"{safavidTag}\",\n          \"{photoTag}\",\n          \"{familyTag}\"\n        ],\n        \"thumbnail\": \"00000000000000000000a106\",\n        \"gallery\": [\n          \"00000000000000000000a118\",\n          \"00000000000000000000a130\"\n        ]\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"slug\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "si-o-se-polPlace",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-05-place-bam-citadel",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"place\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"ارگ بم\",\n        \"antiquity\": 2000,\n        \"description\": \"ارگ بم بزرگ‌ترین بنای خشتی جهان است و پیش از زلزله سال ۱۳۸۲ یکی از مهم‌ترین مراکز راه ابریشم بود. مرمت آن پس از زلزله یکی از بزرگ‌ترین پروژه‌های مرمت میراث فرهنگی جهان به شمار می‌رود.\",\n        \"slug\": \"bam-citadel\",\n        \"center\": {\n          \"type\": \"Point\",\n          \"coordinates\": [\n            58.3669,\n            29.1166\n          ]\n        },\n        \"area\": {\n          \"type\": \"MultiPolygon\",\n          \"coordinates\": [\n            [\n              [\n                [\n                  58.3629,\n                  29.112599999999997\n                ],\n                [\n                  58.3709,\n                  29.112599999999997\n                ],\n                [\n                  58.3709,\n                  29.1206\n                ],\n                [\n                  58.3629,\n                  29.1206\n                ],\n                [\n                  58.3629,\n                  29.112599999999997\n                ]\n              ]\n            ]\n          ]\n        },\n        \"address\": \"کرمان، بم، بلوار شهید رجایی، محوطه ارگ تاریخی بم\",\n        \"hoursOfOperation\": \"۸:۰۰ تا ۱۸:۰۰\",\n        \"contact\": {\n          \"social\": []\n        },\n        \"meta\": {\n          \"gallerySource\": \"naghshe-seed\"\n        },\n        \"status\": \"active\",\n        \"province\": \"{bamProvince}\",\n        \"city\": \"{bamCity}\",\n        \"category\": \"{historicCategory}\",\n        \"tags\": [\n          \"{unescoTag}\",\n          \"{photoTag}\"\n        ],\n        \"thumbnail\": \"00000000000000000000a107\",\n        \"gallery\": [\n          \"00000000000000000000a119\",\n          \"00000000000000000000a131\"\n        ]\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"slug\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "bam-citadelPlace",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-05-place-gonbad-qabus",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"place\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"گنبد قابوس\",\n        \"antiquity\": 1000,\n        \"description\": \"برج آرامگاهی قابوس بن وشمگیر، بلندترین برج آجری جهان با ۵۳ متر ارتفاع، در سال ۱۰۰۶ میلادی ساخته شد. کتیبه کوفی آن و هندسه دقیق بنا از شاهکارهای معماری دوره زیاری است.\",\n        \"slug\": \"gonbad-e-qabus\",\n        \"center\": {\n          \"type\": \"Point\",\n          \"coordinates\": [\n            55.1689,\n            37.2583\n          ]\n        },\n        \"area\": {\n          \"type\": \"MultiPolygon\",\n          \"coordinates\": [\n            [\n              [\n                [\n                  55.1649,\n                  37.2543\n                ],\n                [\n                  55.1729,\n                  37.2543\n                ],\n                [\n                  55.1729,\n                  37.262299999999996\n                ],\n                [\n                  55.1649,\n                  37.262299999999996\n                ],\n                [\n                  55.1649,\n                  37.2543\n                ]\n              ]\n            ]\n          ]\n        },\n        \"address\": \"گلستان، گنبد کاووس، خیابان آیت‌الله خامنه‌ای\",\n        \"hoursOfOperation\": \"۸:۰۰ تا ۱۷:۰۰\",\n        \"contact\": {\n          \"social\": []\n        },\n        \"meta\": {\n          \"gallerySource\": \"naghshe-seed\"\n        },\n        \"status\": \"active\",\n        \"province\": \"{gorganProvince}\",\n        \"city\": \"{gorganCity}\",\n        \"category\": \"{historicCategory}\",\n        \"tags\": [\n          \"{unescoTag}\"\n        ],\n        \"thumbnail\": \"00000000000000000000a108\",\n        \"gallery\": [\n          \"00000000000000000000a120\",\n          \"00000000000000000000a132\"\n        ]\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"slug\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "gonbad-qabusPlace",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-05-place-taq-e-bostan",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"place\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"طاق بستان\",\n        \"antiquity\": 1400,\n        \"description\": \"طاق بستان مجموعه‌ای از نقش‌برجسته‌های دوره ساسانی است؛ صحنه تاج‌ستانی اردشیر دوم، شکار سلطنتی و نقش خسرو پرویز از مهم‌ترین سنگ‌نگاره‌های ایران به شمار می‌روند.\",\n        \"slug\": \"taq-e-bostan\",\n        \"center\": {\n          \"type\": \"Point\",\n          \"coordinates\": [\n            47.1319,\n            34.3878\n          ]\n        },\n        \"area\": {\n          \"type\": \"MultiPolygon\",\n          \"coordinates\": [\n            [\n              [\n                [\n                  47.127900000000004,\n                  34.3838\n                ],\n                [\n                  47.1359,\n                  34.3838\n                ],\n                [\n                  47.1359,\n                  34.391799999999996\n                ],\n                [\n                  47.127900000000004,\n                  34.391799999999996\n                ],\n                [\n                  47.127900000000004,\n                  34.3838\n                ]\n              ]\n            ]\n          ]\n        },\n        \"address\": \"کرمانشاه، بلوار طاق بستان، محوطه تاریخی طاق بستان\",\n        \"hoursOfOperation\": \"۸:۰۰ تا ۱۹:۰۰\",\n        \"contact\": {\n          \"social\": []\n        },\n        \"meta\": {\n          \"gallerySource\": \"naghshe-seed\"\n        },\n        \"status\": \"active\",\n        \"province\": \"{kermanshahProvince}\",\n        \"city\": \"{kermanshahCity}\",\n        \"category\": \"{historicCategory}\",\n        \"tags\": [\n          \"{sasanianTag}\",\n          \"{photoTag}\"\n        ],\n        \"thumbnail\": \"00000000000000000000a109\",\n        \"gallery\": [\n          \"00000000000000000000a121\",\n          \"00000000000000000000a133\"\n        ]\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"slug\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "taq-e-bostanPlace",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-05-place-bu-ali-sina",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"place\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"آرامگاه بوعلی‌سینا\",\n        \"antiquity\": 70,\n        \"description\": \"آرامگاه شیخ‌الرئیس ابوعلی‌سینا در میدان بوعلی همدان، با طراحی هوشنگ سیحون به شکل برجی از ترکیب معماری سنتی و مدرن، نماد شهر همدان است. در کنار آن موزه‌ای با نسخ خطی و ابزار علمی نگهداری می‌شود.\",\n        \"slug\": \"bu-ali-sina-tomb\",\n        \"center\": {\n          \"type\": \"Point\",\n          \"coordinates\": [\n            48.5146,\n            34.7986\n          ]\n        },\n        \"area\": {\n          \"type\": \"MultiPolygon\",\n          \"coordinates\": [\n            [\n              [\n                [\n                  48.510600000000004,\n                  34.7946\n                ],\n                [\n                  48.5186,\n                  34.7946\n                ],\n                [\n                  48.5186,\n                  34.8026\n                ],\n                [\n                  48.510600000000004,\n                  34.8026\n                ],\n                [\n                  48.510600000000004,\n                  34.7946\n                ]\n              ]\n            ]\n          ]\n        },\n        \"address\": \"همدان، میدان بوعلی‌سینا\",\n        \"hoursOfOperation\": \"۹:۰۰ تا ۱۸:۰۰\",\n        \"contact\": {\n          \"social\": []\n        },\n        \"meta\": {\n          \"gallerySource\": \"naghshe-seed\"\n        },\n        \"status\": \"active\",\n        \"province\": \"{hamedanProvince}\",\n        \"city\": \"{hamedanCity}\",\n        \"category\": \"{museumCategory}\",\n        \"tags\": [\n          \"{qajarTag}\",\n          \"{familyTag}\"\n        ],\n        \"thumbnail\": \"00000000000000000000a110\",\n        \"gallery\": [\n          \"00000000000000000000a122\",\n          \"00000000000000000000a134\"\n        ]\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"slug\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "bu-ali-sinaPlace",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-05-place-tabriz-bazaar",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"place\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"بازار تاریخی تبریز\",\n        \"antiquity\": 600,\n        \"description\": \"بازار تاریخی تبریز بزرگ‌ترین بازار سرپوشیده آجری جهان و یکی از ایستگاه‌های اصلی جاده ابریشم است. تیمچه‌ها، سراها و راسته‌های آن هنوز به فعالیت تجاری خود ادامه می‌دهند.\",\n        \"slug\": \"tabriz-historical-bazaar\",\n        \"center\": {\n          \"type\": \"Point\",\n          \"coordinates\": [\n            46.2919,\n            38.08\n          ]\n        },\n        \"area\": {\n          \"type\": \"MultiPolygon\",\n          \"coordinates\": [\n            [\n              [\n                [\n                  46.2879,\n                  38.076\n                ],\n                [\n                  46.295899999999996,\n                  38.076\n                ],\n                [\n                  46.295899999999996,\n                  38.083999999999996\n                ],\n                [\n                  46.2879,\n                  38.083999999999996\n                ],\n                [\n                  46.2879,\n                  38.076\n                ]\n              ]\n            ]\n          ]\n        },\n        \"address\": \"آذربایجان شرقی، تبریز، خیابان جمهوری اسلامی، بازار تاریخی\",\n        \"hoursOfOperation\": \"۹:۰۰ تا ۲۰:۰۰ (جمعه‌ها تعطیل)\",\n        \"contact\": {\n          \"social\": []\n        },\n        \"meta\": {\n          \"gallerySource\": \"naghshe-seed\"\n        },\n        \"status\": \"active\",\n        \"province\": \"{tabrizProvince}\",\n        \"city\": \"{tabrizCity}\",\n        \"category\": \"{bazaarCategory}\",\n        \"tags\": [\n          \"{unescoTag}\",\n          \"{safavidTag}\",\n          \"{familyTag}\"\n        ],\n        \"thumbnail\": \"00000000000000000000a111\",\n        \"gallery\": [\n          \"00000000000000000000a123\",\n          \"00000000000000000000a135\"\n        ]\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1,\n        \"slug\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "tabriz-bazaarPlace",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-06-event-nowruz",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"event\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"جشن نوروزگاه تخت جمشید\",\n        \"description\": \"آیین استقبال از نوروز با اجرای موسیقی سنتی، نمایش آیین‌های نوروزی و تور راهنمای محوطه.\",\n        \"startTime\": \"2027-03-20T08:00:00.000Z\",\n        \"endTime\": \"2027-03-22T18:00:00.000Z\",\n        \"color\": \"#7c2d12\",\n        \"icon\": \"celebration\",\n        \"capacity\": \"500\",\n        \"status\": \"published\",\n        \"isPublic\": true,\n        \"ticketPrice\": \"0\",\n        \"registrationRequired\": true,\n        \"maxAttendees\": \"500\",\n        \"placeIds\": [\n          \"{persepolisPlace}\"\n        ],\n        \"tags\": [\n          \"{unescoTag}\",\n          \"{familyTag}\"\n        ],\n        \"thumbnail\": \"00000000000000000000a112\",\n        \"gallery\": [\n          \"00000000000000000000a113\"\n        ]\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": [
+			{
+				"key": "nowruzEvent",
+				"value": "[body][_id]"
+			}
+		]
+	},
+	{
+		"id": "seed-07-event-naqsh-e-jahan-nights",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"event\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"شب‌های فرهنگی میدان نقش جهان\",\n        \"description\": \"برنامه شبانه شامل نورپردازی میدان، اجرای نقالی و نمایشگاه صنایع دستی اصفهان.\",\n        \"startTime\": \"2027-04-10T16:00:00.000Z\",\n        \"endTime\": \"2027-04-12T22:00:00.000Z\",\n        \"color\": \"#0f766e\",\n        \"icon\": \"night\",\n        \"status\": \"published\",\n        \"isPublic\": true,\n        \"placeIds\": [\n          \"{naqsh-e-jahanPlace}\"\n        ],\n        \"tags\": [\n          \"{safavidTag}\",\n          \"{photoTag}\"\n        ],\n        \"thumbnail\": \"00000000000000000000a114\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": []
+	},
+	{
+		"id": "seed-08-event-photo-exhibition",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"event\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"نمایشگاه عکاسی «میراث ایران»\",\n        \"description\": \"گزیده‌ای از عکس‌های تاریخی محوطه‌های ثبت‌شده ایران در گالری کاخ گلستان.\",\n        \"startTime\": \"2027-05-05T09:00:00.000Z\",\n        \"endTime\": \"2027-05-25T18:00:00.000Z\",\n        \"color\": \"#1e3a8a\",\n        \"icon\": \"camera\",\n        \"status\": \"published\",\n        \"isPublic\": true,\n        \"placeIds\": [\n          \"{golestanPlace}\"\n        ],\n        \"tags\": [\n          \"{qajarTag}\",\n          \"{photoTag}\"\n        ],\n        \"thumbnail\": \"00000000000000000000a115\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": []
+	},
+	{
+		"id": "seed-09-event-architecture-workshop",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"event\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"کارگاه آشنایی با معماری اسلامی\",\n        \"description\": \"کارگاه دو روزه درباره هندسه گنبد، کاشی‌کاری و سیر تحول مساجد جامع ایران.\",\n        \"startTime\": \"2027-06-15T08:30:00.000Z\",\n        \"endTime\": \"2027-06-16T16:30:00.000Z\",\n        \"color\": \"#14532d\",\n        \"icon\": \"workshop\",\n        \"capacity\": \"40\",\n        \"status\": \"published\",\n        \"isPublic\": true,\n        \"ticketPrice\": \"350000\",\n        \"registrationRequired\": true,\n        \"maxAttendees\": \"40\",\n        \"placeIds\": [\n          \"{jameh-yazdPlace}\"\n        ],\n        \"tags\": [\n          \"{islamicTag}\"\n        ],\n        \"thumbnail\": \"00000000000000000000a116\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": []
+	},
+	{
+		"id": "seed-10-event-garden-night-tour",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"event\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"تور شبانه باغ فین\",\n        \"description\": \"بازدید شبانه از باغ با روایت تاریخچه باغ و حمام فین همراه با پذیرایی.\",\n        \"startTime\": \"2027-07-01T18:30:00.000Z\",\n        \"endTime\": \"2027-07-01T21:00:00.000Z\",\n        \"color\": \"#365314\",\n        \"icon\": \"tour\",\n        \"status\": \"published\",\n        \"isPublic\": true,\n        \"ticketPrice\": \"150000\",\n        \"registrationRequired\": true,\n        \"placeIds\": [\n          \"{fin-gardenPlace}\"\n        ],\n        \"tags\": [\n          \"{familyTag}\",\n          \"{safavidTag}\"\n        ],\n        \"thumbnail\": \"00000000000000000000a117\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": []
+	},
+	{
+		"id": "seed-11-virtual-tour-persepolis",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"virtual_tour\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"تور مجازی تخت جمشید\",\n        \"description\": \"بازدید ۳۶۰ درجه از پلکان آپادانا و دروازه ملل با نقاط تعاملی.\",\n        \"status\": \"active\",\n        \"hotspots\": [\n          {\n            \"pitch\": 5,\n            \"yaw\": 30,\n            \"description\": \"دروازه ملل\"\n          },\n          {\n            \"pitch\": -10,\n            \"yaw\": 120,\n            \"description\": \"پلکان آپادانا\"\n          },\n          {\n            \"pitch\": 12,\n            \"yaw\": 240,\n            \"description\": \"کاخ تچر\"\n          }\n        ],\n        \"placeId\": \"{persepolisPlace}\",\n        \"panoramaId\": \"00000000000000000000a118\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": []
+	},
+	{
+		"id": "seed-12-virtual-tour-naqsh-e-jahan",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"virtual_tour\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"تور مجازی میدان نقش جهان\",\n        \"description\": \"نمای ۳۶۰ درجه از میدان با نقاط تعاملی روی مسجد شاه و عالی‌قاپو.\",\n        \"status\": \"active\",\n        \"hotspots\": [\n          {\n            \"pitch\": 0,\n            \"yaw\": 45,\n            \"description\": \"مسجد شاه\"\n          },\n          {\n            \"pitch\": 8,\n            \"yaw\": 180,\n            \"description\": \"عالی‌قاپو\"\n          }\n        ],\n        \"placeId\": \"{naqsh-e-jahanPlace}\",\n        \"panoramaId\": \"00000000000000000000a119\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": []
+	},
+	{
+		"id": "seed-13-virtual-tour-bam",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"virtual_tour\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"name\": \"تور مجازی ارگ بم\",\n        \"description\": \"بازدید مجازی از حاکم‌نشین و بازار ارگ پس از مرمت.\",\n        \"status\": \"active\",\n        \"hotspots\": [\n          {\n            \"pitch\": 0,\n            \"yaw\": 0,\n            \"description\": \"حاکم‌نشین\"\n          },\n          {\n            \"pitch\": -6,\n            \"yaw\": 200,\n            \"description\": \"بازار ارگ\"\n          }\n        ],\n        \"placeId\": \"{bam-citadelPlace}\",\n        \"panoramaId\": \"00000000000000000000a120\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"name\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": []
+	},
+	{
+		"id": "seed-14-comment-persepolis",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"comment\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"text\": \"بازدید از تخت جمشید با راهنمای محلی تجربه‌ای بی‌نظیر بود؛ ساعت‌های پایانی روز برای عکاسی بهترین نور را دارد.\",\n        \"rating\": 5,\n        \"place\": \"{persepolisPlace}\"\n      },\n      \"get\": {\n        \"_id\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": []
+	},
+	{
+		"id": "seed-15-comment-naqsh-e-jahan",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"comment\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"text\": \"میدان در شب نورپردازی بسیار زیبایی دارد. پیشنهاد می‌کنم بازدید عالی‌قاپو را هم در برنامه بگذارید.\",\n        \"rating\": 5,\n        \"place\": \"{naqsh-e-jahanPlace}\"\n      },\n      \"get\": {\n        \"_id\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": []
+	},
+	{
+		"id": "seed-16-comment-nasir-ol-molk",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"comment\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"text\": \"برای دیدن نور رنگی پنجره‌ها صبح زود بروید؛ حدود ساعت ۸ تا ۹ بهترین زمان است.\",\n        \"rating\": 4,\n        \"place\": \"{nasir-ol-molkPlace}\"\n      },\n      \"get\": {\n        \"_id\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": []
+	},
+	{
+		"id": "seed-17-comment-golestan",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"comment\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"text\": \"تالار آینه و ایوان تخت مرمر حتماً دیده شود. بلیط مجموعه برای هر بخش جداگانه است.\",\n        \"rating\": 4,\n        \"place\": \"{golestanPlace}\"\n      },\n      \"get\": {\n        \"_id\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": []
+	},
+	{
+		"id": "seed-18-comment-bam",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"comment\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"text\": \"دیدن تلاش مرمت‌گران در ارگ بم تحسین‌برانگیز است. سایه‌بان و آب آشامیدنی در محوطه موجود است.\",\n        \"rating\": 5,\n        \"place\": \"{bam-citadelPlace}\"\n      },\n      \"get\": {\n        \"_id\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": []
+	},
+	{
+		"id": "seed-19-staff-editor",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"user\",\n    \"act\": \"addUser\",\n    \"details\": {\n      \"set\": {\n        \"first_name\": \"سارا\",\n        \"last_name\": \"محمدی\",\n        \"father_name\": \"حسن\",\n        \"gender\": \"Female\",\n        \"email\": \"editor@naghshe.dev\",\n        \"password\": \"EditorDemo123!\",\n        \"summary\": \"کارشناس محتوا و ثبت آثار تاریخی\",\n        \"address\": \"تهران\",\n        \"level\": \"Editor\",\n        \"is_verified\": true,\n        \"provinceId\": \"{tehranProvince}\",\n        \"cityId\": \"{tehranCity}\"\n      },\n      \"get\": {\n        \"_id\": 1,\n        \"email\": 1,\n        \"level\": 1\n      }\n    }\n  }\n}",
+		"repeat": 1,
+		"captures": []
+	}
+]
