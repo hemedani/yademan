@@ -15,16 +15,21 @@ interface LocationInfoProps {
   phone?: string;
 }
 
+/**
+ * Every field used to carry a hardcoded Persian default ("دوره هخامنشی",
+ * "۵۰,۰۰۰ تومان", …). On a real place that invented a ticket price and a
+ * dynasty it may not have, so a missing value now hides its row instead.
+ */
 const LocationInfo: React.FC<LocationInfoProps> = ({
-  description = "این مکان تاریخی دارای اهمیت فرهنگی و تاریخی بالایی است و هر ساله میزبان هزاران بازدیدکننده داخلی و خارجی می‌باشد.",
-  category = "مکان تاریخی",
-  historicalPeriod = "دوره هخامنشی",
-  features = ["معماری کهن", "نقوش سنگی", "محوطه باستانی"],
-  accessibility = "دسترسی آسان با وسایل نقلیه",
-  visitingHours = "۸:۰۰ تا ۱۸:۰۰",
-  ticketPrice = "۵۰,۰۰۰ تومان",
+  description,
+  category,
+  historicalPeriod,
+  features = [],
+  accessibility,
+  visitingHours,
+  ticketPrice,
   website,
-  phone
+  phone,
 }) => {
   const t = useTranslations('Location');
 
@@ -33,80 +38,95 @@ const LocationInfo: React.FC<LocationInfoProps> = ({
       <div className="p-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('details')}</h2>
 
-        {/* Description */}
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-3">توضیحات</h3>
-          <p className="text-gray-700 leading-relaxed">{description}</p>
-        </div>
+        {description && (
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">توضیحات</h3>
+            <p className="text-gray-700 leading-relaxed">{description}</p>
+          </div>
+        )}
 
-        {/* Basic Information */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          <div>
-            <h4 className="text-md font-semibold text-gray-900 mb-2">اطلاعات پایه</h4>
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-gray-600">دسته‌بندی:</span>
-                <span className="text-gray-900 font-medium">{category}</span>
+        {(category || historicalPeriod || visitingHours || ticketPrice) && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            {(category || historicalPeriod) && (
+              <div>
+                <h4 className="text-md font-semibold text-gray-900 mb-2">اطلاعات پایه</h4>
+                <div className="space-y-2">
+                  {category && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">دسته‌بندی:</span>
+                      <span className="text-gray-900 font-medium">{category}</span>
+                    </div>
+                  )}
+                  {historicalPeriod && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">قدمت:</span>
+                      <span className="text-gray-900 font-medium">{historicalPeriod}</span>
+                    </div>
+                  )}
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">دوره تاریخی:</span>
-                <span className="text-gray-900 font-medium">{historicalPeriod}</span>
+            )}
+
+            {(visitingHours || ticketPrice) && (
+              <div>
+                <h4 className="text-md font-semibold text-gray-900 mb-2">اطلاعات بازدید</h4>
+                <div className="space-y-2">
+                  {visitingHours && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">ساعات بازدید:</span>
+                      <span className="text-gray-900 font-medium">{visitingHours}</span>
+                    </div>
+                  )}
+                  {ticketPrice && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">قیمت بلیط:</span>
+                      <span className="text-gray-900 font-medium">{ticketPrice}</span>
+                    </div>
+                  )}
+                </div>
               </div>
+            )}
+          </div>
+        )}
+
+        {features.length > 0 && (
+          <div className="mb-6">
+            <h4 className="text-md font-semibold text-gray-900 mb-3">ویژگی‌های مهم</h4>
+            <div className="flex flex-wrap gap-2">
+              {features.map((feature, index) => (
+                <span
+                  key={index}
+                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800"
+                >
+                  {feature}
+                </span>
+              ))}
             </div>
           </div>
+        )}
 
-          <div>
-            <h4 className="text-md font-semibold text-gray-900 mb-2">اطلاعات بازدید</h4>
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-gray-600">ساعات بازدید:</span>
-                <span className="text-gray-900 font-medium">{visitingHours}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">قیمت بلیط:</span>
-                <span className="text-gray-900 font-medium">{ticketPrice}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Features */}
-        <div className="mb-6">
-          <h4 className="text-md font-semibold text-gray-900 mb-3">ویژگی‌های مهم</h4>
-          <div className="flex flex-wrap gap-2">
-            {features.map((feature, index) => (
-              <span
-                key={index}
-                className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800"
+        {accessibility && (
+          <div className="mb-6">
+            <h4 className="text-md font-semibold text-gray-900 mb-2">دسترسی</h4>
+            <div className="flex items-start">
+              <svg
+                className="w-5 h-5 text-green-500 mt-0.5 mr-2 flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                {feature}
-              </span>
-            ))}
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span className="text-gray-700">{accessibility}</span>
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Accessibility */}
-        <div className="mb-6">
-          <h4 className="text-md font-semibold text-gray-900 mb-2">دسترسی</h4>
-          <div className="flex items-start">
-            <svg
-              className="w-5 h-5 text-green-500 mt-0.5 mr-2 flex-shrink-0"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
-            <span className="text-gray-700">{accessibility}</span>
-          </div>
-        </div>
-
-        {/* Contact Information */}
         {(website || phone) && (
           <div className="border-t pt-6">
             <h4 className="text-md font-semibold text-gray-900 mb-3">اطلاعات تماس</h4>

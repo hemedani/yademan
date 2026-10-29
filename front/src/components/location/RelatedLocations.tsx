@@ -2,15 +2,17 @@
 
 import React from "react";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { useLocale } from "next-intl";
 
 interface RelatedLocation {
   id: string;
   title: string;
-  category: string;
-  rating: number;
+  category?: string;
+  rating?: number;
   image?: string;
-  distance: number;
+  /** Only known when the caller computed it; omitted hides the badge. */
+  distance?: number;
 }
 
 interface RelatedLocationsProps {
@@ -18,38 +20,11 @@ interface RelatedLocationsProps {
   locations?: RelatedLocation[];
 }
 
-const RelatedLocations: React.FC<RelatedLocationsProps> = ({ currentLocationId, locations = [] }) => {
-  const t = useTranslations("Location");
+const RelatedLocations: React.FC<RelatedLocationsProps> = ({ locations = [] }) => {
+  const locale = useLocale();
 
-  // Mock data for demonstration
-  const mockLocations: RelatedLocation[] = [
-    {
-      id: "2",
-      title: "میدان نقش جهان",
-      category: "میراث جهانی",
-      rating: 4.9,
-      image: "/images/naghsh-jahan.jpg",
-      distance: 8.2,
-    },
-    {
-      id: "3",
-      title: "کاخ گلستان",
-      category: "کاخ تاریخی",
-      rating: 4.7,
-      image: "/images/golestan.jpg",
-      distance: 12.5,
-    },
-    {
-      id: "4",
-      title: "تخت سلیمان",
-      category: "مکان باستانی",
-      rating: 4.6,
-      image: "/images/takht-soleyman.jpg",
-      distance: 15.3,
-    },
-  ];
-
-  const displayLocations = locations.length > 0 ? locations : mockLocations;
+  // Never invent entries: an empty list means the province has no other place.
+  const displayLocations = locations;
 
   const renderStars = (rating: number) => {
     const stars = [];
@@ -128,9 +103,10 @@ const RelatedLocations: React.FC<RelatedLocationsProps> = ({ currentLocationId, 
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {displayLocations.map((location) => (
-            <div
+            <Link
               key={location.id}
-              className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow cursor-pointer border border-gray-200 hover:border-gray-300"
+              href={`/${locale}/location/${location.id}`}
+              className="bg-gray-50 rounded-lg overflow-hidden hover:shadow-md transition-shadow border border-gray-200 hover:border-gray-300"
             >
               {/* Image */}
               <div className="relative h-32">
@@ -161,10 +137,12 @@ const RelatedLocations: React.FC<RelatedLocationsProps> = ({ currentLocationId, 
                   </div>
                 )}
 
-                {/* Distance Badge */}
-                <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded-full text-xs">
-                  {location.distance} کیلومتر
-                </div>
+                {/* Distance Badge — only when the caller computed one */}
+                {typeof location.distance === "number" && (
+                  <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded-full text-xs">
+                    {location.distance} کیلومتر
+                  </div>
+                )}
               </div>
 
               {/* Content */}
@@ -172,19 +150,23 @@ const RelatedLocations: React.FC<RelatedLocationsProps> = ({ currentLocationId, 
                 <h3 className="text-lg font-semibold text-gray-900 mb-2 truncate">{location.title}</h3>
 
                 {/* Category Badge */}
-                <div className="mb-2">
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    {location.category}
-                  </span>
-                </div>
+                {location.category && (
+                  <div className="mb-2">
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      {location.category}
+                    </span>
+                  </div>
+                )}
 
-                {/* Rating */}
-                <div className="flex items-center">
-                  <div className="flex items-center">{renderStars(location.rating)}</div>
-                  <span className="ml-2 text-sm text-gray-600">{location.rating.toFixed(1)}</span>
-                </div>
+                {/* Rating — omitted until the place has rated comments */}
+                {typeof location.rating === "number" && location.rating > 0 && (
+                  <div className="flex items-center">
+                    <div className="flex items-center">{renderStars(location.rating)}</div>
+                    <span className="ml-2 text-sm text-gray-600">{location.rating.toFixed(1)}</span>
+                  </div>
+                )}
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 

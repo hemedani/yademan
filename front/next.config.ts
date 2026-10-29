@@ -168,18 +168,16 @@ const withPWA = withPWAInit({
 const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
-      bodySizeLimit: "550mb", // Increase limit to 50MB for large database uploads
+      // Large uploads (gallery images) go through server actions.
+      bodySizeLimit: "550mb",
     },
   },
-  // Increase API route body size limit for file uploads
-  api: {
-    bodyParser: {
-      sizeLimit: "50mb",
-    },
-    responseLimit: "50mb",
-  },
+  // NOTE: the Pages-Router `api.bodyParser` block used to live here. It is not a
+  // valid App Router option, so Next logged "Unrecognized key(s) in object:
+  // 'api'" on every boot while silently ignoring both limits. The App Router
+  // equivalent is `experimental.serverActions.bodySizeLimit` above; route
+  // handlers have no body-size cap of their own.
   images: {
-    domains: ["localhost", "api.mapbox.com", "tile.openstreetmap.org", "185.204.170.27"],
     remotePatterns: [
       {
         protocol: "http",
