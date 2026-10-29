@@ -102,8 +102,11 @@ authoritative.
   - `user` — `JSON.stringify({ level })`;
   - `national_number` — currently stores the user's email.
 - `token` is `httpOnly: false` because client code reads it via `js-cookie`.
-- `AuthContext` hydrates from the `token` cookie and calls `getMe()`. If that
-  fails, it falls back to the `user` cookie.
+- `AuthContext` hydrates from the `token` cookie and calls `getMe()`. The level
+  always comes from that response — **never** from the `user` cookie, which is
+  client-writable and would let anyone render the admin UI. A `network` failure
+  keeps the token (so the session survives a backend blip); only `no_token` /
+  `unauthorized` clears it.
 - Logout clears the cookies; `logoutAndRedirect` redirects to `/login`.
 
 Do not reuse `src/app/actions/login.ts`: it sends `national_number` + `code`,
@@ -141,7 +144,9 @@ AppApi().send(
 `src/app/api/proxy/route.ts` forwards JSON and multipart bodies, forwards the
 token/cookie headers, has a 55s upstream timeout, and forces dynamic rendering.
 `src/app/api/image-proxy/route.ts` fetches backend `/uploads/**` and caches for
-one hour.
+one hour. It only accepts paths matching `^uploads/[A-Za-z0-9._\-\/]+$`, refuses
+anything that is not served as `image/*`, and answers with a sandboxed CSP so a
+directly-opened SVG cannot run script on our origin.
 
 ### Server Action Pattern
 
@@ -407,18 +412,23 @@ when explicitly requested.
    plus `src/app/api/auth` and `src/app/api/locations`. They are not connected
    to Lesan. Do not extend or use them for real features.
 4. **Admin routes are not localized** and the admin guard is client-side only.
-5. **`getMe` flattens the envelope** to `{ success, user?, error? }`; other
-   actions return `{ success, body }`.
-6. **`place.gets`/`event.gets` return `{ data, metadata }`**, while most other
-   collections return a bare array.
-7. **`virtual_tour` uses an underscore** in action/model names, but routes use
+5. **`getMe` flattens the envelope** to `{ success, user?, error?, reason? }`;
+   other actions return `{ success, body }`. `reason` is
+   `"no_token" | "unauthorized" | "network"` — only clear the session for the
+   first two.
+6. **`place.gets`/`event.gets` return `{ data, metadata? }`**, while most other
+   collections return a bare array. `metadata` is optional: omit it and the
+   backend skips its `$count` aggregation.
+7. **Map viewport filter is `polygon`, not `area`.** `polygon` is tested against
+   the indexed `center`; `area` tests the place boundary and is far slower.
+8. **`virtual_tour` uses an underscore** in action/model names, but routes use
    `virtual-tour`.
-8. **`NEXT_PUBLIC_LESAN_URL` is unused** by the current API service.
-9. **The map style in `mapStore` contains a placeholder MapTiler key**, but
-   `InteractiveMap` uses OpenFreeMap directly; do not assume the store style is
-   active.
-10. **`public/sw.js` is generated** by `next-pwa`; edits are overwritten.
-11. **Direct `AppApi` calls still exist in admin pages** and some pass
+9. **`NEXT_PUBLIC_LESAN_URL` is unused** by the current API service.
+10. **The map style in `mapStore` contains a placeholder MapTiler key**, but
+    `InteractiveMap` uses OpenFreeMap directly; do not assume the store style is
+    active.
+11. **`public/sw.js` is generated** by `next-pwa`; edits are overwritten.
+12. **Direct `AppApi` calls still exist in admin pages** and some pass
     `LESAN_URL` into client components. New code must use `src/app/actions`.
     A few admin fallback URLs are stale (e.g. `admin/virtual-tours` falls back to
     `http://localhost:1382`).

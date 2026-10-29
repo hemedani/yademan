@@ -2,7 +2,7 @@
 
 ## Overview
 
-The backend is a Deno service built on **Lesan `v0.1.26`**, a MongoDB ODM/ORM
+The backend is a Deno service built on **Lesan `0.2.4`** (JSR), a MongoDB ODM/ORM
 with schema validation, relation management, generated type declarations, and a
 built-in API playground. It exposes one service, `main`, containing the actions
 for users, geography, places, events, comments, tags, categories, files, and
@@ -10,8 +10,8 @@ virtual tours.
 
 | Item | Value |
 |---|---|
-| Runtime | Deno (requires network access to JSR/GitHub on first run) |
-| Framework | Lesan `v0.1.26` from `deps.ts` |
+| Runtime | Deno 2.x (needs network access to JSR on first run) |
+| Framework | Lesan `^0.2.4` from `jsr:@hemedani/lesan` in `deps.ts` |
 | Database | MongoDB, database `yademan` |
 | HTTP port | **`1405` hardcoded in `mod.ts`** |
 | Auth | JWT HS512; request header `token`; cookie on the frontend |
@@ -45,7 +45,7 @@ working inside model definitions.
 back/
 ├── mod.ts                  # bootstrap, DB, model instances, server
 ├── deno.json               # tasks + import aliases + fmt config
-├── deps.ts                 # Lesan, djwt, common exports
+├── deps.ts                 # Lesan (JSR), djwt, local ensureDir shim
 ├── models/
 │   ├── <model>.ts          # pure schema + relations + index + factory
 │   ├── excludes.ts         # centralized projection excludes
@@ -63,7 +63,7 @@ back/
 ├── declarations/           # generated Lesan types (do not hand-edit)
 ├── assets/                 # Iran GeoJSON used by province.seed
 ├── uploads/                # runtime files (gitignored)
-└── test/                   # Hurl/E2E JSON scenarios
+└── test/                   # bootstrap + E2E/seed suites (see test/README.md)
 ```
 
 ## Models
@@ -90,7 +90,7 @@ Every model file exports:
 
 | Model | Pure fields | Relations | Notes |
 |---|---|---|---|
-| `user` | `first_name`, `last_name`, `father_name?`, `gender` (`Male`/`Female`), `birth_date?`, `summary?`, `address?`, `level` (default `Ordinary`), `email` (unique), `password`, `is_verified`, timestamps | `avatar?`, `national_card?` → `file`; `province?`, `city?` → location; reverse `registered_places`, comments, events, uploaded assets | Passwords are bcrypt-hashed by actions; `password` is excluded globally. Levels: `Ghost`, `Manager`, `Editor`, `Ordinary`. |
+| `user` | `first_name`, `last_name`, `father_name?`, `gender` (`Male`/`Female`), `birth_date?`, `summary?`, `address?`, `level` (default `Ordinary`), `email` (unique), `password`, `is_verified`, timestamps | `avatar?`, `national_card?` → `file`; `province?`, `city?` → location; `favArticles?` → `place` (reverse `favByUsers`); reverse `registered_places`, comments, events, uploaded assets | Passwords are bcrypt-hashed by actions; `password` is excluded globally. Levels: `Ghost`, `Manager`, `Editor`, `Ordinary`. |
 | `file` | `name`, `mimType`, `size`, `alt_text?`, timestamps | `uploader` → `user`; reverse `uploadedAssets` | Field is spelled `mimType`. Upload action writes the real file under `uploads/`. |
 | `province` | `pure_location` | `registrar?` → `user`; reverse `cities`, `capital`, `places`, `users` | Intended 2dsphere index on `area` + `center_location` (see gotchas). |
 | `city` | `pure_location` | `registrar?`, `province?`; reverse `cities`, `capital`, `places`, `users` | `add` takes `provinceId` + `isCapital`; `isCapital` sets province reverse `capital`. |
@@ -99,7 +99,7 @@ Every model file exports:
 | `place` | `name`, `antiquity`, `description`, `slug?`, `center` (Point), `area` (MultiPolygon), `address?`, `contact{phone,email,website,social[]}?`, `hoursOfOperation?`, `meta?`, `status` (`draft`/`active`/`archived`), timestamps | `registrar?`, `province?`, `city?`, `category` (required), `tags?`, `thumbnail?`, `gallery?`; reverse `comments`, `virtual_tours`, `events` | Indexes: 2dsphere `center` + `area`; unique partial `slug`. `antiquity` is a **construction year**, not an age. |
 | `comment` | `text`, `rating?`, `status` (default `pending`), `is_anonymous` (default `false`), timestamps | `user` (required), `place` (required); reverse comments | Public reads; add/update/remove guarded. |
 | `virtual_tour` | `name`, `description?`, `hotspots?[]` (`pitch`, `yaw`, `description?`, `target?`), `status` (`draft`/`active`/`archived`), timestamps | `place` (required), `panorama?` → `file`, `registrar?`; reverse on place | Hotspots are embedded, not a separate collection. |
-| `event` | `name`, `description?`, `startTime`, `endTime`, `color?`, `icon?`, `capacity?`, `status` (`draft`/`published`/`archived`/`cancelled`), `isPublic?`, `ticketPrice?`, `registrationRequired?`, `maxAttendees?`, `eventUrl?`, `registrationUrl?`, timestamps | `registrar?`, `places?`, `organizer?`, `tags?`, `thumbnail?`, `gallery?`; reverse `registered_events`, `organized_events`, `events` | Date strings are coerced to `Date`. Index on `startTime` + `endTime`. |
+| `event` | `name`, `description?`, `startTime`, `endTime`, `color?`, `icon?`, `capacity?`, `status` (`draft`/`published`/`archived`/`cancelled`), `isPublic?`, `ticketPrice?`, `registrationRequired?`, `maxAttendees?`, `eventUrl?`, `registrationUrl?`, timestamps | `registrar?`, `places?`, `organizer?`, `attendees?` → `user`, `tags?`, `thumbnail?`, `gallery?`; reverse `registered_events`, `organized_events`, `attended_events`, `events` | Date strings are coerced to `Date`. Index on `startTime` + `endTime`. |
 
 ### GeoJSON Discipline
 
@@ -179,8 +179,8 @@ setAct → preAct guards → validator (set/get) → action fn → MongoDB
 | `place` | `add`, `update`, `remove`, `count` | `Manager` |
 | | `updatePlaceRelations`, `removePlaceRelations` | `Ghost`, `Manager` |
 | | `get`, `gets` | public |
-| `comment` | `add` | `Admin`, `Manager`, `User` (see gotchas) |
-| | `update`, `remove` | `Admin`, `Manager` |
+| `comment` | `add` | `Ordinary`, `Editor`, `Manager` |
+| | `update`, `remove` | `Ordinary`, `Editor`, `Manager` (ownership enforced in the action; `status` changes are moderator-only) |
 | | `get`, `gets`, `count` | public |
 | `event` | `add`, `update`, `updateRelations` | `Manager`, `Editor` |
 | | `remove` | `Manager` |
@@ -289,8 +289,63 @@ deno fmt --check
 deno check mod.ts
 ```
 
-The first run downloads Lesan from GitHub and JSR dependencies. There is no
-configured `deno test` suite; `test/` contains Hurl scenarios.
+The first run downloads Lesan and the JSR dependencies. There is no `deno test`
+suite; the coverage lives in `test/` as Lesan playground suites.
+
+## Testing
+
+`test/` holds two JSON suites that run either in the playground (`/playground` →
+E2E tab) or headlessly via `deno task test:e2e`. See
+[`test/README.md`](test/README.md) for the full workflow.
+
+```bash
+deno task test:bootstrap   # once per database: account + placeholder media
+deno task test:e2e         # 143 steps, every act, self-cleaning
+deno task test:seed        # demo data for the VPS
+deno task test:build       # regenerate the JSON from build-suites.ts
+```
+
+`E2E.json` runs in a fixed order — `auth → fixtures → authz → iso → reads →
+writes → role → neg → guards → cleanup` — because later blocks substitute the
+ids captured by earlier ones. Three blocks are worth knowing about:
+
+- **`iso`** — two independent `Ordinary` accounts. The same request must succeed
+  for its owner and be rejected for the other one, which is how ownership checks
+  in `comment.update` / `comment.remove` are verified.
+- **`role`** — the `Editor` tier: allowed on comments, events and user reads,
+  denied on the taxonomy, the geography and `event.remove`.
+- **`neg`** — rules that are neither authorization nor schema (duplicate slug on
+  update, delete-while-referenced, relation to a missing document). These are
+  what catch a field that a validator accepts and an action forgets to write.
+
+`E2E.json` and `seed-presentation.json` are **generated** — edit
+`test/build-suites.ts`, then run `deno task test:build`. Never hand-edit the
+JSON: `bodyHeaders` is a stringified envelope and is trivial to corrupt.
+
+Run `test:e2e` after touching a validator, an action, or a model. It is the only
+thing that catches shape drift between the generated `declarations/selectInp.ts`
+and the validators.
+
+## Lesan 0.2.x notes
+
+The upgrade from the pinned `v0.1.26` GitHub tarball to `jsr:@hemedani/lesan@^0.2.4`
+kept the ODM surface (`find`, `findOne`, `insertOne`, `insertMany`,
+`addRelation`, `removeRelation`, `findOneAndUpdate`, `aggregation`,
+`countDocument`) unchanged. Three things to know:
+
+- **`ensureDir` is no longer exported.** 0.2.x moved filesystem access behind a
+  platform adapter. `deps.ts` re-exports a two-line `Deno.mkdir` shim used by
+  `file.uploadFile`.
+- **`expectedFailure` exists in the playground E2E runner.** A step may declare
+  `expectedFailure: { message }`; the runner then requires `success: false` and
+  a body message containing `message`. This is what lets the suites assert
+  guards and validation instead of only happy paths.
+- **`preValidation` and `preAct` are both real hooks, and the order matters.**
+  `getUsers`, `countUsers` and `dashboardStatistic` use `preValidation`; every
+  other protected act uses `preAct`, which runs *after* the validator. So for a
+  `preAct` act the schema is checked before `grantAccess`: a denial test with a
+  malformed body fails on the schema and never reaches the authorization check.
+  All `role-*` / `iso-*` denial steps therefore send schema-valid payloads.
 
 ## Adding or Changing an Action
 
@@ -321,33 +376,68 @@ configured `deno test` suite; `test/` contains Hurl scenarios.
 
 1. **Port is hardcoded to 1405**; `APP_PORT` is ignored by `runServer`.
 2. **Database is `yademan`**, not `naghshe`.
-3. **`center_location` drift:** `province`/`city` models define `center`, but
-   their `update` actions and 2dsphere indexes use `center_location`. Center
-   updates and center indexes therefore do not match the schema.
-4. **`antiquity` is a construction year** (Solar Hijri), despite comments saying
+3. **`antiquity` is a construction year** (Solar Hijri), despite comments saying
    "age in years". `place.gets` converts the requested minimum age into a
    maximum construction year.
-5. **Legacy level names are used in guards.** `comment.add` lists `"User"`,
-   comment update/remove list `"Admin"`, and `getUser` lists `"Examiner"`.
-   None of these exist in `user_level_array`; only a real listed level passes
-   (or `Ghost`, which bypasses). In practice comment mutations require
-   `Manager`/`Ghost`.
-6. **`getUsers` filters `levels`**, but the schema field is `level`.
-7. **`event.updateRelations` accepts `attendees` and writes an `attendees`
-   relation**, but the event model has no such relation. Do not rely on it until
-   the model is updated.
-8. **`file.getFiles` filters on `type`**, while the file model stores `mimType`.
-9. **`addUser` validator requires `mobile` and `national_number`**, but
-   `user_pure` no longer defines either field.
-10. **`province.count` counts the `city` collection**, not `province`. This is a
-    copy/paste bug; do not rely on it.
-11. **Count response shapes are not uniform.** Check each action: `{ qty }` is
-    common, place/comment return `{ filtered, total }`, and event returns a raw
-    number.
-12. **`checkGhostUser` reads `set.levels`**, but `addUser` validates `level`.
-    The Ghost-creation guard therefore does not fire.
-13. **`toggleFavArticle` uses `favArticles` / `favByUsers`**, but the user model
-    defines neither relation. It will fail until the model is extended.
+4. **Count response shapes are not uniform.** Check each action: `{ qty }` is
+   common, place/comment return `{ filtered, total }`, and event returns a raw
+   number.
+5. **`$geoNear` needs an explicit `key`.** `place` has two 2dsphere indexes
+   (`center` and `area`), so MongoDB refuses to guess. `place.gets` passes
+   `key: "center"`; keep that if you add another geo index.
+6. **`get.metadata` is optional on `place.gets` / `event.gets`.** When it is
+   omitted the `$count` aggregation is skipped entirely — request it only if the
+   caller actually reads `total`/`pageCount`.
+7. **Pagination is clamped** to `MAX_PAGE_SIZE` (200) by `clampPagination` in
+   `utils/pagination.ts`. The validators still accept any number, so the clamp
+   in the action is the real limit.
+8. **Only one index per model via Lesan.** Extra indexes live in
+   `models/indexes.ts` and are applied by `ensureIndexes(db)` in `mod.ts`. The
+   bootstrap also drops the legacy `center_location` indexes. Add new filterable
+   fields there, not in `newModel({ createIndex })`.
+9. **`TOKEN_KEY` is mandatory in production.** `utils/setToken.ts` throws at
+   boot when `ENV=production` and the variable is missing. The development
+   fallback logs a warning.
+
+### Fixed — do not reintroduce
+
+These were real bugs; the fixes are load-bearing:
+
+- `center_location` on city/province: the field does not exist. Use `center`,
+  and `MultiPolygon` for `area`.
+- Legacy level names (`User`, `Admin`, `Examiner`) in guards: not in
+  `user_level_array`, so they never matched. Use `Ordinary` / `Editor` /
+  `Manager`. Comment update/remove enforce ownership in the action and reserve
+  `status` changes for moderators.
+- `getUsers` filtering `levels` (schema field is `level`).
+- `countUsers` filtering `levels` (same mistake, same fix).
+- `dashboardStatistic` validator declaring `locaions` instead of `places`, so
+  the place count could never be requested.
+- `place.gets` assuming `province` / `city` are ObjectIds. A name crashed with a
+  raw driver error while `place.count` treated the same value as a name. Both
+  now accept either (24-char hex → id, otherwise case-insensitive name).
+- `addUser` passing `_ids: [id]` for the **single** `province`/`city` relations.
+  The lookup filtered `{_id: [id]}`, matched nothing, and failed with
+  "can not find this relation". Single relations take one ObjectId.
+- `province.seed` inserting a duplicate copy of all 31 provinces and 429 cities
+  on every run. It now skips rows that already exist (matched on
+  `english_name`, and on `english_name` + `province._id` for cities).
+- `event.count` filtering `relations.places._id` (the path is `places._id`).
+- `file.getFiles` filtering `type` (the field is `mimType`; match a MIME prefix).
+- `addUser` requiring `mobile`/`national_number` and omitting
+  `email`/`password`; it now hashes the password.
+- `province.count` counting the `city` collection.
+- `checkGhostUser` reading `set.levels` instead of `set.level`.
+- `toggleFavArticle` / `event.updateRelations(attendees)` referencing relations
+  the models did not define; `favArticles`/`favByUsers` and
+  `attendees`/`attended_events` now exist.
+- Unescaped user input in `new RegExp(...)`: use `containsRegex` from `@lib`,
+  which escapes metacharacters and prevents `SyntaxError` / ReDoS.
+- `place.update` accepting `slug` in its validator and then never writing it:
+  renames answered `success: true` and changed nothing. `slug` is the key
+  `place.gets` looks up by, so the place could only be re-slugged by deleting
+  and recreating it. `neg-02-place-update-duplicate-slug` is the regression
+  test — with the field dropped it passes as a success and the suite fails.
 
 ## Related Documentation
 

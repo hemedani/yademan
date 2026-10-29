@@ -31,7 +31,7 @@ Sub-documents:
 
 | Layer | Technology |
 |---|---|
-| Backend | Deno + Lesan `v0.1.26` (MongoDB ODM/ORM) |
+| Backend | Deno + Lesan `0.2.4` (MongoDB ODM/ORM, JSR) |
 | Frontend | Next.js `15.3.8` (App Router), React 19, TypeScript strict |
 | Styling | Tailwind CSS v4, custom neon dark theme, Vazirmatn font, RTL |
 | Database | MongoDB, database name `yademan` |
@@ -191,10 +191,17 @@ See the port caveats in **Known Inconsistencies** before deploying.
 | Frontend strict build | `cd front && pnpm build:strict` |
 | Backend format check | `cd back && deno fmt --check` |
 | Backend type check | `cd back && deno check mod.ts` |
+| Backend behaviour | `cd back && deno task test:e2e` (needs a running server) |
+
+`deno task test:e2e` is the only check that exercises the API itself: 143 steps
+covering every action — happy paths, the guards that must reject, a two-account
+ownership/isolation matrix and the role boundaries for `Ordinary`, `Editor` and
+`Manager`. It is self-cleaning, so it can run against a live database. Run
+`deno task test:bootstrap` once first. Details in
+[`back/test/README.md`](back/test/README.md).
 
 Do **not** start dev servers or production builds automatically. Run them only
-when explicitly requested. There are currently no configured automated test
-suites.
+when explicitly requested.
 
 ## Environment Configuration
 
@@ -258,29 +265,39 @@ task calls for it.
 1. **Backend port is hardcoded.** `back/mod.ts` calls `runServer({ port: 1405 })`
    and ignores `APP_PORT`.
 2. **Database name is `yademan`,** not `naghshe` (`client.db("yademan")`).
-3. **City/province updates use `center_location`.** Their models define `center`;
-   `update` actions currently read/write `center_location`, so center updates do
-   not align with the schema.
+3. **City/province geometry uses `center`.** The models define `center`, and the
+   `update` actions/validators now read and write `center` with a `MultiPolygon`
+   `area`. (They previously used a non-existent `center_location` field and
+   rejected `MultiPolygon`, so geometry updates silently failed.)
 4. **Place `antiquity` is a construction year** in the Solar Hijri calendar, not
    an age. `place.gets` treats the `antiquity` filter as "minimum age" and
    converts it to a maximum construction year.
-5. **Legacy level names appear in guards.** `comment.add` allows `"User"`, and
-   comment update/remove allow `"Admin"`; neither is in `user_level_array`
-   (`Ghost`, `Manager`, `Editor`, `Ordinary`). `getUser` allows `"Examiner"`,
-   also invalid. Only real listed levels pass; `Ghost` always bypasses.
+5. **Guards use real level names.** `comment.add/update/remove` accept
+   `Ordinary`, `Editor`, `Manager` (comment update/remove additionally enforce
+   ownership in the action), and `getUser` accepts `Manager`, `Editor`. `Ghost`
+   always bypasses. Do not reintroduce the legacy `User`/`Admin`/`Examiner`
+   names — they are not in `user_level_array` and never match.
 6. **Legacy login action:** `front/src/app/actions/login.ts` expects
    `national_number` + `code`, but the backend `login` expects `email` +
    `password`. Use `front/src/app/actions/auth/login.ts`.
 7. **Mock APIs remain:** `front/src/lib/api/auth.ts` and `locations.ts` contain
    mock data and are not connected to the backend. Do not extend them.
-8. **Docker Compose drift:** development Compose sets backend `APP_PORT=8000`
-   although the app listens on 1405; production frontend sets
-   `LESAN_URL=http://backend:1404` while the backend listens on 1405. The
-   frontend production image runs `next start` without an explicit port. Verify
-   and correct these before relying on Compose.
+8. **`TOKEN_KEY` is required in production.** `back/utils/setToken.ts` throws at
+   boot when `ENV=production` and `TOKEN_KEY` is unset. Docker Compose requires
+   it via `${TOKEN_KEY:?...}`. Never reintroduce a hard-coded fallback secret —
+   it would let anyone mint a `Ghost` token.
 9. **Admin routes are not localized.** `admin/` bypasses the locale middleware
    and uses Persian-only plain `next/navigation`.
 10. **No automated tests are configured** for either package.
+
+### Indexes
+
+Lesan's `newModel({ createIndex })` accepts only **one** index spec per model.
+All additional indexes (slug uniqueness, `area`, `status`/`antiquity`, relation
+ids, `name`) are declared in `back/models/indexes.ts` and applied by
+`ensureIndexes(db)` at boot, which also drops the legacy
+`center_location`-based indexes. When you add a filterable field, add its index
+there.
 
 ## Git Workflow
 
