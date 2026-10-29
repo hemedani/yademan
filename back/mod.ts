@@ -12,6 +12,7 @@ import {
 	virtualTours,
 } from "@model";
 import { functionsSetup } from "./src/mod.ts";
+import { ensureIndexes } from "./models/indexes.ts";
 
 const MONGO_URI = Deno.env.get("MONGO_URI") || "mongodb://127.0.0.1:27017/";
 
@@ -31,6 +32,9 @@ export const category = categories();
 export const virtual_tour = virtualTours();
 export const event = events();
 
+// Lesan only supports one index per model, so the rest are created here.
+await ensureIndexes(db);
+
 export const { setAct, setService, getAtcsWithServices } = coreApp.acts;
 
 export const { selectStruct, getSchemas } = coreApp.schemas;
@@ -47,7 +51,7 @@ coreApp.runServer({
 		"http://localhost:3005",
 		"http://194.5.192.166:3005",
 		"http://localhost:4000",
-		"http://http://185.204.170.27:4000",
-		"http://http://185.204.170.27:3005",
+		"http://185.204.170.27:4000",
+		"http://185.204.170.27:3005",
 	],
 });

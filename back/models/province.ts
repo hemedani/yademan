@@ -20,7 +20,6 @@ export const provinces = () =>
 		createIndex: {
 			indexSpec: {
 				area: "2dsphere",
-				center_location: "2dsphere",
 			},
 		},
 	});

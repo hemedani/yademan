@@ -8,8 +8,8 @@ export const updateValidator = () => {
 			_id: objectIdValidation,
 			name: optional(string()),
 			english_name: optional(string()),
-			area: optional(geoJSONStruct("Polygon")),
-			center_location: optional(geoJSONStruct("Point")),
+			area: optional(geoJSONStruct("MultiPolygon")),
+			center: optional(geoJSONStruct("Point")),
 		}),
 		get: selectStruct("province", 1),
 	});

@@ -13,6 +13,31 @@ export const seedFn: ActFn = async (body) => {
 	const { user }: MyContext = coreApp.contextFns
 		.getContextModel() as MyContext;
 
+	/**
+	 * GADM assets mix `Polygon` and `MultiPolygon` geometries, while the schema
+	 * only accepts `MultiPolygon`. Wrap polygons instead of casting blindly.
+	 */
+	const toMultiPolygon = (geometry: {
+		type: string;
+		coordinates?: unknown;
+	}): { type: "MultiPolygon"; coordinates: [number, number][][][] } => {
+		if (geometry.type === "MultiPolygon") {
+			return {
+				type: "MultiPolygon",
+				coordinates: geometry.coordinates as [number, number][][][],
+			};
+		}
+
+		if (geometry.type === "Polygon") {
+			return {
+				type: "MultiPolygon",
+				coordinates: [geometry.coordinates as [number, number][][]],
+			};
+		}
+
+		throw new Error(`Unsupported geometry type: ${geometry.type}`);
+	};
+
 	// Read and parse the provinces GeoJSON file
 	const provincesDataStr = await Deno.readTextFile(
 		"assets/geojson/irn_admin1_simplified_converted.json",
@@ -29,8 +54,12 @@ export const seedFn: ActFn = async (body) => {
 		citiesDataStr,
 	);
 
-	// Create provinces first
+	// Create provinces first.
+	// Re-running the seed used to insert a second copy of all 31 provinces and
+	// 429 cities, so an already-seeded database is detected and reused instead.
 	const createdProvinces: Record<string, any> = {};
+	let provincesCreated = 0;
+	let citiesCreated = 0;
 
 	for (const feature of provincesData.features) {
 		const provinceName = feature.properties.adm1_name1 ||
@@ -38,11 +67,20 @@ export const seedFn: ActFn = async (body) => {
 		const provinceEnglishName = feature.properties.adm1_name;
 		const provinceCode = feature.properties.adm1_pcode;
 
+		const existingProvince = await province.findOne({
+			filters: { english_name: provinceEnglishName },
+		});
+
+		if (existingProvince) {
+			createdProvinces[provinceCode] = existingProvince;
+			continue;
+		}
+
 		const newProvince = await province.insertOne({
 			doc: {
 				name: provinceName,
 				english_name: provinceEnglishName,
-				area: feature.geometry,
+				area: toMultiPolygon(feature.geometry),
 				center: {
 					type: "Point",
 					coordinates: [
@@ -61,9 +99,12 @@ export const seedFn: ActFn = async (body) => {
 		});
 
 		createdProvinces[provinceCode] = newProvince;
+		provincesCreated++;
 	}
 
-	// Create cities and associate them with their provinces
+	// Create cities and associate them with their provinces.
+	// Same idempotency rule: a city that already exists inside this province is
+	// skipped so re-running the seed does not duplicate the boundary data.
 	for (const feature of citiesData.features) {
 		const cityName = feature.properties.adm2_name1 ||
 			feature.properties.adm2_name;
@@ -79,11 +120,20 @@ export const seedFn: ActFn = async (body) => {
 			continue;
 		}
 
+		const existingCity = await city.findOne({
+			filters: {
+				english_name: cityEnglishName,
+				"province._id": provinceDoc._id,
+			},
+		});
+
+		if (existingCity) continue;
+
 		await city.insertOne({
 			doc: {
 				name: cityName,
 				english_name: cityEnglishName,
-				area: feature.geometry,
+				area: toMultiPolygon(feature.geometry),
 				center: {
 					type: "Point",
 					coordinates: [
@@ -107,10 +157,9 @@ export const seedFn: ActFn = async (body) => {
 				},
 			},
 		});
+
+		citiesCreated++;
 	}
 
-	return {
-		provincesCreated: Object.keys(createdProvinces).length,
-		citiesCreated: citiesData.features.length,
-	};
+	return { provincesCreated, citiesCreated };
 };

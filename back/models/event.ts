@@ -98,6 +98,25 @@ export const event_relations = {
 			},
 		},
 	},
+	// `event.updateRelations` already accepts and writes `attendees`; without
+	// this relation every call that included attendees failed.
+	attendees: {
+		schemaName: "user",
+		type: "multiple" as RelationDataType,
+		optional: true,
+		excludes: user_excludes,
+		relatedRelations: {
+			attended_events: {
+				type: "multiple" as RelationDataType,
+				excludes: event_excludes,
+				limit: 50,
+				sort: {
+					field: "_id",
+					order: "desc" as RelationSortOrderType,
+				},
+			},
+		},
+	},
 	tags: {
 		schemaName: "tag",
 		type: "multiple" as RelationDataType,

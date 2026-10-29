@@ -7,10 +7,13 @@
 national_card?: number | fileInp
 province?: number | provinceInp
 city?: number | cityInp
-      registered_places?: number | placeInp
+favArticles?: number | placeInp
+      uploadedAssets?: number | fileInp
+registered_places?: number | placeInp
 comments?: number | commentInp
 registered_events?: number | eventInp
 organized_events?: number | eventInp
+attended_events?: number | eventInp
     }
 
 
@@ -54,6 +57,28 @@ english_name: string;
 createdAt?: Date;
 updatedAt?: Date;
 };
+favArticles?: {
+_id?: string;
+name: string;
+antiquity: number;
+description: string;
+slug?: string;
+address?: string;
+contact?: {
+phone?: string;
+email?: string;
+website?: string;
+social?: string[];
+};
+hoursOfOperation?: string;
+status: ("draft" | "active" | "archived" );
+}[];
+uploadedAssets: {
+_id?: string;
+name: string;
+mimType: string;
+alt_text?: string;
+}[];
 registered_places: {
 _id?: string;
 name: string;
@@ -109,6 +134,22 @@ registrationRequired?: boolean;
 maxAttendees?: string;
 eventUrl?: string;
 }[];
+attended_events: {
+_id?: string;
+name: string;
+description?: string;
+startTime: Date;
+endTime: Date;
+color?: string;
+icon?: string;
+capacity?: string;
+status: ("draft" | "published" | "archived" | "cancelled" );
+isPublic?: boolean;
+ticketPrice?: string;
+registrationRequired?: boolean;
+maxAttendees?: string;
+eventUrl?: string;
+}[];
 };
 ;
 
@@ -143,7 +184,8 @@ is_verified: boolean;
 
     export type provinceInp = {
       registrar?: number | userInp
-      cities?: number | cityInp
+      users?: number | userInp
+cities?: number | cityInp
 capital?: number | cityInp
 places?: number | placeInp
     }
@@ -173,6 +215,16 @@ level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
 email: string;
 is_verified: boolean;
 };
+users: {
+_id?: string;
+first_name: string;
+last_name: string;
+gender: ("Male" | "Female" );
+address?: string;
+level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
+email: string;
+is_verified: boolean;
+}[];
 cities: {
 _id?: string;
 name: string;
@@ -218,7 +270,8 @@ status: ("draft" | "active" | "archived" );
     export type cityInp = {
       registrar?: number | userInp
 province?: number | provinceInp
-      places?: number | placeInp
+      users?: number | userInp
+places?: number | placeInp
     }
 
 
@@ -253,6 +306,16 @@ english_name: string;
 createdAt?: Date;
 updatedAt?: Date;
 };
+users: {
+_id?: string;
+first_name: string;
+last_name: string;
+gender: ("Male" | "Female" );
+address?: string;
+level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
+email: string;
+is_verified: boolean;
+}[];
 places: {
 _id?: string;
 name: string;
@@ -273,78 +336,6 @@ status: ("draft" | "active" | "archived" );
 ;
 
 
-    export type categoryInp = {
-      registrar?: number | userInp
-      
-    }
-
-
-    export type categorySchema = {
-_id?: string;
-name: string;
-description: string;
-color?: string;
-icon?: string;
-createdAt?: Date;
-updatedAt?: Date;
-registrar?: {
-_id?: string;
-first_name: string;
-last_name: string;
-gender: ("Male" | "Female" );
-address?: string;
-level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
-email: string;
-is_verified: boolean;
-};
-};
-;
-
-
-    export type tagInp = {
-      registrar?: number | userInp
-      events?: number | eventInp
-    }
-
-
-    export type tagSchema = {
-_id?: string;
-name: string;
-description: string;
-color?: string;
-icon?: string;
-createdAt?: Date;
-updatedAt?: Date;
-registrar?: {
-_id?: string;
-first_name: string;
-last_name: string;
-gender: ("Male" | "Female" );
-address?: string;
-level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
-email: string;
-is_verified: boolean;
-};
-events: {
-_id?: string;
-name: string;
-description?: string;
-startTime: Date;
-endTime: Date;
-color?: string;
-icon?: string;
-capacity?: string;
-status: ("draft" | "published" | "archived" | "cancelled" );
-isPublic?: boolean;
-ticketPrice?: string;
-registrationRequired?: boolean;
-maxAttendees?: string;
-eventUrl?: string;
-}[];
-};
-;
-
-
     export type placeInp = {
       registrar?: number | userInp
 province?: number | provinceInp
@@ -353,7 +344,8 @@ category?: number | categoryInp
 tags?: number | tagInp
 thumbnail?: number | fileInp
 gallery?: number | fileInp
-      comments?: number | commentInp
+      favByUsers?: number | userInp
+comments?: number | commentInp
 virtual_tours?: number | virtual_tourInp
 events?: number | eventInp
     }
@@ -433,6 +425,16 @@ name: string;
 mimType: string;
 alt_text?: string;
 }[];
+favByUsers: {
+_id?: string;
+first_name: string;
+last_name: string;
+gender: ("Male" | "Female" );
+address?: string;
+level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
+email: string;
+is_verified: boolean;
+}[];
 comments: {
 _id?: string;
 text: string;
@@ -443,6 +445,111 @@ is_anonymous: boolean;
 virtual_tours: {
 _id?: string;
 name: string;
+status: ("draft" | "active" | "archived" );
+}[];
+events: {
+_id?: string;
+name: string;
+description?: string;
+startTime: Date;
+endTime: Date;
+color?: string;
+icon?: string;
+capacity?: string;
+status: ("draft" | "published" | "archived" | "cancelled" );
+isPublic?: boolean;
+ticketPrice?: string;
+registrationRequired?: boolean;
+maxAttendees?: string;
+eventUrl?: string;
+}[];
+};
+;
+
+
+    export type categoryInp = {
+      registrar?: number | userInp
+      places?: number | placeInp
+    }
+
+
+    export type categorySchema = {
+_id?: string;
+name: string;
+description: string;
+color?: string;
+icon?: string;
+createdAt?: Date;
+updatedAt?: Date;
+registrar?: {
+_id?: string;
+first_name: string;
+last_name: string;
+gender: ("Male" | "Female" );
+address?: string;
+level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
+email: string;
+is_verified: boolean;
+};
+places: {
+_id?: string;
+name: string;
+antiquity: number;
+description: string;
+slug?: string;
+address?: string;
+contact?: {
+phone?: string;
+email?: string;
+website?: string;
+social?: string[];
+};
+hoursOfOperation?: string;
+status: ("draft" | "active" | "archived" );
+}[];
+};
+;
+
+
+    export type tagInp = {
+      registrar?: number | userInp
+      places?: number | placeInp
+events?: number | eventInp
+    }
+
+
+    export type tagSchema = {
+_id?: string;
+name: string;
+description: string;
+color?: string;
+icon?: string;
+createdAt?: Date;
+updatedAt?: Date;
+registrar?: {
+_id?: string;
+first_name: string;
+last_name: string;
+gender: ("Male" | "Female" );
+address?: string;
+level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
+email: string;
+is_verified: boolean;
+};
+places: {
+_id?: string;
+name: string;
+antiquity: number;
+description: string;
+slug?: string;
+address?: string;
+contact?: {
+phone?: string;
+email?: string;
+website?: string;
+social?: string[];
+};
+hoursOfOperation?: string;
 status: ("draft" | "active" | "archived" );
 }[];
 events: {
@@ -571,6 +678,7 @@ is_verified: boolean;
       registrar?: number | userInp
 places?: number | placeInp
 organizer?: number | userInp
+attendees?: number | userInp
 tags?: number | tagInp
 thumbnail?: number | fileInp
 gallery?: number | fileInp
@@ -643,6 +751,16 @@ level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
 email: string;
 is_verified: boolean;
 };
+attendees?: {
+_id?: string;
+first_name: string;
+last_name: string;
+gender: ("Male" | "Female" );
+address?: string;
+level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
+email: string;
+is_verified: boolean;
+}[];
 tags?: {
 _id?: string;
 name: string;
@@ -716,6 +834,16 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -737,10 +865,10 @@ _id: string;
 name?: string;
 english_name?: string;
 area?: {
-type: "Polygon";
+type: "MultiPolygon";
 coordinates: any[];
 };
-center_location?: {
+center?: {
 type: "Point";
 coordinates: any[];
 };
@@ -769,6 +897,16 @@ name?: (0 | 1 );
 english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
+};
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 places?: {
 _id?: (0 | 1 );
@@ -832,6 +970,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -882,6 +1037,22 @@ registrationRequired?: (0 | 1 );
 maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
 };
 province?: {
 _id?: (0 | 1 );
@@ -890,6 +1061,16 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+users?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
@@ -925,6 +1106,125 @@ address?: (0 | 1 );
 contact?: (0 | 1 );
 hoursOfOperation?: (0 | 1 );
 status?: (0 | 1 );
+};
+};
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+avatar?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+national_card?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+registered_places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+};
+registered_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
 };
 };
 places?: {
@@ -984,6 +1284,16 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 comments?: {
 _id?: (0 | 1 );
@@ -1068,6 +1378,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -1118,6 +1445,22 @@ registrationRequired?: (0 | 1 );
 maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
 };
 province?: {
 _id?: (0 | 1 );
@@ -1126,6 +1469,16 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+users?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
@@ -1161,6 +1514,125 @@ address?: (0 | 1 );
 contact?: (0 | 1 );
 hoursOfOperation?: (0 | 1 );
 status?: (0 | 1 );
+};
+};
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+avatar?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+national_card?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+registered_places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+};
+registered_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
 };
 };
 places?: {
@@ -1220,6 +1692,16 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 comments?: {
 _id?: (0 | 1 );
@@ -1331,6 +1813,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -1366,6 +1865,22 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -1453,6 +1968,16 @@ level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
 };
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 cities?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -1490,10 +2015,10 @@ _id: string;
 name?: string;
 english_name?: string;
 area?: {
-type: "Polygon";
+type: "MultiPolygon";
 coordinates: any[];
 };
-center_location?: {
+center?: {
 type: "Point";
 coordinates: any[];
 };
@@ -1507,6 +2032,16 @@ center?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+users?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
@@ -1594,6 +2129,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -1644,6 +2196,141 @@ registrationRequired?: (0 | 1 );
 maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+};
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+avatar?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+national_card?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+registered_places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+};
+registered_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
 };
 cities?: {
 _id?: (0 | 1 );
@@ -1667,6 +2354,16 @@ name?: (0 | 1 );
 english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
+};
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 places?: {
 _id?: (0 | 1 );
@@ -1704,6 +2401,16 @@ name?: (0 | 1 );
 english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
+};
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 places?: {
 _id?: (0 | 1 );
@@ -1774,6 +2481,16 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 comments?: {
 _id?: (0 | 1 );
@@ -1857,6 +2574,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -1907,6 +2641,141 @@ registrationRequired?: (0 | 1 );
 maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+};
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+avatar?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+national_card?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+registered_places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+};
+registered_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
 };
 cities?: {
 _id?: (0 | 1 );
@@ -1930,6 +2799,16 @@ name?: (0 | 1 );
 english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
+};
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 places?: {
 _id?: (0 | 1 );
@@ -1967,6 +2846,16 @@ name?: (0 | 1 );
 english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
+};
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 places?: {
 _id?: (0 | 1 );
@@ -2037,6 +2926,16 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 comments?: {
 _id?: (0 | 1 );
@@ -2112,14 +3011,14 @@ citiesCreated?: (0 | 1 );
 set: {
 first_name: string;
 last_name: string;
-father_name: string;
-mobile: string;
+email: string;
+password: string;
+father_name?: string;
 gender: ("Male" | "Female" );
 birth_date?: Date;
 summary?: string;
-national_number: string;
-address: string;
-level: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
+address?: string;
+level?: ("Ghost" | "Manager" | "Editor" | "Ordinary" );
 is_verified: boolean;
 nationalCard?: string;
 avatar?: string;
@@ -2166,6 +3065,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -2201,6 +3117,22 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -2285,6 +3217,16 @@ level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
 };
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 cities?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -2336,6 +3278,16 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -2346,6 +3298,119 @@ address?: (0 | 1 );
 contact?: (0 | 1 );
 hoursOfOperation?: (0 | 1 );
 status?: (0 | 1 );
+};
+};
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+category?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+tags?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+};
+virtual_tours?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+status?: (0 | 1 );
+};
+events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+uploader?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 };
 registered_places?: {
@@ -2405,6 +3470,16 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 comments?: {
 _id?: (0 | 1 );
@@ -2514,6 +3589,16 @@ level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
 };
+attendees?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 tags?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -2575,6 +3660,96 @@ createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 organizer?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+attendees?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+tags?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+};
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+organizer?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+attendees?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
@@ -2673,6 +3848,16 @@ level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
 };
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 cities?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -2724,6 +3909,16 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -2734,6 +3929,119 @@ address?: (0 | 1 );
 contact?: (0 | 1 );
 hoursOfOperation?: (0 | 1 );
 status?: (0 | 1 );
+};
+};
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+category?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+tags?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+};
+virtual_tours?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+status?: (0 | 1 );
+};
+events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+uploader?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 };
 registered_places?: {
@@ -2793,6 +4101,16 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 comments?: {
 _id?: (0 | 1 );
@@ -2902,6 +4220,16 @@ level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
 };
+attendees?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 tags?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -2963,6 +4291,96 @@ createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 organizer?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+attendees?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+tags?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+};
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+organizer?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+attendees?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
@@ -3042,6 +4460,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -3077,6 +4512,22 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -3151,6 +4602,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -3186,6 +4654,22 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -3256,6 +4740,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -3291,6 +4792,22 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -3364,6 +4881,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -3399,6 +4933,22 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -3486,6 +5036,16 @@ level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
 };
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 cities?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -3537,6 +5097,16 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -3547,6 +5117,119 @@ address?: (0 | 1 );
 contact?: (0 | 1 );
 hoursOfOperation?: (0 | 1 );
 status?: (0 | 1 );
+};
+};
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+category?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+tags?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+};
+virtual_tours?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+status?: (0 | 1 );
+};
+events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+uploader?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 };
 registered_places?: {
@@ -3606,6 +5289,16 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 comments?: {
 _id?: (0 | 1 );
@@ -3715,6 +5408,16 @@ level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
 };
+attendees?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 tags?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -3776,6 +5479,96 @@ createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 organizer?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+attendees?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+tags?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+};
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+organizer?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+attendees?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
@@ -3873,6 +5666,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -3908,6 +5718,22 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -3975,6 +5801,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -4025,6 +5868,22 @@ registrationRequired?: (0 | 1 );
 maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
 };
 };
 
@@ -4036,7 +5895,7 @@ get: {
 users?: (0 | 1 );
 provinces?: (0 | 1 );
 cities?: (0 | 1 );
-locaions?: (0 | 1 );
+places?: (0 | 1 );
 categories?: (0 | 1 );
 tags?: (0 | 1 );
 };
@@ -4145,6 +6004,16 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 comments?: {
 _id?: (0 | 1 );
@@ -4267,6 +6136,16 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
 };
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 comments?: {
 _id?: (0 | 1 );
 text?: (0 | 1 );
@@ -4372,6 +6251,16 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
 };
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 comments?: {
 _id?: (0 | 1 );
 text?: (0 | 1 );
@@ -4472,6 +6361,16 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 comments?: {
 _id?: (0 | 1 );
@@ -4581,6 +6480,16 @@ level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
 };
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 cities?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -4632,6 +6541,16 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -4642,6 +6561,119 @@ address?: (0 | 1 );
 contact?: (0 | 1 );
 hoursOfOperation?: (0 | 1 );
 status?: (0 | 1 );
+};
+};
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+category?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+tags?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+};
+virtual_tours?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+status?: (0 | 1 );
+};
+events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+uploader?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 };
 registered_places?: {
@@ -4701,6 +6733,16 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 comments?: {
 _id?: (0 | 1 );
@@ -4810,6 +6852,16 @@ level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
 };
+attendees?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 tags?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -4880,6 +6932,96 @@ level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
 };
+attendees?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+tags?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+};
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+organizer?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+attendees?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 tags?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -4941,6 +7083,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -4991,6 +7150,141 @@ registrationRequired?: (0 | 1 );
 maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+};
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+avatar?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+national_card?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+registered_places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+};
+registered_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
 };
 cities?: {
 _id?: (0 | 1 );
@@ -5014,6 +7308,16 @@ name?: (0 | 1 );
 english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
+};
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 places?: {
 _id?: (0 | 1 );
@@ -5051,6 +7355,16 @@ name?: (0 | 1 );
 english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
+};
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 places?: {
 _id?: (0 | 1 );
@@ -5121,6 +7435,16 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 comments?: {
 _id?: (0 | 1 );
@@ -5193,6 +7517,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -5243,6 +7584,22 @@ registrationRequired?: (0 | 1 );
 maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
 };
 province?: {
 _id?: (0 | 1 );
@@ -5251,6 +7608,16 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+users?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
@@ -5286,6 +7653,125 @@ address?: (0 | 1 );
 contact?: (0 | 1 );
 hoursOfOperation?: (0 | 1 );
 status?: (0 | 1 );
+};
+};
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+avatar?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+national_card?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+registered_places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+};
+registered_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
 };
 };
 places?: {
@@ -5345,6 +7831,16 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 comments?: {
 _id?: (0 | 1 );
@@ -5416,6 +7912,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -5451,6 +7964,119 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+category?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+tags?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+};
+virtual_tours?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+status?: (0 | 1 );
+};
+events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -5508,6 +8134,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -5543,6 +8186,119 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+category?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+tags?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+};
+virtual_tours?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+status?: (0 | 1 );
+};
+events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -5610,6 +8366,16 @@ level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
 };
+attendees?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 tags?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -5670,6 +8436,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -5705,6 +8488,22 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -5762,6 +8561,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -5811,6 +8627,641 @@ ticketPrice?: (0 | 1 );
 registrationRequired?: (0 | 1 );
 maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
+};
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+};
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+avatar?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+uploader?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+};
+national_card?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+uploader?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+cities?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+capital?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+area?: (0 | 1 );
+center?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+};
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+category?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+tags?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+};
+virtual_tours?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+status?: (0 | 1 );
+};
+events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+uploader?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+};
+registered_places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+category?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+tags?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+};
+virtual_tours?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+status?: (0 | 1 );
+};
+events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+user?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+place?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+};
+registered_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+organizer?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+attendees?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+tags?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+};
+organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+organizer?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+attendees?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+tags?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+};
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+center?: (0 | 1 );
+area?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+meta?: (0 | 1 );
+status?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+organizer?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+attendees?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+tags?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
 };
 };
 };
@@ -5855,6 +9306,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -5890,6 +9358,22 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -5963,6 +9447,16 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 comments?: {
 _id?: (0 | 1 );
@@ -6055,6 +9549,16 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 comments?: {
 _id?: (0 | 1 );
@@ -6136,6 +9640,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -6171,6 +9692,22 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -6238,6 +9775,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -6273,6 +9827,22 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -6352,6 +9922,16 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
 };
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 comments?: {
 _id?: (0 | 1 );
 text?: (0 | 1 );
@@ -6416,6 +9996,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -6466,6 +10063,141 @@ registrationRequired?: (0 | 1 );
 maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+};
+attendees?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+avatar?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+national_card?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+registered_places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+};
+registered_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
 };
 tags?: {
 _id?: (0 | 1 );
@@ -6481,6 +10213,17 @@ address?: (0 | 1 );
 level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
 };
 events?: {
 _id?: (0 | 1 );
@@ -6615,6 +10358,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -6665,6 +10425,22 @@ registrationRequired?: (0 | 1 );
 maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
 };
 province?: {
 _id?: (0 | 1 );
@@ -6673,6 +10449,16 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+users?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
@@ -6733,6 +10519,16 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+users?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -6760,6 +10556,17 @@ level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
 };
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
 };
 tags?: {
 _id?: (0 | 1 );
@@ -6775,6 +10582,17 @@ address?: (0 | 1 );
 level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
 };
 events?: {
 _id?: (0 | 1 );
@@ -6823,6 +10641,125 @@ address?: (0 | 1 );
 level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
+};
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+avatar?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+national_card?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+registered_places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+};
+registered_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
 };
 };
 comments?: {
@@ -6936,6 +10873,16 @@ level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
 };
+attendees?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 tags?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -6956,7 +10903,7 @@ alt_text?: (0 | 1 );
 };
 };
 };
-metadata: {
+metadata?: {
 total?: (0 | 1 );
 page?: (0 | 1 );
 limit?: (0 | 1 );
@@ -7131,6 +11078,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -7166,6 +11130,22 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -7239,6 +11219,16 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 comments?: {
 _id?: (0 | 1 );
@@ -7327,6 +11317,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -7362,6 +11369,22 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -7435,6 +11458,16 @@ _id?: (0 | 1 );
 name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
 };
 comments?: {
 _id?: (0 | 1 );
@@ -7529,6 +11562,17 @@ level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
 };
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
 events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -7574,6 +11618,17 @@ address?: (0 | 1 );
 level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
 };
 events?: {
 _id?: (0 | 1 );
@@ -7642,6 +11697,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -7677,6 +11749,119 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+category?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+tags?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+};
+virtual_tours?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+status?: (0 | 1 );
+};
+events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -7735,6 +11920,16 @@ createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 organizer?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+attendees?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
@@ -7816,6 +12011,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -7851,6 +12063,119 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+category?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+tags?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+};
+virtual_tours?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+status?: (0 | 1 );
+};
+events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -7909,6 +12234,16 @@ createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 organizer?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+attendees?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
@@ -7995,6 +12330,17 @@ level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
 };
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
 };
 };
 
@@ -8022,6 +12368,17 @@ address?: (0 | 1 );
 level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
 };
 };
 };
@@ -8074,6 +12431,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -8109,6 +12483,119 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+category?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+tags?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+};
+virtual_tours?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+status?: (0 | 1 );
+};
+events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -8178,6 +12665,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -8213,6 +12717,119 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+registrar?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+category?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+tags?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+};
+thumbnail?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+gallery?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+};
+virtual_tours?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+status?: (0 | 1 );
+};
+events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -8437,6 +13054,16 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
 };
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 comments?: {
 _id?: (0 | 1 );
 text?: (0 | 1 );
@@ -8517,6 +13144,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -8552,6 +13196,22 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -8645,6 +13305,16 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
 };
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 comments?: {
 _id?: (0 | 1 );
 text?: (0 | 1 );
@@ -8725,6 +13395,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -8760,6 +13447,22 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -8886,6 +13589,16 @@ level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
 };
+attendees?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 tags?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -8982,6 +13695,16 @@ level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
 };
+attendees?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 tags?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -9060,6 +13783,16 @@ createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 organizer?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+attendees?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );
@@ -9148,6 +13881,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -9183,6 +13933,22 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -9262,6 +14028,16 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
 };
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 comments?: {
 _id?: (0 | 1 );
 text?: (0 | 1 );
@@ -9326,6 +14102,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -9376,6 +14169,141 @@ registrationRequired?: (0 | 1 );
 maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+};
+attendees?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+avatar?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+national_card?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+registered_places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+};
+registered_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
 };
 tags?: {
 _id?: (0 | 1 );
@@ -9391,6 +14319,17 @@ address?: (0 | 1 );
 level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
 };
 events?: {
 _id?: (0 | 1 );
@@ -9519,6 +14458,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -9554,6 +14510,22 @@ maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
 organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
 description?: (0 | 1 );
@@ -9633,6 +14605,16 @@ name?: (0 | 1 );
 mimType?: (0 | 1 );
 alt_text?: (0 | 1 );
 };
+favByUsers?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
 comments?: {
 _id?: (0 | 1 );
 text?: (0 | 1 );
@@ -9697,6 +14679,23 @@ english_name?: (0 | 1 );
 createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
 registered_places?: {
 _id?: (0 | 1 );
 name?: (0 | 1 );
@@ -9747,6 +14746,141 @@ registrationRequired?: (0 | 1 );
 maxAttendees?: (0 | 1 );
 eventUrl?: (0 | 1 );
 };
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+};
+attendees?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+avatar?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+national_card?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+province?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+city?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+english_name?: (0 | 1 );
+createdAt?: (0 | 1 );
+updatedAt?: (0 | 1 );
+};
+favArticles?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+uploadedAssets?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+mimType?: (0 | 1 );
+alt_text?: (0 | 1 );
+};
+registered_places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
+};
+comments?: {
+_id?: (0 | 1 );
+text?: (0 | 1 );
+rating?: (0 | 1 );
+status?: (0 | 1 );
+is_anonymous?: (0 | 1 );
+};
+registered_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+organized_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
+attended_events?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+description?: (0 | 1 );
+startTime?: (0 | 1 );
+endTime?: (0 | 1 );
+color?: (0 | 1 );
+icon?: (0 | 1 );
+capacity?: (0 | 1 );
+status?: (0 | 1 );
+isPublic?: (0 | 1 );
+ticketPrice?: (0 | 1 );
+registrationRequired?: (0 | 1 );
+maxAttendees?: (0 | 1 );
+eventUrl?: (0 | 1 );
+};
 };
 tags?: {
 _id?: (0 | 1 );
@@ -9762,6 +14896,17 @@ address?: (0 | 1 );
 level?: (0 | 1 );
 email?: (0 | 1 );
 is_verified?: (0 | 1 );
+};
+places?: {
+_id?: (0 | 1 );
+name?: (0 | 1 );
+antiquity?: (0 | 1 );
+description?: (0 | 1 );
+slug?: (0 | 1 );
+address?: (0 | 1 );
+contact?: (0 | 1 );
+hoursOfOperation?: (0 | 1 );
+status?: (0 | 1 );
 };
 events?: {
 _id?: (0 | 1 );
@@ -9813,7 +14958,7 @@ is_verified?: (0 | 1 );
 };
 };
 };
-metadata: {
+metadata?: {
 total?: (0 | 1 );
 page?: (0 | 1 );
 limit?: (0 | 1 );
@@ -9872,6 +15017,16 @@ createdAt?: (0 | 1 );
 updatedAt?: (0 | 1 );
 };
 organizer?: {
+_id?: (0 | 1 );
+first_name?: (0 | 1 );
+last_name?: (0 | 1 );
+gender?: (0 | 1 );
+address?: (0 | 1 );
+level?: (0 | 1 );
+email?: (0 | 1 );
+is_verified?: (0 | 1 );
+};
+attendees?: {
 _id?: (0 | 1 );
 first_name?: (0 | 1 );
 last_name?: (0 | 1 );

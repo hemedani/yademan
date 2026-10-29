@@ -48,7 +48,6 @@ export const cities = () =>
 		createIndex: {
 			indexSpec: {
 				area: "2dsphere",
-				center_location: "2dsphere",
 			},
 		},
 	});

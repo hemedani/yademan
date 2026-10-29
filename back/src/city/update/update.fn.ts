@@ -10,7 +10,7 @@ export const updateFn: ActFn = async (body) => {
 			area,
 
 			english_name,
-			center_location,
+			center,
 		},
 		get,
 	} = body.details;
@@ -23,7 +23,7 @@ export const updateFn: ActFn = async (body) => {
 	name && (updateObj.name = name);
 	english_name && (updateObj.english_name = english_name);
 	area && (updateObj.area = area);
-	center_location && (updateObj.center_location = center_location);
+	center && (updateObj.center = center);
 	// native_area && (updateObj.native_area = native_area);
 	// non_native_area && (updateObj.non_native_area = non_native_area);
 	// population && (updateObj.population = population);

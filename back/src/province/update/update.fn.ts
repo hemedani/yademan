@@ -10,7 +10,7 @@ export const updateFn: ActFn = async (body) => {
 			area,
 
 			english_name,
-			center_location,
+			center,
 		},
 		get,
 	} = body.details;
@@ -23,7 +23,7 @@ export const updateFn: ActFn = async (body) => {
 	name && (updateObj.name = name);
 	english_name && (updateObj.english_name = english_name);
 	area && (updateObj.area = area);
-	center_location && (updateObj.center_location = center_location);
+	center && (updateObj.center = center);
 
 	return await province.findOneAndUpdate({
 		filter: { _id: new ObjectId(_id as string) },

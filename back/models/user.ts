@@ -15,7 +15,12 @@ import {
 	union,
 } from "@deps";
 import { createUpdateAt, isValidNationalNumber } from "@lib";
-import { file_excludes, location_excludes, user_excludes } from "./excludes.ts";
+import {
+	file_excludes,
+	location_excludes,
+	place_excludes,
+	user_excludes,
+} from "./excludes.ts";
 
 export const user_level_array = ["Ghost", "Manager", "Editor", "Ordinary"];
 export const user_level_emums = enums(user_level_array);
@@ -115,6 +120,25 @@ export const user_relations = {
 				type: "multiple" as RelationDataType,
 				excludes: user_excludes,
 				limit: 500,
+				sort: {
+					field: "_id",
+					order: "desc" as RelationSortOrderType,
+				},
+			},
+		},
+	},
+	// Favourites. `toggleFavArticle` already reads and writes this relation;
+	// without it every call failed because the relation did not exist.
+	favArticles: {
+		schemaName: "place",
+		type: "multiple" as RelationDataType,
+		optional: true,
+		excludes: place_excludes,
+		relatedRelations: {
+			favByUsers: {
+				type: "multiple" as RelationDataType,
+				excludes: user_excludes,
+				limit: 50,
 				sort: {
 					field: "_id",
 					order: "desc" as RelationSortOrderType,

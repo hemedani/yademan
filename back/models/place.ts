@@ -215,18 +215,14 @@ export const place_relations = {
 
 // Model factory function: Creates and registers the 'place' model with Lesan ODM.
 // Parameters: Model name, pure schema, relations, and optional config (e.g., indexes).
-// Indexes: Geospatial on center/area for location queries, unique on slug (partial for existing slugs only).
+// Lesan accepts only one index spec per model, so the remaining indexes
+// (slug uniqueness, area, status/antiquity, relation ids) are created by
+// `ensureIndexes` in models/indexes.ts at boot.
 export const places = () =>
 	coreApp.odm.newModel("place", place_pure, place_relations, {
 		createIndex: {
 			indexSpec: {
 				center: "2dsphere", // Enables geospatial queries on point locations.
-				area: "2dsphere", // Enables geospatial queries on polygon areas.
-				slug: 1, // Standard index on slug for fast lookups.
-			},
-			options: {
-				unique: true, // Ensures unique slugs where they exist.
-				partialFilterExpression: { slug: { $exists: true } }, // Only applies uniqueness to documents with a slug.
 			},
 		},
 	});
