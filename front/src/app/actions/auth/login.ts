@@ -3,6 +3,7 @@
 import { AppApi } from "@/services/api";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { secureCookie } from "@/lib/cookie-secure";
 
 interface LoginResponse {
   success: boolean;
@@ -59,7 +60,7 @@ export const loginAction = async (
       // Set token cookie (accessible by client)
       cookieStore.set("token", response.body.token, {
         httpOnly: false, // Allow client-side access
-        secure: process.env.NODE_ENV === "production",
+        secure: secureCookie(),
         sameSite: "strict",
         maxAge: 60 * 60 * 24 * 7, // 7 days
         path: "/",
@@ -71,7 +72,7 @@ export const loginAction = async (
         JSON.stringify({ level: response.body.user.level }),
         {
           httpOnly: false,
-          secure: process.env.NODE_ENV === "production",
+          secure: secureCookie(),
           sameSite: "strict",
           maxAge: 60 * 60 * 24 * 7, // 7 days
           path: "/",
@@ -81,7 +82,7 @@ export const loginAction = async (
       // Set national_number cookie (use email as fallback)
       cookieStore.set("national_number", response.body.user.email, {
         httpOnly: false,
-        secure: process.env.NODE_ENV === "production",
+        secure: secureCookie(),
         sameSite: "strict",
         maxAge: 60 * 60 * 24 * 7, // 7 days
         path: "/",
