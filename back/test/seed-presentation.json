@@ -522,31 +522,31 @@
 	},
 	{
 		"id": "seed-14-comment-persepolis",
-		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"comment\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"text\": \"بازدید از تخت جمشید با راهنمای محلی تجربه‌ای بی‌نظیر بود؛ ساعت‌های پایانی روز برای عکاسی بهترین نور را دارد.\",\n        \"rating\": 5,\n        \"place\": \"{persepolisPlace}\"\n      },\n      \"get\": {\n        \"_id\": 1\n      }\n    }\n  }\n}",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"comment\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"text\": \"بازدید از تخت جمشید با راهنمای محلی تجربه‌ای بی‌نظیر بود؛ ساعت‌های پایانی روز برای عکاسی بهترین نور را دارد.\",\n        \"rating\": 5,\n        \"status\": \"approved\",\n        \"place\": \"{persepolisPlace}\"\n      },\n      \"get\": {\n        \"_id\": 1\n      }\n    }\n  }\n}",
 		"repeat": 1,
 		"captures": []
 	},
 	{
 		"id": "seed-15-comment-naqsh-e-jahan",
-		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"comment\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"text\": \"میدان در شب نورپردازی بسیار زیبایی دارد. پیشنهاد می‌کنم بازدید عالی‌قاپو را هم در برنامه بگذارید.\",\n        \"rating\": 5,\n        \"place\": \"{naqsh-e-jahanPlace}\"\n      },\n      \"get\": {\n        \"_id\": 1\n      }\n    }\n  }\n}",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"comment\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"text\": \"میدان در شب نورپردازی بسیار زیبایی دارد. پیشنهاد می‌کنم بازدید عالی‌قاپو را هم در برنامه بگذارید.\",\n        \"rating\": 5,\n        \"status\": \"approved\",\n        \"place\": \"{naqsh-e-jahanPlace}\"\n      },\n      \"get\": {\n        \"_id\": 1\n      }\n    }\n  }\n}",
 		"repeat": 1,
 		"captures": []
 	},
 	{
 		"id": "seed-16-comment-nasir-ol-molk",
-		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"comment\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"text\": \"برای دیدن نور رنگی پنجره‌ها صبح زود بروید؛ حدود ساعت ۸ تا ۹ بهترین زمان است.\",\n        \"rating\": 4,\n        \"place\": \"{nasir-ol-molkPlace}\"\n      },\n      \"get\": {\n        \"_id\": 1\n      }\n    }\n  }\n}",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"comment\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"text\": \"برای دیدن نور رنگی پنجره‌ها صبح زود بروید؛ حدود ساعت ۸ تا ۹ بهترین زمان است.\",\n        \"rating\": 4,\n        \"status\": \"approved\",\n        \"place\": \"{nasir-ol-molkPlace}\"\n      },\n      \"get\": {\n        \"_id\": 1\n      }\n    }\n  }\n}",
 		"repeat": 1,
 		"captures": []
 	},
 	{
 		"id": "seed-17-comment-golestan",
-		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"comment\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"text\": \"تالار آینه و ایوان تخت مرمر حتماً دیده شود. بلیط مجموعه برای هر بخش جداگانه است.\",\n        \"rating\": 4,\n        \"place\": \"{golestanPlace}\"\n      },\n      \"get\": {\n        \"_id\": 1\n      }\n    }\n  }\n}",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"comment\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"text\": \"تالار آینه و ایوان تخت مرمر حتماً دیده شود. بلیط مجموعه برای هر بخش جداگانه است.\",\n        \"rating\": 4,\n        \"status\": \"approved\",\n        \"place\": \"{golestanPlace}\"\n      },\n      \"get\": {\n        \"_id\": 1\n      }\n    }\n  }\n}",
 		"repeat": 1,
 		"captures": []
 	},
 	{
 		"id": "seed-18-comment-bam",
-		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"comment\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"text\": \"دیدن تلاش مرمت‌گران در ارگ بم تحسین‌برانگیز است. سایه‌بان و آب آشامیدنی در محوطه موجود است.\",\n        \"rating\": 5,\n        \"place\": \"{bam-citadelPlace}\"\n      },\n      \"get\": {\n        \"_id\": 1\n      }\n    }\n  }\n}",
+		"bodyHeaders": "{\n  \"headers\": {\n    \"Content-Type\": \"application/json\",\n    \"token\": \"{token}\"\n  },\n  \"body\": {\n    \"service\": \"main\",\n    \"model\": \"comment\",\n    \"act\": \"add\",\n    \"details\": {\n      \"set\": {\n        \"text\": \"دیدن تلاش مرمت‌گران در ارگ بم تحسین‌برانگیز است. سایه‌بان و آب آشامیدنی در محوطه موجود است.\",\n        \"rating\": 5,\n        \"status\": \"approved\",\n        \"place\": \"{bam-citadelPlace}\"\n      },\n      \"get\": {\n        \"_id\": 1\n      }\n    }\n  }\n}",
 		"repeat": 1,
 		"captures": []
 	},

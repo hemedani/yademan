@@ -2462,6 +2462,8 @@ const seed: Case[] = [
 				text:
 					"بازدید از تخت جمشید با راهنمای محلی تجربه‌ای بی‌نظیر بود؛ ساعت‌های پایانی روز برای عکاسی بهترین نور را دارد.",
 				rating: 5,
+				// Seeded comments are published so the place page has reviews.
+				status: "approved",
 				place: "{persepolisPlace}",
 			},
 			get: { _id: 1 },
@@ -2476,6 +2478,8 @@ const seed: Case[] = [
 				text:
 					"میدان در شب نورپردازی بسیار زیبایی دارد. پیشنهاد می‌کنم بازدید عالی‌قاپو را هم در برنامه بگذارید.",
 				rating: 5,
+				// Seeded comments are published so the place page has reviews.
+				status: "approved",
 				place: "{naqsh-e-jahanPlace}",
 			},
 			get: { _id: 1 },
@@ -2490,6 +2494,8 @@ const seed: Case[] = [
 				text:
 					"برای دیدن نور رنگی پنجره‌ها صبح زود بروید؛ حدود ساعت ۸ تا ۹ بهترین زمان است.",
 				rating: 4,
+				// Seeded comments are published so the place page has reviews.
+				status: "approved",
 				place: "{nasir-ol-molkPlace}",
 			},
 			get: { _id: 1 },
@@ -2504,6 +2510,8 @@ const seed: Case[] = [
 				text:
 					"تالار آینه و ایوان تخت مرمر حتماً دیده شود. بلیط مجموعه برای هر بخش جداگانه است.",
 				rating: 4,
+				// Seeded comments are published so the place page has reviews.
+				status: "approved",
 				place: "{golestanPlace}",
 			},
 			get: { _id: 1 },
@@ -2518,6 +2526,8 @@ const seed: Case[] = [
 				text:
 					"دیدن تلاش مرمت‌گران در ارگ بم تحسین‌برانگیز است. سایه‌بان و آب آشامیدنی در محوطه موجود است.",
 				rating: 5,
+				// Seeded comments are published so the place page has reviews.
+				status: "approved",
 				place: "{bam-citadelPlace}",
 			},
 			get: { _id: 1 },
