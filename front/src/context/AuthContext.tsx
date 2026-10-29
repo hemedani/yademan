@@ -2,16 +2,16 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
   ReactNode,
 } from "react";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { getMe } from "@/app/actions/user/getMe";
-import { AppApi } from "@/services/api";
-import { Cookie } from "next/font/google";
 
 export type UserLevel = "Ghost" | "Manager" | "Editor" | "Normal" | null;
 
@@ -63,147 +63,135 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setHydrated(true);
   }, []);
 
-  // Check authentication status on client-side only
-  useEffect(() => {
-    if (!hydrated) return;
-
-    const checkAuth = async () => {
-      const token = Cookies.get("token");
-      const userCookie = Cookies.get("user");
-      const nationalNumber = Cookies.get("national_number");
-
-      if (!token) {
-        setIsAuthenticated(false);
-        setUserLevel(null);
-        setUser(null);
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const response = await getMe();
-
-        if (response.success && response.user) {
-          setUser(response.user);
-          setIsAuthenticated(true);
-          setUserLevel(response.user.level as UserLevel);
-        } else {
-          // Try fallback from cookies
-          try {
-            const userCookieData = userCookie ? JSON.parse(userCookie) : null;
-            if (userCookieData && userCookieData.level) {
-              const fallbackUser: UserData = {
-                _id: "temp_user",
-                first_name: "User",
-                last_name: "",
-                email: nationalNumber || "user@example.com",
-                level: userCookieData.level,
-                gender: "unknown",
-                is_verified: false,
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
-              };
-              setUser(fallbackUser);
-              setIsAuthenticated(true);
-              setUserLevel(userCookieData.level as UserLevel);
-            } else {
-              throw new Error("No valid fallback data");
-            }
-          } catch {
-            clearAuth();
-          }
-        }
-      } catch {
-        clearAuth();
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkAuth();
-  }, [hydrated]);
-
-  const clearAuth = () => {
+  const clearAuth = useCallback(() => {
     setIsAuthenticated(false);
     setUserLevel(null);
     setUser(null);
     Cookies.remove("token", { path: "/" });
     Cookies.remove("national_number", { path: "/" });
     Cookies.remove("user", { path: "/" });
-  };
+  }, []);
 
-  const login = (token: string, level: UserLevel, nationalNumber: string) => {
-    // Set cookies
-    Cookies.set("token", token, { path: "/" });
-    Cookies.set("national_number", nationalNumber, { path: "/" });
-    Cookies.set("user", JSON.stringify({ level }), { path: "/" });
-
-    // Update state immediately with temp user
+  const applyUser = useCallback((nextUser: UserData) => {
+    setUser(nextUser);
     setIsAuthenticated(true);
-    setUserLevel(level);
+    setUserLevel(nextUser.level as UserLevel);
+  }, []);
 
-    const tempUser: UserData = {
-      _id: "temp_user",
-      first_name: "User",
-      last_name: "",
-      email: nationalNumber,
-      level: level || "Normal",
-      gender: "unknown",
-      is_verified: false,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    setUser(tempUser);
+  /**
+   * Resolves the session from the backend.
+   *
+   * The level is never read from the `user` cookie: that cookie is
+   * client-writable, so trusting it let anyone render the admin UI by setting
+   * `level: "Manager"`. A network failure must not destroy the session either —
+   * only a missing or rejected token does.
+   */
+  const resolveSession = useCallback(async () => {
+    const token = Cookies.get("token");
 
-    // Refresh with real data
-    setTimeout(async () => {
-      try {
-        const response = await getMe();
-        if (response.success && response.user) {
-          setUser(response.user);
-          setUserLevel(response.user.level as UserLevel);
-        }
-      } catch {
-        // Silently handle refresh errors
-      }
-    }, 100);
-  };
-
-  const logout = async () => {
-    setLoading(true);
-
-    try {
-      const token = Cookies.get("token");
-      if (token) {
-        Cookies.remove("token", { path: "/" });
-      }
-    } catch {
-      // Silently handle general logout errors
+    if (!token) {
+      setIsAuthenticated(false);
+      setUserLevel(null);
+      setUser(null);
+      return;
     }
 
+    const response = await getMe();
+
+    if (response.success && response.user) {
+      applyUser(response.user);
+      return;
+    }
+
+    if (response.reason === "no_token" || response.reason === "unauthorized") {
+      clearAuth();
+    }
+    // `network`: leave the stored token alone so the next load can restore the
+    // session once the backend is reachable again.
+  }, [applyUser, clearAuth]);
+
+  // Check authentication status on client-side only
+  useEffect(() => {
+    if (!hydrated) return;
+
+    let cancelled = false;
+
+    resolveSession()
+      .catch(() => {
+        // Never clear the session because of an unexpected error.
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [hydrated, resolveSession]);
+
+  const login = useCallback(
+    (token: string, level: UserLevel, nationalNumber: string) => {
+      // Set cookies
+      Cookies.set("token", token, { path: "/" });
+      Cookies.set("national_number", nationalNumber, { path: "/" });
+      Cookies.set("user", JSON.stringify({ level }), { path: "/" });
+
+      // Update state immediately with temp user
+      setIsAuthenticated(true);
+      setUserLevel(level);
+
+      const tempUser: UserData = {
+        _id: "temp_user",
+        first_name: "User",
+        last_name: "",
+        email: nationalNumber,
+        level: level || "Normal",
+        gender: "unknown",
+        is_verified: false,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      setUser(tempUser);
+
+      // Refresh with real data
+      getMe()
+        .then((response) => {
+          if (response.success && response.user) applyUser(response.user);
+        })
+        .catch(() => {
+          // Silently handle refresh errors
+        });
+    },
+    [applyUser],
+  );
+
+  const logout = useCallback(async () => {
+    setLoading(true);
     clearAuth();
     setLoading(false);
     router.replace("/");
-  };
+  }, [clearAuth, router]);
 
-  const refreshUserData = async () => {
+  const refreshUserData = useCallback(async () => {
     if (!hydrated || !isAuthenticated) return;
 
     try {
       const response = await getMe();
       if (response.success && response.user) {
-        setUser(response.user);
-        setUserLevel(response.user.level as UserLevel);
+        applyUser(response.user);
       }
     } catch {
       // Silently handle refresh errors
     }
-  };
+  }, [hydrated, isAuthenticated, applyUser]);
 
-  const setInitialAuthState = (isAuth: boolean, level: UserLevel) => {
-    setIsAuthenticated(isAuth);
-    setUserLevel(level);
-  };
+  const setInitialAuthState = useCallback(
+    (isAuth: boolean, level: UserLevel) => {
+      setIsAuthenticated(isAuth);
+      setUserLevel(level);
+    },
+    [],
+  );
 
   // Helper to get display name
   const displayName = user
@@ -216,6 +204,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       user.email?.[0]?.toUpperCase() ||
       "U"
     : "";
+
+  // Memoised so consumers do not re-render on every provider render.
+  const value = useMemo<AuthContextType>(
+    () => ({
+      isAuthenticated,
+      userLevel,
+      user,
+      loading,
+      login,
+      logout,
+      setInitialAuthState,
+      refreshUserData,
+      displayName,
+      initials,
+    }),
+    [
+      isAuthenticated,
+      userLevel,
+      user,
+      loading,
+      login,
+      logout,
+      setInitialAuthState,
+      refreshUserData,
+      displayName,
+      initials,
+    ],
+  );
 
   // Don't render until hydrated to avoid hydration mismatch
   if (!hydrated) {
@@ -239,22 +255,5 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     );
   }
 
-  return (
-    <AuthContext.Provider
-      value={{
-        isAuthenticated,
-        userLevel,
-        user,
-        loading,
-        login,
-        logout,
-        setInitialAuthState,
-        refreshUserData,
-        displayName,
-        initials,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

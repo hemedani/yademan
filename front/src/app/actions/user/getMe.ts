@@ -17,6 +17,11 @@ interface GetMeResponse {
     updatedAt: string;
   };
   error?: string;
+  /**
+   * Why the call failed. Callers must only clear the session for
+   * `no_token` / `unauthorized`; a `network` failure must not log the user out.
+   */
+  reason?: "no_token" | "unauthorized" | "network";
 }
 
 export const getMe = async (
@@ -29,6 +34,7 @@ export const getMe = async (
       return {
         success: false,
         error: "No authentication token found",
+        reason: "no_token",
       };
     }
 
@@ -66,12 +72,14 @@ export const getMe = async (
       return {
         success: false,
         error: response.body.message || "Failed to get user information",
+        reason: "unauthorized",
       };
     }
   } catch {
     return {
       success: false,
       error: "An unexpected error occurred",
+      reason: "network",
     };
   }
 };

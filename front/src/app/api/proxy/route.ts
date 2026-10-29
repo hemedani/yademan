@@ -9,44 +9,21 @@ export async function POST(request: NextRequest) {
     const backendUrl = process.env.LESAN_URL || "http://localhost:1405";
     const fullUrl = `${backendUrl}/lesan`;
 
-    // Get the authorization token from cookies or headers
-    const authHeader = request.headers.get("authorization") || request.headers.get("token");
-    const cookieHeader = request.headers.get("cookie");
+    // Get the authorization token from headers
+    const authHeader =
+      request.headers.get("authorization") || request.headers.get("token");
 
-    // Check if this is a multipart request (for file uploads)
-    const contentType = request.headers.get("content-type");
-    let requestBody: BodyInit;
+    const contentType = request.headers.get("content-type") || "";
     const headers: Record<string, string> = {};
 
-    if (contentType && contentType.includes("multipart/form-data")) {
-      // For multipart requests (file uploads), pass the raw body directly
-      // This preserves the boundary and multipart structure
-      const blob = await request.blob();
-      requestBody = blob;
-
-      // Extract boundary from content-type header and pass it along
-      const boundary = contentType.split("boundary=")[1];
-      if (boundary) {
-        headers["Content-Type"] = `multipart/form-data; boundary=${boundary}`;
-      } else {
-        // Fallback: let fetch handle it
-        headers["Content-Type"] = contentType;
-      }
-    } else {
-      // For regular JSON requests
-      const body = await request.json();
-      requestBody = JSON.stringify(body);
-      headers["Content-Type"] = "application/json";
+    if (contentType) {
+      headers["Content-Type"] = contentType;
     }
 
-    // Add authentication header if present
+    // Add authentication header if present. The backend expects the raw token
+    // in a `token` header, never a `Bearer ` prefix.
     if (authHeader) {
-      headers["token"] = authHeader;
-    }
-
-    // Add cookie header if present
-    if (cookieHeader) {
-      headers["cookie"] = cookieHeader;
+      headers["token"] = authHeader.replace(/^Bearer\s+/i, "");
     }
 
     // Forward the request to the backend service with timeout
@@ -54,38 +31,25 @@ export async function POST(request: NextRequest) {
     const timeoutId = setTimeout(() => controller.abort(), 55000); // 55 second timeout
 
     try {
+      // Stream the request body straight through instead of buffering it.
+      // `request.blob()` used to hold the whole payload (up to 550MB) in memory.
       const response = await fetch(fullUrl, {
         method: "POST",
         headers,
-        body: requestBody,
+        body: request.body,
+        // Required by Node's fetch when streaming a request body.
+        duplex: "half",
         signal: controller.signal,
-      });
+      } as RequestInit & { duplex: "half" });
 
       clearTimeout(timeoutId);
 
-      // Get the response body
-      let responseData;
-      const responseContentType = response.headers.get("content-type");
-
-      if (responseContentType && responseContentType.includes("application/json")) {
-        responseData = await response.json();
-      } else {
-        // For non-JSON responses (like file uploads), get text response
-        responseData = await response.text();
-
-        // Try to parse as JSON if possible, otherwise return as text
-        try {
-          responseData = JSON.parse(responseData);
-        } catch {
-          // If it's not valid JSON, return as text
-          responseData = { success: true, body: responseData };
-        }
-      }
-
-      return new Response(JSON.stringify(responseData), {
+      // Stream the response back rather than parse-and-restringify it.
+      return new Response(response.body, {
         status: response.status,
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type":
+            response.headers.get("content-type") || "application/json",
         },
       });
     } catch (fetchError: any) {
