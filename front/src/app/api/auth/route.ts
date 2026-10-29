@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { loginUser, refreshToken } from "@/lib/api/auth";
 import { LoginCredentials } from "@/types/auth";
+import { secureCookie } from "@/lib/cookie-secure";
 
 export async function POST(request: NextRequest) {
   try {
@@ -54,14 +55,14 @@ async function handleLogin(credentials: LoginCredentials) {
 
     response.cookies.set("accessToken", tokens.accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: secureCookie(),
       sameSite: "lax",
       maxAge: 15 * 60, // 15 minutes
     });
 
     response.cookies.set("refreshToken", tokens.refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: secureCookie(),
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60, // 7 days
     });
@@ -113,7 +114,7 @@ async function handleRefresh() {
 
     response.cookies.set("accessToken", tokens.accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: secureCookie(),
       sameSite: "lax",
       maxAge: 15 * 60, // 15 minutes
     });
@@ -121,7 +122,7 @@ async function handleRefresh() {
     if (tokens.refreshToken) {
       response.cookies.set("refreshToken", tokens.refreshToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: secureCookie(),
         sameSite: "lax",
         maxAge: 7 * 24 * 60 * 60, // 7 days
       });

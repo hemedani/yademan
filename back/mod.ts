@@ -41,8 +41,21 @@ export const { selectStruct, getSchemas } = coreApp.schemas;
 
 functionsSetup();
 
+/**
+ * Extra browser origins allowed to call this API, comma-separated.
+ *
+ * The list below covers local development; deployments set `CORS_ORIGINS` so a
+ * host change does not need a code edit and a redeploy.
+ */
+const extraCors = (Deno.env.get("CORS_ORIGINS") ?? "")
+	.split(",")
+	.map((origin) => origin.trim())
+	.filter(Boolean);
+
 coreApp.runServer({
-	port: 1405,
+	// `APP_PORT` is declared in `.env.backend`; honouring it here keeps the
+	// container and bare-metal deployments on the same knob.
+	port: Number(Deno.env.get("APP_PORT")) || 1405,
 	typeGeneration: true,
 	playground: true,
 	staticPath: ["/uploads"],
@@ -53,5 +66,6 @@ coreApp.runServer({
 		"http://localhost:4000",
 		"http://185.204.170.27:4000",
 		"http://185.204.170.27:3005",
+		...extraCors,
 	],
 });
