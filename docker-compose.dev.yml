@@ -12,15 +12,19 @@ services:
       - /app/declarations # Exclude declarations directory from mounting
       - ./back/uploads:/app/uploads # Ensure uploads directory is mounted correctly
     environment:
-      - APP_PORT=8000
+      # The server listens on 1405 regardless of APP_PORT; keep them in sync so
+      # Traefik routes to the port that is actually open.
+      - APP_PORT=1405
       - ENV=development
-      - MONGO_URI=mongodb://mongo:27017/mydatabase
+      # The database name is fixed to `yademan` in mod.ts.
+      - MONGO_URI=mongodb://mongo:27017/
       - REDIS_URI=redis://redis:6379
+      - TOKEN_KEY=${TOKEN_KEY:-dev-insecure-token-key}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`api.localhost`)"
       - "traefik.http.routers.backend.entrypoints=web"
-      - "traefik.http.services.backend.loadbalancer.server.port=8000"
+      - "traefik.http.services.backend.loadbalancer.server.port=1405"
 
   # Frontend service (development)
   frontend:
@@ -34,6 +38,7 @@ services:
     environment:
       - APP_PORT=3000
       - NODE_ENV=development
+      - LESAN_URL=http://backend:1405
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`frontend.localhost`)"

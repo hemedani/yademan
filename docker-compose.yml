@@ -14,6 +14,8 @@ services:
       - APP_PORT=1405
       - ENV=production
       - MONGO_URI=mongodb://mongo:27017/
+      # Required: the backend refuses to start in production without it.
+      - TOKEN_KEY=${TOKEN_KEY:?TOKEN_KEY must be set (JWT signing secret)}
     volumes:
       - ./back/uploads:/app/uploads
     depends_on:
@@ -33,7 +35,7 @@ services:
     environment:
       - APP_PORT=3005
       - NODE_ENV=production
-      - LESAN_URL=http://backend:1404
+      - LESAN_URL=http://backend:1405
       - NEXT_TELEMETRY_DISABLED=1
 
   # MongoDB service
